@@ -11,8 +11,8 @@ pub fn hello_derive_impl(ast: &syn::DeriveInput) -> TokenStream {
 
     let gen = quote! {
         impl #name {
-            pub fn hello_macro() {
-                println!("Hello, Macro! My name is {}", stringify!(#name));
+            pub fn hello() {
+                println!("Hello! I am a {} type.", stringify!(#name));
             }
         }
     };
