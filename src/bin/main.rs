@@ -4,6 +4,7 @@ use proc::HelloMacro;
 
 #[derive(HelloMacro)]
 struct Testy {
+    /// Place holder item.
     item: u64,
 }
 
@@ -13,4 +14,5 @@ pub fn main() {
 
     let t = Testy { item: 4 };
     Testy::hello();
+    println!("The item is: {}", t.item);
 }

@@ -8,7 +8,7 @@
     clippy::pedantic,
     clippy::restriction
 )]
-#![allow(clippy::implicit_return)]
+#![allow(clippy::implicit_return, clippy::result_expect_used)]
 
 extern crate proc_macro;
 extern crate proc_macro2;
