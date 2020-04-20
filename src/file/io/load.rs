@@ -1,7 +1,6 @@
 //! Load trait.
 
-use crate::file::Error;
-use json5;
+use crate::Error;
 use serde::Deserialize;
 use std::{fs::read_to_string, path::Path};
 

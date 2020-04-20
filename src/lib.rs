@@ -8,8 +8,18 @@
     clippy::pedantic,
     clippy::restriction
 )]
-#![allow(clippy::implicit_return)]
+#![allow(
+    clippy::as_conversions,
+    clippy::implicit_return,
+    clippy::integer_arithmetic,
+    clippy::integer_division,
+    clippy::print_stdout,
+    clippy::modulo_arithmetic,
+    clippy::unreachable
+)]
 
 pub mod file;
+pub mod fmt;
 
 pub use self::file::*;
+pub use self::fmt::*;

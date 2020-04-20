@@ -1,6 +1,6 @@
 //! Save trait.
 
-use crate::file::Error;
+use crate::Error;
 use serde::Serialize;
 use serde_json::to_string;
 use std::{fs::write, path::Path};
