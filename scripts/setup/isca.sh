@@ -17,7 +17,7 @@ mkdir Projects;
 cd Projects;
 
 # Clone dia repo and check that it will compile.
-git clone https://github.com/FreddyWordingham/arc.git;
+git clone https://github.com/FreddyWordingham/dia.git;
 cd dia;
 cargo check;
 
