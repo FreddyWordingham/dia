@@ -1,4 +1,4 @@
-//! Library core.
+//! Support library of attribute macros.
 
 #![warn(
     clippy::all,
@@ -9,3 +9,6 @@
     clippy::restriction
 )]
 #![allow(clippy::implicit_return)]
+
+extern crate proc_macro;
+extern crate proc_macro2;
