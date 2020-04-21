@@ -1,12 +1,12 @@
 //! Probability distribution implementation.
 
 use crate::distribution;
-// use attr::json;
+// use attr::form;
 use ndarray::Array1;
 use rand::{rngs::ThreadRng, Rng};
 
 /// Probability distribution formulae.
-// #[json]
+// #[form]
 #[derive(Clone)]
 pub enum Probability {
     /// Point.
