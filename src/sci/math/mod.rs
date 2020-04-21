@@ -1,8 +1,10 @@
 //! Math module.
 
+pub mod rng;
 pub mod sample;
 pub mod sort;
 
+pub use self::rng::*;
 pub use self::sample::*;
 pub use self::sort::*;
 
