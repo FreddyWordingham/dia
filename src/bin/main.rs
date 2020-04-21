@@ -29,4 +29,10 @@ pub fn main() {
 
     dia::args!(exec_name: String; pi: f64);
     dia::report!(pi);
+
+    dia::map!(
+        "beans" => 3,
+        "tea" => 4,
+        "pinecone" => 38
+    );
 }
