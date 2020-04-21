@@ -1,6 +1,6 @@
-//! Input and output error enumeration.
+//! Error enumeration.
 
-/// IO error enumeration.
+/// Error enumeration.
 pub enum Error {
     /// File loading error.
     Load(std::io::Error),
@@ -8,6 +8,10 @@ pub enum Error {
     Read(json5::Error),
     /// Writing error.
     Write(serde_json::Error),
+    /// Environment variable error.
+    EnvVar(std::env::VarError),
+    /// None.
+    None(),
 }
 
 impl From<std::io::Error> for Error {
@@ -30,3 +34,18 @@ impl From<serde_json::Error> for Error {
         Self::Write(e)
     }
 }
+
+impl From<std::env::VarError> for Error {
+    #[inline]
+    fn from(e: std::env::VarError) -> Self {
+        Self::EnvVar(e)
+    }
+}
+
+// #![feature(try_trait)]
+// impl From<std::option::NoneError> for Error {
+//     #[inline]
+//     fn from(_e: std::option::NoneError) -> Self {
+//         Self::None()
+//     }
+// }

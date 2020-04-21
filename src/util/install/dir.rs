@@ -1,7 +1,9 @@
 //! Install directory information.
 
+use crate::util::exec;
 use std::{
-    env::var,
+    env::{current_dir, set_current_dir, var},
+    fs::create_dir_all,
     path::{Path, PathBuf},
 };
 
@@ -12,4 +14,43 @@ use std::{
 #[inline]
 pub fn root() -> Result<PathBuf, std::env::VarError> {
     Ok(Path::new(&var("DIA_DIR")?).to_path_buf())
+}
+
+/// Initialise the current working directory.
+#[inline]
+fn input_dir(dir: &PathBuf) -> Result<PathBuf, std::io::Error> {
+    set_current_dir(dir)?;
+    current_dir()
+}
+
+/// Create an output directory.
+#[inline]
+fn output_dir(dir: &PathBuf) -> Result<PathBuf, std::io::Error> {
+    create_dir_all(dir)?;
+    Ok(dir.to_path_buf())
+}
+
+/// Set and get the input and output directories.
+/// Returned pair is (input, output).
+#[inline]
+#[must_use]
+pub fn io_dirs(
+    input: Option<PathBuf>,
+    output: Option<PathBuf>,
+) -> Result<(PathBuf, PathBuf), crate::Error> {
+    let in_dir = if let Some(input) = input {
+        input
+    } else {
+        root()?.join("input").join(exec::name())
+    };
+
+    let out_dir = if let Some(output) = output {
+        output
+    } else {
+        root()?.join("output").join(exec::name())
+    };
+
+    let in_dir = input_dir(&in_dir)?;
+    let out_dir = output_dir(&out_dir)?;
+    Ok((in_dir, out_dir))
 }

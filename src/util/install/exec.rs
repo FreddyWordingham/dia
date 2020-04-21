@@ -5,9 +5,14 @@ use std::{env::args, path::Path};
 /// Determine the name of the executable.
 #[inline]
 #[must_use]
-pub fn name() -> Option<String> {
+pub fn name() -> String {
     let args: Vec<String> = args().collect();
-    let name = args.get(0)?;
+    let name = args.get(0).unwrap();
 
-    Some(Path::new(&name).file_name()?.to_str()?.to_string())
+    Path::new(&name)
+        .file_name()
+        .unwrap()
+        .to_str()
+        .unwrap()
+        .to_string()
 }

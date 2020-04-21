@@ -29,7 +29,7 @@ pub fn main() {
 
     dia::args!(exec_name: String; pi: f64);
     dia::report!(pi);
-    dia::report!(dia::exec::name().expect("Could not determine executable name."));
+    dia::report!(dia::exec::name());
 
     dia::map!(
         "beans" => 3,

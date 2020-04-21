@@ -18,8 +18,8 @@
     clippy::unreachable
 )]
 
+pub mod error;
 pub mod file;
 pub mod util;
 
-pub use self::file::*;
-pub use self::util::*;
+pub use self::{error::*, file::*, util::*};
