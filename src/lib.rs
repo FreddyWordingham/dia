@@ -10,6 +10,7 @@
 )]
 #![allow(
     clippy::as_conversions,
+    clippy::float_arithmetic,
     clippy::implicit_return,
     clippy::integer_arithmetic,
     clippy::integer_division,
