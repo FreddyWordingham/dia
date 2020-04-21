@@ -15,11 +15,13 @@
     clippy::integer_division,
     clippy::print_stdout,
     clippy::modulo_arithmetic,
+    clippy::panic,
     clippy::unreachable
 )]
 
 pub mod error;
 pub mod file;
+pub mod tools;
 pub mod util;
 
-pub use self::{error::*, file::*, util::*};
+pub use self::{error::*, file::*, tools::*, util::*};
