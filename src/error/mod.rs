@@ -1,5 +1,7 @@
 //! Error enumeration.
 
+use std::fmt::{Debug, Formatter};
+
 /// Error enumeration.
 pub enum Error {
     /// File loading error.
@@ -10,8 +12,6 @@ pub enum Error {
     Write(serde_json::Error),
     /// Environment variable error.
     EnvVar(std::env::VarError),
-    /// None.
-    None(),
 }
 
 impl From<std::io::Error> for Error {
@@ -49,3 +49,19 @@ impl From<std::env::VarError> for Error {
 //         Self::None()
 //     }
 // }
+
+impl Debug for Error {
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        write!(
+            fmt,
+            "{}",
+            match self {
+                Self::Load { .. } => "Loading error.",
+                Self::Read { .. } => "Reading error.",
+                Self::Write { .. } => "Writing error.",
+                Self::EnvVar { .. } => "Environment variable missing error.",
+            }
+        )
+    }
+}

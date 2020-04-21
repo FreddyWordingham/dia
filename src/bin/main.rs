@@ -24,16 +24,5 @@ pub fn main() {
     dia::banner::sub_section("Sub-Section two");
     dia::banner::sub_sub_section("Sub-Sub-Section two");
 
-    let x = 2;
-    dia::report!(x);
-
-    dia::args!(exec_name: String; pi: f64);
-    dia::report!(pi);
-    dia::report!(dia::exec::name());
-
-    dia::map!(
-        "beans" => 3,
-        "tea" => 4,
-        "pinecone" => 38
-    );
+    dia::dir::io_dirs(None, None).expect("Could not initialise directories.");
 }
