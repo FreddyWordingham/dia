@@ -21,6 +21,7 @@ extern crate proc_macro2;
 
 mod hello_macro;
 mod load;
+mod save;
 
 use crate::proc_macro::TokenStream;
 
@@ -39,4 +40,12 @@ pub fn hello_derive(input: TokenStream) -> TokenStream {
 #[must_use]
 pub fn load_derive(input: TokenStream) -> TokenStream {
     load::load_derive_impl(input)
+}
+
+/// Create the procedural macro Save.
+#[proc_macro_derive(Save)]
+#[inline]
+#[must_use]
+pub fn save_derive(input: TokenStream) -> TokenStream {
+    save::save_derive_impl(input)
 }

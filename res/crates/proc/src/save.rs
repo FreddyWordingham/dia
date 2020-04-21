@@ -1,13 +1,13 @@
-//! Implementation function of the load procedural macro.
+//! Implementation function of the save procedural macro.
 
 use crate::proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, Item};
 
-/// Implement `Load` trait using json parsing.
+/// Implement `Save` trait using json parsing.
 #[inline]
 #[must_use]
-pub fn load_derive_impl(input: TokenStream) -> TokenStream {
+pub fn save_derive_impl(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as Item);
 
     let name = match input {
@@ -18,10 +18,10 @@ pub fn load_derive_impl(input: TokenStream) -> TokenStream {
     };
 
     let output = quote! {
-        impl crate::Load for #name {
+        impl crate::Save for #name {
             #[inline]
-            fn load(path: &std::path::Path) -> Result<Self, crate::Error> {
-                crate::from_json(path)
+            fn save(&self, path: &std::path::Path) -> Result<(), crate::Error> {
+                crate::as_json(self, path)
             }
         }
     };
