@@ -19,7 +19,7 @@
 )]
 
 pub mod file;
-pub mod fmt;
+pub mod util;
 
 pub use self::file::*;
-pub use self::fmt::*;
+pub use self::util::*;

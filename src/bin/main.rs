@@ -23,4 +23,7 @@ pub fn main() {
     dia::section("Section two");
     dia::sub_section("Sub-Section two");
     dia::sub_sub_section("Sub-Sub-Section two");
+
+    let x = 2;
+    dia::report!(x);
 }
