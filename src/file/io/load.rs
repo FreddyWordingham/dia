@@ -5,9 +5,12 @@ use serde::Deserialize;
 use std::{fs::read_to_string, path::Path};
 
 /// Types implementing this trait can be loaded from a file.
-pub trait Load {
+pub trait Load
+where
+    Self: std::marker::Sized,
+{
     /// Deserialize the type from a given file.
-    fn load(path: &Path) -> Self;
+    fn load(path: &Path) -> Result<Self, Error>;
 }
 
 /// Deserialise the type in json format.

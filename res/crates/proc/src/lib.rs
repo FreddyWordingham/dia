@@ -12,14 +12,15 @@
     clippy::implicit_return,
     clippy::module_name_repetitions,
     clippy::panic,
-    clippy::result_expect_used
+    clippy::result_expect_used,
+    clippy::wildcard_enum_match_arm
 )]
 
 extern crate proc_macro;
 extern crate proc_macro2;
 
-mod form;
 mod hello_macro;
+mod load;
 
 use crate::proc_macro::TokenStream;
 
@@ -30,4 +31,12 @@ use crate::proc_macro::TokenStream;
 pub fn hello_derive(input: TokenStream) -> TokenStream {
     let ast = syn::parse(input).expect("Unable to parse token stream.");
     hello_macro::derive_impl(&ast)
+}
+
+/// Create the procedural macro Load.
+#[proc_macro_derive(Load)]
+#[inline]
+#[must_use]
+pub fn load_derive(input: TokenStream) -> TokenStream {
+    load::load_derive_impl(input)
 }

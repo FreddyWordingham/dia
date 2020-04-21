@@ -13,4 +13,14 @@
 extern crate proc_macro;
 extern crate proc_macro2;
 
-mod form;
+mod load;
+
+use proc_macro::TokenStream;
+
+/// Create the attribute macro load.
+#[proc_macro_attribute]
+#[inline]
+#[must_use]
+pub fn load(metadata: TokenStream, input: TokenStream) -> TokenStream {
+    load::implementation(&metadata, input)
+}
