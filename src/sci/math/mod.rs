@@ -1,8 +1,10 @@
 //! Math module.
 
 pub mod sample;
+pub mod sort;
 
 pub use self::sample::*;
+pub use self::sort::*;
 
 use nalgebra::{Point3, Unit, Vector3};
 
