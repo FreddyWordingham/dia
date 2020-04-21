@@ -1,9 +1,11 @@
 //! Math module.
 
+pub mod lambda;
 pub mod rng;
 pub mod sample;
 pub mod sort;
 
+pub use self::lambda::*;
 pub use self::rng::*;
 pub use self::sample::*;
 pub use self::sort::*;
