@@ -1,6 +1,6 @@
 //! Banner printing functions.
 
-use crate::term_width;
+use crate::term;
 use colored::Colorize;
 
 /// Index of the section.
@@ -11,7 +11,7 @@ static mut SECTION: i32 = 0;
 pub fn title(title: &str) {
     let title = title.to_uppercase();
 
-    let term_width = term_width();
+    let term_width = term::width();
 
     let (left_bar, right_bar) = if term_width < ((title.len() * 2) + 11) {
         (4, 4)
@@ -48,7 +48,7 @@ pub fn section(title: &str) {
     print!("====");
     print!(" {}", colour(&title).bold());
 
-    let term_width = term_width();
+    let term_width = term::width();
     let mut cur_len = 5 + title.len();
     if cur_len >= term_width {
         println!();
@@ -71,7 +71,7 @@ pub fn sub_section(title: &str) {
     println!(
         "---- {} {}",
         colour(title).bold(),
-        "-".repeat(term_width() - 6 - title.len())
+        "-".repeat(term::width() - 6 - title.len())
     );
 }
 

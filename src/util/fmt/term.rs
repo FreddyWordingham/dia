@@ -9,7 +9,7 @@ const FALLBACK_TERM_WIDTH: usize = 80;
 /// Return the fallback size if the width could not be determined.
 #[inline]
 #[must_use]
-pub fn term_width() -> usize {
+pub fn width() -> usize {
     let ts = terminal_size();
 
     if let Some(ts) = ts {

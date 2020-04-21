@@ -16,19 +16,20 @@ pub fn main() {
     Testy::hello();
     println!("The item is: {}", t.item);
 
-    dia::title("Title");
-    dia::section("Section");
-    dia::sub_section("Sub-Section");
-    dia::sub_sub_section("Sub-Sub-Section");
-    dia::section("Section two");
-    dia::sub_section("Sub-Section two");
-    dia::sub_sub_section("Sub-Sub-Section two");
+    dia::banner::title("Title");
+    dia::banner::section("Section");
+    dia::banner::sub_section("Sub-Section");
+    dia::banner::sub_sub_section("Sub-Sub-Section");
+    dia::banner::section("Section two");
+    dia::banner::sub_section("Sub-Section two");
+    dia::banner::sub_sub_section("Sub-Sub-Section two");
 
     let x = 2;
     dia::report!(x);
 
     dia::args!(exec_name: String; pi: f64);
     dia::report!(pi);
+    dia::report!(dia::exec::name().expect("Could not determine executable name."));
 
     dia::map!(
         "beans" => 3,
