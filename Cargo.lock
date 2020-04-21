@@ -101,6 +101,7 @@ dependencies = [
  "colored",
  "indicatif",
  "json5",
+ "lazy_static",
  "proc",
  "serde",
  "serde_json",

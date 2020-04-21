@@ -22,7 +22,8 @@
 
 pub mod error;
 pub mod file;
+pub mod sci;
 pub mod tools;
 pub mod util;
 
-pub use self::{error::*, file::*, tools::*, util::*};
+pub use self::{error::*, file::*, sci::*, tools::*, util::*};
