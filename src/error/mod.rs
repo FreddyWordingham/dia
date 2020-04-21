@@ -14,41 +14,24 @@ pub enum Error {
     EnvVar(std::env::VarError),
 }
 
-impl From<std::io::Error> for Error {
-    #[inline]
-    fn from(e: std::io::Error) -> Self {
-        Self::Load(e)
-    }
+macro_rules! impl_from_for_err {
+    ($enum:path, $error:ty) => {
+        impl From<$error> for Error {
+            #[inline]
+            fn from(e: $error) -> Self {
+                $enum(e)
+            }
+        }
+    };
 }
 
-impl From<json5::Error> for Error {
-    #[inline]
-    fn from(e: json5::Error) -> Self {
-        Self::Read(e)
-    }
-}
-
-impl From<serde_json::Error> for Error {
-    #[inline]
-    fn from(e: serde_json::Error) -> Self {
-        Self::Write(e)
-    }
-}
-
-impl From<std::env::VarError> for Error {
-    #[inline]
-    fn from(e: std::env::VarError) -> Self {
-        Self::EnvVar(e)
-    }
-}
+impl_from_for_err!(Self::Load, std::io::Error);
+impl_from_for_err!(Self::Read, json5::Error);
+impl_from_for_err!(Self::Write, serde_json::Error);
+impl_from_for_err!(Self::EnvVar, std::env::VarError);
 
 // #![feature(try_trait)]
-// impl From<std::option::NoneError> for Error {
-//     #[inline]
-//     fn from(_e: std::option::NoneError) -> Self {
-//         Self::None()
-//     }
-// }
+// impl_from_for_err!(Self::None, std::option::NoneError);
 
 impl Debug for Error {
     #[inline]
