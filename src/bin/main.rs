@@ -26,4 +26,7 @@ pub fn main() {
 
     let x = 2;
     dia::report!(x);
+
+    dia::args!(exec_name: String; pi: f64);
+    dia::report!(pi);
 }
