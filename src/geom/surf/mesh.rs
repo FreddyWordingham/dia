@@ -1,8 +1,8 @@
 //! Smooth triangle-mesh implementation.
 
 use crate::{
-    access, Aabb, Collide, Dir3, Error, Load, Pos3, SmoothTriangle, Trans3, Transform, Vec3, ALPHA,
-    X,
+    access, Aabb, Collide, Dir3, Error, Load, Pos3, Ray, Side, SmoothTriangle, Trace, Trans3,
+    Transform, Vec3, ALPHA, X,
 };
 use std::{
     fs::File,
@@ -93,6 +93,44 @@ impl Transform for Mesh {
         }
 
         self.aabb = Self::init_aabb(&self.tris);
+    }
+}
+
+impl Trace for Mesh {
+    #[inline]
+    #[must_use]
+    fn hit(&self, ray: &Ray) -> bool {
+        if !self.aabb.hit(ray) {
+            return false;
+        }
+
+        self.tris.iter().any(|t| t.hit(ray))
+    }
+
+    #[inline]
+    #[must_use]
+    fn dist(&self, ray: &Ray) -> Option<f64> {
+        if !self.aabb.hit(ray) {
+            return None;
+        }
+
+        self.tris
+            .iter()
+            .filter_map(|tri| tri.dist(ray))
+            .min_by(|a, b| a.partial_cmp(b).unwrap())
+    }
+
+    #[inline]
+    #[must_use]
+    fn dist_side(&self, ray: &Ray) -> Option<(f64, Side)> {
+        if !self.aabb.hit(ray) {
+            return None;
+        }
+
+        self.tris
+            .iter()
+            .filter_map(|tri| tri.dist_side(ray))
+            .min_by(|a, b| a.0.partial_cmp(&b.0).unwrap())
     }
 }
 
