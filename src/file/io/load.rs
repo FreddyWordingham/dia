@@ -10,12 +10,15 @@ where
     Self: std::marker::Sized,
 {
     /// Deserialize the type from a given file.
+    /// # Errors
+    /// if the target file can not be found,
+    /// or the read string can not be serialised into an instance of the required type.
     fn load(path: &Path) -> Result<Self, Error>;
 }
 
 /// Deserialise the type in json format.
 /// # Errors
-/// if file can not be opened or read string isn't a valid json instance.
+/// if file can not be opened or read string can not be serialised into an instance of the required type.
 #[inline]
 pub fn from_json<T>(path: &Path) -> Result<T, Error>
 where

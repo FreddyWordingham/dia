@@ -7,9 +7,9 @@ use std::{env::args, path::Path};
 #[must_use]
 pub fn name() -> String {
     let args: Vec<String> = args().collect();
-    let name = args.get(0).unwrap();
+    let name = &args[0];
 
-    Path::new(&name)
+    Path::new(name)
         .file_name()
         .unwrap()
         .to_str()

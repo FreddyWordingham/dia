@@ -58,7 +58,7 @@ impl Multivariate {
     /// Construct a new sum instance.
     #[inline]
     #[must_use]
-    pub fn new_sum() -> Self {
+    pub const fn new_sum() -> Self {
         Self::Sum {}
     }
 
@@ -111,16 +111,9 @@ impl Multivariate {
         match self {
             Self::Sum {} => xs.sum(),
             Self::Constant { c } => *c,
-            Self::ScaledFirstOrder { k, a } => *xs.get(*a).expect("Invalid index.") * k,
-            Self::ScaledSecondOrder { k, a, b } => {
-                *xs.get(*a).expect("Invalid index.") * *xs.get(*b).expect("Invalid index.") * k
-            }
-            Self::ScaledThirdOrder { k, a, b, c } => {
-                *xs.get(*a).expect("Invalid index.")
-                    * *xs.get(*b).expect("Invalid index.")
-                    * *xs.get(*c).expect("Invalid index.")
-                    * k
-            }
+            Self::ScaledFirstOrder { k, a } => xs[*a] * k,
+            Self::ScaledSecondOrder { k, a, b } => xs[*a] * xs[*b] * k,
+            Self::ScaledThirdOrder { k, a, b, c } => xs[*a] * xs[*b] * xs[*c] * k,
             Self::Weight { ws } => {
                 assert!(xs.len() == ws.len());
 

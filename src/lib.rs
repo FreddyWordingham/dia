@@ -16,8 +16,17 @@
     clippy::integer_division,
     clippy::print_stdout,
     clippy::modulo_arithmetic,
+    clippy::option_unwrap_used,
     clippy::panic,
+    clippy::indexing_slicing,
+    clippy::else_if_without_else,
     clippy::unreachable
+)]
+#![allow(
+    clippy::cast_possible_wrap,
+    clippy::cast_sign_loss,
+    clippy::cast_possible_truncation,
+    clippy::cast_precision_loss
 )]
 
 pub mod error;

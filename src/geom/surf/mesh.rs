@@ -1,8 +1,8 @@
 //! Smooth triangle-mesh implementation.
 
 use crate::{
-    access, Aabb, Cartesian::X, Collide, Dir3, Error, Greek::Alpha, Load, Pos3, SmoothTriangle,
-    Trans3, Transform, Vec3,
+    access, Aabb, Collide, Dir3, Error, Load, Pos3, SmoothTriangle, Trans3, Transform, Vec3, ALPHA,
+    X,
 };
 use std::{
     fs::File,
@@ -35,13 +35,7 @@ impl Mesh {
 
     /// Initialise the bounding box for the mesh.
     fn init_aabb(tris: &[SmoothTriangle]) -> Aabb {
-        let mut mins = *tris
-            .get(X as usize)
-            .unwrap()
-            .tri()
-            .verts()
-            .get(Alpha as usize)
-            .unwrap();
+        let mut mins = tris[X].tri().verts()[ALPHA];
         let mut maxs = mins;
 
         for tri in tris {
@@ -104,7 +98,6 @@ impl Transform for Mesh {
 
 impl Load for Mesh {
     #[inline]
-    #[must_use]
     fn load(path: &Path) -> Result<Self, Error> {
         let vertex_lines: Vec<_> = BufReader::new(File::open(path)?)
             .lines()
@@ -117,9 +110,9 @@ impl Load for Mesh {
             let mut words = line.split_whitespace();
             words.next();
 
-            let px = words.next().unwrap().parse::<f64>().unwrap();
-            let py = words.next().unwrap().parse::<f64>().unwrap();
-            let pz = words.next().unwrap().parse::<f64>().unwrap();
+            let px = words.next().unwrap().parse::<f64>()?;
+            let py = words.next().unwrap().parse::<f64>()?;
+            let pz = words.next().unwrap().parse::<f64>()?;
 
             verts.push(Pos3::new(px, py, pz));
         }
@@ -135,9 +128,9 @@ impl Load for Mesh {
             let mut words = line.split_whitespace();
             words.next();
 
-            let nx = words.next().unwrap().parse::<f64>().unwrap();
-            let ny = words.next().unwrap().parse::<f64>().unwrap();
-            let nz = words.next().unwrap().parse::<f64>().unwrap();
+            let nx = words.next().unwrap().parse::<f64>()?;
+            let ny = words.next().unwrap().parse::<f64>()?;
+            let nz = words.next().unwrap().parse::<f64>()?;
 
             norms.push(Dir3::new_normalize(Vec3::new(nx, ny, nz)));
         }
@@ -154,12 +147,12 @@ impl Load for Mesh {
             let mut words = line.split_whitespace();
             words.next();
 
-            let fx = words.next().unwrap().parse::<usize>().unwrap() - 1;
-            let nx = words.next().unwrap().parse::<usize>().unwrap() - 1;
-            let fy = words.next().unwrap().parse::<usize>().unwrap() - 1;
-            let ny = words.next().unwrap().parse::<usize>().unwrap() - 1;
-            let fz = words.next().unwrap().parse::<usize>().unwrap() - 1;
-            let nz = words.next().unwrap().parse::<usize>().unwrap() - 1;
+            let fx = words.next().unwrap().parse::<usize>()? - 1;
+            let nx = words.next().unwrap().parse::<usize>()? - 1;
+            let fy = words.next().unwrap().parse::<usize>()? - 1;
+            let ny = words.next().unwrap().parse::<usize>()? - 1;
+            let fz = words.next().unwrap().parse::<usize>()? - 1;
+            let nz = words.next().unwrap().parse::<usize>()? - 1;
 
             faces.push(((fx, fy, fz), (nx, ny, nz)));
         }
@@ -167,16 +160,8 @@ impl Load for Mesh {
         let mut tris = Vec::with_capacity(faces.len());
         for face in faces {
             tris.push(SmoothTriangle::new_from_verts(
-                [
-                    *verts.get((face.0).0).unwrap(),
-                    *verts.get((face.0).1).unwrap(),
-                    *verts.get((face.0).2).unwrap(),
-                ],
-                [
-                    *norms.get((face.1).0).unwrap(),
-                    *norms.get((face.1).1).unwrap(),
-                    *norms.get((face.1).2).unwrap(),
-                ],
+                [verts[(face.0).0], verts[(face.0).1], verts[(face.0).2]],
+                [norms[(face.1).0], norms[(face.1).1], norms[(face.1).2]],
             ));
         }
 

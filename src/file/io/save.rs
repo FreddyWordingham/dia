@@ -7,7 +7,9 @@ use std::{fs::write, path::Path};
 
 /// Types implementing this trait can be saved to file.
 pub trait Save {
-    /// Serialise the type to a given file.
+    /// Serialise the type to a given file
+    /// # Errors
+    /// if the instance can not be serialised or if the file can't be written to.
     fn save(&self, path: &Path) -> Result<(), Error>;
 }
 

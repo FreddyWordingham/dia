@@ -1,10 +1,6 @@
 //! Flat triangle implementation.
 
-use crate::{
-    access, Aabb, Collide, Dir3,
-    Greek::{Alpha, Beta, Gamma},
-    Pos3, Trans3, Transform, Vec3,
-};
+use crate::{access, Aabb, Collide, Dir3, Pos3, Trans3, Transform, Vec3, ALPHA, BETA, GAMMA};
 
 /// Triangle.
 pub struct Triangle {
@@ -31,28 +27,16 @@ impl Triangle {
     #[inline]
     #[must_use]
     fn init_plane_norm(verts: &[Pos3; 3]) -> Dir3 {
-        Dir3::new_normalize(
-            (verts.get(Alpha as usize).unwrap() - verts.get(Gamma as usize).unwrap())
-                .cross(&(verts.get(Beta as usize).unwrap() - verts.get(Alpha as usize).unwrap())),
-        )
+        Dir3::new_normalize((verts[ALPHA] - verts[GAMMA]).cross(&(verts[BETA] - verts[ALPHA])))
     }
 
     /// Calculate the side lengths.
     #[inline]
     #[must_use]
     pub fn side_lengths(&self) -> [f64; 3] {
-        let ab = nalgebra::distance(
-            self.verts.get(Alpha as usize).unwrap(),
-            self.verts.get(Beta as usize).unwrap(),
-        );
-        let bc = nalgebra::distance(
-            self.verts.get(Beta as usize).unwrap(),
-            self.verts.get(Gamma as usize).unwrap(),
-        );
-        let ca = nalgebra::distance(
-            self.verts.get(Gamma as usize).unwrap(),
-            self.verts.get(Alpha as usize).unwrap(),
-        );
+        let ab = nalgebra::distance(&self.verts[ALPHA], &self.verts[BETA]);
+        let bc = nalgebra::distance(&self.verts[BETA], &self.verts[GAMMA]);
+        let ca = nalgebra::distance(&self.verts[GAMMA], &self.verts[ALPHA]);
 
         [ab, bc, ca]
     }
@@ -79,9 +63,9 @@ impl Triangle {
     #[must_use]
     pub fn centre(&self) -> Pos3 {
         Pos3::from(
-            ((self.verts.get(Alpha as usize).unwrap().to_homogeneous()
-                + self.verts.get(Beta as usize).unwrap().to_homogeneous()
-                + self.verts.get(Gamma as usize).unwrap().to_homogeneous())
+            ((self.verts.get(ALPHA).unwrap().to_homogeneous()
+                + self.verts.get(BETA).unwrap().to_homogeneous()
+                + self.verts.get(GAMMA).unwrap().to_homogeneous())
                 / 3.0)
                 .xyz(),
         )
@@ -95,9 +79,9 @@ impl Collide for Triangle {
         let c = aabb.centre();
         let e = aabb.half_widths();
 
-        let v0 = self.verts.get(Alpha as usize).unwrap() - c;
-        let v1 = self.verts.get(Beta as usize).unwrap() - c;
-        let v2 = self.verts.get(Gamma as usize).unwrap() - c;
+        let v0 = self.verts.get(ALPHA).unwrap() - c;
+        let v1 = self.verts.get(BETA).unwrap() - c;
+        let v2 = self.verts.get(GAMMA).unwrap() - c;
 
         let f0 = v1 - v0;
         let f1 = v2 - v1;

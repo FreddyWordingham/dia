@@ -9,3 +9,12 @@ pub enum Greek {
     /// Third letter.
     Gamma,
 }
+
+/// Greek Alpha convenience constant.
+pub const ALPHA: usize = Greek::Alpha as usize;
+
+/// Greek Beta convenience constant.
+pub const BETA: usize = Greek::Beta as usize;
+
+/// Greek Gamma convenience constant.
+pub const GAMMA: usize = Greek::Gamma as usize;

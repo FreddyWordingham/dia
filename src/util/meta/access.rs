@@ -6,7 +6,7 @@ macro_rules! access {
     ($field:ident, $type:ty) => {
         #[inline]
         #[must_use]
-        pub fn $field(&self) -> &$type {
+        pub const fn $field(&self) -> &$type {
             &self.$field
         }
     };
@@ -14,14 +14,14 @@ macro_rules! access {
     ($field:ident, $setter:ident, $type:ty) => {
         #[inline]
         #[must_use]
-        pub fn $field(&self) -> &$type {
+        pub const fn $field(&self) -> &$type {
             &self.$field
         }
 
         #[allow(clippy::mut_mut)]
         #[inline]
         #[must_use]
-        pub fn $setter(&mut self) -> &mut $type {
+        pub const fn $setter(&mut self) -> &mut $type {
             &mut self.$field
         }
     };
@@ -47,7 +47,7 @@ macro_rules! clone {
 
         #[inline]
         #[must_use]
-        pub fn $setter(&mut self) -> &mut $type {
+        pub const fn $setter(&mut self) -> &mut $type {
             &mut self.$field
         }
     };

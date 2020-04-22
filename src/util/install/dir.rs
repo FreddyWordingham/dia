@@ -10,7 +10,7 @@ use std::{
 /// Get the arc installation directory path from the environment variable.
 /// Environment variable must be set.
 /// # Errors
-/// if the environment variable DIA_DIR is not set.
+/// if the environment variable `DIA_DIR` is not set.
 #[inline]
 pub fn root() -> Result<PathBuf, std::env::VarError> {
     Ok(Path::new(&var("DIA_DIR")?).to_path_buf())
@@ -32,8 +32,10 @@ fn output_dir(dir: &PathBuf) -> Result<PathBuf, std::io::Error> {
 
 /// Set and get the input and output directories.
 /// Returned pair is (input, output).
+/// # Errors
+/// if the root installation directory can not be determined,
+/// or if one of the input or output directories could not be created.
 #[inline]
-#[must_use]
 pub fn io_dirs(
     input: Option<PathBuf>,
     output: Option<PathBuf>,
