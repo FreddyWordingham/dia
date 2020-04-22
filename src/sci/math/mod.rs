@@ -5,10 +5,7 @@ pub mod rng;
 pub mod sample;
 pub mod sort;
 
-pub use self::lambda::*;
-pub use self::rng::*;
-pub use self::sample::*;
-pub use self::sort::*;
+pub use self::{lambda::*, rng::*, sample::*, sort::*};
 
 use nalgebra::{Point3, Unit, Vector3};
 

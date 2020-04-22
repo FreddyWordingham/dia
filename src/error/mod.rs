@@ -30,7 +30,8 @@ impl_from_for_err!(Self::Read, json5::Error);
 impl_from_for_err!(Self::Write, serde_json::Error);
 impl_from_for_err!(Self::EnvVar, std::env::VarError);
 
-// #![feature(try_trait)]
+// TODO: This Requires nightly compiler but would allow us properly to handle unwraping None's as errors.
+// #![feature(try_trait)] // This goes in lib.rs.
 // impl_from_for_err!(Self::None, std::option::NoneError);
 
 impl Debug for Error {
