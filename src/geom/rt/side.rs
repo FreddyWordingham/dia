@@ -18,11 +18,11 @@ pub enum Side {
 
 impl Side {
     /// Construct a new instance.
-    pub fn new(dir: &Dir3, norm: &Dir3) -> Self {
-        if dir.dot(norm) < 0.0 {
-            Self::Inside { norm: *norm }
+    pub fn new(dir: &Dir3, norm: Dir3) -> Self {
+        if dir.dot(&norm) < 0.0 {
+            Self::Outside { norm: norm }
         } else {
-            Self::Inside { norm: -*norm }
+            Self::Inside { norm: -norm }
         }
     }
 

@@ -235,7 +235,7 @@ impl Trace for Triangle {
     #[must_use]
     fn dist_side(&self, ray: &Ray) -> Option<(f64, Side)> {
         if let Some(dist) = self.dist(ray) {
-            let side = Side::new(ray.dir(), &self.plane_norm);
+            let side = Side::new(ray.dir(), self.plane_norm);
             Some((dist, side))
         } else {
             None

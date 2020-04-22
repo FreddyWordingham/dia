@@ -1,6 +1,9 @@
 //! Smooth triangle implementation.
 
-use crate::{access, Aabb, Collide, Dir3, Pos3, Trans3, Transform, Triangle};
+use crate::{
+    access, Aabb, Collide, Dir3, Pos3, Ray, Side, Trace, Trans3, Transform, Triangle, ALPHA, BETA,
+    GAMMA,
+};
 
 /// Triangle geometry with normal interpolation.
 pub struct SmoothTriangle {
@@ -36,6 +39,40 @@ impl Collide for SmoothTriangle {
     #[must_use]
     fn overlap(&self, aabb: &Aabb) -> bool {
         self.tri.overlap(aabb)
+    }
+}
+
+impl Trace for SmoothTriangle {
+    #[inline]
+    #[must_use]
+    fn hit(&self, ray: &Ray) -> bool {
+        self.tri.hit(ray)
+    }
+
+    #[inline]
+    #[must_use]
+    fn dist(&self, ray: &Ray) -> Option<f64> {
+        self.tri.dist(ray)
+    }
+
+    #[inline]
+    #[must_use]
+    fn dist_side(&self, ray: &Ray) -> Option<(f64, Side)> {
+        if let Some((dist, [u, v, w])) = self.tri.intersection_coors(ray) {
+            Some((
+                dist,
+                Side::new(
+                    ray.dir(),
+                    Dir3::new_normalize(
+                        (self.norms[BETA].into_inner() * u)
+                            + (self.norms[GAMMA].into_inner() * v)
+                            + (self.norms[ALPHA].into_inner() * w),
+                    ),
+                ),
+            ))
+        } else {
+            None
+        }
     }
 }
 
