@@ -1,6 +1,7 @@
 //! Axis-aligned-bounding-box implementation.
 
-use crate::{access, Collide, Pos3, Vec3};
+use crate::{access, Collide, Pos3, Ray, Side, Trace, Vec3};
+use std::cmp::Ordering;
 
 /// Axis-aligned bounding box geometry.
 /// Used for spatial partitioning.
@@ -76,6 +77,74 @@ impl Aabb {
     pub fn contains(&self, p: &Pos3) -> bool {
         p >= &self.mins && p <= &self.maxs
     }
+
+    /// Shrink the aabb by a fraction of its lengths, maintaining the central position.
+    pub fn shrink(&mut self, f: f64) {
+        debug_assert!(f > 0.0);
+        debug_assert!(f < 1.0);
+
+        let delta = self.half_widths() * f;
+
+        self.mins += delta;
+        self.maxs -= delta;
+    }
+
+    /// Expand the aabb by a fraction of its lengths, maintaining the central position.
+    pub fn expand(&mut self, f: f64) {
+        debug_assert!(f > 0.0);
+
+        let delta = self.half_widths() * f;
+
+        self.mins -= delta;
+        self.maxs += delta;
+    }
+
+    /// Determine the intersection distances along a ray's direction.
+    #[inline]
+    #[must_use]
+    fn intersections(&self, ray: &Ray) -> (f64, f64) {
+        let t_0: Vec<_> = self
+            .mins
+            .iter()
+            .zip(ray.pos().iter().zip(ray.dir().iter()))
+            .map(|(m, (p, d))| (m - p) / d)
+            .collect();
+
+        let t_1: Vec<_> = self
+            .maxs
+            .iter()
+            .zip(ray.pos().iter().zip(ray.dir().iter()))
+            .map(|(m, (p, d))| (m - p) / d)
+            .collect();
+
+        let t_min = t_0
+            .iter()
+            .zip(t_1.iter())
+            .map(|(a, b)| a.min(*b))
+            .max_by(|a, b| {
+                if a < b {
+                    Ordering::Less
+                } else {
+                    Ordering::Greater
+                }
+            })
+            .unwrap();
+
+        let t_max = t_0
+            .iter()
+            .zip(t_1.iter())
+            .map(|(a, b)| a.max(*b))
+            .min_by(|a, b| {
+                if a < b {
+                    Ordering::Less
+                } else {
+                    Ordering::Greater
+                }
+            })
+            .unwrap();
+
+        (t_min, t_max)
+    }
 }
 
 impl Collide for Aabb {
@@ -83,5 +152,37 @@ impl Collide for Aabb {
     #[must_use]
     fn overlap(&self, aabb: &Aabb) -> bool {
         self.mins <= aabb.maxs && self.maxs >= aabb.mins
+    }
+}
+
+impl Trace for Aabb {
+    #[inline]
+    #[must_use]
+    fn hit(&self, ray: &Ray) -> bool {
+        let (t_min, t_max) = self.intersections(ray);
+
+        !(t_max <= 0.0 || t_min > t_max)
+    }
+
+    #[inline]
+    #[must_use]
+    fn dist(&self, ray: &Ray) -> Option<f64> {
+        let (t_min, t_max) = self.intersections(ray);
+
+        if t_max <= 0.0 || t_min > t_max {
+            return None;
+        }
+
+        if t_min > 0.0 {
+            return Some(t_min);
+        }
+
+        Some(t_max)
+    }
+
+    #[inline]
+    #[must_use]
+    fn dist_side(&self, _ray: &Ray) -> Option<(f64, Side)> {
+        unimplemented!("Tell me (Freddy) if you need this.");
     }
 }
