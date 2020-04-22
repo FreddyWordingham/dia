@@ -1,6 +1,9 @@
 //! Flat triangle implementation.
 
-use crate::{access, Aabb, Collide, Dir3, Pos3, Trans3, Transform, Vec3, ALPHA, BETA, GAMMA};
+use crate::{
+    access, Aabb, Collide, Dir3, Pos3, Ray, Side, Trace, Trans3, Transform, Vec3, ALPHA, BETA,
+    GAMMA,
+};
 
 /// Triangle.
 pub struct Triangle {
@@ -63,12 +66,55 @@ impl Triangle {
     #[must_use]
     pub fn centre(&self) -> Pos3 {
         Pos3::from(
-            ((self.verts.get(ALPHA).unwrap().to_homogeneous()
-                + self.verts.get(BETA).unwrap().to_homogeneous()
-                + self.verts.get(GAMMA).unwrap().to_homogeneous())
+            ((self.verts[ALPHA].to_homogeneous()
+                + self.verts[BETA].to_homogeneous()
+                + self.verts[GAMMA].to_homogeneous())
                 / 3.0)
                 .xyz(),
         )
+    }
+
+    /// Determine the intersection distance along a `Ray`'s direction.
+    /// Also return the barycentric intersection coordinates.
+    #[inline]
+    #[must_use]
+    pub fn intersection_coors(&self, ray: &Ray) -> Option<(f64, [f64; 3])> {
+        let verts = self.verts;
+
+        let e1 = verts[BETA] - verts[ALPHA];
+        let e2 = verts[GAMMA] - verts[ALPHA];
+
+        let d_cross_e2 = ray.dir().cross(&e2);
+        let e1_dot_d_cross_e2 = e1.dot(&d_cross_e2);
+
+        if e1_dot_d_cross_e2.abs() <= 0.0 {
+            return None;
+        }
+
+        let inv_e1_dot_d_cross_e2 = 1.0 / e1_dot_d_cross_e2;
+        let rel_pos = ray.pos() - verts[ALPHA];
+        let u = inv_e1_dot_d_cross_e2 * rel_pos.dot(&d_cross_e2);
+
+        if (u < 0.0) || (u > 1.0) {
+            return None;
+        }
+
+        let q = rel_pos.cross(&e1);
+        let v = inv_e1_dot_d_cross_e2 * ray.dir().dot(&q);
+
+        if (v < 0.0) || ((u + v) > 1.0) {
+            return None;
+        }
+
+        let dist = inv_e1_dot_d_cross_e2 * e2.dot(&q);
+
+        if dist <= 0.0 {
+            return None;
+        }
+
+        let w = 1.0 - (u + v);
+
+        Some((dist, [u, v, w]))
     }
 }
 
@@ -165,6 +211,35 @@ impl Collide for Triangle {
         }
 
         true
+    }
+}
+
+impl Trace for Triangle {
+    #[inline]
+    #[must_use]
+    fn hit(&self, ray: &Ray) -> bool {
+        self.intersection_coors(ray).is_some()
+    }
+
+    #[inline]
+    #[must_use]
+    fn dist(&self, ray: &Ray) -> Option<f64> {
+        if let Some((dist, _coors)) = self.intersection_coors(ray) {
+            return Some(dist);
+        }
+
+        None
+    }
+
+    #[inline]
+    #[must_use]
+    fn dist_side(&self, ray: &Ray) -> Option<(f64, Side)> {
+        if let Some(dist) = self.dist(ray) {
+            let side = Side::new(ray.dir(), &self.plane_norm);
+            Some((dist, side))
+        } else {
+            None
+        }
     }
 }
 
