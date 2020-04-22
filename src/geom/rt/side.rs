@@ -1,0 +1,48 @@
+//! Hit side enumeration.
+
+use crate::Dir3;
+
+/// Side of a surface hit.
+pub enum Side {
+    /// Inside of surface hit. d.dot(n) > 0.0
+    Inside {
+        /// Facing surface normal vector.
+        norm: Dir3,
+    },
+    /// Outside of surface hit. d.dot(n) < 0.0
+    Outside {
+        /// Facing surface normal vector.
+        norm: Dir3,
+    },
+}
+
+impl Side {
+    /// Reference the normal vector.
+    #[inline]
+    #[must_use]
+    pub fn norm(&self) -> &Dir3 {
+        match self {
+            Self::Inside { norm } | Self::Outside { norm } => norm,
+        }
+    }
+
+    /// Check if the side is an inside.
+    #[inline]
+    #[must_use]
+    pub fn is_inside(&self) -> bool {
+        match self {
+            Self::Inside { .. } => true,
+            Self::Outside { .. } => false,
+        }
+    }
+
+    /// Check if the side is an outside.
+    #[inline]
+    #[must_use]
+    pub fn is_outside(&self) -> bool {
+        match self {
+            Self::Inside { .. } => false,
+            Self::Outside { .. } => true,
+        }
+    }
+}
