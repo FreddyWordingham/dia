@@ -3,7 +3,7 @@
 use crate::{
     access, Dir3,
     Greek::{Alpha, Beta, Gamma},
-    Pos3,
+    Pos3, Trans3, Transform,
 };
 
 /// Triangle.
@@ -85,5 +85,16 @@ impl Triangle {
                 / 3.0)
                 .xyz(),
         )
+    }
+}
+
+impl Transform for Triangle {
+    #[inline]
+    fn transform(&mut self, trans: &Trans3) {
+        for v in &mut self.verts {
+            *v = trans.transform_point(v);
+        }
+
+        self.plane_norm = Dir3::new_normalize(trans.transform_vector(&self.plane_norm));
     }
 }

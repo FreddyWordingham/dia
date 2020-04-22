@@ -1,6 +1,6 @@
 //! Smooth triangle-mesh implementation.
 
-use crate::{access, Aabb, Cartesian::X, Greek::Alpha, SmoothTriangle};
+use crate::{access, Aabb, Cartesian::X, Greek::Alpha, SmoothTriangle, Trans3, Transform};
 
 /// Mesh geometry.
 pub struct Mesh {
@@ -61,5 +61,16 @@ impl Mesh {
         }
 
         area
+    }
+}
+
+impl Transform for Mesh {
+    #[inline]
+    fn transform(&mut self, trans: &Trans3) {
+        for tri in &mut self.tris {
+            tri.transform(trans);
+        }
+
+        self.aabb = Self::init_aabb(&self.tris);
     }
 }
