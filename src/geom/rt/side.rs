@@ -20,7 +20,7 @@ impl Side {
     /// Construct a new instance.
     pub fn new(dir: &Dir3, norm: Dir3) -> Self {
         if dir.dot(&norm) < 0.0 {
-            Self::Outside { norm: norm }
+            Self::Outside { norm }
         } else {
             Self::Inside { norm: -norm }
         }
