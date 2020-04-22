@@ -1,6 +1,6 @@
 //! Smooth triangle implementation.
 
-use crate::{access, Dir3, Pos3, Trans3, Transform, Triangle};
+use crate::{access, Aabb, Collide, Dir3, Pos3, Trans3, Transform, Triangle};
 
 /// Triangle geometry with normal interpolation.
 pub struct SmoothTriangle {
@@ -28,6 +28,14 @@ impl SmoothTriangle {
     #[must_use]
     pub fn new_from_verts(verts: [Pos3; 3], norms: [Dir3; 3]) -> Self {
         Self::new(Triangle::new(verts), norms)
+    }
+}
+
+impl Collide for SmoothTriangle {
+    #[inline]
+    #[must_use]
+    fn overlap(&self, aabb: &Aabb) -> bool {
+        self.tri.overlap(aabb)
     }
 }
 

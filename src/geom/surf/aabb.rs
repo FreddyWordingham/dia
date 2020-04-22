@@ -1,6 +1,6 @@
 //! Axis-aligned-bounding-box implementation.
 
-use crate::{access, Pos3, Vec3};
+use crate::{access, Collide, Pos3, Vec3};
 
 /// Axis-aligned bounding box geometry.
 /// Used for spatial partitioning.
@@ -75,5 +75,13 @@ impl Aabb {
     #[must_use]
     pub fn contains(&self, p: &Pos3) -> bool {
         p >= &self.mins && p <= &self.maxs
+    }
+}
+
+impl Collide for Aabb {
+    #[inline]
+    #[must_use]
+    fn overlap(&self, aabb: &Aabb) -> bool {
+        self.mins <= aabb.maxs && self.maxs >= aabb.mins
     }
 }

@@ -1,8 +1,8 @@
 //! Smooth triangle-mesh implementation.
 
 use crate::{
-    access, Aabb, Cartesian::X, Dir3, Error, Greek::Alpha, Load, Pos3, SmoothTriangle, Trans3,
-    Transform, Vec3,
+    access, Aabb, Cartesian::X, Collide, Dir3, Error, Greek::Alpha, Load, Pos3, SmoothTriangle,
+    Trans3, Transform, Vec3,
 };
 use std::{
     fs::File,
@@ -70,6 +70,24 @@ impl Mesh {
         }
 
         area
+    }
+}
+
+impl Collide for Mesh {
+    #[inline]
+    #[must_use]
+    fn overlap(&self, aabb: &Aabb) -> bool {
+        if !self.aabb.overlap(aabb) {
+            return false;
+        }
+
+        for tri in &self.tris {
+            if tri.overlap(aabb) {
+                return true;
+            }
+        }
+
+        false
     }
 }
 

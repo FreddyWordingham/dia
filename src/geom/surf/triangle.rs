@@ -1,9 +1,9 @@
 //! Flat triangle implementation.
 
 use crate::{
-    access, Dir3,
+    access, Aabb, Collide, Dir3,
     Greek::{Alpha, Beta, Gamma},
-    Pos3, Trans3, Transform,
+    Pos3, Trans3, Transform, Vec3,
 };
 
 /// Triangle.
@@ -85,6 +85,102 @@ impl Triangle {
                 / 3.0)
                 .xyz(),
         )
+    }
+}
+
+impl Collide for Triangle {
+    #[inline]
+    #[must_use]
+    fn overlap(&self, aabb: &Aabb) -> bool {
+        let c = aabb.centre();
+        let e = aabb.half_widths();
+
+        let v0 = self.verts.get(Alpha as usize).unwrap() - c;
+        let v1 = self.verts.get(Beta as usize).unwrap() - c;
+        let v2 = self.verts.get(Gamma as usize).unwrap() - c;
+
+        let f0 = v1 - v0;
+        let f1 = v2 - v1;
+        let f2 = v0 - v2;
+
+        let u0 = Vec3::x_axis();
+        let u1 = Vec3::y_axis();
+        let u2 = Vec3::z_axis();
+
+        let axis_test = |axis: &Vec3| {
+            let p0 = v0.dot(axis);
+            let p1 = v1.dot(axis);
+            let p2 = v2.dot(axis);
+
+            let r = e.z.mul_add(
+                u2.dot(axis).abs(),
+                e.x.mul_add(u0.dot(axis).abs(), e.y * u1.dot(axis).abs()),
+            );
+
+            if (-(p0.max(p1).max(p2))).max(p0.min(p1).min(p2)) > r {
+                return false;
+            }
+
+            true
+        };
+
+        if !axis_test(&u0) {
+            return false;
+        }
+        if !axis_test(&u1) {
+            return false;
+        }
+        if !axis_test(&u2) {
+            return false;
+        }
+
+        let axis_u0_f0 = u0.cross(&f0);
+        let axis_u0_f1 = u0.cross(&f1);
+        let axis_u0_f2 = u0.cross(&f2);
+
+        let axis_u1_f0 = u1.cross(&f0);
+        let axis_u1_f1 = u1.cross(&f1);
+        let axis_u1_f2 = u1.cross(&f2);
+
+        let axis_u2_f0 = u2.cross(&f0);
+        let axis_u2_f1 = u2.cross(&f1);
+        let axis_u2_f2 = u2.cross(&f2);
+
+        if !axis_test(&axis_u0_f0) {
+            return false;
+        }
+        if !axis_test(&axis_u0_f1) {
+            return false;
+        }
+        if !axis_test(&axis_u0_f2) {
+            return false;
+        }
+
+        if !axis_test(&axis_u1_f0) {
+            return false;
+        }
+        if !axis_test(&axis_u1_f1) {
+            return false;
+        }
+        if !axis_test(&axis_u1_f2) {
+            return false;
+        }
+
+        if !axis_test(&axis_u2_f0) {
+            return false;
+        }
+        if !axis_test(&axis_u2_f1) {
+            return false;
+        }
+        if !axis_test(&axis_u2_f2) {
+            return false;
+        }
+
+        if !axis_test(&self.plane_norm) {
+            return false;
+        }
+
+        true
     }
 }
 
