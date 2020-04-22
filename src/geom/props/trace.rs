@@ -3,7 +3,7 @@
 use crate::{Ray, Side};
 
 /// Trace trait implementation.
-/// Types implementing this trait can be traced using rays.
+/// Types implementing this trait can be traced using 'Ray's.
 pub trait Trace {
     /// Determine if a ray hit occurs.
     fn hit(&self, ray: &Ray) -> bool;
