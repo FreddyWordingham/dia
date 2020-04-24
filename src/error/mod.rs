@@ -16,6 +16,8 @@ pub enum Error {
     Write(serde_json::Error),
     /// Environment variable error.
     EnvVar(std::env::VarError),
+    // /// Unexpected None error.
+    // None(std::option::NoneError),
 }
 
 macro_rules! impl_from_for_err {
@@ -37,7 +39,7 @@ impl_from_for_err!(Self::Write, serde_json::Error);
 impl_from_for_err!(Self::EnvVar, std::env::VarError);
 
 // TODO: This Requires nightly compiler but would allow us properly to handle unwraping None's as errors.
-// #![feature(try_trait)] // This goes in lib.rs.
+// // #![feature(try_trait)] // This goes in lib.rs.
 // impl_from_for_err!(Self::None, std::option::NoneError);
 
 impl Debug for Error {
