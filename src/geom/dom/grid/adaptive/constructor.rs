@@ -4,7 +4,7 @@ use crate::{
     settings::Adaptive as Settings, Aabb, Collide, Group, Mesh, Pos3, Set, SmoothTriangle,
 };
 
-impl<'a> Adaptive<'a> {
+impl<'a> super::Adaptive<'a> {
     /// Construct a new adaptive grid.
     #[inline]
     #[must_use]
@@ -111,7 +111,7 @@ impl<'a> Adaptive<'a> {
         parent_boundary: &Aabb,
         depth: i32,
         potential_tris: &[(Group, &'a SmoothTriangle)],
-    ) -> [Box<Adaptive<'a>>; 8] {
+    ) -> [Box<Self>; 8] {
         debug_assert!(depth <= settings.max_depth());
         debug_assert!(!potential_tris.is_empty());
 
