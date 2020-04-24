@@ -38,8 +38,26 @@ pub enum Adaptive<'a> {
     },
 }
 
+impl<'a> Adaptive<'a> {
+    /// Reference the cell's boundary.
+    #[inline]
+    #[must_use]
+    pub fn boundary(&self) -> &Aabb {
+        match self {
+            Self::Root { boundary, .. }
+            | Self::Branch { boundary, .. }
+            | Self::Leaf { boundary, .. }
+            | Self::Empty { boundary, .. } => boundary,
+        }
+    }
+}
+
 pub mod constructor;
 pub mod properties;
+pub mod scan;
+pub mod search;
 
 pub use self::constructor::*;
 pub use self::properties::*;
+pub use self::scan::*;
+pub use self::search::*;
