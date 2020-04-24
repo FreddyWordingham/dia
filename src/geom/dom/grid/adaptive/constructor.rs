@@ -1,4 +1,4 @@
-//! Adaptive gridding scheme.
+//! Constructor methods.
 
 use crate::{
     settings::Adaptive as Settings, Aabb, Collide, Group, Mesh, Pos3, Set, SmoothTriangle,

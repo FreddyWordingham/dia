@@ -39,5 +39,7 @@ pub enum Adaptive<'a> {
 }
 
 pub mod constructor;
+pub mod properties;
 
 pub use self::constructor::*;
+pub use self::properties::*;
