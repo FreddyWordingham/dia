@@ -5,6 +5,7 @@ use std::cmp::Ordering;
 
 /// Axis-aligned bounding box geometry.
 /// Used for spatial partitioning.
+#[derive(Clone)]
 pub struct Aabb {
     /// Minimum bound.
     mins: Pos3,
@@ -32,6 +33,13 @@ impl Aabb {
         debug_assert!(hws.iter().all(|x| *x > 0.0));
 
         Self::new(centre - hws, centre + hws)
+    }
+
+    /// Get mins and maxs together.
+    #[inline]
+    #[must_use]
+    pub fn mins_maxs(&self) -> (Pos3, Pos3) {
+        (self.mins, self.maxs)
     }
 
     /// Calculate the widths.

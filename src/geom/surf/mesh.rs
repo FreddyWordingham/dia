@@ -14,13 +14,13 @@ use std::{
 /// Mesh geometry.
 pub struct Mesh {
     /// Bounding box.
-    aabb: Aabb,
+    boundary: Aabb,
     /// List of component triangles.
     tris: Vec<SmoothTriangle>,
 }
 
 impl Mesh {
-    access!(aabb, Aabb);
+    access!(boundary, Aabb);
     access!(tris, Vec<SmoothTriangle>);
 
     /// Construct a new instance.
@@ -28,13 +28,13 @@ impl Mesh {
     #[must_use]
     pub fn new(tris: Vec<SmoothTriangle>) -> Self {
         Self {
-            aabb: Self::init_aabb(&tris),
+            boundary: Self::init_boundary(&tris),
             tris,
         }
     }
 
     /// Initialise the bounding box for the mesh.
-    fn init_aabb(tris: &[SmoothTriangle]) -> Aabb {
+    fn init_boundary(tris: &[SmoothTriangle]) -> Aabb {
         let mut mins = tris[X].tri().verts()[ALPHA];
         let mut maxs = mins;
 
@@ -71,7 +71,7 @@ impl Collide for Mesh {
     #[inline]
     #[must_use]
     fn overlap(&self, aabb: &Aabb) -> bool {
-        if !self.aabb.overlap(aabb) {
+        if !self.boundary.overlap(aabb) {
             return false;
         }
 
@@ -92,7 +92,7 @@ impl Transform for Mesh {
             tri.transform(trans);
         }
 
-        self.aabb = Self::init_aabb(&self.tris);
+        self.boundary = Self::init_boundary(&self.tris);
     }
 }
 
@@ -100,7 +100,7 @@ impl Trace for Mesh {
     #[inline]
     #[must_use]
     fn hit(&self, ray: &Ray) -> bool {
-        if !self.aabb.hit(ray) {
+        if !self.boundary.hit(ray) {
             return false;
         }
 
@@ -110,7 +110,7 @@ impl Trace for Mesh {
     #[inline]
     #[must_use]
     fn dist(&self, ray: &Ray) -> Option<f64> {
-        if !self.aabb.hit(ray) {
+        if !self.boundary.hit(ray) {
             return None;
         }
 
@@ -123,7 +123,7 @@ impl Trace for Mesh {
     #[inline]
     #[must_use]
     fn dist_side(&self, ray: &Ray) -> Option<(f64, Side)> {
-        if !self.aabb.hit(ray) {
+        if !self.boundary.hit(ray) {
             return None;
         }
 

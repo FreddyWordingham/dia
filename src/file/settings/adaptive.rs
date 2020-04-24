@@ -1,5 +1,8 @@
 //! Adaptive grid settings implementation.
 
+use crate::clone;
+use attr::load;
+
 /// Adaptive grid settings.
 #[load]
 pub struct Adaptive {
