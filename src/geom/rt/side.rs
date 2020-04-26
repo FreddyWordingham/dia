@@ -3,6 +3,7 @@
 use crate::Dir3;
 
 /// Side of a surface hit.
+#[derive(Clone)]
 pub enum Side {
     /// Inside of surface hit. d.dot(n) > 0.0
     Inside {
@@ -18,6 +19,8 @@ pub enum Side {
 
 impl Side {
     /// Construct a new instance.
+    #[inline]
+    #[must_use]
     pub fn new(dir: &Dir3, norm: Dir3) -> Self {
         if dir.dot(&norm) < 0.0 {
             Self::Outside { norm }
