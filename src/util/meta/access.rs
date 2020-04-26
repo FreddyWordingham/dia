@@ -47,7 +47,7 @@ macro_rules! clone {
 
         #[inline]
         #[must_use]
-        pub const fn $setter(&mut self) -> &mut $type {
+        pub fn $setter(&mut self) -> &mut $type {
             &mut self.$field
         }
     };

@@ -15,7 +15,7 @@ pub struct Hit {
 
 impl Hit {
     clone!(group, Group);
-    clone!(dist, f64);
+    clone!(dist, dist_mut, f64);
     access!(side, Side);
 
     /// Construct a new instance.
