@@ -73,7 +73,8 @@ impl Scene {
         let mut surfs: Set<Vec<Mesh>> = Set::new();
         for (group, meshes) in names {
             for mesh in meshes {
-                let path = in_dir.join(format!("{}.json", mesh));
+                let path = in_dir.join(format!("{}.obj", mesh));
+                println!("Loading mesh: {}", path.display());
                 let mesh: Mesh = Mesh::load(&path)?;
 
                 if let Some(entry) = surfs.get_mut(group) {
