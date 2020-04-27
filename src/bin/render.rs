@@ -29,7 +29,7 @@ pub fn main() {
 fn init() -> (PathBuf, PathBuf, PathBuf) {
     banner::section("Initialisation");
     banner::sub_section("Directories");
-    let (in_dir, out_dir) = dir::io_dirs(None, None).expect("Could not initialise directories.");
+    let (in_dir, out_dir) = dir::io_dirs(None, None).expect("Could not initialise directories");
     report!("in_dir", in_dir.display());
     report!("out_dir", out_dir.display());
 
@@ -47,7 +47,7 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::section("Input");
     banner::sub_section("Parameters");
     let params =
-        Parameters::load(&in_dir.join(params_path)).expect("Could not load parameters file.");
+        Parameters::load(&in_dir.join(params_path)).expect("Could not load parameters file");
 
     params
 }
