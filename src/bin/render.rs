@@ -15,7 +15,8 @@ struct Parameters {
 pub fn main() {
     banner::title("Render");
     let (in_dir, _out_dir, params_path) = init();
-    let _params = input(&in_dir, &params_path);
+    let params = input(&in_dir, &params_path);
+    let (_scene) = setup(&params);
 }
 
 fn init() -> (PathBuf, PathBuf, PathBuf) {
@@ -42,4 +43,8 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
         Parameters::load(&in_dir.join(params_path)).expect("Could not load parameters file.");
 
     params
+}
+
+fn setup(params: &Parameters) -> Set<Vec<Mesh>> {
+    
 }
