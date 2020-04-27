@@ -1,5 +1,5 @@
 //! Rendering module.
 
-pub mod frame;
+pub mod setup;
 
-pub use self::frame::*;
+pub use self::setup::*;
