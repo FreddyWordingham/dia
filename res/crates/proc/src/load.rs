@@ -10,15 +10,15 @@ use syn::{parse_macro_input, Item};
 pub fn load_derive_impl(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as Item);
 
-    let name = match input {
-        Item::Struct(s) => s.ident,
-        Item::Enum(e) => e.ident,
-        Item::Union(u) => u.ident,
+    let (name, generics) = match input {
+        Item::Struct(s) => (s.ident, s.generics),
+        Item::Enum(e) => (e.ident, e.generics),
+        Item::Union(u) => (u.ident, u.generics),
         _ => panic!("Can not derive json for this item."),
     };
 
     let output = quote! {
-        impl crate::Load for #name {
+        impl crate::Load<#generics> for #name<#generics> {
             #[inline]
             fn load(path: &std::path::Path) -> Result<Self, crate::Error> {
                 crate::from_json(path)
