@@ -26,7 +26,7 @@ pub fn main() {
     let (in_dir, _out_dir, params_path) = init();
     let params = input(&in_dir, &params_path);
     let scene = setup(&in_dir, &params);
-    let grid = building(&params.grid, &scene);
+    let _grid = building(&params.grid, &scene);
 }
 
 fn init() -> (PathBuf, PathBuf, PathBuf) {
