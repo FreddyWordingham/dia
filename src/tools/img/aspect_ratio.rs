@@ -42,3 +42,22 @@ impl AspectRatio {
         }
     }
 }
+
+impl Display for AspectRatio {
+    fn fmt(&self, fmt: &mut Formatter) -> Result {
+        write!(
+            fmt,
+            "{}",
+            match self {
+                Self::Square => "Square",
+                Self::Classic => "Classic",
+                Self::Golden => "Golden",
+                Self::Silver => "Silver",
+                Self::Standard => "Standard",
+                Self::Widescreen => "Widescreen",
+                Self::IPhoneXS => "IPhone XS",
+                Self::IPhone7 => "IPhone 7",
+            }
+        )
+    }
+}
