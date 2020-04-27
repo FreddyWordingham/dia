@@ -6,15 +6,13 @@ use std::path::{Path, PathBuf};
 
 /// Scene parameters.
 #[input]
-#[output]
 struct SceneParameters {
     /// Input surfaces.
-    surfs: Set<Vec<String>>,
+    surfs: Vec<(Group, Vec<String>)>,
 }
 
 /// Input parameters.
 #[input]
-#[output]
 struct Parameters {
     /// Scene.
     scene: SceneParameters,
@@ -23,7 +21,7 @@ struct Parameters {
 /// Main function.
 pub fn main() {
     banner::title("Render");
-    let (in_dir, _out_dir, params_path) = init();
+    let (in_dir, out_dir, params_path) = init();
     let params = input(&in_dir, &params_path);
     let (_scene) = setup(&in_dir, &params);
 }
