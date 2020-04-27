@@ -3,5 +3,10 @@
         "surfs": [
             [0, ["block", "gem"]]
         ]
+    },
+    "grid": {
+        "tar_tris": 5,
+        "max_depth": 8,
+        "padding": 0.01
     }
 }

@@ -20,7 +20,7 @@ pub fn input_derive_impl(input: TokenStream) -> TokenStream {
     let output = quote! {
         impl dia::Load<#generics> for #name<#generics> {
             #[inline]
-            fn load(path: &std::path::Path) -> Result<Self, dia::Error> {
+            fn load(path: &std::path::Path) -> std::result::Result<Self, dia::Error> {
                 dia::from_json(path)
             }
         }

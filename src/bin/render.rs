@@ -14,6 +14,8 @@ struct SceneParameters {
 /// Input parameters.
 #[input]
 struct Parameters {
+    /// Grid settings.
+    grid: settings::Adaptive,
     /// Scene.
     scene: SceneParameters,
 }
@@ -23,7 +25,8 @@ pub fn main() {
     banner::title("Render");
     let (in_dir, _out_dir, params_path) = init();
     let params = input(&in_dir, &params_path);
-    let _scene = setup(&in_dir, &params);
+    let scene = setup(&in_dir, &params);
+    let grid = building(&params.grid, &scene);
 }
 
 fn init() -> (PathBuf, PathBuf, PathBuf) {
@@ -53,6 +56,8 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 }
 
 fn setup(in_dir: &Path, params: &Parameters) -> Scene {
+    banner::section("Input");
+    banner::sub_section("Scene");
     let mut names: Set<Vec<String>> = Set::new();
     for (group, meshes) in &params.scene.surfs {
         for mesh in meshes {
@@ -63,6 +68,15 @@ fn setup(in_dir: &Path, params: &Parameters) -> Scene {
             }
         }
     }
+    let scene = Scene::load(&in_dir.join("meshes"), names.iter()).expect("Could not load scene.");
 
-    Scene::load(&in_dir.join("meshes"), names.iter()).expect("Could not load scene.")
+    scene
+}
+
+fn building<'a>(settings: &settings::Adaptive, scene: &'a Scene) -> Adaptive<'a> {
+    banner::section("Building");
+    banner::sub_section("Adaptive grid");
+    let grid = Adaptive::new_root(settings, scene);
+
+    grid
 }

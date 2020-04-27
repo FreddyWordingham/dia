@@ -20,7 +20,7 @@ pub fn output_derive_impl(input: TokenStream) -> TokenStream {
     let output = quote! {
         impl dia::Save for #name {
             #[inline]
-            fn save(&self, path: &std::path::Path) -> Result<(), dia::Error> {
+            fn save(&self, path: &std::path::Path) -> std::result::Result<(), dia::Error> {
                 dia::as_json(self, path)
             }
         }
