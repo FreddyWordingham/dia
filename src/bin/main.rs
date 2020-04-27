@@ -2,7 +2,7 @@
 
 use attr::input;
 use dia::*;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 /// Input parameters.
 #[input]
@@ -14,8 +14,8 @@ struct Parameters {
 /// Main function.
 pub fn main() {
     banner::title("Render");
-    let (in_dir, out_dir, params) = init();
-    let input = input();
+    let (in_dir, _out_dir, params_path) = init();
+    let _params = input(&in_dir, &params_path);
 }
 
 fn init() -> (PathBuf, PathBuf, PathBuf) {
@@ -35,6 +35,11 @@ fn init() -> (PathBuf, PathBuf, PathBuf) {
     (in_dir, out_dir, params_path)
 }
 
-fn input() -> () {
+fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::section("Input");
+    banner::sub_section("Parameters");
+    let params =
+        Parameters::load(&in_dir.join(params_path)).expect("Could not load parameters file.");
+
+    params
 }
