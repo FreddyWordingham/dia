@@ -41,6 +41,39 @@ impl AspectRatio {
             Self::IPhone7 => 750.0 / 1334.0,
         }
     }
+
+    /// Determine a resolution for the target number of pixels.
+    #[inline]
+    #[must_use]
+    pub fn resolution(&self, total_target: usize, mult: (usize, usize)) -> (usize, usize) {
+        debug_assert!(total_target > 0);
+
+        let fx = (total_target as f64 * self.ratio()).sqrt().ceil() as usize;
+        let fy = (total_target as f64 / self.ratio()).sqrt().ceil() as usize;
+
+        // Round up to nearest multiple if required.
+        let mx = if fx % mult.0 == 0 {
+            fx
+        } else {
+            fx + (mult.0 - (fx % mult.0))
+        };
+        let my = if fy % mult.1 == 0 {
+            fy
+        } else {
+            fy + (mult.1 - (fx % mult.1))
+        };
+
+        (mx, my)
+    }
+
+    /// Calculate the vertical resolution for a given horizontal resolution.
+    #[inline]
+    #[must_use]
+    pub fn vert_res(&self, hor_res: usize) -> usize {
+        debug_assert!(hor_res > 0);
+
+        (self.ratio() * hor_res as f64).ceil() as usize
+    }
 }
 
 impl Display for AspectRatio {
