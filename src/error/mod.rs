@@ -47,14 +47,22 @@ impl Debug for Error {
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
         write!(
             fmt,
-            "{}",
+            "{} error: `{}`",
             match self {
-                Self::Load { .. } => "Loading error.",
-                Self::Read { .. } => "Reading error.",
-                Self::ParseInt { .. } => "Integer parsing error.",
-                Self::ParseFloat { .. } => "Float parsing error.",
-                Self::Write { .. } => "Writing error.",
-                Self::EnvVar { .. } => "Environment variable missing error.",
+                Self::Load { .. } => "Loading",
+                Self::Read { .. } => "Reading",
+                Self::ParseInt { .. } => "Integer parsing",
+                Self::ParseFloat { .. } => "Float parsing",
+                Self::Write { .. } => "Writing",
+                Self::EnvVar { .. } => "Environment variable missing",
+            },
+            match self {
+                Self::Load { 0: err } => format!("{:?}", err),
+                Self::Read { 0: err } => format!("{:?}", err),
+                Self::ParseInt { 0: err } => format!("{:?}", err),
+                Self::ParseFloat { 0: err } => format!("{:?}", err),
+                Self::Write { 0: err } => format!("{:?}", err),
+                Self::EnvVar { 0: err } => format!("{:?}", err),
             }
         )
     }

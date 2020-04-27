@@ -1,18 +1,19 @@
 //! Constructor methods.
 
 use crate::{
-    settings::Adaptive as Settings, Aabb, Collide, Group, Mesh, Pos3, Set, SmoothTriangle,
+    settings::Adaptive as Settings, Aabb, Collide, Group, Mesh, Pos3, Scene, Set, SmoothTriangle,
 };
 
 impl<'a> super::Adaptive<'a> {
     /// Construct a new adaptive grid.
     #[inline]
     #[must_use]
-    pub fn new_root(settings: &Settings, surfs: &'a Set<Vec<Mesh>>) -> Self {
-        let boundary = Self::init_boundary(settings, surfs);
+    pub fn new_root(settings: &Settings, scene: &'a Scene) -> Self {
+        let mut boundary = scene.boundary().clone();
+        boundary.expand(settings.padding());
 
         let mut tris = Vec::new();
-        for (group, meshes) in surfs {
+        for (group, meshes) in scene.surfs() {
             for mesh in meshes {
                 tris.reserve(mesh.tris().len());
                 for tri in mesh.tris() {
@@ -23,49 +24,6 @@ impl<'a> super::Adaptive<'a> {
         let children = Self::init_children(settings, &boundary, 0, &tris);
 
         Self::Root { boundary, children }
-    }
-
-    /// Initialise the boundary encompassing all of the mesh vertices.
-    #[inline]
-    #[must_use]
-    fn init_boundary(settings: &Settings, surfs: &Set<Vec<Mesh>>) -> Aabb {
-        let mut mins = None;
-        let mut maxs = None;
-
-        for meshes in surfs.values() {
-            for mesh in meshes {
-                let (mesh_mins, mesh_maxs) = mesh.boundary().mins_maxs();
-
-                if mins.is_none() {
-                    mins = Some(mesh_mins);
-                } else {
-                    for (grid_min, mesh_min) in
-                        mins.as_mut().unwrap().iter_mut().zip(mesh_mins.iter())
-                    {
-                        if mesh_min < grid_min {
-                            *grid_min = *mesh_min;
-                        }
-                    }
-                }
-
-                if maxs.is_none() {
-                    maxs = Some(mesh_maxs);
-                } else {
-                    for (grid_max, mesh_max) in
-                        maxs.as_mut().unwrap().iter_mut().zip(mesh_maxs.iter())
-                    {
-                        if mesh_max > grid_max {
-                            *grid_max = *mesh_max;
-                        }
-                    }
-                }
-            }
-        }
-
-        let mut boundary = Aabb::new(mins.unwrap(), maxs.unwrap());
-        boundary.expand(settings.padding());
-
-        boundary
     }
 
     /// Initialise a child cell.

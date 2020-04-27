@@ -4,11 +4,18 @@ use attr::input;
 use dia::*;
 use std::path::{Path, PathBuf};
 
+/// Scene parameters.
+#[input]
+struct SceneParameters {
+    /// Input surfaces.
+    item: Set<Vec<String>>,
+}
+
 /// Input parameters.
 #[input]
 struct Parameters {
-    /// Place holder item.
-    item: u64,
+    /// Scene.
+    scene: SceneParameters,
 }
 
 /// Main function.
@@ -16,7 +23,7 @@ pub fn main() {
     banner::title("Render");
     let (in_dir, _out_dir, params_path) = init();
     let params = input(&in_dir, &params_path);
-    let (_scene) = setup(&params);
+    let (_scene) = setup(&in_dir, &params);
 }
 
 fn init() -> (PathBuf, PathBuf, PathBuf) {
@@ -45,6 +52,9 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     params
 }
 
-fn setup(params: &Parameters) -> Set<Vec<Mesh>> {
-    
+fn setup(_in_dir: &Path, params: &Parameters) {
+    // let surfs = Vec::new();
+    // Scene::load(in_dir.join(), surfs)
+
+    report!(params.scene);
 }
