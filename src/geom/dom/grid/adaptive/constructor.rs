@@ -1,8 +1,6 @@
 //! Constructor methods.
 
-use crate::{
-    settings::Adaptive as Settings, Aabb, Collide, Group, Mesh, Pos3, Scene, Set, SmoothTriangle,
-};
+use crate::{settings::Adaptive as Settings, Aabb, Collide, Group, Pos3, Scene, SmoothTriangle};
 
 impl<'a> super::Adaptive<'a> {
     /// Construct a new adaptive grid.

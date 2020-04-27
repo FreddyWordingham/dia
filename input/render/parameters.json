@@ -1,6 +1,8 @@
 {
     "scene": {
         "surfs": [
+            [0, ["potato", "pies"]],
+            [1, ["apples", "chips"]],
             [2, ["beans", "cheese"]]
         ]
     }

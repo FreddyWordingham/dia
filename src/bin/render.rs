@@ -21,9 +21,9 @@ struct Parameters {
 /// Main function.
 pub fn main() {
     banner::title("Render");
-    let (in_dir, out_dir, params_path) = init();
+    let (in_dir, _out_dir, params_path) = init();
     let params = input(&in_dir, &params_path);
-    let (_scene) = setup(&in_dir, &params);
+    let _scene = setup(&in_dir, &params);
 }
 
 fn init() -> (PathBuf, PathBuf, PathBuf) {
@@ -52,9 +52,17 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     params
 }
 
-fn setup(_in_dir: &Path, params: &Parameters) {
-    // let surfs = Vec::new();
-    // Scene::load(in_dir.join(), surfs)
+fn setup(in_dir: &Path, params: &Parameters) -> Scene {
+    let mut names: Set<Vec<String>> = Set::new();
+    for (group, meshes) in &params.scene.surfs {
+        for mesh in meshes {
+            if let Some(entry) = names.get_mut(group) {
+                entry.push(mesh.clone());
+            } else {
+                names.insert(*group, vec![mesh.clone()]);
+            }
+        }
+    }
 
-    report!(params.scene);
+    Scene::load(&in_dir.join("meshes"), names.iter()).expect("Could not load scene.")
 }

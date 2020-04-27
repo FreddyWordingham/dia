@@ -1,6 +1,7 @@
 //! Scene implementation.
 
-use crate::{access, Aabb, Mesh, Set};
+use crate::{access, Aabb, Error, Group, Load, Mesh, Set};
+use std::path::Path;
 
 /// Scene collection.
 pub struct Scene {
@@ -60,5 +61,29 @@ impl Scene {
         }
 
         Aabb::new(mins.unwrap(), maxs.unwrap())
+    }
+
+    /// Load in a set of meshes.
+    #[inline]
+    #[must_use]
+    pub fn load<'a, I>(in_dir: &Path, names: I) -> Result<Self, Error>
+    where
+        I: Iterator<Item = (&'a Group, &'a Vec<String>)>,
+    {
+        let mut surfs: Set<Vec<Mesh>> = Set::new();
+        for (group, meshes) in names {
+            for mesh in meshes {
+                let path = in_dir.join(format!("{}.json", mesh));
+                let mesh: Mesh = Mesh::load(&path)?;
+
+                if let Some(entry) = surfs.get_mut(group) {
+                    entry.push(mesh);
+                } else {
+                    surfs.insert(*group, vec![mesh]);
+                }
+            }
+        }
+
+        Ok(Self::new(surfs))
     }
 }
