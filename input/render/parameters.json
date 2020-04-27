@@ -1,5 +1,8 @@
 {
-    "scene": [
-        [1, ["piece"]]
-    ]
+    "scene": {
+        "surfs": {
+            1,
+            ["string"]
+        }
+    }
 }

@@ -15,6 +15,7 @@ extern crate proc_macro2;
 
 mod input;
 mod load;
+mod output;
 mod save;
 
 use proc_macro::TokenStream;
@@ -25,6 +26,14 @@ use proc_macro::TokenStream;
 #[must_use]
 pub fn input(metadata: TokenStream, input: TokenStream) -> TokenStream {
     input::implementation(&metadata, input)
+}
+
+/// Create the attribute macro output.
+#[proc_macro_attribute]
+#[inline]
+#[must_use]
+pub fn output(metadata: TokenStream, input: TokenStream) -> TokenStream {
+    output::implementation(&metadata, input)
 }
 
 /// Create the attribute macro load.

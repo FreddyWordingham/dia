@@ -6,13 +6,15 @@ use std::path::{Path, PathBuf};
 
 /// Scene parameters.
 #[input]
+#[output]
 struct SceneParameters {
     /// Input surfaces.
-    item: Set<Vec<String>>,
+    surfs: Set<Vec<String>>,
 }
 
 /// Input parameters.
 #[input]
+#[output]
 struct Parameters {
     /// Scene.
     scene: SceneParameters,
