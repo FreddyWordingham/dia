@@ -57,7 +57,4 @@ pub mod properties;
 pub mod scan;
 pub mod search;
 
-pub use self::constructor::*;
-pub use self::properties::*;
-pub use self::scan::*;
-pub use self::search::*;
+pub use self::{constructor::*, properties::*, scan::*, search::*};
