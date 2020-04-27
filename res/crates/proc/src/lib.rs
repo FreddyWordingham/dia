@@ -20,6 +20,7 @@ extern crate proc_macro;
 extern crate proc_macro2;
 
 mod hello_macro;
+mod input;
 mod load;
 mod save;
 
@@ -32,6 +33,14 @@ use crate::proc_macro::TokenStream;
 pub fn hello_derive(input: TokenStream) -> TokenStream {
     let ast = syn::parse(input).expect("Unable to parse token stream.");
     hello_macro::derive_impl(&ast)
+}
+
+/// Create the procedural macro Input.
+#[proc_macro_derive(Input)]
+#[inline]
+#[must_use]
+pub fn input_derive(input: TokenStream) -> TokenStream {
+    input::input_derive_impl(input)
 }
 
 /// Create the procedural macro Load.
