@@ -38,7 +38,7 @@ impl Aabb {
     /// Get mins and maxs together.
     #[inline]
     #[must_use]
-    pub fn mins_maxs(&self) -> (Pos3, Pos3) {
+    pub const fn mins_maxs(&self) -> (Pos3, Pos3) {
         (self.mins, self.maxs)
     }
 
@@ -87,6 +87,7 @@ impl Aabb {
     }
 
     /// Shrink the aabb by a fraction of its lengths, maintaining the central position.
+    #[inline]
     pub fn shrink(&mut self, f: f64) {
         debug_assert!(f > 0.0);
         debug_assert!(f < 1.0);
@@ -98,6 +99,7 @@ impl Aabb {
     }
 
     /// Expand the aabb by a fraction of its lengths, maintaining the central position.
+    #[inline]
     pub fn expand(&mut self, f: f64) {
         debug_assert!(f > 0.0);
 
