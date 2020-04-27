@@ -19,13 +19,11 @@ impl<T: Load> Redirect<T> {
     /// if the redirection can not be opened
     /// or if the data can not be serialised into a valid instance.
     #[inline]
-    #[must_use]
     pub fn load(self, in_dir: &Path) -> Result<T, Error> {
         match self {
             Self::Here(data) => Ok(data),
             Self::File(path) => {
                 let path = in_dir.join(&path);
-                // File::open(path).unwrap();
                 T::load(&path)
             }
         }
