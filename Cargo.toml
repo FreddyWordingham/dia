@@ -9,7 +9,7 @@ license = "license.txt"
 keywords = ["physics", "mcrt", "ode", "diffusion", "rt"]
 categories = ["science", "simulation"]
 edition = "2018"
-default-run = "main"
+default-run = "render"
 
 [dependencies]
 attr = { path = "res/crates/attr" }
