@@ -1,4 +1,4 @@
-//! Transform implementation.
+//! Transform form implementation.
 
 use crate::{Trans3 as Trans3Inst, Vec3};
 use attr::load;
