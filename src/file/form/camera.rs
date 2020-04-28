@@ -1,6 +1,6 @@
 //! Camera form implementation.
 
-use crate::{Camera as CameraInst, Pos3};
+use crate::{AspectRatio, Camera as CameraInst, Focus, Lens, Pos3, Sensor};
 use attr::load;
 
 /// Loadable camera structure.
@@ -10,6 +10,12 @@ pub struct Camera {
     pos: Pos3,
     /// Target point.
     tar: Pos3,
+    /// Horizontal field of view [deg].
+    fov: f64,
+    /// Aspect ratio.
+    aspect_ratio: AspectRatio,
+    /// Horizontal resolution.
+    res: usize,
 }
 
 impl Camera {
@@ -17,6 +23,10 @@ impl Camera {
     #[inline]
     #[must_use]
     pub fn build(&self) -> CameraInst {
-        CameraInst::new(self.pos, self.tar)
+        let focus = Focus::new(self.pos, self.tar);
+        let lens = Lens::new(self.fov.to_radians());
+        let sensor = Sensor::new(&self.aspect_ratio, self.res);
+
+        CameraInst::new(focus, lens, sensor)
     }
 }

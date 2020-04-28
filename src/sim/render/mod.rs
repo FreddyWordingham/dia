@@ -1,5 +1,5 @@
 //! Rendering module.
 
-pub mod obs;
+pub mod camera;
 
-pub use self::obs::*;
+pub use self::camera::*;

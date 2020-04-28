@@ -1,16 +1,16 @@
-//! Camera implementation.
+//! Focus implementation.
 
 use crate::{access, Dir3, Orient, Pos3, Ray};
 
-/// Camera structure.
-pub struct Camera {
+/// Focus structure.
+pub struct Focus {
     /// Orientation.
     orient: Orient,
     /// Target point.
     tar: Pos3,
 }
 
-impl Camera {
+impl Focus {
     access!(orient, Orient);
     access!(tar, Pos3);
 
