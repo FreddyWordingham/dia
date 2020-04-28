@@ -172,6 +172,7 @@ dependencies = [
  "lazy_static",
  "nalgebra",
  "ndarray",
+ "netcdf",
  "proc",
  "rand",
  "serde",
@@ -355,6 +356,23 @@ dependencies = [
  "rayon",
  "serde",
 ]
+
+[[package]]
+name = "netcdf"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "52e5aa57d91dbd2a88ebaa1ded408427d2ccc71d4df7724ff4fafc83a244cce8"
+dependencies = [
+ "lazy_static",
+ "ndarray",
+ "netcdf-sys",
+]
+
+[[package]]
+name = "netcdf-sys"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0136debf038071235b2e9156be56bb4d5b9efaf6f474a6b51fd45fb07fd8664f"
 
 [[package]]
 name = "num-complex"
@@ -653,9 +671,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.51"
+version = "1.0.52"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "da07b57ee2623368351e9a0488bb0b261322a15a6e0ae53e243cbdc0f4208da9"
+checksum = "a7894c8ed05b7a3a279aeb79025fdec1d3158080b75b98a08faf2806bb799edd"
 dependencies = [
  "itoa",
  "ryu",
@@ -699,9 +717,9 @@ dependencies = [
 
 [[package]]
 name = "terminal_size"
-version = "0.1.11"
+version = "0.1.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "248dbcb93f8697c50b85b0492cf559b94667eb24c26934eae73ae5673175ebf6"
+checksum = "8038f95fc7a6f351163f4b964af631bd26c9e828f7db085f2a84aca56f70d13b"
 dependencies = [
  "libc",
  "winapi",

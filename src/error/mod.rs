@@ -12,8 +12,10 @@ pub enum Error {
     ParseInt(std::num::ParseIntError),
     /// Float parsing error.
     ParseFloat(std::num::ParseFloatError),
-    /// Writing error.
-    Write(serde_json::Error),
+    /// Json writing error.
+    WriteJson(serde_json::Error),
+    /// NetCDF writing error.
+    WriteNetCDF(netcdf::error::Error),
     /// Environment variable error.
     EnvVar(std::env::VarError),
     // /// Unexpected None error.
@@ -35,7 +37,8 @@ impl_from_for_err!(Self::Load, std::io::Error);
 impl_from_for_err!(Self::Read, json5::Error);
 impl_from_for_err!(Self::ParseInt, std::num::ParseIntError);
 impl_from_for_err!(Self::ParseFloat, std::num::ParseFloatError);
-impl_from_for_err!(Self::Write, serde_json::Error);
+impl_from_for_err!(Self::WriteJson, serde_json::Error);
+impl_from_for_err!(Self::WriteNetCDF, netcdf::error::Error);
 impl_from_for_err!(Self::EnvVar, std::env::VarError);
 
 // TODO: This Requires nightly compiler but would allow us properly to handle unwraping None's as errors.
@@ -53,7 +56,8 @@ impl Debug for Error {
                 Self::Read { .. } => "Reading",
                 Self::ParseInt { .. } => "Integer parsing",
                 Self::ParseFloat { .. } => "Float parsing",
-                Self::Write { .. } => "Writing",
+                Self::WriteJson { .. } => "JSON writing",
+                Self::WriteNetCDF { .. } => "NetCDF writing",
                 Self::EnvVar { .. } => "Environment variable missing",
             },
             match self {
@@ -61,7 +65,8 @@ impl Debug for Error {
                 Self::Read { 0: err } => format!("{:?}", err),
                 Self::ParseInt { 0: err } => format!("{:?}", err),
                 Self::ParseFloat { 0: err } => format!("{:?}", err),
-                Self::Write { 0: err } => format!("{:?}", err),
+                Self::WriteJson { 0: err } => format!("{:?}", err),
+                Self::WriteNetCDF { 0: err } => format!("{:?}", err),
                 Self::EnvVar { 0: err } => format!("{:?}", err),
             }
         )
