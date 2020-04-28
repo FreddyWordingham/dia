@@ -18,6 +18,8 @@ struct Parameters {
     grid: settings::Adaptive,
     /// Scene.
     scene: SceneParameters,
+    /// Camera.
+    cam: form::Camera,
 }
 
 /// Main function.
@@ -26,7 +28,7 @@ pub fn main() {
     let (in_dir, _out_dir, params_path) = init();
     let params = input(&in_dir, &params_path);
     let scene = setup(&in_dir, &params);
-    let _grid = building(&params.grid, &scene);
+    let (_grid, _cam) = building(&params, &scene);
 }
 
 fn init() -> (PathBuf, PathBuf, PathBuf) {
@@ -80,10 +82,10 @@ fn setup(in_dir: &Path, params: &Parameters) -> Scene {
     scene
 }
 
-fn building<'a>(settings: &settings::Adaptive, scene: &'a Scene) -> Adaptive<'a> {
+fn building<'a>(params: &Parameters, scene: &'a Scene) -> (Adaptive<'a>, Camera) {
     banner::section("Building");
     banner::sub_section("Adaptive grid");
-    let grid = Adaptive::new_root(settings, scene);
+    let grid = Adaptive::new_root(&params.grid, scene);
 
     report!("max depth", grid.max_depth());
     report!("num cells", grid.num_cells());
@@ -91,5 +93,17 @@ fn building<'a>(settings: &settings::Adaptive, scene: &'a Scene) -> Adaptive<'a>
     report!("num tri refs", grid.num_tri_refs());
     report!("ave leaf tris", grid.ave_leaf_tris());
 
-    grid
+    banner::sub_section("Camera");
+    let cam = params.cam.build();
+
+    report!("cam pos", cam.focus().orient().pos());
+    report!("tar pos", cam.focus().tar());
+    report!("field of view", cam.lens().fov(), "rad");
+    report!(
+        "resolution",
+        format!("{}x{}", cam.sensor().res().0, cam.sensor().res().1)
+    );
+    report!("total pixels", cam.sensor().num_pixels());
+
+    (grid, cam)
 }

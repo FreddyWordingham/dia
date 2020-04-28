@@ -8,5 +8,12 @@
         "tar_tris": 5,
         "max_depth": 6,
         "padding": 0.01
+    },
+    "cam": {
+        "pos": [2.0, 1.0, 3.0],
+        "tar": [0.0, 0.0, 0.0],
+        "fov": 90.0,
+        "aspect_ratio": "Square",
+        "res": 128
     }
 }

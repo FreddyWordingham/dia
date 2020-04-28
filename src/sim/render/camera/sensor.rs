@@ -19,4 +19,11 @@ impl Sensor {
 
         Self { res }
     }
+
+    /// Calculate the total number of pixels.
+    #[inline]
+    #[must_use]
+    pub fn num_pixels(&self) -> usize {
+        self.res.0 * self.res.1
+    }
 }
