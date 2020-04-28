@@ -4,9 +4,7 @@ pub mod focus;
 pub mod lens;
 pub mod sensor;
 
-pub use self::focus::*;
-pub use self::lens::*;
-pub use self::sensor::*;
+pub use self::{focus::*, lens::*, sensor::*};
 
 use crate::access;
 

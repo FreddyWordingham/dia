@@ -16,6 +16,8 @@ pub enum Error {
     WriteJson(serde_json::Error),
     /// NetCDF writing error.
     WriteNetCDF(netcdf::error::Error),
+    /// PNG writing error.
+    WritePng(png::EncodingError),
     /// Environment variable error.
     EnvVar(std::env::VarError),
     // /// Unexpected None error.
@@ -39,6 +41,7 @@ impl_from_for_err!(Self::ParseInt, std::num::ParseIntError);
 impl_from_for_err!(Self::ParseFloat, std::num::ParseFloatError);
 impl_from_for_err!(Self::WriteJson, serde_json::Error);
 impl_from_for_err!(Self::WriteNetCDF, netcdf::error::Error);
+impl_from_for_err!(Self::WritePng, png::EncodingError);
 impl_from_for_err!(Self::EnvVar, std::env::VarError);
 
 // TODO: This Requires nightly compiler but would allow us properly to handle unwraping None's as errors.
@@ -58,6 +61,7 @@ impl Debug for Error {
                 Self::ParseFloat { .. } => "Float parsing",
                 Self::WriteJson { .. } => "JSON writing",
                 Self::WriteNetCDF { .. } => "NetCDF writing",
+                Self::WritePng { .. } => "PNG writing",
                 Self::EnvVar { .. } => "Environment variable missing",
             },
             match self {
@@ -67,6 +71,7 @@ impl Debug for Error {
                 Self::ParseFloat { 0: err } => format!("{:?}", err),
                 Self::WriteJson { 0: err } => format!("{:?}", err),
                 Self::WriteNetCDF { 0: err } => format!("{:?}", err),
+                Self::WritePng { 0: err } => format!("{:?}", err),
                 Self::EnvVar { 0: err } => format!("{:?}", err),
             }
         )

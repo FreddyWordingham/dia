@@ -1,12 +1,17 @@
 //! Save trait.
 
 use crate::{Error, X, Y, Z};
-use ndarray::{Array2, Array3};
-use netcdf::variable::Numeric;
+use ndarray::{Array2, Array3, ShapeBuilder};
+use palette::{LinSrgba, Pixel, Srgba};
+use png::{BitDepth, ColorType, Encoder};
 use serde::Serialize;
 use serde_json::to_string;
-use std::fmt::Debug;
-use std::{fs::write, path::Path};
+use slice_of_array::prelude::*;
+use std::{
+    fs::{write, File},
+    io::BufWriter,
+    path::Path,
+};
 
 /// Types implementing this trait can be saved to file.
 pub trait Save {
@@ -25,7 +30,33 @@ pub fn as_json<T: Serialize>(instance: &T, path: &Path) -> Result<(), Error> {
     Ok(write(path, s)?)
 }
 
-impl<T: Debug + Numeric> Save for Array2<T> {
+impl Save for Array2<LinSrgba> {
+    #[inline]
+    fn save(&self, path: &Path) -> Result<(), Error> {
+        let res = (self.shape()[0], self.shape()[1]);
+        let mut data = Array2::from_elem((res.0, res.1).f(), [0; 4]);
+        for xi in 0..res.0 {
+            for yi in 0..res.1 {
+                let col = self[(xi, yi)];
+                data[(xi, res.1 - yi - 1)] = Srgba::from_linear(col).into_format().into_raw();
+            }
+        }
+
+        let file = File::create(path)?;
+        let w = BufWriter::new(file);
+
+        let mut encoder = Encoder::new(w, res.0 as u32, res.1 as u32);
+        encoder.set_color(ColorType::RGBA);
+        encoder.set_depth(BitDepth::Eight);
+        let mut writer = encoder.write_header()?;
+
+        writer.write_image_data(data.into_raw_vec().flat())?;
+
+        Ok(())
+    }
+}
+
+impl Save for Array2<f64> {
     #[inline]
     fn save(&self, path: &Path) -> Result<(), Error> {
         let mut file = netcdf::create(path)?;
@@ -37,14 +68,14 @@ impl<T: Debug + Numeric> Save for Array2<T> {
         let dim2_name = "y";
         file.add_dimension(dim2_name, shape[Y])?;
 
-        let mut var = file.add_variable::<T>("data", &[dim1_name, dim2_name])?;
+        let mut var = file.add_variable::<f64>("data", &[dim1_name, dim2_name])?;
         var.put_values(self.as_slice().unwrap(), None, None)?;
 
         Ok(())
     }
 }
 
-impl<T: Debug + Numeric> Save for Array3<T> {
+impl Save for Array3<f64> {
     #[inline]
     fn save(&self, path: &Path) -> Result<(), Error> {
         let mut file = netcdf::create(path)?;
@@ -58,7 +89,7 @@ impl<T: Debug + Numeric> Save for Array3<T> {
         let dim3_name = "z";
         file.add_dimension(dim3_name, shape[Z])?;
 
-        let mut var = file.add_variable::<T>("data", &[dim1_name, dim2_name, dim3_name])?;
+        let mut var = file.add_variable::<f64>("data", &[dim1_name, dim2_name, dim3_name])?;
         var.put_values(self.as_slice().unwrap(), None, None)?;
 
         Ok(())
