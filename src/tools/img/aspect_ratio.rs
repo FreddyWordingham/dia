@@ -69,10 +69,10 @@ impl AspectRatio {
     /// Calculate the vertical resolution for a given horizontal resolution.
     #[inline]
     #[must_use]
-    pub fn vert_res(&self, hor_res: usize) -> usize {
-        debug_assert!(hor_res > 0);
+    pub fn vt_res(&self, hr_res: usize) -> usize {
+        debug_assert!(hr_res > 0);
 
-        (self.ratio() * hor_res as f64).ceil() as usize
+        (self.ratio() * hr_res as f64).ceil() as usize
     }
 }
 
