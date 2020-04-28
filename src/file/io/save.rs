@@ -1,7 +1,7 @@
 //! Save trait.
 
-use crate::{Error, X, Y};
-use ndarray::Array2;
+use crate::{Error, X, Y, Z};
+use ndarray::{Array2, Array3};
 use netcdf::variable::Numeric;
 use serde::Serialize;
 use serde_json::to_string;
@@ -38,6 +38,27 @@ impl<T: Debug + Numeric> Save for Array2<T> {
         file.add_dimension(dim2_name, shape[Y])?;
 
         let mut var = file.add_variable::<T>("data", &[dim1_name, dim2_name])?;
+        var.put_values(self.as_slice().unwrap(), None, None)?;
+
+        Ok(())
+    }
+}
+
+impl<T: Debug + Numeric> Save for Array3<T> {
+    #[inline]
+    fn save(&self, path: &Path) -> Result<(), Error> {
+        let mut file = netcdf::create(path).expect("Unable to create file.");
+
+        let shape = self.shape();
+
+        let dim1_name = "x";
+        file.add_dimension(dim1_name, shape[X])?;
+        let dim2_name = "y";
+        file.add_dimension(dim2_name, shape[Y])?;
+        let dim3_name = "z";
+        file.add_dimension(dim3_name, shape[Z])?;
+
+        let mut var = file.add_variable::<T>("data", &[dim1_name, dim2_name, dim3_name])?;
         var.put_values(self.as_slice().unwrap(), None, None)?;
 
         Ok(())
