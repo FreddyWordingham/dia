@@ -25,19 +25,15 @@ struct Parameters {
 /// Main function.
 pub fn main() {
     banner::title("Render");
-    let (in_dir, _out_dir, params_path) = init();
+    let (params_path, in_dir, _out_dir) = init();
     let params = input(&in_dir, &params_path);
     let scene = setup(&in_dir, &params);
     let (_grid, _cam) = building(&params, &scene);
 }
 
+/// Initialise the command line arguments and directories.
 fn init() -> (PathBuf, PathBuf, PathBuf) {
     banner::section("Initialisation");
-    banner::sub_section("Directories");
-    let (in_dir, out_dir) = dir::io_dirs(None, None).expect("Could not initialise directories");
-    report!("in_dir", in_dir.display());
-    report!("out_dir", out_dir.display());
-
     banner::sub_section("Command line args");
     args!(bin_path: PathBuf;
         params_path: PathBuf
@@ -45,9 +41,15 @@ fn init() -> (PathBuf, PathBuf, PathBuf) {
     report!(bin_path);
     report!(params_path);
 
-    (in_dir, out_dir, params_path)
+    banner::sub_section("Directories");
+    let (in_dir, out_dir) = dir::io_dirs(None, None).expect("Could not initialise directories");
+    report!("in_dir", in_dir.display());
+    report!("out_dir", out_dir.display());
+
+    (params_path, in_dir, out_dir)
 }
 
+/// Load the input files.
 fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::section("Input");
     banner::sub_section("Parameters");
@@ -62,6 +64,7 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     params
 }
 
+/// Load the resource files.
 fn setup(in_dir: &Path, params: &Parameters) -> Scene {
     banner::section("Input");
     banner::sub_section("Scene");
@@ -82,6 +85,7 @@ fn setup(in_dir: &Path, params: &Parameters) -> Scene {
     scene
 }
 
+/// Build the simulation structures.
 fn building<'a>(params: &Parameters, scene: &'a Scene) -> (Adaptive<'a>, Camera) {
     banner::section("Building");
     banner::sub_section("Adaptive grid");
