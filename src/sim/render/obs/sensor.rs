@@ -14,7 +14,7 @@ impl Sensor {
     /// Construct a new instance.
     #[inline]
     #[must_use]
-    pub fn new(aspect_ratio: AspectRatio, hr_res: usize) -> Self {
+    pub fn new(aspect_ratio: &AspectRatio, hr_res: usize) -> Self {
         let res = (hr_res, aspect_ratio.vt_res(hr_res));
 
         Self { res }
