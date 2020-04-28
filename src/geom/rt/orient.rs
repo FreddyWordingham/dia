@@ -35,4 +35,18 @@ impl Orient {
             right,
         }
     }
+
+    /// Set the orientation's forward direction and update the right direction.
+    #[inline]
+    pub fn set_forward(&mut self, dir: Dir3) {
+        self.forward = dir;
+        self.right = Dir3::new_normalize(self.forward.cross(&self.up));
+    }
+
+    /// Set the orientation's up direction and update the right direction.
+    #[inline]
+    pub fn set_up(&mut self, dir: Dir3) {
+        self.up = dir;
+        self.right = Dir3::new_normalize(self.forward.cross(&self.up));
+    }
 }
