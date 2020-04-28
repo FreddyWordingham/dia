@@ -114,6 +114,14 @@ fn build<'a>(params: &Parameters, scene: &'a Scene) -> (Adaptive<'a>, render::Ca
     );
     report!("total pixels", cam.sensor().num_pixels());
 
+    banner::sub_section("Colours");
+    let cols = params.cols.build();
+
+    for (group, grad) in &cols {
+        let name = format!("grad [{}]", group);
+        report!(name, gradient::to_string(grad, 60));
+    }
+
     (grid, cam)
 }
 
