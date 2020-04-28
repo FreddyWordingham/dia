@@ -28,7 +28,7 @@ pub fn as_json<T: Serialize>(instance: &T, path: &Path) -> Result<(), Error> {
 impl<T: Debug + Numeric> Save for Array2<T> {
     #[inline]
     fn save(&self, path: &Path) -> Result<(), Error> {
-        let mut file = netcdf::create(path).expect("Unable to create file.");
+        let mut file = netcdf::create(path)?;
 
         let shape = self.shape();
 
