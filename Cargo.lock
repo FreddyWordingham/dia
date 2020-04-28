@@ -202,12 +202,15 @@ dependencies = [
  "json5",
  "lazy_static",
  "nalgebra",
- "ndarray",
+ "ndarray 0.13.1",
+ "ndarray-parallel",
  "netcdf",
+ "num_cpus",
  "palette",
  "png",
  "proc",
  "rand",
+ "rayon",
  "serde",
  "serde_json",
  "slice-of-array",
@@ -301,6 +304,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "itertools"
+version = "0.7.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0d47946d458e94a1b7bcabbf6521ea7c037062c81f534615abcad76e84d4970d"
+dependencies = [
+ "either",
+]
+
+[[package]]
 name = "itoa"
 version = "0.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -343,11 +355,20 @@ checksum = "3e2e65a1a2e43cfcb47a895c4c8b10d1f4a61097f9f254f183aee60cad9c651d"
 
 [[package]]
 name = "matrixmultiply"
+version = "0.1.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dcad67dcec2d58ff56f6292582377e6921afdf3bfbd533e26fb8900ae575e002"
+dependencies = [
+ "rawpointer 0.1.0",
+]
+
+[[package]]
+name = "matrixmultiply"
 version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d4f7ec66360130972f34830bfad9ef05c6610a43938a467bcc9ab9369ab3478f"
 dependencies = [
- "rawpointer",
+ "rawpointer 0.2.1",
 ]
 
 [[package]]
@@ -373,7 +394,7 @@ checksum = "d630f146ae751cfb43db9e0ad6bd73819a546a38baa5d4a9de69823c389c78a1"
 dependencies = [
  "approx",
  "generic-array 0.13.2",
- "matrixmultiply",
+ "matrixmultiply 0.2.3",
  "num-complex",
  "num-rational",
  "num-traits",
@@ -387,17 +408,39 @@ dependencies = [
 
 [[package]]
 name = "ndarray"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7cf380a8af901ad627594013a3bbac903ae0a6f94e176e47e46b5bbc1877b928"
+dependencies = [
+ "itertools",
+ "matrixmultiply 0.1.15",
+ "num-complex",
+ "num-traits",
+]
+
+[[package]]
+name = "ndarray"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ac06db03ec2f46ee0ecdca1a1c34a99c0d188a0d83439b84bf0cb4b386e4ab09"
 dependencies = [
- "matrixmultiply",
+ "matrixmultiply 0.2.3",
  "num-complex",
  "num-integer",
  "num-traits",
- "rawpointer",
+ "rawpointer 0.2.1",
  "rayon",
  "serde",
+]
+
+[[package]]
+name = "ndarray-parallel"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a9444c9e6c2f9d8190cef4734cd2359bc79e16285db578eea76e0ea3dcad7d68"
+dependencies = [
+ "ndarray 0.12.1",
+ "rayon",
 ]
 
 [[package]]
@@ -407,7 +450,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "52e5aa57d91dbd2a88ebaa1ded408427d2ccc71d4df7724ff4fafc83a244cce8"
 dependencies = [
  "lazy_static",
- "ndarray",
+ "ndarray 0.13.1",
  "netcdf-sys",
 ]
 
@@ -718,6 +761,12 @@ checksum = "16abd0c1b639e9eb4d7c50c0b8100b0d0f849be2349829c740fe8e6eb4816429"
 dependencies = [
  "rand_core",
 ]
+
+[[package]]
+name = "rawpointer"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ebac11a9d2e11f2af219b8b8d833b76b1ea0e054aa0e8d8e9e4cbde353bdf019"
 
 [[package]]
 name = "rawpointer"
