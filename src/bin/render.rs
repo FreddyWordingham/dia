@@ -20,6 +20,8 @@ struct Parameters {
     scene: SceneParameters,
     /// Camera.
     cam: form::Camera,
+    /// Colours.
+    cols: form::Colours,
 }
 
 /// Main function.
