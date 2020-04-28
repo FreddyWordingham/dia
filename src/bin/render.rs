@@ -72,7 +72,7 @@ fn setup(in_dir: &Path, params: &Parameters) -> Scene {
     }
     let scene = Scene::load(&in_dir.join("meshes"), names.iter()).expect("Could not load scene.");
 
-    report!(scene.surfs().len());
+    report!("num groups", scene.surfs().len());
 
     scene
 }
@@ -82,11 +82,11 @@ fn building<'a>(settings: &settings::Adaptive, scene: &'a Scene) -> Adaptive<'a>
     banner::sub_section("Adaptive grid");
     let grid = Adaptive::new_root(settings, scene);
 
-    report!(grid.max_depth());
-    report!(grid.num_cells());
-    report!(grid.num_leaf_cells());
-    report!(grid.num_tri_refs());
-    report!(grid.ave_leaf_tris());
+    report!("max depth", grid.max_depth());
+    report!("num cells", grid.num_cells());
+    report!("num leaf cells", grid.num_leaf_cells());
+    report!("num tri refs", grid.num_tri_refs());
+    report!("ave leaf tris", grid.ave_leaf_tris());
 
     grid
 }
