@@ -19,7 +19,7 @@ impl<'a> super::Adaptive<'a> {
                 }
             }
         }
-        let children = Self::init_children(settings, &boundary, 0, &tris);
+        let children = Self::init_children(settings, &boundary, 1, &tris);
 
         Self::Root { boundary, children }
     }
