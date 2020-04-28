@@ -95,14 +95,14 @@ fn building<'a>(params: &Parameters, scene: &'a Scene) -> (Adaptive<'a>, Camera)
     report!("num cells", grid.num_cells());
     report!("num leaf cells", grid.num_leaf_cells());
     report!("num tri refs", grid.num_tri_refs());
-    report!("ave leaf tris", grid.ave_leaf_tris());
+    report!("ave leaf tris", format!("{:.2}", grid.ave_leaf_tris()));
 
     banner::sub_section("Camera");
     let cam = params.cam.build();
 
-    report!("cam pos", cam.focus().orient().pos());
-    report!("tar pos", cam.focus().tar());
-    report!("field of view", cam.lens().fov(), "rad");
+    report!("position", cam.focus().orient().pos());
+    report!("target", cam.focus().tar());
+    report!("field of view", cam.lens().fov().to_degrees(), "deg");
     report!(
         "resolution",
         format!("{}x{}", cam.sensor().res().0, cam.sensor().res().1)
