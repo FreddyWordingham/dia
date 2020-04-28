@@ -52,7 +52,9 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     let params =
         Parameters::load(&in_dir.join(params_path)).expect("Could not load parameters file");
 
-    report!(params);
+    report!("tar tris", params.grid.max_depth());
+    report!("tar tris", params.grid.tar_tris());
+    report!("tar tris", params.grid.padding());
 
     params
 }
