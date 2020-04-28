@@ -2,6 +2,8 @@
 
 use attr::input;
 use dia::*;
+use ndarray::Array2;
+use palette::LinSrgba;
 use std::path::{Path, PathBuf};
 
 /// Scene parameters.
@@ -28,7 +30,8 @@ pub fn main() {
     let (params_path, in_dir, _out_dir) = init();
     let params = input(&in_dir, &params_path);
     let scene = setup(&in_dir, &params);
-    let (_grid, _cam) = building(&params, &scene);
+    let (grid, cam) = build(&params, &scene);
+    let img = render(&grid, &cam);
 }
 
 /// Initialise the command line arguments and directories.
@@ -86,7 +89,7 @@ fn setup(in_dir: &Path, params: &Parameters) -> Scene {
 }
 
 /// Build the simulation structures.
-fn building<'a>(params: &Parameters, scene: &'a Scene) -> (Adaptive<'a>, Camera) {
+fn build<'a>(params: &Parameters, scene: &'a Scene) -> (Adaptive<'a>, render::Camera) {
     banner::section("Building");
     banner::sub_section("Adaptive grid");
     let grid = Adaptive::new_root(&params.grid, scene);
@@ -110,4 +113,12 @@ fn building<'a>(params: &Parameters, scene: &'a Scene) -> (Adaptive<'a>, Camera)
     report!("total pixels", cam.sensor().num_pixels());
 
     (grid, cam)
+}
+
+/// Render an image.
+fn render(grid: &Adaptive, cam: &render::Camera) -> Array2<LinSrgba> {
+    banner::section("Rendering");
+    let img = render::run(&grid, &cam);
+
+    img
 }

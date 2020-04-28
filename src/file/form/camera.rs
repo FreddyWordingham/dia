@@ -1,6 +1,9 @@
 //! Camera form implementation.
 
-use crate::{AspectRatio, Camera as CameraInst, Focus, Lens, Pos3, Sensor};
+use crate::{
+    render::{Camera as CameraInst, Focus, Lens, Sensor},
+    AspectRatio, Pos3,
+};
 use attr::load;
 
 /// Loadable camera structure.
