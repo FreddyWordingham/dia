@@ -23,7 +23,7 @@ impl Orient {
     /// Construct a new instance.
     #[inline]
     #[must_use]
-    pub const fn new(ray: Ray) -> Self {
+    pub fn new(ray: Ray) -> Self {
         let (pos, forward) = ray.destruct();
         let up = Vec3::z_axis();
         let right = Dir3::new_normalize(forward.cross(&up));

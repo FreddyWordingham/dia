@@ -10,10 +10,6 @@ pub struct Camera {
     pos: Pos3,
     /// Target point.
     tar: Pos3,
-    /// Image resolution.
-    res: (usize, usize),
-    /// Horizontal field of view.
-    fov: f64,
 }
 
 impl Camera {
@@ -21,6 +17,6 @@ impl Camera {
     #[inline]
     #[must_use]
     pub fn build(&self) -> CameraInst {
-        CameraInst::new(self.pos, self.tar, self.res, self.fov)
+        CameraInst::new(self.pos, self.tar)
     }
 }

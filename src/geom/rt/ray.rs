@@ -21,10 +21,10 @@ impl Ray {
         Self { pos, dir }
     }
 
-    /// Deconstruct self into components.
+    /// Destruct self into components.
     #[inline]
     #[must_use]
-    pub fn destruct(self) -> (Pos3, Dir3) {
+    pub const fn destruct(self) -> (Pos3, Dir3) {
         (self.pos, self.dir)
     }
 
