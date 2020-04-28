@@ -4,7 +4,9 @@ pub mod camera;
 
 pub use self::camera::*;
 
+use crate::Image;
 
-pub fn run() -> Array2<LinSrgba> {
-    
-}
+/// Render an image.
+#[inline]
+#[must_use]
+pub fn run() -> Image {}

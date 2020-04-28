@@ -2,8 +2,6 @@
 
 use attr::input;
 use dia::*;
-use ndarray::Array2;
-use palette::LinSrgba;
 use std::path::{Path, PathBuf};
 
 /// Scene parameters.
@@ -116,7 +114,7 @@ fn build<'a>(params: &Parameters, scene: &'a Scene) -> (Adaptive<'a>, render::Ca
 }
 
 /// Render an image.
-fn render(grid: &Adaptive, cam: &render::Camera) -> Array2<LinSrgba> {
+fn render(grid: &Adaptive, cam: &render::Camera) -> Image {
     banner::section("Rendering");
     let img = render::run(&grid, &cam);
 
