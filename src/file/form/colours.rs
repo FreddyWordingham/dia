@@ -8,7 +8,7 @@ use palette::{Gradient, LinSrgba};
 #[load]
 pub struct Colours {
     /// Gradient mappings.
-    grads: Vec<(Group, Vec<[f32; 4]>)>,
+    grads: Vec<(Group, Vec<String>)>,
 }
 
 impl Colours {
@@ -28,11 +28,13 @@ impl Colours {
                 Gradient::new(
                     cols.iter()
                         .map(|col| {
+                            let col = hex::decode(col).unwrap();
+
                             LinSrgba::new(
-                                col[0] as f32,
-                                col[1] as f32,
-                                col[2] as f32,
-                                col[3] as f32,
+                                f32::from(col[0]),
+                                f32::from(col[1]),
+                                f32::from(col[2]),
+                                f32::from(col[3]),
                             )
                         })
                         .collect::<Vec<_>>(),
