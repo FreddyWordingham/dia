@@ -8,25 +8,25 @@ pub struct Orient {
     pos: Pos3,
     /// Forward direction.
     forward: Dir3,
-    /// Up direction.
-    up: Dir3,
     /// Right direction.
     right: Dir3,
+    /// Up direction.
+    up: Dir3,
 }
 
 impl Orient {
     access!(pos, Pos3);
     access!(forward, Dir3);
-    access!(up, Dir3);
     access!(right, Dir3);
+    access!(up, Dir3);
 
     /// Construct a new instance.
     #[inline]
     #[must_use]
     pub fn new(ray: Ray) -> Self {
         let (pos, forward) = ray.destruct();
-        let up = Vec3::z_axis();
-        let right = Dir3::new_normalize(forward.cross(&up));
+        let right = Dir3::new_normalize(forward.cross(&Vec3::z_axis()));
+        let up = Dir3::new_normalize(right.cross(&forward));
 
         Self {
             pos,
@@ -34,19 +34,5 @@ impl Orient {
             up,
             right,
         }
-    }
-
-    /// Set the orientation's forward direction and update the right direction.
-    #[inline]
-    pub fn set_forward(&mut self, dir: Dir3) {
-        self.forward = dir;
-        self.right = Dir3::new_normalize(self.forward.cross(&self.up));
-    }
-
-    /// Set the orientation's up direction and update the right direction.
-    #[inline]
-    pub fn set_up(&mut self, dir: Dir3) {
-        self.up = dir;
-        self.right = Dir3::new_normalize(self.forward.cross(&self.up));
     }
 }
