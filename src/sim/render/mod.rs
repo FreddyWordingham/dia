@@ -4,7 +4,7 @@ pub mod camera;
 
 pub use self::camera::*;
 
-use crate::{Adaptive, Image, ParBar};
+use crate::{Adaptive, Error, Image, ParBar};
 use num_cpus;
 use palette::{Gradient, LinSrgba};
 use rayon::prelude::*;
@@ -16,7 +16,7 @@ const BLOCK_SIZE: u64 = 128;
 /// Render an image.
 #[inline]
 #[must_use]
-pub fn run(grid: &Adaptive, cam: &Camera) -> Image {
+pub fn run(grid: &Adaptive, cam: &Camera) -> Result<Image, Error> {
     let num_pixels = cam.sensor().num_pixels();
     let pb = ParBar::new("Rendering", num_pixels as u64);
     let pb = Arc::new(Mutex::new(pb));
@@ -24,24 +24,27 @@ pub fn run(grid: &Adaptive, cam: &Camera) -> Image {
     let threads: Vec<usize> = (0..num_cpus::get()).collect();
     let mut images: Vec<_> = threads
         .par_iter()
-        .map(|id| run_thread(*id, &Arc::clone(&pb), grid, cam))
+        .map(|id| run_thread(*id, &Arc::clone(&pb), grid, cam).unwrap())
         .collect();
-    pb.lock()
-        .expect("Unable to lock progress bar.")
-        .finish_with_message("Render complete");
+    pb.lock()?.finish_with_message("Render complete");
 
     let mut base = images.pop().unwrap();
     for img in images {
         base += &img;
     }
 
-    base
+    Ok(base)
 }
 
 /// Render on a single thread.
 #[inline]
 #[must_use]
-fn run_thread(thread_id: usize, pb: &Arc<Mutex<ParBar>>, _grid: &Adaptive, cam: &Camera) -> Image {
+fn run_thread(
+    thread_id: usize,
+    pb: &Arc<Mutex<ParBar>>,
+    _grid: &Adaptive,
+    cam: &Camera,
+) -> Result<Image, Error> {
     let mut img = Image::from_elem(cam.sensor().res(), LinSrgba::default());
 
     let backup = Gradient::new(vec![
@@ -52,7 +55,7 @@ fn run_thread(thread_id: usize, pb: &Arc<Mutex<ParBar>>, _grid: &Adaptive, cam: 
     let hr_res = cam.sensor().res().0;
 
     while let Some((start, end)) = {
-        let mut pb = pb.lock().expect("Could not lock progress bar.");
+        let mut pb = pb.lock()?;
         let b = pb.block(BLOCK_SIZE);
         std::mem::drop(pb);
         b
@@ -64,5 +67,5 @@ fn run_thread(thread_id: usize, pb: &Arc<Mutex<ParBar>>, _grid: &Adaptive, cam: 
         }
     }
 
-    img
+    Ok(img)
 }

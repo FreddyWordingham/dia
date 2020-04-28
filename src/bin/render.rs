@@ -25,11 +25,13 @@ struct Parameters {
 /// Main function.
 pub fn main() {
     banner::title("Render");
-    let (params_path, in_dir, _out_dir) = init();
+    let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
     let scene = setup(&in_dir, &params);
     let (grid, cam) = build(&params, &scene);
     let img = render(&grid, &cam);
+    save(&out_dir, img);
+    banner::section("Finished");
 }
 
 /// Initialise the command line arguments and directories.
@@ -116,7 +118,15 @@ fn build<'a>(params: &Parameters, scene: &'a Scene) -> (Adaptive<'a>, render::Ca
 /// Render an image.
 fn render(grid: &Adaptive, cam: &render::Camera) -> Image {
     banner::section("Rendering");
-    let img = render::run(&grid, &cam);
+    let img = render::run(&grid, &cam).expect("Rendering failed.");
 
     img
+}
+
+/// Save the image.
+fn save(out_dir: &Path, img: Image) {
+    banner::section("Saving");
+    let path = out_dir.join("img.png");
+    img.save(&path).expect("Failed to save image.");
+    report!("Image saved at", path.display());
 }
