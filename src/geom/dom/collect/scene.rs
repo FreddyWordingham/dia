@@ -64,8 +64,9 @@ impl Scene {
     }
 
     /// Load in a set of meshes.
+    /// # Errors
+    /// if a mesh can not be loaded from a file.
     #[inline]
-    #[must_use]
     pub fn load<'a, I>(in_dir: &Path, names: I) -> Result<Self, Error>
     where
         I: Iterator<Item = (&'a Group, &'a Vec<String>)>,

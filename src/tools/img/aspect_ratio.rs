@@ -77,6 +77,7 @@ impl AspectRatio {
 }
 
 impl Display for AspectRatio {
+    #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
         write!(
             fmt,

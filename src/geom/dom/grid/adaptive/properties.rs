@@ -4,6 +4,19 @@ impl<'a> super::Adaptive<'a> {
     /// Determine the total number of cells.
     #[inline]
     #[must_use]
+    pub fn max_depth(&self) -> usize {
+        match self {
+            Self::Root { children, .. } => children.iter().map(|c| c.max_depth()).max().unwrap(),
+            Self::Branch { children, .. } => {
+                1 + children.iter().map(|c| c.max_depth()).max().unwrap()
+            }
+            Self::Leaf { .. } | Self::Empty { .. } => 1,
+        }
+    }
+
+    /// Determine the total number of cells.
+    #[inline]
+    #[must_use]
     pub fn num_cells(&self) -> usize {
         match self {
             Self::Root { children, .. } | Self::Branch { children, .. } => {
@@ -23,19 +36,6 @@ impl<'a> super::Adaptive<'a> {
             }
             Self::Leaf { .. } => 1,
             Self::Empty { .. } => 0,
-        }
-    }
-
-    /// Determine the total number of cells.
-    #[inline]
-    #[must_use]
-    pub fn max_depth(&self) -> usize {
-        match self {
-            Self::Root { children, .. } => children.iter().map(|c| c.max_depth()).max().unwrap(),
-            Self::Branch { children, .. } => {
-                1 + children.iter().map(|c| c.max_depth()).max().unwrap()
-            }
-            Self::Leaf { .. } | Self::Empty { .. } => 1,
         }
     }
 
