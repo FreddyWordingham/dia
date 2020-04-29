@@ -24,6 +24,13 @@
             ]
         ]
     },
+    "attrs": {
+        "attributes": [
+            [0, {
+                "transparency": 1.23
+            }]
+        ]
+    },
     "surfs": [
         [0, ["block", "gem"]]
     ]
