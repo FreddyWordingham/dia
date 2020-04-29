@@ -83,7 +83,7 @@ impl Debug for Error {
                 Self::WriteNetCDF { 0: err } => format!("{:?}", err),
                 Self::WritePng { 0: err } => format!("{:?}", err),
                 Self::EnvVar { 0: err } => format!("{:?}", err),
-                Self::Parallel => format!("parallelisation fail"),
+                Self::Parallel => "Parallelisation fail".to_string(),
             }
         )
     }

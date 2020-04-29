@@ -128,9 +128,7 @@ fn build<'a>(params: &Parameters, scene: &'a Scene) -> (Adaptive<'a>, render::Ca
 /// Render an image.
 fn render(grid: &Adaptive, cam: &render::Camera) -> Image {
     banner::section("Rendering");
-    let img = render::run(&grid, &cam).expect("Rendering failed.");
-
-    img
+    render::run(&grid, &cam).expect("Rendering failed.")
 }
 
 /// Save the image.

@@ -24,7 +24,9 @@ impl Camera {
     access!(sensor, Sensor);
 
     /// Construct a new instance.
-    pub fn new(focus: Focus, lens: Lens, sensor: Sensor) -> Self {
+    #[inline]
+    #[must_use]
+    pub const fn new(focus: Focus, lens: Lens, sensor: Sensor) -> Self {
         Self {
             focus,
             lens,

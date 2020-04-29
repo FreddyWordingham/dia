@@ -5,7 +5,6 @@ pub mod camera;
 pub use self::camera::*;
 
 use crate::{Adaptive, Error, Image, ParBar};
-use num_cpus;
 use palette::{Gradient, LinSrgba};
 use rayon::prelude::*;
 use std::sync::{Arc, Mutex};
@@ -14,8 +13,9 @@ use std::sync::{Arc, Mutex};
 const BLOCK_SIZE: u64 = 128;
 
 /// Render an image.
+/// # Errors
+/// if an invalid thread image was created.
 #[inline]
-#[must_use]
 pub fn run(grid: &Adaptive, cam: &Camera) -> Result<Image, Error> {
     let num_pixels = cam.sensor().num_pixels();
     let pb = ParBar::new("Rendering", num_pixels as u64);
@@ -24,21 +24,22 @@ pub fn run(grid: &Adaptive, cam: &Camera) -> Result<Image, Error> {
     let threads: Vec<usize> = (0..num_cpus::get()).collect();
     let mut images: Vec<_> = threads
         .par_iter()
-        .map(|id| run_thread(*id, &Arc::clone(&pb), grid, cam).unwrap())
+        .map(|id| run_thread(*id, &Arc::clone(&pb), grid, cam))
         .collect();
     pb.lock()?.finish_with_message("Render complete");
 
-    let mut base = images.pop().unwrap();
+    let mut base = images.pop().unwrap()?;
     for img in images {
-        base += &img;
+        base += &img?;
     }
 
     Ok(base)
 }
 
 /// Render on a single thread.
+/// # Errors
+/// if image creation fails.
 #[inline]
-#[must_use]
 fn run_thread(
     thread_id: usize,
     pb: &Arc<Mutex<ParBar>>,
