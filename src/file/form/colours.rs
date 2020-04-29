@@ -28,7 +28,7 @@ impl Colours {
                 Gradient::new(
                     cols.iter()
                         .map(|col| {
-                            let col = hex::decode(col).unwrap();
+                            let col = hex::decode(col.replace("#", "")).unwrap();
 
                             LinSrgba::new(
                                 f32::from(col[0]),
