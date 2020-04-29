@@ -1,13 +1,11 @@
 {
-    "scene": {
-        "surfs": [
-            [0, ["block", "gem"]]
-        ]
-    },
     "grid": {
         "tar_tris": 5,
         "max_depth": 6,
         "padding": 0.01
+    },
+    "sett": {
+        "place_holder": 0
     },
     "cam": {
         "pos": [2.0, 1.0, 3.0],
@@ -25,5 +23,8 @@
                 1, ["#ff3838ff", "#cb36b8ff", "#56e940ff", "#40dae9ff", "#7c40e9ff"]
             ]
         ]
-    }
+    },
+    "surfs": [
+        [0, ["block", "gem"]]
+    ]
 }

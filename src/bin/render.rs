@@ -4,24 +4,19 @@ use attr::input;
 use dia::*;
 use std::path::{Path, PathBuf};
 
-/// Scene parameters.
-#[input]
-struct SceneParameters {
-    /// Input surfaces.
-    surfs: Vec<(Group, Vec<String>)>,
-}
-
 /// Input parameters.
 #[input]
 struct Parameters {
     /// Grid settings.
     grid: settings::Adaptive,
-    /// Scene.
-    scene: SceneParameters,
+    /// Global settings.
+    sett: render::Settings,
     /// Camera.
     cam: form::Camera,
     /// Colours.
     cols: form::Colours,
+    /// Input surfaces.
+    surfs: Vec<(Group, Vec<String>)>,
 }
 
 /// Main function.
@@ -74,7 +69,7 @@ fn setup(in_dir: &Path, params: &Parameters) -> Scene {
     banner::section("Input");
     banner::sub_section("Scene");
     let mut names: Set<Vec<String>> = Set::new();
-    for (group, meshes) in &params.scene.surfs {
+    for (group, meshes) in &params.surfs {
         for mesh in meshes {
             if let Some(entry) = names.get_mut(group) {
                 entry.push(mesh.clone());
