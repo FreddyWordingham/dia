@@ -2,6 +2,7 @@
 
 use attr::input;
 use dia::*;
+use palette::{Gradient, LinSrgba};
 use std::path::{Path, PathBuf};
 
 /// Input parameters.
@@ -27,8 +28,8 @@ pub fn main() {
     let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
     let scene = setup(&in_dir, &params);
-    let (grid, sett, cam, attrs) = build(&params, &scene);
-    let img = render(&grid, &sett, &cam, &attrs);
+    let (grid, sett, cam, cols, attrs) = build(&params, &scene);
+    let img = render(&grid, &sett, &cam, &cols, &attrs);
     save(&out_dir, img);
     banner::section("Finished");
 }
@@ -95,6 +96,7 @@ fn build<'a>(
     Adaptive<'a>,
     render::Settings,
     render::Camera,
+    Set<Gradient<LinSrgba>>,
     Set<render::Attribute>,
 ) {
     banner::section("Building");
@@ -133,7 +135,7 @@ fn build<'a>(
     banner::sub_section("Attributes");
     let attrs = params.attrs.build();
 
-    (grid, sett, cam, attrs)
+    (grid, sett, cam, cols, attrs)
 }
 
 /// Render an image.
@@ -141,10 +143,11 @@ fn render(
     grid: &Adaptive,
     sett: &render::Settings,
     cam: &render::Camera,
+    cols: &Set<Gradient<LinSrgba>>,
     attrs: &Set<render::Attribute>,
 ) -> Image {
     banner::section("Rendering");
-    render::run(grid, sett, cam, attrs).expect("Rendering failed.")
+    render::run(grid, sett, cam, cols, attrs).expect("Rendering failed.")
 }
 
 /// Save the image.

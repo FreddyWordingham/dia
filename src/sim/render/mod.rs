@@ -24,6 +24,7 @@ pub fn run(
     grid: &Adaptive,
     sett: &Settings,
     cam: &Camera,
+    cols: &Set<Gradient<LinSrgba>>,
     attrs: &Set<Attribute>,
 ) -> Result<Image, Error> {
     let num_pixels = cam.sensor().num_pixels();
@@ -33,7 +34,7 @@ pub fn run(
     let threads: Vec<usize> = (0..num_cpus::get()).collect();
     let mut images: Vec<_> = threads
         .par_iter()
-        .map(|id| run_thread(*id, &Arc::clone(&pb), grid, sett, cam, attrs))
+        .map(|id| run_thread(*id, &Arc::clone(&pb), grid, sett, cam, cols, attrs))
         .collect();
     pb.lock()?.finish_with_message("Render complete");
 
@@ -55,14 +56,10 @@ fn run_thread(
     _grid: &Adaptive,
     _sett: &Settings,
     cam: &Camera,
+    cols: &Set<Gradient<LinSrgba>>,
     _attrs: &Set<Attribute>,
 ) -> Result<Image, Error> {
     let mut img = Image::from_elem(cam.sensor().res(), LinSrgba::default());
-
-    let backup = Gradient::new(vec![
-        LinSrgba::new(0.0, 0.0, 0.0, 1.0),
-        LinSrgba::new(1.0, 1.0, 1.0, 1.0),
-    ]);
 
     let hr_res = cam.sensor().res().0;
 
@@ -75,7 +72,7 @@ fn run_thread(
         for n in start as usize..end as usize {
             let pixel = (n % hr_res, n / hr_res);
 
-            img[pixel] += backup.get(thread_id as f32 * 1.0 / 8.0);
+            img[pixel] += cols[&0].get(thread_id as f32 * 1.0 / 8.0);
         }
     }
 
