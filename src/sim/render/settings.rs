@@ -5,6 +5,7 @@ use attr::load;
 
 /// Rendering settings structure.
 #[load]
+#[derive(Clone)]
 pub struct Settings {
     /// Place holder.
     place_holder: f64,

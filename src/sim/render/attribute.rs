@@ -5,6 +5,7 @@ use attr::load;
 
 /// Sensor structure.
 #[load]
+#[derive(Clone)]
 pub struct Attribute {
     /// Transparency.
     transparency: f64,

@@ -14,15 +14,15 @@ impl Attributes {
     /// Build an attribute set.
     #[inline]
     #[must_use]
-    pub fn build(self) -> Set<Attribute> {
+    pub fn build(&self) -> Set<Attribute> {
         let mut attributes = Set::new();
 
-        for (group, attr) in self.attributes {
-            if attributes.contains_key(&group) {
+        for (group, attr) in &self.attributes {
+            if attributes.contains_key(group) {
                 panic!("Duplicate attribute for group: {}", group);
             }
 
-            attributes.insert(group, attr);
+            attributes.insert(*group, attr.clone());
         }
 
         attributes

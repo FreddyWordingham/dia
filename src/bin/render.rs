@@ -15,6 +15,8 @@ struct Parameters {
     cam: form::Camera,
     /// Colours.
     cols: form::Colours,
+    /// Attributes.
+    attrs: form::Attributes,
     /// Input surfaces.
     surfs: Vec<(Group, Vec<String>)>,
 }
@@ -25,8 +27,8 @@ pub fn main() {
     let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
     let scene = setup(&in_dir, &params);
-    let (grid, cam) = build(&params, &scene);
-    let img = render(&grid, &cam);
+    let (grid, sett, cam, attrs) = build(&params, &scene);
+    let img = render(&grid, &sett, &cam, &attrs);
     save(&out_dir, img);
     banner::section("Finished");
 }
@@ -86,7 +88,15 @@ fn setup(in_dir: &Path, params: &Parameters) -> Scene {
 }
 
 /// Build the simulation structures.
-fn build<'a>(params: &Parameters, scene: &'a Scene) -> (Adaptive<'a>, render::Camera) {
+fn build<'a>(
+    params: &Parameters,
+    scene: &'a Scene,
+) -> (
+    Adaptive<'a>,
+    render::Settings,
+    render::Camera,
+    Set<render::Attribute>,
+) {
     banner::section("Building");
     banner::sub_section("Adaptive grid");
     let grid = Adaptive::new_root(&params.grid, scene);
@@ -96,6 +106,9 @@ fn build<'a>(params: &Parameters, scene: &'a Scene) -> (Adaptive<'a>, render::Ca
     report!("num leaf cells", grid.num_leaf_cells());
     report!("num tri refs", grid.num_tri_refs());
     report!("ave leaf tris", format!("{:.2}", grid.ave_leaf_tris()));
+
+    banner::sub_section("Settings");
+    let sett = params.sett.clone();
 
     banner::sub_section("Camera");
     let cam = params.cam.build();
@@ -117,13 +130,21 @@ fn build<'a>(params: &Parameters, scene: &'a Scene) -> (Adaptive<'a>, render::Ca
         report!(name, gradient::to_string(grad, 60));
     }
 
-    (grid, cam)
+    banner::sub_section("Attributes");
+    let attrs = params.attrs.build();
+
+    (grid, sett, cam, attrs)
 }
 
 /// Render an image.
-fn render(grid: &Adaptive, cam: &render::Camera) -> Image {
+fn render(
+    grid: &Adaptive,
+    sett: &render::Settings,
+    cam: &render::Camera,
+    attrs: &Set<render::Attribute>,
+) -> Image {
     banner::section("Rendering");
-    render::run(&grid, &cam).expect("Rendering failed.")
+    render::run(grid, sett, cam, attrs).expect("Rendering failed.")
 }
 
 /// Save the image.

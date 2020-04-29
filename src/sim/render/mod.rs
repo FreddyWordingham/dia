@@ -8,7 +8,7 @@ pub use self::attribute::*;
 pub use self::camera::*;
 pub use self::settings::*;
 
-use crate::{Adaptive, Error, Image, ParBar};
+use crate::{Adaptive, Error, Image, ParBar, Set};
 use palette::{Gradient, LinSrgba};
 use rayon::prelude::*;
 use std::sync::{Arc, Mutex};
@@ -20,7 +20,12 @@ const BLOCK_SIZE: u64 = 128;
 /// # Errors
 /// if an invalid thread image was created.
 #[inline]
-pub fn run(grid: &Adaptive, cam: &Camera) -> Result<Image, Error> {
+pub fn run(
+    grid: &Adaptive,
+    sett: &Settings,
+    cam: &Camera,
+    attrs: &Set<Attribute>,
+) -> Result<Image, Error> {
     let num_pixels = cam.sensor().num_pixels();
     let pb = ParBar::new("Rendering", num_pixels as u64);
     let pb = Arc::new(Mutex::new(pb));
@@ -28,7 +33,7 @@ pub fn run(grid: &Adaptive, cam: &Camera) -> Result<Image, Error> {
     let threads: Vec<usize> = (0..num_cpus::get()).collect();
     let mut images: Vec<_> = threads
         .par_iter()
-        .map(|id| run_thread(*id, &Arc::clone(&pb), grid, cam))
+        .map(|id| run_thread(*id, &Arc::clone(&pb), grid, sett, cam, attrs))
         .collect();
     pb.lock()?.finish_with_message("Render complete");
 
@@ -48,7 +53,9 @@ fn run_thread(
     thread_id: usize,
     pb: &Arc<Mutex<ParBar>>,
     _grid: &Adaptive,
+    _sett: &Settings,
     cam: &Camera,
+    _attrs: &Set<Attribute>,
 ) -> Result<Image, Error> {
     let mut img = Image::from_elem(cam.sensor().res(), LinSrgba::default());
 
