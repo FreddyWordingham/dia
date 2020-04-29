@@ -30,12 +30,12 @@ impl Colours {
                         .map(|col| {
                             let col = hex::decode(col.replace("#", "")).unwrap();
 
-                            LinSrgba::new(
-                                f32::from(col[0]),
-                                f32::from(col[1]),
-                                f32::from(col[2]),
-                                f32::from(col[3]),
-                            )
+                            let r = f32::from(col[0]) / 255.0;
+                            let g = f32::from(col[1]) / 255.0;
+                            let b = f32::from(col[2]) / 255.0;
+                            let a = f32::from(col[3]) / 255.0;
+
+                            LinSrgba::new(r, g, b, a)
                         })
                         .collect::<Vec<_>>(),
                 ),
