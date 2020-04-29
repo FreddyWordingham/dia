@@ -1,7 +1,9 @@
 //! Rendering module.
 
+pub mod attribute;
 pub mod camera;
 
+pub use self::attribute::*;
 pub use self::camera::*;
 
 use crate::{Adaptive, Error, Image, ParBar};
