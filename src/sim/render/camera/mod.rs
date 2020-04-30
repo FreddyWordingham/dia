@@ -6,7 +6,7 @@ pub mod sensor;
 
 pub use self::{focus::*, lens::*, sensor::*};
 
-use crate::access;
+use crate::{access, Ray};
 
 /// Camera structure.
 pub struct Camera {
@@ -32,5 +32,15 @@ impl Camera {
             lens,
             sensor,
         }
+    }
+
+    /// Generate the nth camera ray.
+    #[inline]
+    #[must_use]
+    pub fn gen_ray(&self, pixel: (usize, usize)) -> Ray {
+        debug_assert!(pixel.0 < self.sensor.res().0);
+        debug_assert!(pixel.1 < self.sensor.res().1);
+
+         
     }
 }

@@ -35,4 +35,46 @@ impl Orient {
             right,
         }
     }
+
+    /// Create a forward ray.
+    #[inline]
+    #[must_use]
+    pub fn forward_ray(&self) -> Ray {
+        Ray::new(self.pos, self.forward)
+    }
+
+    /// Create a backward ray.
+    #[inline]
+    #[must_use]
+    pub fn backward_ray(&self) -> Ray {
+        Ray::new(self.pos, -self.forward)
+    }
+
+    /// Create a upward ray.
+    #[inline]
+    #[must_use]
+    pub fn up_ray(&self) -> Ray {
+        Ray::new(self.pos, self.up)
+    }
+
+    /// Create a downward ray.
+    #[inline]
+    #[must_use]
+    pub fn down_ray(&self) -> Ray {
+        Ray::new(self.pos, -self.up)
+    }
+
+    /// Create a right ray.
+    #[inline]
+    #[must_use]
+    pub fn right_ray(&self) -> Ray {
+        Ray::new(self.pos, self.right)
+    }
+
+    /// Create a left ray.
+    #[inline]
+    #[must_use]
+    pub fn left_ray(&self) -> Ray {
+        Ray::new(self.pos, -self.right)
+    }
 }
