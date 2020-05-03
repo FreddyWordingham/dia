@@ -21,5 +21,7 @@ pub fn light(ray: &Ray, scene: &Scene, hit: &Hit) -> f64 {
         .max(0.0)
         .powi(scene.sett().spec_pow());
 
-    ambient + diffuse + specular
+    (ambient * scene.sett().light_weights()[0])
+        + (diffuse * scene.sett().light_weights()[1])
+        + (specular * scene.sett().light_weights()[2])
 }

@@ -11,6 +11,8 @@ pub struct Settings {
     bump_dist: f64,
     /// Sun position.
     sun_pos: Pos3,
+    /// Lighting weights.
+    light_weights: [f64; 3],
     /// Specular power.
     spec_pow: i32,
 }
@@ -18,5 +20,6 @@ pub struct Settings {
 impl Settings {
     clone!(bump_dist, f64);
     access!(sun_pos, Pos3);
+    access!(light_weights, [f64; 3]);
     clone!(spec_pow, i32);
 }

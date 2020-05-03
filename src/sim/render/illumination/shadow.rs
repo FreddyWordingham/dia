@@ -11,7 +11,7 @@ pub fn shadow(ray: &Ray, scene: &Scene, hit: &Hit) -> f64 {
     let light_dir = Dir3::new_normalize(scene.sett().sun_pos() - light_ray.pos());
     *light_ray.dir_mut() = light_dir;
 
-    let mut direct = visibility(light_ray, scene);
+    let direct = visibility(light_ray, scene);
 
     direct
 }
@@ -19,7 +19,7 @@ pub fn shadow(ray: &Ray, scene: &Scene, hit: &Hit) -> f64 {
 /// Calculate the visibility of a given ray.
 #[inline]
 #[must_use]
-fn visibility(mut ray: Ray, scene: &Scene) -> f64 {
+fn visibility(ray: Ray, scene: &Scene) -> f64 {
     let mut vis = 1.0;
     while let Some(hit) = scene.grid().observe(ray.clone(), scene.sett().bump_dist()) {
         if vis <= 0.0 {
