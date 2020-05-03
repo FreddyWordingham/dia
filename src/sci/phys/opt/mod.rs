@@ -2,4 +2,4 @@
 
 pub mod crossing;
 
-pub use self::crossing;
+pub use self::crossing::*;

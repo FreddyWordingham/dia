@@ -1,6 +1,6 @@
 //! Crossing implementation.
 
-use crate::{access, clone, Dir3, Vec3};
+use crate::{access, clone, Dir3};
 
 /// Crossing structure implementation.
 /// Optical interface Crossing information structure.
@@ -55,6 +55,7 @@ impl Crossing {
     }
 
     /// Calculate the reflection probability.
+    #[inline]
     #[must_use]
     fn init_ref_prob(n1: f64, n2: f64, ci: f64, ct: f64) -> f64 {
         debug_assert!(n1 >= 0.0);
@@ -72,12 +73,14 @@ impl Crossing {
     }
 
     /// Calculate the reflection direction.
+    #[inline]
     #[must_use]
-    fn init_ref_dir(inc: &Dir3, norm: &Dir3, ci: f64) -> Dir3 {
-        Unit::new_unchecked(inc.into_inner() + (2.0 * ci * norm.into_inner()))
+    pub fn init_ref_dir(inc: &Dir3, norm: &Dir3, ci: f64) -> Dir3 {
+        Dir3::new_unchecked(inc.into_inner() + (2.0 * ci * norm.into_inner()))
     }
 
     /// Calculate the transmission direction.
+    #[inline]
     #[must_use]
     fn init_trans_dir(inc: &Dir3, norm: &Dir3, n: f64, ci: f64, ct: f64) -> Dir3 {
         Dir3::new_unchecked((n * inc.into_inner()) + ((n * ci) - ct) * norm.into_inner())

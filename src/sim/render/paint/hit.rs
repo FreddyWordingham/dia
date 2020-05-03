@@ -1,6 +1,9 @@
 //! Hit-scan painting function.
 
-use crate::{render::Scene, Hit, Ray};
+use crate::{
+    render::{illumination, Scene},
+    Ray,
+};
 use palette::LinSrgba;
 use rand::rngs::ThreadRng;
 
@@ -26,16 +29,15 @@ pub fn colour(
     }
 
     if let Some(hit) = scene.grid().observe(ray.clone(), scene.sett().bump_dist()) {
-        col += scene.cols()[&0].get(hit.dist() as f32 / 10.0);
         ray.travel(hit.dist());
 
-        let light = light(&ray, scene, &hit);
-        let shadow = shadow(&ray, scene, &hit);
+        let light = illumination::light(&ray, scene, &hit);
+        let shadow = illumination::shadow(&ray, scene, &hit);
         let illumination = light * shadow;
 
         match hit.group() {
             _ => {
-                col += scene.cols()[&hit.group()].get(1.0);
+                col += scene.cols()[&hit.group()].get(illumination as f32);
             }
         }
     } else {
@@ -45,18 +47,4 @@ pub fn colour(
     }
 
     col
-}
-
-/// Calculate the lighting. 0.0 = Complete darkness. 1.0 = Full brightness.
-#[inline]
-#[must_use]
-fn light(_ray: &Ray, _scene: &Scene, _hit: &Hit) -> f64 {
-    0.9
-}
-
-/// Calculate the shadowing multiplier. 0.0 = Full shadow. 1.0 = No shadow.
-#[inline]
-#[must_use]
-fn shadow(_ray: &Ray, _scene: &Scene, _hit: &Hit) -> f64 {
-    0.3
 }
