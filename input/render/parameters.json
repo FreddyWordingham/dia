@@ -13,17 +13,17 @@
         "tar": [0.0, 0.0, -0.5],
         "fov": 90.0,
         "aspect_ratio": "Square",
-        "res": 1000,
+        "res": 1024
         // "ss": 4,
         // "dof": [7, 2.0]
     },
     "cols": {
         "grads": [
             [
-                1, ["#e01212ff", "#cb36b8ff"]
+                0, ["#0000000f", "#ffffffff"]
             ],
             [
-                0, ["#ff3838ff", "#cb36b8ff", "#56e940ff", "#40dae9ff", "#7c40e9ff"]
+                1, ["#ff3838ff", "#cb36b8ff", "#56e940ff", "#40dae9ff", "#7c40e9ff"]
             ]
         ]
     },

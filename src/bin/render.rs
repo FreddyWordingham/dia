@@ -142,7 +142,7 @@ fn build<'a>(
 /// Render an image.
 fn render(scene: &render::Scene) -> Image {
     banner::section("Rendering");
-    render::run(scene).expect("Rendering failed.")
+    render::run::capture(scene).expect("Rendering failed.")
 }
 
 /// Save the image.

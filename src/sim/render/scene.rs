@@ -1,4 +1,5 @@
-/// Scene implementation.
+//! Scene implementation.
+
 use crate::{
     access,
     render::{Attribute, Camera, Settings},
@@ -30,7 +31,7 @@ impl<'a> Scene<'a> {
     /// Construct a new instance.
     #[inline]
     #[must_use]
-    pub fn new(
+    pub const fn new(
         grid: &'a Adaptive<'a>,
         sett: &'a Settings,
         cam: &'a Camera,
