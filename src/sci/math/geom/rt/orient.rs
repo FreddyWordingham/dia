@@ -46,22 +46,22 @@ impl Orient {
     /// Reference the backward direction.
     #[inline]
     #[must_use]
-    pub fn back(&self) -> &Dir3 {
-        &-self.forward
+    pub fn back(&self) -> Dir3 {
+        -self.forward
     }
 
     /// Reference the left direction.
     #[inline]
     #[must_use]
-    pub fn left(&self) -> &Dir3 {
-        &-self.right
+    pub fn left(&self) -> Dir3 {
+        -self.right
     }
 
     /// Reference the downward direction.
     #[inline]
     #[must_use]
-    pub fn down(&self) -> &Dir3 {
-        &-self.up
+    pub fn down(&self) -> Dir3 {
+        -self.up
     }
 
     /// Create a forward ray.

@@ -21,7 +21,7 @@ macro_rules! access {
         #[allow(clippy::mut_mut)]
         #[inline]
         #[must_use]
-        pub const fn $setter(&mut self) -> &mut $type {
+        pub fn $setter(&mut self) -> &mut $type {
             &mut self.$field
         }
     };

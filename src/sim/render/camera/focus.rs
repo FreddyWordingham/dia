@@ -24,7 +24,7 @@ impl Focus {
         debug_assert!(dof.is_none() || dof.unwrap().0 > 0);
         debug_assert!(dof.is_none() || dof.unwrap().1 > 0.0);
 
-        let tar_dist = nalgebra::distance(pos, tar);
+        let tar_dist = nalgebra::distance(&pos, &tar);
         let dof = if let Some((samples, angle)) = dof {
             Some((samples, tar_dist * angle.tan()))
         } else {
@@ -34,26 +34,34 @@ impl Focus {
         Self {
             orient: Orient::new(Ray::new(pos, Dir3::new_normalize(tar - pos))),
             tar,
+            dof,
         }
     }
 
     /// Calculate the nth depth-of-field observation position.
     #[inline]
     #[must_use]
-    pub fn observation_pos(&self, n: usize) -> Pos3 {
-        let pos = self.orient.pos();
+    pub fn observation_pos(&self, offset: f64, n: i32) -> Pos3 {
+        let mut pos = self.orient.pos().clone();
 
         if let Some((dof_samples, max_rad)) = self.dof {
-            let (rho, theta) = golden::circle(n, dof_samples);
-        } else {
+            let (rho, mut theta) = golden::circle(n, dof_samples);
+            theta += offset;
+
+            pos += self.orient.right().as_ref() * theta.sin() * max_rad * rho;
+            pos += self.orient.up().as_ref() * theta.cos() * max_rad * rho;
         }
+
+        pos
     }
 
     /// Calculate the nth depth-of-field observation ray.
     #[inline]
     #[must_use]
-    pub fn observation_ray(&self, n: usize) -> Ray {
-        let pos = self.observation_pos(n);
-        Ray::new(pos, Dir3::new_normalize(self.tar - self.orient.pos()));
+    pub fn observation_ray(&self, offset: f64, n: i32) -> Ray {
+        debug_assert!(n >= 0);
+
+        let pos = self.observation_pos(offset, n);
+        Ray::new(pos, Dir3::new_normalize(self.tar - self.orient.pos()))
     }
 }
