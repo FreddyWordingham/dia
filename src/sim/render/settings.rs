@@ -7,10 +7,10 @@ use attr::load;
 #[load]
 #[derive(Clone)]
 pub struct Settings {
-    /// Place holder.
-    place_holder: f64,
+    /// Bump distance.
+    bump_dist: f64,
 }
 
 impl Settings {
-    clone!(place_holder, f64);
+    clone!(bump_dist, f64);
 }

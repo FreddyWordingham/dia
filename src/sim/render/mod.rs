@@ -97,18 +97,18 @@ fn run_thread(
 #[inline]
 #[must_use]
 fn paint(
-    thread_id: usize,
+    _thread_id: usize,
     ray: Ray,
     grid: &Adaptive,
     sett: &Settings,
     _cam: &Camera,
     cols: &Set<Gradient<LinSrgba>>,
     _attrs: &Set<Attribute>,
-    rng: &mut ThreadRng,
+    _rng: &mut ThreadRng,
 ) -> LinSrgba {
     let mut col = LinSrgba::default();
-    if grid.observe(ray, sett.bump_dist()).is_some() {
-        col += cols[&0].get(1.0);
+    if let Some(hit) = grid.observe(ray, sett.bump_dist()) {
+        col += cols[&0].get(hit.dist() as f32 / 10.0);
     }
 
     col

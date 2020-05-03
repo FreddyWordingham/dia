@@ -5,14 +5,14 @@
         "padding": 0.01
     },
     "sett": {
-        "place_holder": 0
+        "bump_dist": 1.0e-6
     },
     "cam": {
-        "pos": [2.0, 1.0, 3.0],
-        "tar": [0.0, 0.0, 0.0],
+        "pos": [1.0, 2.0, 2.0],
+        "tar": [0.0, 0.0, -0.5],
         "fov": 90.0,
         "aspect_ratio": "Square",
-        "res": 177
+        "res": 1000
     },
     "cols": {
         "grads": [
