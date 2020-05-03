@@ -29,7 +29,18 @@ impl Sensor {
     /// Calculate the total number of pixels.
     #[inline]
     #[must_use]
-    pub fn num_pixels(&self) -> usize {
+    pub const fn num_pixels(&self) -> usize {
         self.res.0 * self.res.1
+    }
+
+    /// Calculate the number of sub-samples per pixel.
+    #[inline]
+    #[must_use]
+    pub fn super_samples(&self) -> i32 {
+        if let Some(power) = self.super_sample_power {
+            power.pow(2)
+        } else {
+            1
+        }
     }
 }

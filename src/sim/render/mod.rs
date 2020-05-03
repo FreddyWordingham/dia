@@ -8,9 +8,12 @@ pub use self::attribute::*;
 pub use self::camera::*;
 pub use self::settings::*;
 
-use crate::{Adaptive, Error, Image, ParBar, Set};
+use crate::{Adaptive, Error, Image, ParBar, Ray, Set};
 use palette::{Gradient, LinSrgba};
+use rand::thread_rng;
+use rand::Rng;
 use rayon::prelude::*;
+use std::f64::consts::PI;
 use std::sync::{Arc, Mutex};
 
 /// Pixel block size.
@@ -53,15 +56,19 @@ pub fn run(
 fn run_thread(
     thread_id: usize,
     pb: &Arc<Mutex<ParBar>>,
-    _grid: &Adaptive,
-    _sett: &Settings,
+    grid: &Adaptive,
+    sett: &Settings,
     cam: &Camera,
     cols: &Set<Gradient<LinSrgba>>,
-    _attrs: &Set<Attribute>,
+    attrs: &Set<Attribute>,
 ) -> Result<Image, Error> {
     let mut img = Image::from_elem(cam.sensor().res(), LinSrgba::default());
+    let mut rng = thread_rng();
 
     let hr_res = cam.sensor().res().0;
+
+    let super_samples = cam.sensor().super_samples();
+    let dof_samples = cam.focus().dof().unwrap_or((1, 0.0)).0;
 
     while let Some((start, end)) = {
         let mut pb = pb.lock()?;
@@ -73,8 +80,27 @@ fn run_thread(
             let pixel = (n % hr_res, n / hr_res);
 
             img[pixel] += cols[&0].get(thread_id as f32 * 1.0 / 8.0);
+
+            let offset = rng.gen_range(0.0, 2.0 * PI); // TODO: Try placing within super sample?
+            for sub_sample in 0..super_samples {
+                for depth_sample in 0..dof_samples {
+                    let ray = cam.gen_ray(pixel, offset, sub_sample, depth_sample);
+                    img[pixel] += paint(ray, grid, sett, cam, cols, attrs);
+                }
+            }
         }
     }
 
     Ok(img)
+}
+
+fn paint(
+    _ray: Ray,
+    _grid: &Adaptive,
+    _sett: &Settings,
+    _cam: &Camera,
+    cols: &Set<Gradient<LinSrgba>>,
+    _attrs: &Set<Attribute>,
+) -> LinSrgba {
+    cols[&0].get(0.5)
 }

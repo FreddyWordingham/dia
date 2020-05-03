@@ -48,6 +48,9 @@ impl Focus {
             let (rho, mut theta) = golden::circle(n, dof_samples);
             theta += offset;
 
+            pos += self.orient.forward().as_ref()
+                * nalgebra::distance(self.orient.pos(), &self.tar)
+                * (1.0 - theta.cos()); // TODO: See what happens when you don't bum forward.
             pos += self.orient.right().as_ref() * theta.sin() * max_rad * rho;
             pos += self.orient.up().as_ref() * theta.cos() * max_rad * rho;
         }
