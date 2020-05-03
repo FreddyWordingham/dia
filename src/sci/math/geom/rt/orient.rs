@@ -67,7 +67,7 @@ impl Orient {
     /// Create a forward ray.
     #[inline]
     #[must_use]
-    pub fn forward_ray(&self) -> Ray {
+    pub const fn forward_ray(&self) -> Ray {
         Ray::new(self.pos, self.forward)
     }
 
@@ -81,7 +81,7 @@ impl Orient {
     /// Create a upward ray.
     #[inline]
     #[must_use]
-    pub fn up_ray(&self) -> Ray {
+    pub const fn up_ray(&self) -> Ray {
         Ray::new(self.pos, self.up)
     }
 
@@ -95,7 +95,7 @@ impl Orient {
     /// Create a right ray.
     #[inline]
     #[must_use]
-    pub fn right_ray(&self) -> Ray {
+    pub const fn right_ray(&self) -> Ray {
         Ray::new(self.pos, self.right)
     }
 

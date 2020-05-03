@@ -126,7 +126,7 @@ fn build<'a>(
     report!("total pixels", cam.sensor().num_pixels());
 
     banner::sub_section("Colours");
-    let cols = params.cols.build();
+    let cols = params.cols.build().expect("Could not build colour map");
 
     for (group, grad) in &cols {
         let name = format!("grad [{}]", group);
@@ -142,7 +142,7 @@ fn build<'a>(
 /// Render an image.
 fn render(scene: &render::Scene) -> Image {
     banner::section("Rendering");
-    render::run::capture(scene).expect("Rendering failed.")
+    render::run::capture(scene).expect("Rendering failed")
 }
 
 /// Save the image.

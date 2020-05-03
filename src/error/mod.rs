@@ -8,6 +8,8 @@ pub enum Error {
     Load(std::io::Error),
     /// Reading error.
     Read(json5::Error),
+    /// Hexadecimal parsing error.
+    ParseHex(hex::FromHexError),
     /// Integer parsing error.
     ParseInt(std::num::ParseIntError),
     /// Float parsing error.
@@ -39,6 +41,7 @@ macro_rules! impl_from_for_err {
 
 impl_from_for_err!(Self::Load, std::io::Error);
 impl_from_for_err!(Self::Read, json5::Error);
+impl_from_for_err!(Self::ParseHex, hex::FromHexError);
 impl_from_for_err!(Self::ParseInt, std::num::ParseIntError);
 impl_from_for_err!(Self::ParseFloat, std::num::ParseFloatError);
 impl_from_for_err!(Self::WriteJson, serde_json::Error);
@@ -66,6 +69,7 @@ impl Debug for Error {
             match self {
                 Self::Load { .. } => "Loading",
                 Self::Read { .. } => "Reading",
+                Self::ParseHex { .. } => "Hexadecimal parsing",
                 Self::ParseInt { .. } => "Integer parsing",
                 Self::ParseFloat { .. } => "Float parsing",
                 Self::WriteJson { .. } => "JSON writing",
@@ -77,6 +81,7 @@ impl Debug for Error {
             match self {
                 Self::Load { 0: err } => format!("{:?}", err),
                 Self::Read { 0: err } => format!("{:?}", err),
+                Self::ParseHex { 0: err } => format!("{:?}", err),
                 Self::ParseInt { 0: err } => format!("{:?}", err),
                 Self::ParseFloat { 0: err } => format!("{:?}", err),
                 Self::WriteJson { 0: err } => format!("{:?}", err),

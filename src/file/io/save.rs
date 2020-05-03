@@ -31,6 +31,7 @@ pub fn as_json<T: Serialize>(instance: &T, path: &Path) -> Result<(), Error> {
 }
 
 impl Save for Array2<LinSrgba> {
+    #[allow(clippy::use_self)]
     #[inline]
     fn save(&self, path: &Path) -> Result<(), Error> {
         let res = (self.shape()[0], self.shape()[1]);

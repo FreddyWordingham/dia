@@ -1,6 +1,6 @@
 //! Camera form implementation.
 
-use crate::{Group, Set};
+use crate::{Error, Group, Set};
 use attr::load;
 use palette::{Gradient, LinSrgba};
 
@@ -13,9 +13,10 @@ pub struct Colours {
 
 impl Colours {
     /// Build a colour set.
+    /// # Errors
+    /// if a a hexadecimal string can't be parsed.
     #[inline]
-    #[must_use]
-    pub fn build(&self) -> Set<Gradient<LinSrgba>> {
+    pub fn build(&self) -> Result<Set<Gradient<LinSrgba>>, Error> {
         let mut grads = Set::new();
 
         for (group, cols) in &self.grads {
@@ -23,25 +24,21 @@ impl Colours {
                 panic!("Duplicate gradient for group: {}", group);
             }
 
-            grads.insert(
-                *group,
-                Gradient::new(
-                    cols.iter()
-                        .map(|col| {
-                            let col = hex::decode(col.replace("#", "")).unwrap();
+            let mut cs = Vec::with_capacity(cols.len());
+            for col in cols.iter() {
+                let col_arr = hex::decode(col.replace("#", ""))?;
 
-                            let r = f32::from(col[0]) / 255.0;
-                            let g = f32::from(col[1]) / 255.0;
-                            let b = f32::from(col[2]) / 255.0;
-                            let a = f32::from(col[3]) / 255.0;
+                let r = f32::from(col_arr[0]) / 255.0;
+                let g = f32::from(col_arr[1]) / 255.0;
+                let b = f32::from(col_arr[2]) / 255.0;
+                let a = f32::from(col_arr[3]) / 255.0;
 
-                            LinSrgba::new(r, g, b, a)
-                        })
-                        .collect::<Vec<_>>(),
-                ),
-            );
+                cs.push(LinSrgba::new(r, g, b, a));
+            }
+
+            grads.insert(*group, Gradient::new(cs));
         }
 
-        grads
+        Ok(grads)
     }
 }
