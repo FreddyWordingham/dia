@@ -81,8 +81,8 @@ fn run_thread(
         for n in start as usize..end as usize {
             let pixel = (n % hr_res, n / hr_res);
 
-            let offset = rng.gen_range(0.0, 2.0 * PI); // TODO: Try placing within super sample?
             for sub_sample in 0..super_samples {
+                let offset = rng.gen_range(0.0, 2.0 * PI);
                 for depth_sample in 0..dof_samples {
                     let ray = cam.gen_ray(pixel, offset, sub_sample, depth_sample);
                     img[pixel] +=

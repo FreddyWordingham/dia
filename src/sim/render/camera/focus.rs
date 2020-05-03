@@ -42,15 +42,14 @@ impl Focus {
     #[inline]
     #[must_use]
     pub fn observation_pos(&self, offset: f64, n: i32) -> Pos3 {
-        let mut pos = self.orient.pos().clone();
+        let mut pos = *self.orient.pos();
 
         if let Some((dof_samples, max_rad)) = self.dof {
             let (rho, mut theta) = golden::circle(n, dof_samples);
             theta += offset;
 
-            pos += self.orient.forward().as_ref()
-                * nalgebra::distance(self.orient.pos(), &self.tar)
-                * (1.0 - theta.cos()); // TODO: See what happens when you don't bum forward.
+            let r = nalgebra::distance(self.orient.pos(), &self.tar);
+            pos += self.orient.forward().as_ref() * (r - (r.powi(2) - rho.powi(2)).sqrt()); // TODO: See what happens when you don't bum forward.
             pos += self.orient.right().as_ref() * theta.sin() * max_rad * rho;
             pos += self.orient.up().as_ref() * theta.cos() * max_rad * rho;
         }
@@ -65,6 +64,6 @@ impl Focus {
         debug_assert!(n >= 0);
 
         let pos = self.observation_pos(offset, n);
-        Ray::new(pos, Dir3::new_normalize(self.tar - self.orient.pos()))
+        Ray::new(pos, Dir3::new_normalize(self.tar - pos))
     }
 }
