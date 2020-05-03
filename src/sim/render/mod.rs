@@ -2,6 +2,7 @@
 
 pub mod attribute;
 pub mod camera;
+pub mod paint;
 pub mod run;
 pub mod scene;
 pub mod settings;

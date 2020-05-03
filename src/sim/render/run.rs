@@ -1,8 +1,11 @@
 //! Rendering simulation run functions.
 
-use crate::{render::Scene, Error, Image, ParBar, Ray};
+use crate::{
+    render::{paint, Scene},
+    Error, Image, ParBar,
+};
 use palette::LinSrgba;
-use rand::{rngs::ThreadRng, thread_rng, Rng};
+use rand::{thread_rng, Rng};
 use rayon::prelude::*;
 use std::{
     f64::consts::PI,
@@ -65,29 +68,11 @@ fn single_thread(thread_id: usize, pb: &Arc<Mutex<ParBar>>, scene: &Scene) -> Re
                 let offset = rng.gen_range(0.0, 2.0 * PI);
                 for depth_sample in 0..dof_samples {
                     let ray = cam.gen_ray(pixel, offset, sub_sample, depth_sample);
-                    img[pixel] += paint(thread_id, ray, scene, &mut rng) * weight;
+                    img[pixel] += paint::hit::colour(thread_id, scene, ray, &mut rng) * weight;
                 }
             }
         }
     }
 
     Ok(img)
-}
-
-/// Determine the colour of a given observation ray.
-#[inline]
-#[must_use]
-fn paint(_thread_id: usize, ray: Ray, scene: &Scene, _rng: &mut ThreadRng) -> LinSrgba {
-    let grid = scene.grid();
-    let sett = scene.sett();
-    let _cam = scene.cam();
-    let cols = scene.cols();
-    let _attrs = scene.attrs();
-
-    let mut col = LinSrgba::default();
-    if let Some(hit) = grid.observe(ray, sett.bump_dist()) {
-        col += cols[&0].get(hit.dist() as f32 / 10.0);
-    }
-
-    col
 }
