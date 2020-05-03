@@ -19,6 +19,10 @@ pub struct Camera {
     aspect_ratio: AspectRatio,
     /// Horizontal resolution.
     res: usize,
+    /// Optional depth-of-field samples and maximum angular sample [deg].
+    dof: Option<(i32, f64)>,
+    /// Optional sub-samples.
+    sub_samples: Option<i32>,
 }
 
 impl Camera {
@@ -26,9 +30,15 @@ impl Camera {
     #[inline]
     #[must_use]
     pub fn build(&self) -> CameraInst {
-        let focus = Focus::new(self.pos, self.tar);
+        let dof = if let Some((samples, angle)) = self.dof {
+            Some((samples, angle.to_radians()))
+        } else {
+            None
+        };
+
+        let focus = Focus::new(self.pos, self.tar, dof);
         let lens = Lens::new(self.fov.to_radians());
-        let sensor = Sensor::new(&self.aspect_ratio, self.res);
+        let sensor = Sensor::new(&self.aspect_ratio, self.res, self.sub_samples);
 
         CameraInst::new(focus, lens, sensor)
     }

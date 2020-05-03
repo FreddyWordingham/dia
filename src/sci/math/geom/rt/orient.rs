@@ -36,6 +36,34 @@ impl Orient {
         }
     }
 
+    /// Construct a new instance.
+    #[inline]
+    #[must_use]
+    pub fn new_tar(pos: Pos3, tar: &Pos3) -> Self {
+        Self::new(Ray::new(pos, Dir3::new_normalize(tar - pos)))
+    }
+
+    /// Reference the backward direction.
+    #[inline]
+    #[must_use]
+    pub fn back(&self) -> &Dir3 {
+        &-self.forward
+    }
+
+    /// Reference the left direction.
+    #[inline]
+    #[must_use]
+    pub fn left(&self) -> &Dir3 {
+        &-self.right
+    }
+
+    /// Reference the downward direction.
+    #[inline]
+    #[must_use]
+    pub fn down(&self) -> &Dir3 {
+        &-self.up
+    }
+
     /// Create a forward ray.
     #[inline]
     #[must_use]
