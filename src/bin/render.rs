@@ -29,7 +29,8 @@ pub fn main() {
     let params = input(&in_dir, &params_path);
     let scene = setup(&in_dir, &params);
     let (grid, sett, cam, cols, attrs) = build(&params, &scene);
-    let img = render(&grid, &sett, &cam, &cols, &attrs);
+    let scene = render::Scene::new(&grid, &sett, &cam, &cols, &attrs);
+    let img = render(&scene);
     save(&out_dir, img);
     banner::section("Finished");
 }
@@ -139,15 +140,9 @@ fn build<'a>(
 }
 
 /// Render an image.
-fn render(
-    grid: &Adaptive,
-    sett: &render::Settings,
-    cam: &render::Camera,
-    cols: &Set<Gradient<LinSrgba>>,
-    attrs: &Set<render::Attribute>,
-) -> Image {
+fn render(scene: &render::Scene) -> Image {
     banner::section("Rendering");
-    render::run(grid, sett, cam, cols, attrs).expect("Rendering failed.")
+    render::run(scene).expect("Rendering failed.")
 }
 
 /// Save the image.

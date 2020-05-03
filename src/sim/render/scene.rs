@@ -26,4 +26,23 @@ impl<'a> Scene<'a> {
     access!(cam, Camera);
     access!(cols, Set<Gradient<LinSrgba>>);
     access!(attrs, Set<Attribute>);
+
+    /// Construct a new instance.
+    #[inline]
+    #[must_use]
+    pub fn new(
+        grid: &'a Adaptive<'a>,
+        sett: &'a Settings,
+        cam: &'a Camera,
+        cols: &'a Set<Gradient<LinSrgba>>,
+        attrs: &'a Set<Attribute>,
+    ) -> Self {
+        Self {
+            grid,
+            sett,
+            cam,
+            cols,
+            attrs,
+        }
+    }
 }
