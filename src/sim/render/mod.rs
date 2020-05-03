@@ -10,6 +10,7 @@ pub use self::settings::*;
 
 use crate::{Adaptive, Error, Image, ParBar, Ray, Set};
 use palette::{Gradient, LinSrgba};
+use rand::rngs::ThreadRng;
 use rand::thread_rng;
 use rand::Rng;
 use rayon::prelude::*;
@@ -17,7 +18,7 @@ use std::f64::consts::PI;
 use std::sync::{Arc, Mutex};
 
 /// Pixel block size.
-const BLOCK_SIZE: u64 = 128;
+const BLOCK_SIZE: u64 = 12;
 
 /// Render an image.
 /// # Errors
@@ -79,13 +80,11 @@ fn run_thread(
         for n in start as usize..end as usize {
             let pixel = (n % hr_res, n / hr_res);
 
-            img[pixel] += cols[&0].get(thread_id as f32 * 1.0 / 8.0);
-
             let offset = rng.gen_range(0.0, 2.0 * PI); // TODO: Try placing within super sample?
             for sub_sample in 0..super_samples {
                 for depth_sample in 0..dof_samples {
                     let ray = cam.gen_ray(pixel, offset, sub_sample, depth_sample);
-                    img[pixel] += paint(ray, grid, sett, cam, cols, attrs);
+                    img[pixel] += paint(thread_id, ray, grid, sett, cam, cols, attrs, &mut rng);
                 }
             }
         }
@@ -94,13 +93,23 @@ fn run_thread(
     Ok(img)
 }
 
+/// Determine the colour of a given observation ray.
+#[inline]
+#[must_use]
 fn paint(
-    _ray: Ray,
-    _grid: &Adaptive,
-    _sett: &Settings,
+    thread_id: usize,
+    ray: Ray,
+    grid: &Adaptive,
+    sett: &Settings,
     _cam: &Camera,
     cols: &Set<Gradient<LinSrgba>>,
     _attrs: &Set<Attribute>,
+    rng: &mut ThreadRng,
 ) -> LinSrgba {
-    cols[&0].get(0.5)
+    let mut col = LinSrgba::default();
+    if grid.observe(ray, sett.bump_dist()).is_some() {
+        col += cols[&0].get(1.0);
+    }
+
+    col
 }
