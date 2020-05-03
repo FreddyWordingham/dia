@@ -70,6 +70,7 @@ fn run_thread(
 
     let super_samples = cam.sensor().super_samples();
     let dof_samples = cam.focus().dof().unwrap_or((1, 0.0)).0;
+    let weight = 1.0 / (super_samples * dof_samples) as f32;
 
     while let Some((start, end)) = {
         let mut pb = pb.lock()?;
@@ -84,7 +85,8 @@ fn run_thread(
             for sub_sample in 0..super_samples {
                 for depth_sample in 0..dof_samples {
                     let ray = cam.gen_ray(pixel, offset, sub_sample, depth_sample);
-                    img[pixel] += paint(thread_id, ray, grid, sett, cam, cols, attrs, &mut rng);
+                    img[pixel] +=
+                        paint(thread_id, ray, grid, sett, cam, cols, attrs, &mut rng) * weight;
                 }
             }
         }

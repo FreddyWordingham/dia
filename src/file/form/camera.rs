@@ -21,8 +21,8 @@ pub struct Camera {
     res: usize,
     /// Optional depth-of-field samples and maximum angular sample [deg].
     dof: Option<(i32, f64)>,
-    /// Optional sub-samples.
-    sub_samples: Option<i32>,
+    /// Optional super-sampling power.
+    ss: Option<i32>,
 }
 
 impl Camera {
@@ -38,7 +38,7 @@ impl Camera {
 
         let focus = Focus::new(self.pos, self.tar, dof);
         let lens = Lens::new(self.fov.to_radians());
-        let sensor = Sensor::new(&self.aspect_ratio, self.res, self.sub_samples);
+        let sensor = Sensor::new(&self.aspect_ratio, self.res, self.ss);
 
         CameraInst::new(focus, lens, sensor)
     }
