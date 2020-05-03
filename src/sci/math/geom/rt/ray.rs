@@ -3,6 +3,7 @@
 use crate::{access, Dir3, Pos3};
 
 /// Ray structure.
+#[derive(Clone)]
 pub struct Ray {
     /// Ray origin.
     pos: Pos3,

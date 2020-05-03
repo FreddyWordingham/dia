@@ -68,7 +68,7 @@ fn single_thread(thread_id: usize, pb: &Arc<Mutex<ParBar>>, scene: &Scene) -> Re
                 let offset = rng.gen_range(0.0, 2.0 * PI);
                 for depth_sample in 0..dof_samples {
                     let ray = cam.gen_ray(pixel, offset, sub_sample, depth_sample);
-                    img[pixel] += paint::hit::colour(thread_id, scene, ray, &mut rng) * weight;
+                    img[pixel] += paint::hit::colour(thread_id, scene, ray, &mut rng, 1.0) * weight;
                 }
             }
         }
