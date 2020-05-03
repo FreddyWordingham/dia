@@ -2,10 +2,12 @@
 
 pub mod attribute;
 pub mod camera;
+pub mod scene;
 pub mod settings;
 
 pub use self::attribute::*;
 pub use self::camera::*;
+pub use self::scene::*;
 pub use self::settings::*;
 
 use crate::{Adaptive, Error, Image, ParBar, Ray, Set};
