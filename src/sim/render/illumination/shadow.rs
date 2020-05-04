@@ -12,21 +12,7 @@ pub fn shadow(ray: &Ray, scene: &Scene, hit: &Hit, rng: &mut ThreadRng) -> f64 {
     let light_dir = Dir3::new_normalize(scene.sett().sun_pos() - light_ray.pos());
     *light_ray.dir_mut() = light_dir;
 
-    let solar = if let Some(soft_shadows) = scene.sett().soft_shadows() {
-        let offset = rng.gen_range(0.0, 2.0);
-        let mut total = 0.0;
-        for s in 0..soft_shadows {
-            let (r, theta) = golden::circle(s, soft_shadows);
-            let mut soft_ray = light_ray.clone();
-            soft_ray.rotate(r * scene.sett().sun_rad(), theta + offset);
-            total += visibility(soft_ray, scene);
-        }
-        total / soft_shadows as f64
-    } else {
-        visibility(light_ray.clone(), scene)
-    };
-
-    let ambient = if let Some(ambient_occlusion) = scene.sett().ambient_occlusion() {
+    let mut ambient = if let Some(ambient_occlusion) = scene.sett().ambient_occlusion() {
         let offset = rng.gen_range(0.0, 2.0);
         let mut total = 0.0;
         let mut norm_ray = Ray::new(*ray.pos(), *hit.side().norm());
@@ -42,7 +28,24 @@ pub fn shadow(ray: &Ray, scene: &Scene, hit: &Hit, rng: &mut ThreadRng) -> f64 {
         1.0
     };
 
-    solar * ambient
+    let mut solar = if let Some(soft_shadows) = scene.sett().soft_shadows() {
+        let offset = rng.gen_range(0.0, 2.0);
+        let mut total = 0.0;
+        for s in 0..soft_shadows {
+            let (r, theta) = golden::circle(s, soft_shadows);
+            let mut soft_ray = light_ray.clone();
+            soft_ray.rotate(r * scene.sett().sun_rad(), theta + offset);
+            total += visibility(soft_ray, scene);
+        }
+        total / soft_shadows as f64
+    } else {
+        visibility(light_ray.clone(), scene)
+    };
+
+    ambient *= scene.sett().shadow_weights()[0];
+    solar *= scene.sett().shadow_weights()[1];
+
+    ambient + solar
 }
 
 /// Calculate the visibility of a given ray.

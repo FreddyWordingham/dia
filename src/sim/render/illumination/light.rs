@@ -14,14 +14,16 @@ pub fn light(ray: &Ray, scene: &Scene, hit: &Hit) -> f64 {
         -ray.dir().dot(hit.side().norm()),
     );
 
-    let ambient = 1.0;
-    let diffuse = hit.side().norm().dot(&light_dir).max(0.0);
-    let specular = view_dir
+    let mut ambient = 1.0;
+    let mut diffuse = hit.side().norm().dot(&light_dir).max(0.0);
+    let mut specular = view_dir
         .dot(&ref_dir)
         .max(0.0)
         .powi(scene.sett().spec_pow());
 
-    (ambient * scene.sett().light_weights()[0])
-        + (diffuse * scene.sett().light_weights()[1])
-        + (specular * scene.sett().light_weights()[2])
+    ambient *= scene.sett().light_weights()[0];
+    diffuse *= scene.sett().light_weights()[1];
+    specular *= scene.sett().light_weights()[2];
+
+    ambient + diffuse + specular
 }
