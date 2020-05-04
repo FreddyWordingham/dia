@@ -39,7 +39,6 @@ impl Ray {
 
     /// Rotate the photon with a given pitch and subsequent roll manoeuvre.
     #[inline]
-    #[must_use]
     pub fn rotate(&mut self, pitch: f64, roll: f64) {
         let arbitrary_axis = if (self.dir.z.abs() - 1.0) >= 1.0e-1 {
             Vec3::z_axis()

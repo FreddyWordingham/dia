@@ -17,7 +17,7 @@ pub fn colour(
     _thread_id: usize,
     scene: &Scene,
     mut ray: Ray,
-    _rng: &mut ThreadRng,
+    rng: &mut ThreadRng,
     weight: f64,
 ) -> LinSrgba {
     debug_assert!(weight > 0.0);
@@ -32,7 +32,7 @@ pub fn colour(
         ray.travel(hit.dist());
 
         let light = illumination::light(&ray, scene, &hit);
-        let shadow = illumination::shadow(&ray, scene, &hit);
+        let shadow = illumination::shadow(&ray, scene, &hit, rng);
         let illumination = light * shadow;
 
         match hit.group() {

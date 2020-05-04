@@ -11,14 +11,14 @@ pub struct Settings {
     bump_dist: f64,
     /// Sun position.
     sun_pos: Pos3,
-    /// Sun radius [m].
+    /// Sun angular radius [rad].
     sun_rad: f64,
     /// Lighting weights.
     light_weights: [f64; 3],
     /// Specular power.
     spec_pow: i32,
     /// Optional number of soft shadow samples.
-    soft_shadows: Option<usize>,
+    soft_shadows: Option<i32>,
 }
 
 impl Settings {
@@ -27,5 +27,5 @@ impl Settings {
     clone!(sun_rad, f64);
     access!(light_weights, [f64; 3]);
     clone!(spec_pow, i32);
-    clone!(soft_shadows, Option<usize>);
+    clone!(soft_shadows, Option<i32>);
 }
