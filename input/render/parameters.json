@@ -6,14 +6,15 @@
     },
     "sett": {
         "bump_dist": 1.0e-6,
-        "sun_pos": [20.0, -40.0, 30.0],
+        "sun_pos": [-20.0, -40.0, 30.0],
+        // "sun_pos": [-0.375, 0.925, 0.2],
         "light_weights": [0.1, 0.6, 0.3],
         "spec_pow": 16,
         "sun_rad": 0.1,
-        "ambient_occlusion": 31,
+        // "ambient_occlusion": 31,
         "ambient_occlusion_power": 4,
-        "soft_shadows": 17,
-        "shadow_weights": [0.75, 0.25]
+        // "soft_shadows": 17,
+        "shadow_weights": [0.05, 0.95]
     },
     "cam": {
         "pos": [8.0, -7.0, 3.0],
@@ -22,8 +23,8 @@
         "aspect_ratio": "Widescreen",
         // "res": 1024,
         "res": 1024,
-        "ss": 4,
-        "dof": [7, 2.0]
+        // "ss": 4,
+        // "dof": [7, 2.0]
     },
     "cols": {
         "grads": [
@@ -37,16 +38,19 @@
                 2, ["#000000ff", "#ff0000ff"]
             ],
             [
-                3, ["#000000ff", "#ffff00ff"]
+                3, ["#000000ff", "#d0c885ff", "#ffff00ff"]
             ],
             [
-                4, ["#000000ff", "#ff00ffff"]
+                4, ["#000000ff", "#ae2a2aff", "#a0522dff"]
             ],
             [
                 5, ["#000000ff", "#00ffffff"]
             ],
             [
                 6, ["#000000ff", "#aaaaaaff"]
+            ],
+            [
+                7, ["#ffeb28ff", "#ff770cff", "#e9ff18ff", "#ffa500ff", "#ffffffff"]
             ]
         ]
     },
@@ -64,6 +68,7 @@
         [3, ["boulders"]],
         [4, ["trees"]],
         [5, ["leaves"]],
-        [6, ["stag"]]
+        [6, ["stag"]],
+        [7, ["solar"]]
     ]
 }
