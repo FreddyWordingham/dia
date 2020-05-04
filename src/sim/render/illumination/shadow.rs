@@ -19,7 +19,7 @@ pub fn shadow(ray: &Ray, scene: &Scene, hit: &Hit) -> f64 {
 /// Calculate the visibility of a given ray.
 #[inline]
 #[must_use]
-fn visibility(ray: Ray, scene: &Scene) -> f64 {
+fn visibility(mut ray: Ray, scene: &Scene) -> f64 {
     let mut vis = 1.0;
     while let Some(hit) = scene.grid().observe(ray.clone(), scene.sett().bump_dist()) {
         if vis <= 0.0 {
@@ -28,9 +28,8 @@ fn visibility(ray: Ray, scene: &Scene) -> f64 {
 
         match hit.group() {
             _ => {
-                // Opaque
-                vis = 0.1;
-                break;
+                vis *= 0.5;
+                ray.travel(hit.dist() + scene.sett().bump_dist());
             }
         }
     }
