@@ -17,8 +17,8 @@ pub struct Settings {
     light_weights: [f64; 3],
     /// Specular power.
     spec_pow: i32,
-    /// Soft shadow samples.
-    soft_shadows: usize,
+    /// Optional number of soft shadow samples.
+    soft_shadows: Option<usize>,
 }
 
 impl Settings {
@@ -27,5 +27,5 @@ impl Settings {
     clone!(sun_rad, f64);
     access!(light_weights, [f64; 3]);
     clone!(spec_pow, i32);
-    clone!(soft_shadows, usize);
+    clone!(soft_shadows, Option<usize>);
 }
