@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Adaptive","Adaptive cell enumeration."]],"mod":[["constructor","Constructor methods."],["properties","Information methods."],["scan","Scan methods."],["search","Scan methods."]]});

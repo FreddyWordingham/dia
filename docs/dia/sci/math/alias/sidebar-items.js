@@ -1,0 +1,1 @@
+initSidebarItems({"type":[["Dir3","Normalised three-dimensional vector alias."],["Pos3","Three-dimensional position alias."],["Rot3","Three-dimensional rotation alias."],["Trans3","Three-dimensional transformation alias."],["Vec3","Three-dimensional vector alias."]]});

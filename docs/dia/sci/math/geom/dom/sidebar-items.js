@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["collect","Collection module."],["grid","Grid module."]]});

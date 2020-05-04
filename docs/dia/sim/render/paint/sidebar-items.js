@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["hit","Hit-scan painting function."]],"type":[["Painter","Fragment painter function type."]]});

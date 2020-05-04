@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["math","Math module."],["phys","Physics module."]]});

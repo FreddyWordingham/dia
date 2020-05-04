@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["build","Build the simulation structures."],["init","Initialise the command line arguments and directories."],["input","Load the input files."],["main","Main function."],["render","Render an image."],["save","Save the image."],["setup","Load the resource files."]],"struct":[["Parameters","Input parameters."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["adaptive","Adaptive gridding scheme."]]});
