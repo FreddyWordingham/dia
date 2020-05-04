@@ -11,17 +11,18 @@
         "spec_pow": 16,
         "sun_rad": 0.1,
         "ambient_occlusion": 31,
-        "ambient_occlusion_power": 8,
-        // "soft_shadows": 17,
-        "shadow_weights": [0.9, 0.1]
+        "ambient_occlusion_power": 4,
+        "soft_shadows": 17,
+        "shadow_weights": [0.75, 0.25]
     },
     "cam": {
         "pos": [0.0, 0.01, 20.0],
-        "tar": [0.0, 0.0, -0.5],
+        "tar": [0.0, 0.0, 0.0],
         "fov": 45.0,
         "aspect_ratio": "Square",
-        "res": 1024,
-        // "ss": 4,
+        // "res": 1024,
+        "res": 512,
+        "ss": 4,
         // "dof": [7, 2.0]
     },
     "cols": {
