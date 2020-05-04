@@ -72,7 +72,7 @@ impl AspectRatio {
     pub fn vt_res(&self, hr_res: usize) -> usize {
         debug_assert!(hr_res > 0);
 
-        (self.ratio() * hr_res as f64).ceil() as usize
+        (hr_res as f64 / self.ratio()).ceil() as usize
     }
 }
 
