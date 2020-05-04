@@ -11,8 +11,9 @@
         "spec_pow": 16,
         "sun_rad": 0.1,
         "ambient_occlusion": 31,
+        "ambient_occlusion_power": 8,
         // "soft_shadows": 17,
-        "shadow_weights": [0.4, 0.6]
+        "shadow_weights": [0.9, 0.1]
     },
     "cam": {
         "pos": [0.0, 0.01, 20.0],
@@ -20,22 +21,22 @@
         "fov": 45.0,
         "aspect_ratio": "Square",
         "res": 1024,
-        "ss": 4,
+        // "ss": 4,
         // "dof": [7, 2.0]
     },
     "cols": {
         "grads": [
             [
-                0, ["#333333ff", "#ffffffff"]
+                0, ["#000000ff", "#ffffffff"]
             ],
             [
-                1, ["#220000ff", "#ff0000ff"]
+                1, ["#000000ff", "#ff0000ff"]
             ],
             [
-                2, ["#002200ff", "#00ff00ff"]
+                2, ["#000000ff", "#00ff00ff"]
             ],
             [
-                3, ["#000022ff", "#0000ffff"]
+                3, ["#000000ff", "#0000ffff"]
             ],
             [
                 4, ["#ff3838ff", "#cb36b8ff", "#56e940ff", "#40dae9ff", "#7c40e9ff"]

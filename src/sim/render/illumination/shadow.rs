@@ -23,7 +23,7 @@ pub fn shadow(ray: &Ray, scene: &Scene, hit: &Hit, rng: &mut ThreadRng) -> f64 {
             ambi_ray.rotate(phi, theta + offset);
             total += visibility(ambi_ray, scene);
         }
-        total / ambient_occlusion as f64
+        (total / ambient_occlusion as f64).powi(scene.sett().ambient_occlusion_power())
     } else {
         1.0
     };
