@@ -21,6 +21,8 @@ pub struct Settings {
     soft_shadows: Option<i32>,
     /// Optional number of ambient occlusion samples.
     ambient_occlusion: Option<i32>,
+    /// Shadowing weights.
+    shadow_weights: [f64; 2],
 }
 
 impl Settings {
@@ -31,4 +33,5 @@ impl Settings {
     clone!(spec_pow, i32);
     clone!(soft_shadows, Option<i32>);
     clone!(ambient_occlusion, Option<i32>);
+    access!(shadow_weights, [f64; 2]);
 }

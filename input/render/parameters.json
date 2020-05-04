@@ -10,6 +10,7 @@
         "light_weights": [0.1, 0.6, 0.3],
         "spec_pow": 16,
         "sun_rad": 0.1,
+        "ambient_occlusion": 31
         // "soft_shadows": 17
     },
     "cam": {
