@@ -43,22 +43,6 @@ pub fn colour(
         let illumination = light * shadow;
 
         match hit.group() {
-            1 => {
-                // Water
-                col += scene.cols()[&hit.group()].get(illumination as f32) * MIRROR_COLOURING;
-
-                *ray.dir_mut() = Crossing::init_ref_dir(
-                    ray.dir(),
-                    hit.side().norm(),
-                    -ray.dir().dot(hit.side().norm()),
-                );
-                let theta = ((ray.pos().x * PUDDLE_SHIMMER).sin().powi(2)
-                    * (ray.pos().y * PUDDLE_SHIMMER).sin().powi(2))
-                    * 0.5e-1;
-                let rot = Rot3::from_axis_angle(&Vec3::y_axis(), theta);
-                *ray.dir_mut() = Dir3::new_normalize(rot * ray.dir().as_ref());
-                ray.travel(scene.sett().bump_dist());
-            }
             _ => {
                 col += scene.cols()[&hit.group()].get(illumination as f32);
                 sky = false;

@@ -17,8 +17,8 @@
         "shadow_weights": [0.5, 0.5]
     },
     "cam": {
-        "pos": [8.0, -7.0, 3.0],
-        "tar": [-8.0, 7.0, 4.0],
+        "pos": [7.5, -7.5, 3.0],
+        "tar": [-0.95, 1.75, 2.9],
         "fov": 90.0,
         "aspect_ratio": "Square",
         "res": 512,
@@ -29,50 +29,43 @@
     "cols": {
         "grads": [
             [
-                0, ["#000000ff", "#0044aaff"]
-            ],
-            [
-                1, ["#000000ff", "#ffffaaff"]
-            ],
-            [
-                2, ["#000000ff", "#ff3333ff"]
-            ],
-            [
-                3, ["#000000ff", "##b09d94ff"]
-            ],
-            [
-                4, ["#000000ff", "##dcdcdcff"]
-            ],
-            [
-                5, ["#000000ff", "##ff5e2eff"]
-            ],
-            [
-                6, ["#000000ff", "#cd853fff"]
-            ],
-            [
-                7, ["#000000ff", "#ffff00ff"]
-            ],
-            [
-                8, ["#000000ff", "#00ff00ff"]
+                0, ["#000000ff", "#ffffffff"]
             ]
         ]
     },
     "attrs": {
         "attributes": [
-            [0, {
+            [4, {
                 "transparency": 1.23
             }]
         ]
     },
     "surfs": [
-        [0, ["plane"]],
-        [1, ["gold"]],
-        [2, ["rocks"]],
-        [3, ["boulders"]],
-        [4, ["trees"]],
-        [5, ["leaves"]],
-        [6, ["stag"]],
-        [7, ["antlers"]],
-        [8, ["floor"]]
+        [0, ["antlers",
+            "aurora",
+            "basin",
+            "boulders",
+            "drops",
+            "flowers",
+            "flowers_0",
+            "flowers_1",
+            "flowers_2",
+            "flowers_3",
+            "gold",
+            "grass",
+            "ground",
+            "leaves",
+            "lillies",
+            "moon",
+            "plane",
+            "rocks_0",
+            "rocks_1",
+            "rocks_2",
+            "solar",
+            "stag",
+            "stars",
+            "trees",
+            "water"
+        ]]
     ]
 }
