@@ -69,7 +69,7 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 }
 
 /// Load the resource files.
-fn setup(in_dir: &Path, params: &Parameters) -> Scene {
+fn setup(in_dir: &Path, params: &Parameters) -> Collection {
     banner::section("Input");
     banner::sub_section("Scene");
     let mut names: Set<Vec<String>> = Set::new();
@@ -82,17 +82,18 @@ fn setup(in_dir: &Path, params: &Parameters) -> Scene {
             }
         }
     }
-    let scene = Scene::load(&in_dir.join("meshes"), names.iter()).expect("Could not load scene.");
+    let collection =
+        Collection::load(&in_dir.join("meshes"), names.iter()).expect("Could not load scene.");
 
-    report!("num groups", scene.surfs().len());
+    report!("num groups", collection.surfs().len());
 
-    scene
+    collection
 }
 
 /// Build the simulation structures.
 fn build<'a>(
     params: &Parameters,
-    scene: &'a Scene,
+    collection: &'a Collection,
 ) -> (
     Adaptive<'a>,
     render::Settings,
@@ -102,7 +103,7 @@ fn build<'a>(
 ) {
     banner::section("Building");
     banner::sub_section("Adaptive grid");
-    let grid = Adaptive::new_root(&params.grid, scene);
+    let grid = Adaptive::new_root(&params.grid, collection);
 
     report!("max depth", grid.max_depth());
     report!("num cells", grid.num_cells());

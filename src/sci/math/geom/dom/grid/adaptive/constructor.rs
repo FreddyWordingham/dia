@@ -1,17 +1,19 @@
 //! Constructor methods.
 
-use crate::{settings::Adaptive as Settings, Aabb, Collide, Group, Pos3, Scene, SmoothTriangle};
+use crate::{
+    settings::Adaptive as Settings, Aabb, Collection, Collide, Group, Pos3, SmoothTriangle,
+};
 
 impl<'a> super::Adaptive<'a> {
     /// Construct a new adaptive grid.
     #[inline]
     #[must_use]
-    pub fn new_root(settings: &Settings, scene: &'a Scene) -> Self {
-        let mut boundary = scene.boundary().clone();
+    pub fn new_root(settings: &Settings, collection: &'a Collection) -> Self {
+        let mut boundary = collection.boundary().clone();
         boundary.expand(settings.padding());
 
         let mut tris = Vec::new();
-        for (group, meshes) in scene.surfs() {
+        for (group, meshes) in collection.surfs() {
             for mesh in meshes {
                 tris.reserve(mesh.tris().len());
                 for tri in mesh.tris() {

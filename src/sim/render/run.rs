@@ -13,7 +13,7 @@ use std::{
 };
 
 /// Pixel block size.
-const BLOCK_SIZE: u64 = 12;
+const BLOCK_SIZE: u64 = 1000;
 
 /// Render an image.
 /// # Errors

@@ -1,6 +1,6 @@
 //! Domain module.
 
-pub mod collect;
+pub mod collection;
 pub mod grid;
 
-pub use self::{collect::*, grid::*};
+pub use self::{collection::*, grid::*};
