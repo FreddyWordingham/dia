@@ -1,56 +1,59 @@
 {
     "grid": {
         "tar_tris": 5,
-        "max_depth": 6,
+        "max_depth": 10,
         "padding": 0.01
     },
     "sett": {
         "bump_dist": 1.0e-6,
-        // "sun_pos": [-20.0, -40.0, 30.0],
-        "sun_pos": [-5, 5.5, 7.75],
+        "sun_pos": [20.0, -40.0, 30.0],
+        // "sun_pos": [1, -1, 1.5],
         "light_weights": [0.1, 0.6, 0.3],
         "spec_pow": 16,
         "sun_rad": 0.1,
-        "ambient_occlusion": 31,
+        // "ambient_occlusion": 31,
         "ambient_occlusion_power": 4,
-        "soft_shadows": 17,
+        // "soft_shadows": 17,
         "shadow_weights": [0.5, 0.5]
     },
     "cam": {
         "pos": [8.0, -7.0, 3.0],
         "tar": [-8.0, 7.0, 4.0],
         "fov": 90.0,
-        "aspect_ratio": "Widescreen",
-        // "res": 1024,
-        "res": 3440,
-        "ss": 2,
-        "dof": [17, 2.0]
+        "aspect_ratio": "Square",
+        "res": 512,
+        // "res": 3440,
+        // "ss": 2,
+        // "dof": [17, 2.0]
     },
     "cols": {
         "grads": [
             [
-                0, ["#000000ff", "#00ff00ff"]
+                0, ["#000000ff", "#0044aaff"]
             ],
             [
-                1, ["#000000ff", "#0044aaff"]
+                1, ["#000000ff", "#ffffaaff"]
             ],
             [
-                2, ["#000000ff", "#ff0000ff"]
+                2, ["#000000ff", "#ff3333ff"]
             ],
             [
-                3, ["#000000ff", "#d0c885ff", "#ffff00ff"]
+                3, ["#000000ff", "##b09d94ff"]
             ],
             [
-                4, ["#000000ff", "#ae2a2aff", "#a0522dff"]
+                4, ["#000000ff", "##dcdcdcff"]
             ],
             [
-                5, ["#000000ff", "#00ffffff"]
+                5, ["#000000ff", "##ff5e2eff"]
             ],
             [
-                6, ["#000000ff", "#aaaaaaff", "#ffffffff"]
+                6, ["#000000ff", "#cd853fff"]
             ],
             [
-                7, ["#ffeb28ff", "#ff770cff", "#e9ff18ff", "#ffa500ff", "#ffffffff"]
+                7, ["#000000ff", "#ffff00ff"]
+            ],
+            [
+                8, ["#000000ff", "#00ff00ff"]
             ]
         ]
     },
@@ -62,13 +65,14 @@
         ]
     },
     "surfs": [
-        [0, ["floor"]],
-        [1, ["water"]],
+        [0, ["plane"]],
+        [1, ["gold"]],
         [2, ["rocks"]],
         [3, ["boulders"]],
         [4, ["trees"]],
         [5, ["leaves"]],
         [6, ["stag"]],
-        [7, ["solar"]]
+        [7, ["antlers"]],
+        [8, ["floor"]]
     ]
 }
