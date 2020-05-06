@@ -109,9 +109,8 @@ fn visibility(mut ray: Ray, scene: &Scene) -> f64 {
                     }
                 }
             }
-            10 => {
+            3..=5 => {
                 // Transparent.
-                vis *= 0.8;
                 ray.travel(scene.sett().bump_dist());
             }
             _ => {

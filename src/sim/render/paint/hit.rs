@@ -43,7 +43,8 @@ pub fn colour(
         let illumination = light * shadow;
 
         let x = match hit.group() {
-            3 => hit.side().norm().dot(&Vec3::z_axis()).abs(),
+            3..=5 => hit.side().norm().dot(&Vec3::z_axis()).abs(),
+            // 4..=5 => wobble(ray.pos()),
             _ => 1.0,
         };
 
@@ -100,6 +101,11 @@ pub fn colour(
                     ray.travel(scene.sett().bump_dist());
                 }
             }
+            4..=5 => {
+                col += scene.cols()[&hit.group()].get(x as f32);
+                sky = false;
+                break;
+            }
             _ => {
                 let grad = Gradient::new(vec![
                     LinSrgba::default(),
@@ -120,9 +126,9 @@ pub fn colour(
     col
 }
 
-// /// Create a spatially varying value between zero and unity.
-// #[inline]
-// #[must_use]
-// fn wobble(p: &Pos3) -> f64 {
-//     (p.x.cos() * p.y.cos() * p.z.cos()).abs()
-// }
+/// Create a spatially varying value between zero and unity.
+#[inline]
+#[must_use]
+fn wobble(p: &Pos3) -> f64 {
+    (p.x.cos() * p.y.cos() * p.z.cos()).abs()
+}

@@ -40,6 +40,12 @@
             [
                 3, ["#008080ff", "#4545eaff", "#ea45d5ff", "#7f43bdff", "#00ced1ff"]
             ],
+            [
+                4, ["#ffe627ff", "#ff8c00ff", "#ffd700ff", "#ff4444ff", "#ffff00ff"]
+            ],
+            [
+                5, ["#a6afc0ff", "#44a4ffff", "#f5f5f5ff"]
+            ],
         ]
     },
     "attrs": {
@@ -56,9 +62,9 @@
         [1, ["gold"]],
         [2, ["water"]],
         [3, ["aurora"]],
+        [4, ["stars"]],
+        [5, ["moon"]],
         // [0, ["antlers",
-        //     "aurora",
-        //     "basin",
         //     "boulders",
         //     "drops",
         //     "flowers",
