@@ -124,15 +124,25 @@ pub fn colour(
                 sky = true;
                 break;
             }
-            14 | 18 => {
+            7 | 14 | 18 => {
                 // Translucent
-                weight *= 0.5;
+                weight *= 0.25;
                 let grad = Gradient::new(vec![
                     LinSrgba::default(),
                     scene.cols()[&hit.group()].get(x as f32),
                 ]);
                 col += grad.get(illumination as f32) * weight as f32;
                 ray.travel(scene.sett().bump_dist());
+            }
+            16 => {
+                // Opaque.
+                let grad = Gradient::new(vec![
+                    LinSrgba::default(),
+                    scene.cols()[&hit.group()].get(((x + 3.0) / 4.0) as f32),
+                ]);
+                col += grad.get(illumination as f32) * weight as f32;
+                sky = false;
+                break;
             }
             _ => {
                 // Opaque.
