@@ -71,7 +71,7 @@ fn visibility(mut ray: Ray, scene: &Scene) -> f64 {
                 );
                 ray.travel(scene.sett().bump_dist());
             }
-            2 | 11 => {
+            2 | 11..=13 => {
                 // Refractive.
                 vis *= 0.9;
 
@@ -113,11 +113,17 @@ fn visibility(mut ray: Ray, scene: &Scene) -> f64 {
             }
             3..=5 => {
                 // Transparent.
+                vis *= 0.9;
+                ray.travel(scene.sett().bump_dist());
+            }
+            14 | 18 => {
+                // Translucent.
+                vis *= 0.5;
                 ray.travel(scene.sett().bump_dist());
             }
             _ => {
                 // Opaque.
-                vis *= 0.5;
+                vis = 0.0;
                 break;
             }
         }

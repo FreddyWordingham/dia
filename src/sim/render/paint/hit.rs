@@ -8,7 +8,7 @@ use palette::{Gradient, LinSrgba};
 use rand::rngs::ThreadRng;
 
 /// Minimum fragment weight to simulate.
-const MIN_WEIGHT: f64 = 0.01;
+const MIN_WEIGHT: f64 = 0.1;
 
 /// Mirror colouring fraction.
 const MIRROR_COLOURING: f32 = 0.5;
@@ -17,6 +17,7 @@ const MIRROR_COLOURING: f32 = 0.5;
 pub const REF_INDEX: f64 = 1.3;
 
 /// Colour if surface is hit.
+#[allow(clippy::too_many_lines)]
 #[inline]
 #[must_use]
 pub fn colour(
@@ -24,7 +25,7 @@ pub fn colour(
     scene: &Scene,
     mut ray: Ray,
     rng: &mut ThreadRng,
-    weight: f64,
+    mut weight: f64,
 ) -> LinSrgba {
     debug_assert!(weight > 0.0);
 
@@ -44,17 +45,20 @@ pub fn colour(
 
         let x = match hit.group() {
             1..=2 => 1.0,
-            11 => hit.side().norm().dot(&Vec3::x_axis()).abs(),
-            _ => hit.side().norm().dot(&Vec3::z_axis()).abs(),
+            11 => hit.side().norm().dot(&Vec3::x_axis()).powi(2),
+            14 => hit.side().norm().dot(&Vec3::z_axis()).cos().powi(2),
+            _ => hit.side().norm().dot(&Vec3::z_axis()).powi(2),
         };
 
         match hit.group() {
             1 => {
+                // Reflective.
+                weight *= 0.9;
                 let grad = Gradient::new(vec![
                     LinSrgba::default(),
                     scene.cols()[&hit.group()].get(x as f32),
                 ]);
-                col += grad.get(illumination as f32) * MIRROR_COLOURING;
+                col += grad.get(illumination as f32) * MIRROR_COLOURING * weight as f32;
                 *ray.dir_mut() = Crossing::init_ref_dir(
                     ray.dir(),
                     hit.side().norm(),
@@ -62,12 +66,14 @@ pub fn colour(
                 );
                 ray.travel(scene.sett().bump_dist());
             }
-            2 | 11 => {
+            2 | 11..=13 => {
+                // Refractive.
+                weight *= 0.9;
                 let grad = Gradient::new(vec![
                     LinSrgba::default(),
                     scene.cols()[&hit.group()].get(x as f32),
                 ]);
-                col += grad.get(illumination as f32) * MIRROR_COLOURING;
+                col += grad.get(illumination as f32) * MIRROR_COLOURING * weight as f32;
 
                 let (n0, n1) = if hit.side().is_inside() {
                     (REF_INDEX, 1.0)
@@ -102,16 +108,39 @@ pub fn colour(
                 }
             }
             4..=5 => {
-                col += scene.cols()[&hit.group()].get(x as f32);
+                // Astro.
+                col += scene.cols()[&hit.group()].get(x as f32) * weight as f32;
                 sky = false;
                 break;
             }
-            _ => {
+            3 => {
+                // Aurora.
+                weight *= 0.5;
                 let grad = Gradient::new(vec![
                     LinSrgba::default(),
                     scene.cols()[&hit.group()].get(x as f32),
                 ]);
-                col += grad.get(illumination as f32);
+                col += grad.get(illumination as f32) * 0.5 * weight as f32;
+                sky = true;
+                break;
+            }
+            14 | 18 => {
+                // Translucent
+                weight *= 0.5;
+                let grad = Gradient::new(vec![
+                    LinSrgba::default(),
+                    scene.cols()[&hit.group()].get(x as f32),
+                ]);
+                col += grad.get(illumination as f32) * weight as f32;
+                ray.travel(scene.sett().bump_dist());
+            }
+            _ => {
+                // Opaque.
+                let grad = Gradient::new(vec![
+                    LinSrgba::default(),
+                    scene.cols()[&hit.group()].get(x as f32),
+                ]);
+                col += grad.get(illumination as f32) * weight as f32;
                 sky = false;
                 break;
             }
@@ -119,16 +148,9 @@ pub fn colour(
     }
 
     if sky {
-        return palette::Srgba::new(0.0, 0.0, (1.0 - ray.dir().z).powi(4) as f32, 1.0)
-            .into_linear();
+        col += palette::Srgba::new(0.0, 0.0, (1.0 - ray.dir().z).powi(4) as f32, 1.0).into_linear()
+            * weight as f32;
     }
 
     col
-}
-
-/// Create a spatially varying value between zero and unity.
-#[inline]
-#[must_use]
-fn wobble(p: &Pos3) -> f64 {
-    (p.x.cos() * p.y.cos() * p.z.cos()).abs()
 }

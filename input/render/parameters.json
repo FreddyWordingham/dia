@@ -19,7 +19,7 @@
     "cam": {
         "pos": [7.5, -7.5, 3.0],
         "tar": [-0.95, 1.75, 2.9],
-        "fov": 20.0,
+        "fov": 90.0,
         "aspect_ratio": "Square",
         "res": 1024,
         // "res": 3440,
@@ -59,10 +59,43 @@
                 9, ["#ff371eff", "#ff06f1ff"]
             ],
             [
-                10, ["#a9a9a9ff", "#808080ff"]
+                10, ["#a9a9a9ff", "#ffd700ff", "#808080ff"]
             ],
             [
-                11, ["#ff2b2bff", "#e72525ff", "#ff2bdaff"]
+                11, ["#2b2bffff", "#2525e7ff", "#15a0beff"]
+            ],
+            [
+                12, ["#2bff2bff", "#25e725ff", "#2f9b5dff"]
+            ],
+            [
+                13, ["#ff2b2bff", "#e72525ff", "#db4343ff"]
+            ],
+            [
+                14, ["#ffa500ff", "#ff4500ff", "#d8276aff", "#154afdff"]
+            ],
+            [
+                15, ["#cd5c5cff", "#d2691eff", "#a0522dff"]
+            ],
+            [
+                16, ["#fdf315ff", "#ffc400ff"]
+            ],
+            [
+                17, ["#814be4ff", "#e43bf3ff", "#fb72d9ff"]
+            ],
+            [
+                18, ["#a9a9a9ff", "#f5f5f5ff"]
+            ],
+            [
+                19, ["#d00ec0ff", "#fcdee4ff", "#ff2998ff"]
+            ],
+            [
+                20, ["#22b2ffff", "#225fffff"]
+            ],
+            [
+                21, ["#ffff00ff", "#ffa000ff", "#ff7a49ff"]
+            ],
+            [
+                30, ["#ffff00ff", "#ffa000ff", "#ff7a49ff", "#ff33aaff"]
             ],
         ]
     },
@@ -81,25 +114,19 @@
         [4, ["stars"]],
         [5, ["moon"]],
         [6, ["ground"]],
-        // [7, ["grass"]],
-        // [8, ["boulders"]],
+        [7, ["grass"]],
+        [8, ["boulders"]],
         [9, ["trees"]],
         [10, ["rocks_0", "rocks_2"]],
         [11, ["rocks_1"]],
-        // [0, ["antlers",
-        //     "drops",
-        //     "flowers",
-        //     "flowers_0",
-        //     "flowers_1",
-        //     "flowers_2",
-        //     "flowers_3",
-        //     "leaves",
-        //     "lillies",
-        //     "rocks_0",
-        //     "rocks_1",
-        //     "rocks_2",
-        //     "solar",
-        //     "stag",
-        // ]]
+        [14, ["leaves"]],
+        [15, ["stag"]],
+        [16, ["antlers"]],
+        [17, ["lillies"]],
+        [18, ["flowers_0"]],
+        [19, ["flowers_1"]],
+        [20, ["flowers_3"]],
+        [21, ["flowers_2"]],
+        [30, ["solar"]]
     ]
 }
