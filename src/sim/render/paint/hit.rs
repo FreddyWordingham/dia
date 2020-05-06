@@ -36,7 +36,22 @@ pub fn colour(
     }
 
     let mut sky = true;
+    let mut fog = 0.0;
+    let mut pot = 1.0;
     while let Some(hit) = scene.grid().observe(ray.clone(), scene.sett().bump_dist()) {
+        if hit.dist() > 1.0e-1 {
+            ray.travel(1.0e-1);
+            fog += illumination::visibility(
+                Ray::new(
+                    *ray.pos(),
+                    Dir3::new_normalize(scene.sett().fog_pos() - ray.pos()),
+                ),
+                scene,
+            );
+            pot += 1.0;
+            continue;
+        }
+
         ray.travel(hit.dist());
 
         let light = illumination::light(&ray, scene, &hit);
@@ -161,6 +176,9 @@ pub fn colour(
         col += palette::Srgba::new(0.0, 0.0, (1.0 - ray.dir().z).powi(4) as f32, 1.0).into_linear()
             * weight as f32;
     }
+
+    col +=
+        palette::Srgba::new(1.0, 1.0, 0.8, 0.1).into_linear() * (fog / pot).powi(10) as f32 * 0.15;
 
     col
 }

@@ -51,7 +51,7 @@ pub fn shadow(ray: &Ray, scene: &Scene, hit: &Hit, rng: &mut ThreadRng) -> f64 {
 /// Calculate the visibility of a given ray.
 #[inline]
 #[must_use]
-fn visibility(mut ray: Ray, scene: &Scene) -> f64 {
+pub fn visibility(mut ray: Ray, scene: &Scene) -> f64 {
     let mut vis = 1.0;
     while let Some(hit) = scene.grid().observe(ray.clone(), scene.sett().bump_dist()) {
         if vis <= 0.1 {
