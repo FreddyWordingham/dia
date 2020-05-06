@@ -29,8 +29,14 @@
     "cols": {
         "grads": [
             [
-                0, ["#000000ff", "#ffffffff"]
-            ]
+                0, ["#ae5515ff"]
+            ],
+            [
+                1, ["#ffff00ff"]
+            ],
+            [
+                2, ["#00a1ffff"]
+            ],
         ]
     },
     "attrs": {
@@ -41,31 +47,36 @@
         ]
     },
     "surfs": [
-        [0, ["antlers",
-            "aurora",
-            "basin",
-            "boulders",
-            "drops",
-            "flowers",
-            "flowers_0",
-            "flowers_1",
-            "flowers_2",
-            "flowers_3",
-            "gold",
-            "grass",
-            "ground",
-            "leaves",
-            "lillies",
-            "moon",
-            "plane",
-            "rocks_0",
-            "rocks_1",
-            "rocks_2",
-            "solar",
-            "stag",
-            "stars",
-            "trees",
-            "water"
-        ]]
+        [0, ["basin",
+            // "leaves",
+        ]],
+        [1, ["gold"]],
+        [2, ["water"]]
+        // [0, ["antlers",
+        //     "aurora",
+        //     "basin",
+        //     "boulders",
+        //     "drops",
+        //     "flowers",
+        //     "flowers_0",
+        //     "flowers_1",
+        //     "flowers_2",
+        //     "flowers_3",
+        //     "gold",
+        //     "grass",
+        //     "ground",
+        //     "leaves",
+        //     "lillies",
+        //     "moon",
+        //     "plane",
+        //     "rocks_0",
+        //     "rocks_1",
+        //     "rocks_2",
+        //     "solar",
+        //     "stag",
+        //     "stars",
+        //     "trees",
+        //     "water"
+        // ]]
     ]
 }

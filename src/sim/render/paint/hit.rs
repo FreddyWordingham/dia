@@ -2,9 +2,9 @@
 
 use crate::{
     render::{illumination, Scene},
-    Crossing, Dir3, Ray, Rot3, Vec3,
+    Crossing, Pos3, Ray,
 };
-use palette::LinSrgba;
+use palette::{Gradient, LinSrgba};
 use rand::rngs::ThreadRng;
 
 /// Minimum fragment weight to simulate.
@@ -13,14 +13,14 @@ const MIN_WEIGHT: f64 = 0.01;
 /// Mirror colouring fraction.
 const MIRROR_COLOURING: f32 = 0.15;
 
-/// Puddle reflection shimmer factor.
-const PUDDLE_SHIMMER: f64 = 2.0;
+/// Refractive index of refracting surfaces.
+pub const REF_INDEX: f64 = 1.3;
 
 /// Colour if surface is hit.
 #[inline]
 #[must_use]
 pub fn colour(
-    _thread_id: usize,
+    thread_id: usize,
     scene: &Scene,
     mut ray: Ray,
     rng: &mut ThreadRng,
@@ -42,9 +42,67 @@ pub fn colour(
         let shadow = illumination::shadow(&ray, scene, &hit, rng);
         let illumination = light * shadow;
 
+        let x = wobble(ray.pos());
+
         match hit.group() {
+            1 => {
+                let grad = Gradient::new(vec![
+                    LinSrgba::default(),
+                    scene.cols()[&hit.group()].get(x as f32),
+                ]);
+                col += grad.get(illumination as f32) * MIRROR_COLOURING;
+                *ray.dir_mut() = Crossing::init_ref_dir(
+                    ray.dir(),
+                    hit.side().norm(),
+                    -ray.dir().dot(hit.side().norm()),
+                );
+                ray.travel(scene.sett().bump_dist());
+            }
+            2 => {
+                let grad = Gradient::new(vec![
+                    LinSrgba::default(),
+                    scene.cols()[&hit.group()].get(x as f32),
+                ]);
+                col += grad.get(illumination as f32) * MIRROR_COLOURING;
+
+                let (n0, n1) = if hit.side().is_inside() {
+                    (REF_INDEX, 1.0)
+                } else {
+                    (1.0, REF_INDEX)
+                };
+                let crossing = Crossing::new(ray.dir(), hit.side().norm(), n0, n1);
+                if let Some(trans_dir) = crossing.trans_dir() {
+                    let ref_prob = crossing.ref_prob();
+                    let trans_prob = 1.0 - ref_prob;
+
+                    let mut ref_ray = Ray::new(
+                        ray.pos().clone(),
+                        Crossing::init_ref_dir(
+                            ray.dir(),
+                            hit.side().norm(),
+                            -ray.dir().dot(hit.side().norm()),
+                        ),
+                    );
+                    ref_ray.travel(scene.sett().bump_dist());
+                    let ref_col = colour(thread_id, scene, ref_ray, rng, weight * ref_prob);
+
+                    let mut trans_ray = ray;
+                    *trans_ray.dir_mut() = *trans_dir;
+                    trans_ray.travel(scene.sett().bump_dist());
+                    let trans_col = colour(thread_id, scene, trans_ray, rng, weight * trans_prob);
+
+                    return col + (ref_col * ref_prob as f32) + (trans_col * trans_prob as f32);
+                } else {
+                    *ray.dir_mut() = *crossing.ref_dir();
+                    ray.travel(scene.sett().bump_dist());
+                }
+            }
             _ => {
-                col += scene.cols()[&hit.group()].get(illumination as f32);
+                let grad = Gradient::new(vec![
+                    LinSrgba::default(),
+                    scene.cols()[&hit.group()].get(x as f32),
+                ]);
+                col += grad.get(illumination as f32);
                 sky = false;
                 break;
             }
@@ -57,4 +115,8 @@ pub fn colour(
     }
 
     col
+}
+
+fn wobble(p: &Pos3) -> f64 {
+    (p.x.cos() * p.y.cos() * p.z.cos()).abs()
 }

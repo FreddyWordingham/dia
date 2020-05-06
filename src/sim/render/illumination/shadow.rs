@@ -1,6 +1,6 @@
 //! Shadowing functions.
 
-use crate::{render::Scene, sample::golden, Dir3, Hit, Ray};
+use crate::{render::Scene, sample::golden, Crossing, Dir3, Hit, Ray};
 use rand::{rngs::ThreadRng, Rng};
 
 /// Calculate the shadowing factor.
@@ -58,10 +58,66 @@ fn visibility(mut ray: Ray, scene: &Scene) -> f64 {
             break;
         }
 
+        ray.travel(hit.dist());
+
         match hit.group() {
+            1 => {
+                // Reflective.
+                vis *= 0.9;
+                *ray.dir_mut() = Crossing::init_ref_dir(
+                    ray.dir(),
+                    hit.side().norm(),
+                    -ray.dir().dot(hit.side().norm()),
+                );
+                ray.travel(scene.sett().bump_dist());
+            }
+            2 => {
+                // Refractive.
+                vis *= 0.9;
+
+                {
+                    let (n0, n1) = if hit.side().is_inside() {
+                        (crate::render::paint::hit::REF_INDEX, 1.0)
+                    } else {
+                        (1.0, crate::render::paint::hit::REF_INDEX)
+                    };
+                    let crossing = Crossing::new(ray.dir(), hit.side().norm(), n0, n1);
+                    if let Some(trans_dir) = crossing.trans_dir() {
+                        let ref_prob = crossing.ref_prob();
+                        let trans_prob = 1.0 - ref_prob;
+
+                        let mut ref_ray = Ray::new(
+                            ray.pos().clone(),
+                            Crossing::init_ref_dir(
+                                ray.dir(),
+                                hit.side().norm(),
+                                -ray.dir().dot(hit.side().norm()),
+                            ),
+                        );
+                        ref_ray.travel(scene.sett().bump_dist());
+                        let ref_vis = visibility(ref_ray, scene);
+
+                        let mut trans_ray = ray;
+                        *trans_ray.dir_mut() = *trans_dir;
+                        trans_ray.travel(scene.sett().bump_dist());
+                        let trans_vis = visibility(trans_ray, scene);
+
+                        return vis * ((ref_vis * ref_prob) + (trans_vis * trans_prob));
+                    } else {
+                        *ray.dir_mut() = *crossing.ref_dir();
+                        ray.travel(scene.sett().bump_dist());
+                    }
+                }
+            }
+            10 => {
+                // Transparent.
+                vis *= 0.8;
+                ray.travel(scene.sett().bump_dist());
+            }
             _ => {
+                // Opaque.
                 vis *= 0.5;
-                ray.travel(hit.dist() + scene.sett().bump_dist());
+                break;
             }
         }
     }
