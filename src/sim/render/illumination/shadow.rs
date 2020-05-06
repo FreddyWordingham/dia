@@ -54,7 +54,7 @@ pub fn shadow(ray: &Ray, scene: &Scene, hit: &Hit, rng: &mut ThreadRng) -> f64 {
 fn visibility(mut ray: Ray, scene: &Scene) -> f64 {
     let mut vis = 1.0;
     while let Some(hit) = scene.grid().observe(ray.clone(), scene.sett().bump_dist()) {
-        if vis <= 0.0 {
+        if vis <= 0.1 {
             break;
         }
 
@@ -71,7 +71,7 @@ fn visibility(mut ray: Ray, scene: &Scene) -> f64 {
                 );
                 ray.travel(scene.sett().bump_dist());
             }
-            2 => {
+            2 | 11 => {
                 // Refractive.
                 vis *= 0.9;
 
@@ -83,26 +83,28 @@ fn visibility(mut ray: Ray, scene: &Scene) -> f64 {
                     };
                     let crossing = Crossing::new(ray.dir(), hit.side().norm(), n0, n1);
                     if let Some(trans_dir) = crossing.trans_dir() {
-                        let ref_prob = crossing.ref_prob();
-                        let trans_prob = 1.0 - ref_prob;
+                        // let ref_prob = crossing.ref_prob();
+                        // let trans_prob = 1.0 - ref_prob;
 
-                        let mut ref_ray = Ray::new(
-                            *ray.pos(),
-                            Crossing::init_ref_dir(
-                                ray.dir(),
-                                hit.side().norm(),
-                                -ray.dir().dot(hit.side().norm()),
-                            ),
-                        );
-                        ref_ray.travel(scene.sett().bump_dist());
-                        let ref_vis = visibility(ref_ray, scene);
+                        // let mut ref_ray = Ray::new(
+                        //     *ray.pos(),
+                        //     Crossing::init_ref_dir(
+                        //         ray.dir(),
+                        //         hit.side().norm(),
+                        //         -ray.dir().dot(hit.side().norm()),
+                        //     ),
+                        // );
+                        // ref_ray.travel(scene.sett().bump_dist());
+                        // let ref_vis = visibility(ref_ray, scene);
 
-                        let mut trans_ray = ray;
-                        *trans_ray.dir_mut() = *trans_dir;
-                        trans_ray.travel(scene.sett().bump_dist());
-                        let trans_vis = visibility(trans_ray, scene);
+                        // let mut trans_ray = ray;
+                        // *trans_ray.dir_mut() = *trans_dir;
+                        // trans_ray.travel(scene.sett().bump_dist());
+                        // let trans_vis = visibility(trans_ray, scene);
 
-                        return vis * ref_vis.mul_add(ref_prob, trans_vis * trans_prob);
+                        // return vis * ref_vis.mul_add(ref_prob, trans_vis * trans_prob);
+                        *ray.dir_mut() = *trans_dir;
+                        ray.travel(scene.sett().bump_dist());
                     } else {
                         *ray.dir_mut() = *crossing.ref_dir();
                         ray.travel(scene.sett().bump_dist());

@@ -19,9 +19,9 @@
     "cam": {
         "pos": [7.5, -7.5, 3.0],
         "tar": [-0.95, 1.75, 2.9],
-        "fov": 90.0,
+        "fov": 20.0,
         "aspect_ratio": "Square",
-        "res": 512,
+        "res": 1024,
         // "res": 3440,
         // "ss": 2,
         // "dof": [17, 2.0]
@@ -46,6 +46,24 @@
             [
                 5, ["#a6afc0ff", "#44a4ffff", "#f5f5f5ff"]
             ],
+            [
+                6, ["#008b8bff", "#25be68ff", "#00ff7fff"]
+            ],
+            [
+                7, ["#008000ff", "#32cd32ff", "#008b8bff"]
+            ],
+            [
+                8, ["#a0522dff", "#95b3b4ff", "#d3d3d3ff"]
+            ],
+            [
+                9, ["#ff371eff", "#ff06f1ff"]
+            ],
+            [
+                10, ["#a9a9a9ff", "#808080ff"]
+            ],
+            [
+                11, ["#ff2b2bff", "#e72525ff", "#ff2bdaff"]
+            ],
         ]
     },
     "attrs": {
@@ -56,37 +74,32 @@
         ]
     },
     "surfs": [
-        [0, ["basin",
-            // "leaves",
-        ]],
+        [0, ["basin"]],
         [1, ["gold"]],
-        [2, ["water"]],
+        [2, ["plane"]],
         [3, ["aurora"]],
         [4, ["stars"]],
         [5, ["moon"]],
+        [6, ["ground"]],
+        // [7, ["grass"]],
+        // [8, ["boulders"]],
+        [9, ["trees"]],
+        [10, ["rocks_0", "rocks_2"]],
+        [11, ["rocks_1"]],
         // [0, ["antlers",
-        //     "boulders",
         //     "drops",
         //     "flowers",
         //     "flowers_0",
         //     "flowers_1",
         //     "flowers_2",
         //     "flowers_3",
-        //     "gold",
-        //     "grass",
-        //     "ground",
         //     "leaves",
         //     "lillies",
-        //     "moon",
-        //     "plane",
         //     "rocks_0",
         //     "rocks_1",
         //     "rocks_2",
         //     "solar",
         //     "stag",
-        //     "stars",
-        //     "trees",
-        //     "water"
         // ]]
     ]
 }

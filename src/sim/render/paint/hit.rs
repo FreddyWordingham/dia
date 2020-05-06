@@ -11,7 +11,7 @@ use rand::rngs::ThreadRng;
 const MIN_WEIGHT: f64 = 0.01;
 
 /// Mirror colouring fraction.
-const MIRROR_COLOURING: f32 = 0.15;
+const MIRROR_COLOURING: f32 = 0.5;
 
 /// Refractive index of refracting surfaces.
 pub const REF_INDEX: f64 = 1.3;
@@ -43,9 +43,9 @@ pub fn colour(
         let illumination = light * shadow;
 
         let x = match hit.group() {
-            3..=5 => hit.side().norm().dot(&Vec3::z_axis()).abs(),
-            // 4..=5 => wobble(ray.pos()),
-            _ => 1.0,
+            1..=2 => 1.0,
+            11 => hit.side().norm().dot(&Vec3::x_axis()).abs(),
+            _ => hit.side().norm().dot(&Vec3::z_axis()).abs(),
         };
 
         match hit.group() {
@@ -62,7 +62,7 @@ pub fn colour(
                 );
                 ray.travel(scene.sett().bump_dist());
             }
-            2 => {
+            2 | 11 => {
                 let grad = Gradient::new(vec![
                     LinSrgba::default(),
                     scene.cols()[&hit.group()].get(x as f32),
