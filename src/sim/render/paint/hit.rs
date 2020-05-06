@@ -2,7 +2,7 @@
 
 use crate::{
     render::{illumination, Scene},
-    Crossing, Pos3, Ray,
+    Crossing, Dir3, Pos3, Ray, Vec3,
 };
 use palette::{Gradient, LinSrgba};
 use rand::rngs::ThreadRng;
@@ -42,7 +42,10 @@ pub fn colour(
         let shadow = illumination::shadow(&ray, scene, &hit, rng);
         let illumination = light * shadow;
 
-        let x = wobble(ray.pos());
+        let x = match hit.group() {
+            3 => hit.side().norm().dot(&Vec3::z_axis()).abs(),
+            _ => 1.0,
+        };
 
         match hit.group() {
             1 => {
@@ -117,9 +120,9 @@ pub fn colour(
     col
 }
 
-/// Create a spatially varying value between zero and unity.
-#[inline]
-#[must_use]
-fn wobble(p: &Pos3) -> f64 {
-    (p.x.cos() * p.y.cos() * p.z.cos()).abs()
-}
+// /// Create a spatially varying value between zero and unity.
+// #[inline]
+// #[must_use]
+// fn wobble(p: &Pos3) -> f64 {
+//     (p.x.cos() * p.y.cos() * p.z.cos()).abs()
+// }

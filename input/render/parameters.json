@@ -37,6 +37,9 @@
             [
                 2, ["#00a1ffff"]
             ],
+            [
+                3, ["#008080ff", "#4545eaff", "#ea45d5ff", "#7f43bdff", "#00ced1ff"]
+            ],
         ]
     },
     "attrs": {
@@ -51,7 +54,8 @@
             // "leaves",
         ]],
         [1, ["gold"]],
-        [2, ["water"]]
+        [2, ["water"]],
+        [3, ["aurora"]],
         // [0, ["antlers",
         //     "aurora",
         //     "basin",
