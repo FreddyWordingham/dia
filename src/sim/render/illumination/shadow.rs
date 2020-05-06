@@ -116,10 +116,13 @@ pub fn visibility(mut ray: Ray, scene: &Scene) -> f64 {
                 vis *= 0.9;
                 ray.travel(scene.sett().bump_dist());
             }
-            7 | 14 | 18 => {
+            14 | 18 => {
                 // Translucent.
                 vis *= 0.5;
                 ray.travel(scene.sett().bump_dist());
+            }
+            31 => {
+                break;
             }
             _ => {
                 // Opaque.

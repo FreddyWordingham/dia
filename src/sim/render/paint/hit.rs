@@ -2,7 +2,7 @@
 
 use crate::{
     render::{illumination, Scene},
-    Crossing, Dir3, Pos3, Ray, Vec3,
+    Crossing, Dir3, Ray, Vec3,
 };
 use palette::{Gradient, LinSrgba};
 use rand::rngs::ThreadRng;
@@ -139,7 +139,7 @@ pub fn colour(
                 sky = true;
                 break;
             }
-            7 | 14 | 18 => {
+            14 | 18 => {
                 // Translucent
                 weight *= 0.25;
                 let grad = Gradient::new(vec![
@@ -178,7 +178,7 @@ pub fn colour(
     }
 
     col +=
-        palette::Srgba::new(1.0, 1.0, 0.8, 0.1).into_linear() * (fog / pot).powi(10) as f32 * 0.15;
+        palette::Srgba::new(1.0, 1.0, 0.8, 0.1).into_linear() * (fog / pot).powi(4) as f32 * 0.15;
 
     col
 }
