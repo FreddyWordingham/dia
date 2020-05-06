@@ -76,7 +76,7 @@ pub fn colour(
                     let trans_prob = 1.0 - ref_prob;
 
                     let mut ref_ray = Ray::new(
-                        ray.pos().clone(),
+                        *ray.pos(),
                         Crossing::init_ref_dir(
                             ray.dir(),
                             hit.side().norm(),
@@ -117,6 +117,9 @@ pub fn colour(
     col
 }
 
+/// Create a spatially varying value between zero and unity.
+#[inline]
+#[must_use]
 fn wobble(p: &Pos3) -> f64 {
     (p.x.cos() * p.y.cos() * p.z.cos()).abs()
 }

@@ -23,7 +23,7 @@ pub fn shadow(ray: &Ray, scene: &Scene, hit: &Hit, rng: &mut ThreadRng) -> f64 {
             ambi_ray.rotate(phi, theta + offset);
             total += visibility(ambi_ray, scene);
         }
-        (total / ambient_occlusion as f64).powi(scene.sett().ambient_occlusion_power())
+        (total / f64::from(ambient_occlusion)).powi(scene.sett().ambient_occlusion_power())
     } else {
         1.0
     };
@@ -37,9 +37,9 @@ pub fn shadow(ray: &Ray, scene: &Scene, hit: &Hit, rng: &mut ThreadRng) -> f64 {
             soft_ray.rotate(r * scene.sett().sun_rad(), theta + offset);
             total += visibility(soft_ray, scene);
         }
-        total / soft_shadows as f64
+        total / f64::from(soft_shadows)
     } else {
-        visibility(light_ray.clone(), scene)
+        visibility(light_ray, scene)
     };
 
     ambient *= scene.sett().shadow_weights()[0];
@@ -87,7 +87,7 @@ fn visibility(mut ray: Ray, scene: &Scene) -> f64 {
                         let trans_prob = 1.0 - ref_prob;
 
                         let mut ref_ray = Ray::new(
-                            ray.pos().clone(),
+                            *ray.pos(),
                             Crossing::init_ref_dir(
                                 ray.dir(),
                                 hit.side().norm(),
@@ -102,7 +102,7 @@ fn visibility(mut ray: Ray, scene: &Scene) -> f64 {
                         trans_ray.travel(scene.sett().bump_dist());
                         let trans_vis = visibility(trans_ray, scene);
 
-                        return vis * ((ref_vis * ref_prob) + (trans_vis * trans_prob));
+                        return vis * ref_vis.mul_add(ref_prob, trans_vis * trans_prob);
                     } else {
                         *ray.dir_mut() = *crossing.ref_dir();
                         ray.travel(scene.sett().bump_dist());

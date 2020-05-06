@@ -26,7 +26,7 @@ impl Crossing {
         debug_assert!(n_next >= 1.0);
         debug_assert!(inc.dot(norm) < 0.0);
 
-        let ci = -inc.dot(&norm);
+        let ci = -inc.dot(norm);
         let n = n_curr / n_next;
 
         let crit_ang = if n_curr <= n_next {
@@ -43,13 +43,13 @@ impl Crossing {
 
             (
                 Self::init_ref_prob(n_curr, n_next, ci, ct),
-                Some(Self::init_trans_dir(inc, &norm, n, ci, ct)),
+                Some(Self::init_trans_dir(inc, norm, n, ci, ct)),
             )
         };
 
         Self {
             ref_prob,
-            ref_dir: Self::init_ref_dir(inc, &norm, ci),
+            ref_dir: Self::init_ref_dir(inc, norm, ci),
             trans_dir,
         }
     }
