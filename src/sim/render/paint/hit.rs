@@ -178,7 +178,7 @@ pub fn colour(
     }
 
     col +=
-        palette::Srgba::new(1.0, 1.0, 0.8, 0.1).into_linear() * (fog / pot).powi(4) as f32 * 0.15;
+        palette::Srgba::new(0.7, 0.7, 1.0, 0.001).into_linear() * (fog / pot).powi(4) as f32 * 0.2;
 
     col
 }

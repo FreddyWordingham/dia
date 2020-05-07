@@ -6,8 +6,8 @@
     },
     "sett": {
         "bump_dist": 1.0e-6,
-        "sun_pos": [11.25, 10.75, 14.5],
-        "fog_pos": [11.25, 10.75, 14.5],
+        "sun_pos": [2.2, 12.27, 12.0],
+        "fog_pos": [2.2, 12.27, 12.0],
         // "sun_pos": [1, -1, 1.5],
         // "fog_pos": [1, -1, 1.5],
         // "sun_pos": [1, -1, 1.5],
@@ -17,7 +17,7 @@
         "ambient_occlusion": 31,
         "ambient_occlusion_power": 4,
         "soft_shadows": 17,
-        "shadow_weights": [0.75, 0.25]
+        "shadow_weights": [0.15, 0.85]
     },
     "cam": {
         // "pos": [7.5, -7.5, 3.0],
@@ -26,9 +26,9 @@
         "fov": 110.0,
         "aspect_ratio": "Widescreen",
         // "res": 344,
-        "res": 3440,
-        "ss": 2,
-        "dof": [9, 0.5]
+        "res": 344,
+        // "ss": 2,
+        // "dof": [9, 0.5]
     },
     "cols": {
         "grads": [
