@@ -26,9 +26,9 @@
         "fov": 110.0,
         "aspect_ratio": "Widescreen",
         // "res": 344,
-        "res": 344,
+        "res": 3440,
         // "ss": 2,
-        // "dof": [9, 0.5]
+        "dof": [31, 0.5]
     },
     "cols": {
         "grads": [
