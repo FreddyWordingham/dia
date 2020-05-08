@@ -1,0 +1,7 @@
+{
+    "amr": {
+        "tar_tris": 5,
+        "max_depth": 12,
+        "padding": 0.01
+    }
+}
