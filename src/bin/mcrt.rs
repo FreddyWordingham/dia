@@ -9,6 +9,8 @@ use std::path::{Path, PathBuf};
 struct Parameters {
     /// Adaptive mesh settings.
     amr: settings::Adaptive,
+    /// MCRT runtime settings.
+    sett: mcrt::Settings,
 }
 
 /// Main function.
