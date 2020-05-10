@@ -58,7 +58,7 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 
     banner::sub_sub_section("Surfaces");
     // iter::groups(&params.surfs);
-    report!("surfaces", iter::groups(&params.surfs).unwrap());
+    report!("surfaces", slice::groups(&params.surfs).unwrap());
 
     params
 }

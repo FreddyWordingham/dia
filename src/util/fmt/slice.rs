@@ -1,5 +1,8 @@
 //! Iterator formatting function.
 
+use crate::Error;
+use std::fmt::{Display, Write};
+
 /// Print the vector of values to a string.
 /// # Errors
 /// if can not write value to string.
