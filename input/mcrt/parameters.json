@@ -11,7 +11,7 @@
         "mesh": "circle",
         "power": 1.0,
         "spec": {
-            "Here": 92.3
+            "There": "test.json"
         }
     },
     "surfs": [

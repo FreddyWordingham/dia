@@ -7,20 +7,20 @@ use std::path::Path;
 #[derive(Debug, serde::Deserialize)]
 pub enum Oop<T: Load> {
     /// Path to file.
-    File(String),
+    There(String),
     /// Direct value.
     Here(T),
 }
 
-impl<T: Load> Oop<T> {
+impl<T: Clone + Load> Oop<T> {
     /// Access the held value, or load it from the file.
     /// # Errors
     /// if the file can not be loaded.
     #[inline]
-    pub fn get(self, in_dir: &Path) -> Result<T, Error> {
+    pub fn get(&self, in_dir: &Path) -> Result<T, Error> {
         match self {
-            Self::File(path) => T::load(&in_dir.join(path)),
-            Self::Here(val) => Ok(val),
+            Self::There(path) => T::load(&in_dir.join(path)),
+            Self::Here(val) => Ok((*val).clone()),
         }
     }
 }

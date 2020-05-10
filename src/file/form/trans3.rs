@@ -6,6 +6,7 @@ use nalgebra::{Translation3, UnitQuaternion};
 
 /// Loadable transform structure.
 #[load]
+#[derive(Clone)]
 pub struct Trans3 {
     /// Optional translation to apply.
     trans: Option<Translation3<f64>>,
@@ -16,6 +17,8 @@ pub struct Trans3 {
 }
 
 impl Trans3 {
+    crate::access!(scale, Option<f64>);
+
     /// Build a transformation.
     #[inline]
     #[must_use]

@@ -21,7 +21,7 @@ struct Parameters {
 pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, _out_dir) = init();
-    let _params = input(&in_dir, &params_path);
+    let params = input(&in_dir, &params_path);
     banner::section("Finished");
 }
 
@@ -64,13 +64,8 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
         format!("\n{}", slice::groups(&params.surfs).expect("Print failed."))
     );
 
-    let x = params
-        .light
-        .clone()
-        .spec()
-        .get(&in_dir)
-        .expect("Sub load failed.");
-    // report!("light_spec", params.light.spec().get(in_dir));
+    let x = params.light.spec().get(&in_dir).expect("Sub load failed.");
+    report!("x", x.scale().unwrap());
 
     params
 }
