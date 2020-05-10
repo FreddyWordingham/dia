@@ -11,6 +11,8 @@ struct Parameters {
     amr: settings::Adaptive,
     /// MCRT runtime settings.
     sett: mcrt::Settings,
+    /// Input surfaces.
+    surfs: Vec<(Group, Vec<String>)>,
 }
 
 /// Main function.
@@ -45,10 +47,18 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::sub_section("Parameters");
     let params =
         Parameters::load(&in_dir.join(params_path)).expect("Could not load parameters file");
+
     banner::sub_sub_section("Grid");
     report!("tar_tris", params.amr.tar_tris());
     report!("max_depth", params.amr.max_depth());
-    report!("padding", params.amr.padding());
+    report!("padding", params.amr.padding() * 100.0, "%");
+
+    banner::sub_sub_section("MCRT Settings");
+    report!("bump_dist", params.sett.bump_dist() / 1.0e-9, "nm");
+
+    banner::sub_sub_section("Surfaces");
+    // iter::groups(&params.surfs);
+    report!("surfaces", iter::groups(&params.surfs).unwrap());
 
     params
 }

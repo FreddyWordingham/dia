@@ -26,6 +26,8 @@ pub enum Error {
     Parallel,
     // /// Unexpected None error.
     // None(std::option::NoneError),
+    /// Formatting error.
+    Format(std::fmt::Error),
 }
 
 macro_rules! impl_from_for_err {
@@ -48,6 +50,7 @@ impl_from_for_err!(Self::WriteJson, serde_json::Error);
 impl_from_for_err!(Self::WriteNetCDF, netcdf::error::Error);
 impl_from_for_err!(Self::WritePng, png::EncodingError);
 impl_from_for_err!(Self::EnvVar, std::env::VarError);
+impl_from_for_err!(Self::Format, std::fmt::Error);
 
 impl<T> From<std::sync::PoisonError<T>> for Error {
     #[inline]
@@ -77,6 +80,7 @@ impl Debug for Error {
                 Self::WritePng { .. } => "PNG writing",
                 Self::EnvVar { .. } => "Environment variable missing",
                 Self::Parallel { .. } => "Parallelisation poison",
+                Self::Format { .. } => "Formatting",
             },
             match self {
                 Self::Load { 0: err } => format!("{:?}", err),
@@ -89,6 +93,7 @@ impl Debug for Error {
                 Self::WritePng { 0: err } => format!("{:?}", err),
                 Self::EnvVar { 0: err } => format!("{:?}", err),
                 Self::Parallel => "Parallelisation fail".to_string(),
+                Self::Format { 0: err } => format!("{:?}", err),
             }
         )
     }

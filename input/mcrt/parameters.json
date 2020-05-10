@@ -3,5 +3,8 @@
         "tar_tris": 5,
         "max_depth": 12,
         "padding": 0.01
+    },
+    "sett": {
+        "bump_dist": 1.0e-9
     }
 }
