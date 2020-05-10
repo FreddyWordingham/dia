@@ -35,7 +35,11 @@ where
     let mut s = String::new();
     for (group, vals) in groups {
         let vs = values(vals.as_slice())?;
-        write!(s, "\n{:>32}  : {}", group, vs)?;
+        writeln!(s, "{:>32} -> {}", format!("[{}]", group), vs)?;
+    }
+
+    if !s.is_empty() {
+        s.pop();
     }
 
     Ok(s)

@@ -57,8 +57,10 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     report!("bump_dist", params.sett.bump_dist() / 1.0e-9, "nm");
 
     banner::sub_sub_section("Surfaces");
-    // iter::groups(&params.surfs);
-    report!("surfaces", slice::groups(&params.surfs).unwrap());
+    report!(
+        "surfaces",
+        format!("\n{}", slice::groups(&params.surfs).expect("Print failed."))
+    );
 
     params
 }
