@@ -5,7 +5,7 @@ use std::path::Path;
 
 /// Possible file redirection structure.
 #[derive(Debug, serde::Deserialize)]
-pub enum Oop<T> {
+pub enum Oop<T: Load> {
     /// Path to file.
     File(String),
     /// Direct value.
@@ -25,7 +25,7 @@ impl<T: Load> Oop<T> {
     }
 }
 
-impl<T> Load for Oop<T>
+impl<T: Load> Load for Oop<T>
 where
     for<'de> T: serde::Deserialize<'de>,
 {

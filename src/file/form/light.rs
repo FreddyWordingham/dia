@@ -11,11 +11,11 @@ pub struct Light {
     /// Light power [J/s].
     power: f64,
     /// Light spectrum.
-    spec: Oop<f64>,
+    spec: Oop<crate::form::Trans3>,
 }
 
 impl Light {
     access!(mesh, String);
     clone!(power, f64);
-    access!(spec, Oop<f64>);
+    access!(spec, Oop<crate::form::Trans3>);
 }
