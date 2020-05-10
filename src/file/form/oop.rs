@@ -14,8 +14,9 @@ pub enum Oop<T> {
 
 impl<T: Load> Oop<T> {
     /// Access the held value, or load it from the file.
+    /// # Errors
+    /// if the file can not be loaded.
     #[inline]
-    #[must_use]
     pub fn get(self, in_dir: &Path) -> Result<T, Error> {
         match self {
             Self::File(path) => T::load(&in_dir.join(path)),
