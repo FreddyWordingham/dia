@@ -1,6 +1,6 @@
 //! Camera form implementation.
 
-use crate::{access, clone, form::Oop};
+use crate::{access, clone, Redirect, Spectrum};
 use attr::load;
 
 /// Loadable light structure.
@@ -11,11 +11,11 @@ pub struct Light {
     /// Light power [J/s].
     power: f64,
     /// Light spectrum.
-    spec: Oop<crate::form::Trans3>,
+    spec: Redirect<Spectrum>,
 }
 
 impl Light {
     access!(mesh, String);
     clone!(power, f64);
-    access!(spec, Oop<crate::form::Trans3>);
+    access!(spec, Redirect<Spectrum>);
 }

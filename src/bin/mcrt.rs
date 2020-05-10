@@ -65,7 +65,8 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     );
 
     let x = params.light.spec().get(&in_dir).expect("Sub load failed.");
-    report!("x", x.scale().unwrap());
+    let mut rng = rand::thread_rng();
+    report!("x", x.sample(&mut rng));
 
     params
 }
