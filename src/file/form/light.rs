@@ -1,6 +1,6 @@
 //! Camera form implementation.
 
-use crate::form::Oop;
+use crate::{access, clone, form::Oop};
 use attr::load;
 
 /// Loadable light structure.
@@ -15,10 +15,7 @@ pub struct Light {
 }
 
 impl Light {
-    // /// Build a light.
-    // #[inline]
-    // #[must_use]
-    // pub fn build(&self) -> LightInst {
-    //     LightInst::new()
-    // }
+    access!(mesh, String);
+    clone!(power, f64);
+    access!(spec, Oop<f64>);
 }
