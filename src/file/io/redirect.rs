@@ -1,31 +1,36 @@
-//! Redirection implementation.
+//! File re-direction implementation.
 
 use crate::{Error, Load};
-// use attr::load;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
-/// Redirect the loading path.
+/// Possible file redirection structure.
 #[derive(Debug, serde::Deserialize)]
 pub enum Redirect<T: Load> {
-    /// Given values.
+    /// Path to file.
+    There(String),
+    /// Direct value.
     Here(T),
-    /// File redirection.
-    File(PathBuf),
 }
 
-impl<T: Load> Redirect<T> {
-    /// Load the instance.
+impl<T: Clone + Load> Redirect<T> {
+    /// Access the held value, or load it from the file.
     /// # Errors
-    /// if the redirection can not be opened
-    /// or if the data can not be serialised into a valid instance.
+    /// if the file can not be loaded.
     #[inline]
-    pub fn load(self, in_dir: &Path) -> Result<T, Error> {
+    pub fn get(&self, in_dir: &Path) -> Result<T, Error> {
         match self {
-            Self::Here(data) => Ok(data),
-            Self::File(path) => {
-                let path = in_dir.join(&path);
-                T::load(&path)
-            }
+            Self::There(path) => T::load(&in_dir.join(path)),
+            Self::Here(val) => Ok((*val).clone()),
         }
+    }
+}
+
+impl<T: Load> Load for Redirect<T>
+where
+    for<'de> T: serde::Deserialize<'de>,
+{
+    #[inline]
+    fn load(path: &std::path::Path) -> std::result::Result<Self, crate::Error> {
+        crate::from_json(path)
     }
 }
