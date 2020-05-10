@@ -13,6 +13,8 @@ struct Parameters {
     sett: mcrt::Settings,
     /// Input surfaces.
     surfs: Vec<(Group, Vec<String>)>,
+    /// Light settings.
+    light: form::Light,
 }
 
 /// Main function.

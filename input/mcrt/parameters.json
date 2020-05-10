@@ -10,7 +10,9 @@
     "light": {
         "mesh": "circle",
         "power": 1.0,
-        "spec": "led"
+        "spec": {
+            "Here": 92.3
+        }
     },
     "surfs": [
         [0, ["beans", "rice", "cheese"]],
