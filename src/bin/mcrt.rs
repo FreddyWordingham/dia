@@ -11,8 +11,8 @@ struct Parameters {
     amr: settings::Adaptive,
     /// MCRT runtime settings.
     sett: mcrt::Settings,
-    // /// Light settings.
-    // light: form::Light,
+    /// Light settings.
+    light: form::Light,
     // /// Input surfaces.
     // surfs: Vec<(Group, Vec<String>)>,
     // /// Physical attributes.
@@ -57,6 +57,8 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     report!("grid", format!("_\n{}", params.amr));
     banner::sub_sub_section("Settings");
     report!("mcrt", format!("_\n{}", params.sett));
+    banner::sub_sub_section("Light");
+    report!("light", format!("_\n{}", params.light));
 
     params
 }

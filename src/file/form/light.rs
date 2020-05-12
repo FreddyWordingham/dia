@@ -2,6 +2,7 @@
 
 use crate::{Build, Error, Load, Mesh, Redirect, Spectrum};
 use attr::load;
+use std::fmt::{Display, Formatter};
 use std::path::Path;
 
 /// Loadable light structure.
@@ -25,5 +26,14 @@ impl Build for Light {
         let power = self.power;
 
         Ok(Self::Inst::new(surf, spec, power))
+    }
+}
+
+impl Display for Light {
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        writeln!(fmt, "{:>16}  > {}", "mesh", self.mesh)?;
+        writeln!(fmt, "{:>16}  > {}", "spectrum", self.spec)?;
+        write!(fmt, "{:>16}  > {} [J/s]", "power", self.power)
     }
 }

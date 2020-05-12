@@ -2,6 +2,7 @@
 
 use attr::load;
 use rand::rngs::ThreadRng;
+use std::fmt::{Display, Formatter, Result};
 
 /// Spectrum enumeration implementation.
 #[load]
@@ -27,6 +28,15 @@ impl Spectrum {
     pub fn sample(&self, _rng: &mut ThreadRng) -> f64 {
         match self {
             Self::Laser(w) => *w,
+        }
+    }
+}
+
+impl Display for Spectrum {
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> Result {
+        match self {
+            Self::Laser(w) => write!(fmt, "laser {}nm", w * 1e9),
         }
     }
 }

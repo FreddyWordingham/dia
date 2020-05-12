@@ -1,11 +1,12 @@
 //! File re-direction implementation.
 
 use crate::{Error, Load};
+use std::fmt::{Display, Formatter};
 use std::path::Path;
 
 /// Possible file redirection structure.
 #[derive(Debug, serde::Deserialize)]
-pub enum Redirect<T: Load> {
+pub enum Redirect<T> {
     /// Path to file.
     There(String),
     /// Direct value.
@@ -32,5 +33,15 @@ where
     #[inline]
     fn load(path: &std::path::Path) -> std::result::Result<Self, crate::Error> {
         crate::from_json(path)
+    }
+}
+
+impl<T: Display> Display for Redirect<T> {
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        match self {
+            Self::There(path) => write!(fmt, "redirect -> {}", path),
+            Self::Here(item) => write!(fmt, "here -> {}", item),
+        }
     }
 }

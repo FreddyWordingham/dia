@@ -26,7 +26,7 @@ impl Properties {
     /// Construct a new instance.
     #[inline]
     #[must_use]
-    pub fn new(
+    pub const fn new(
         ref_index: Formula,
         scat_coeff: Formula,
         abs_coeff: Option<Formula>,
