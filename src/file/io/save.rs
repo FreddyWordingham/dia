@@ -70,7 +70,7 @@ impl Save for Array2<f64> {
         file.add_dimension(dim2_name, shape[Y])?;
 
         let mut var = file.add_variable::<f64>("data", &[dim1_name, dim2_name])?;
-        var.put_values(self.as_slice().unwrap(), None, None)?;
+        var.put_values(self.as_slice().ok_or("Missing slice data.")?, None, None)?;
 
         Ok(())
     }
@@ -91,7 +91,7 @@ impl Save for Array3<f64> {
         file.add_dimension(dim3_name, shape[Z])?;
 
         let mut var = file.add_variable::<f64>("data", &[dim1_name, dim2_name, dim3_name])?;
-        var.put_values(self.as_slice().unwrap(), None, None)?;
+        var.put_values(self.as_slice().ok_or("Missing slice data.")?, None, None)?;
 
         Ok(())
     }

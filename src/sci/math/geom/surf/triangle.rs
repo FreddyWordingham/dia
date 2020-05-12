@@ -125,9 +125,9 @@ impl Collide for Triangle {
         let c = aabb.centre();
         let e = aabb.half_widths();
 
-        let v0 = self.verts.get(ALPHA).unwrap() - c;
-        let v1 = self.verts.get(BETA).unwrap() - c;
-        let v2 = self.verts.get(GAMMA).unwrap() - c;
+        let v0 = self.verts[ALPHA] - c;
+        let v1 = self.verts[BETA] - c;
+        let v2 = self.verts[GAMMA] - c;
 
         let f0 = v1 - v0;
         let f1 = v2 - v1;

@@ -148,9 +148,9 @@ impl Load for Mesh {
             let mut words = line.split_whitespace();
             words.next();
 
-            let px = words.next().unwrap().parse::<f64>()?;
-            let py = words.next().unwrap().parse::<f64>()?;
-            let pz = words.next().unwrap().parse::<f64>()?;
+            let px = words.next().ok_or("Missing vertex word.")?.parse::<f64>()?;
+            let py = words.next().ok_or("Missing vertex word.")?.parse::<f64>()?;
+            let pz = words.next().ok_or("Missing vertex word.")?.parse::<f64>()?;
 
             verts.push(Pos3::new(px, py, pz));
         }
@@ -166,9 +166,9 @@ impl Load for Mesh {
             let mut words = line.split_whitespace();
             words.next();
 
-            let nx = words.next().unwrap().parse::<f64>()?;
-            let ny = words.next().unwrap().parse::<f64>()?;
-            let nz = words.next().unwrap().parse::<f64>()?;
+            let nx = words.next().ok_or("Missing normal word.")?.parse::<f64>()?;
+            let ny = words.next().ok_or("Missing normal word.")?.parse::<f64>()?;
+            let nz = words.next().ok_or("Missing normal word.")?.parse::<f64>()?;
 
             norms.push(Dir3::new_normalize(Vec3::new(nx, ny, nz)));
         }
@@ -185,12 +185,24 @@ impl Load for Mesh {
             let mut words = line.split_whitespace();
             words.next();
 
-            let fx = words.next().unwrap().parse::<usize>()? - 1;
-            let nx = words.next().unwrap().parse::<usize>()? - 1;
-            let fy = words.next().unwrap().parse::<usize>()? - 1;
-            let ny = words.next().unwrap().parse::<usize>()? - 1;
-            let fz = words.next().unwrap().parse::<usize>()? - 1;
-            let nz = words.next().unwrap().parse::<usize>()? - 1;
+            let fx = words.next().ok_or("Missing face word.")?.parse::<usize>()? - 1;
+            let nx = words
+                .next()
+                .ok_or("Missing normal word.")?
+                .parse::<usize>()?
+                - 1;
+            let fy = words.next().ok_or("Missing face word.")?.parse::<usize>()? - 1;
+            let ny = words
+                .next()
+                .ok_or("Missing normal word.")?
+                .parse::<usize>()?
+                - 1;
+            let fz = words.next().ok_or("Missing face word.")?.parse::<usize>()? - 1;
+            let nz = words
+                .next()
+                .ok_or("Missing normal word.")?
+                .parse::<usize>()?
+                - 1;
 
             faces.push(((fx, fy, fz), (nx, ny, nz)));
         }
