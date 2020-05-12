@@ -24,8 +24,8 @@ impl Adaptive {
 impl Display for Adaptive {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
-        writeln!(fmt, "{:>32}  : {:?}", "tar_tris", self.tar_tris)?;
-        writeln!(fmt, "{:>32}  : {:?}", "max_depth", self.max_depth)?;
-        writeln!(fmt, "{:>32}  : {:?}", "padding", self.padding)
+        writeln!(fmt, "{:>16}  > {}", "tar_tris", self.tar_tris)?;
+        writeln!(fmt, "{:>16}  > {}", "max_depth", self.max_depth)?;
+        writeln!(fmt, "{:>16}  > {}", "padding", self.padding)
     }
 }

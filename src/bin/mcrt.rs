@@ -9,14 +9,14 @@ use std::path::{Path, PathBuf};
 struct Parameters {
     /// Adaptive mesh settings.
     amr: settings::Adaptive,
-    /// MCRT runtime settings.
-    sett: mcrt::Settings,
-    /// Light settings.
-    light: form::Light,
-    /// Input surfaces.
-    surfs: Vec<(Group, Vec<String>)>,
-    /// Physical attributes.
-    attrs: Vec<(Group, form::Properties)>,
+    // /// MCRT runtime settings.
+    // sett: mcrt::Settings,
+    // /// Light settings.
+    // light: form::Light,
+    // /// Input surfaces.
+    // surfs: Vec<(Group, Vec<String>)>,
+    // /// Physical attributes.
+    // attrs: Vec<(Group, form::Properties)>,
 }
 
 /// Main function.
@@ -25,7 +25,7 @@ pub fn main() {
     let (params_path, in_dir, _out_dir) = init();
     let params = input(&in_dir, &params_path);
 
-    let _attrs = dia::build_from_list(params.attrs, &in_dir);
+    // let _attrs = dia::build_from_list(params.attrs, &in_dir);
 
     banner::section("Finished");
 }
@@ -56,7 +56,7 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
         Parameters::load(&in_dir.join(params_path)).expect("Could not load parameters file");
 
     banner::sub_sub_section("Grid");
-    report!("grid", params.amr);
+    report!("grid", format!("_\n{}", params.amr));
 
     params
 }
