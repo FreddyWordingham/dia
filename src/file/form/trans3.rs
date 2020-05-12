@@ -25,12 +25,14 @@ impl Build for Trans3 {
         let trans = self
             .trans
             .unwrap_or_else(|| Translation3::new(0.0, 0.0, 0.0));
+
         let rot = self.rot.unwrap_or_else(|| Vec3::new(0.0, 0.0, 0.0));
         let rot = UnitQuaternion::from_euler_angles(
             rot.x.to_radians(),
             rot.y.to_radians(),
             rot.z.to_radians(),
         );
+
         let scale = self.scale.unwrap_or(1.0);
 
         Ok(Self::Inst::from_parts(trans, rot, scale))

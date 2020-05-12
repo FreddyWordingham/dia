@@ -24,12 +24,18 @@ impl Build for Properties {
 
     #[inline]
     fn build(self, _in_dir: &Path) -> Result<Self::Inst, Error> {
+        let ref_index = self.ref_index;
+        let scat_coeff = self.scat_coeff;
+        let abs_coeff = self.abs_coeff;
+        let shift_coeff = self.shift_coeff;
+        let asym_fact = self.asym_fact;
+
         Ok(Self::Inst::new(
-            self.ref_index,
-            self.scat_coeff,
-            self.abs_coeff,
-            self.shift_coeff,
-            self.asym_fact,
+            ref_index,
+            scat_coeff,
+            abs_coeff,
+            shift_coeff,
+            asym_fact,
         ))
     }
 }
