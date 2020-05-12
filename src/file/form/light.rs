@@ -32,8 +32,8 @@ impl Build for Light {
 impl Display for Light {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        writeln!(fmt, "{:>16}  > {}", "mesh", self.mesh)?;
-        writeln!(fmt, "{:>16}  > {}", "spectrum", self.spec)?;
-        write!(fmt, "{:>16}  > {} [J/s]", "power", self.power)
+        writeln!(fmt, "{:>16} :  {}", "mesh", self.mesh)?;
+        writeln!(fmt, "{:>16} :  {}", "spectrum", self.spec)?;
+        write!(fmt, "{:>16} :  {} [J/s]", "power", self.power)
     }
 }

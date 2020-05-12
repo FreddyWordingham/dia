@@ -18,6 +18,6 @@ impl Settings {
 impl Display for Settings {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
-        write!(fmt, "{:>16}  > {} [m]", "bump_dist", self.bump_dist)
+        write!(fmt, "{:>16} :  {} [m]", "bump_dist", self.bump_dist)
     }
 }
