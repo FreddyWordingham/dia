@@ -6,19 +6,19 @@ use std::collections::BTreeMap;
 /// Set alias.
 pub type Set<T> = BTreeMap<Group, T>;
 
-// /// Build an attribute set.
-// #[inline]
-// #[must_use]
-// pub fn build(&self) -> Set<Properties> {
-//     let mut props = Set::new();
+/// Build a set from a list.
+#[inline]
+#[must_use]
+pub fn set_from_list<T>(list: Vec<(Group, T)>) -> Set<T> {
+    let mut set = Set::new();
 
-//     for (group, attr) in &self.props {
-//         if props.contains_key(group) {
-//             panic!("Duplicate properties for group: {}", group);
-//         }
+    for (group, item) in list {
+        if set.contains_key(&group) {
+            panic!("Duplicate entries for group: {}", group);
+        }
 
-//         props.insert(*group, attr.clone());
-//     }
+        set.insert(group, item);
+    }
 
-//     props
-// }
+    set
+}
