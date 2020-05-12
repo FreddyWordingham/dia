@@ -87,7 +87,7 @@ impl Probability {
     pub fn gen(&self, rng: &mut ThreadRng) -> f64 {
         match self {
             Self::Point { c } => *c,
-            Self::Points { cs } => *cs.get(rng.gen_range(0, cs.len())).unwrap(),
+            Self::Points { cs } => cs[rng.gen_range(0, cs.len())],
             Self::Uniform { min, max } => rng.gen_range(*min, *max),
             Self::Gaussian { mu, sigma } => distribution::gaussian(rng, *mu, *sigma),
             Self::Linear { .. } => {

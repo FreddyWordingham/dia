@@ -31,7 +31,7 @@ pub fn capture(scene: &Scene) -> Result<Image, Error> {
         .collect();
     pb.lock()?.finish_with_message("Render complete");
 
-    let mut base = images.pop().unwrap()?;
+    let mut base = images.pop().ok_or("Missing image result.")??;
     for img in images {
         base += &img?;
     }
