@@ -27,7 +27,7 @@ impl Scan {
     /// Construct a new surface instance.
     #[inline]
     #[must_use]
-    pub fn new_surface(hit: Hit) -> Self {
+    pub const fn new_surface(hit: Hit) -> Self {
         Self::Surface { hit }
     }
 

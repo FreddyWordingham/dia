@@ -46,7 +46,7 @@ impl Probability {
     /// Construct a new point instance.
     #[inline]
     #[must_use]
-    pub fn new_point(c: f64) -> Self {
+    pub const fn new_point(c: f64) -> Self {
         Self::Point { c }
     }
 
@@ -77,7 +77,7 @@ impl Probability {
     /// Construct a new linear instance.
     #[inline]
     #[must_use]
-    pub fn new_linear(m: f64, c: f64) -> Self {
+    pub const fn new_linear(m: f64, c: f64) -> Self {
         Self::Linear { m, c }
     }
 

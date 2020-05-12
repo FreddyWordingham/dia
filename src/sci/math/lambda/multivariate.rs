@@ -65,42 +65,42 @@ impl Multivariate {
     /// Construct a new constant instance.
     #[inline]
     #[must_use]
-    pub fn new_constant(c: f64) -> Self {
+    pub const fn new_constant(c: f64) -> Self {
         Self::Constant { c }
     }
 
     /// Construct a new scaled first order instance.
     #[inline]
     #[must_use]
-    pub fn new_scaled_first_order(k: f64, a: usize) -> Self {
+    pub const fn new_scaled_first_order(k: f64, a: usize) -> Self {
         Self::ScaledFirstOrder { k, a }
     }
 
     /// Construct a new scaled second order instance.
     #[inline]
     #[must_use]
-    pub fn new_scaled_second_order(k: f64, a: usize, b: usize) -> Self {
+    pub const fn new_scaled_second_order(k: f64, a: usize, b: usize) -> Self {
         Self::ScaledSecondOrder { k, a, b }
     }
 
     /// Construct a new scaled third order instance.
     #[inline]
     #[must_use]
-    pub fn new_scaled_third_order(k: f64, a: usize, b: usize, c: usize) -> Self {
+    pub const fn new_scaled_third_order(k: f64, a: usize, b: usize, c: usize) -> Self {
         Self::ScaledThirdOrder { k, a, b, c }
     }
 
     /// Construct a new weighted instance.
     #[inline]
     #[must_use]
-    pub fn new_weight(ws: Array1<f64>) -> Self {
+    pub const fn new_weight(ws: Array1<f64>) -> Self {
         Self::Weight { ws }
     }
 
     /// Construct a new scaled weighted instance.
     #[inline]
     #[must_use]
-    pub fn new_scaled_weight(k: f64, ws: Array1<f64>) -> Self {
+    pub const fn new_scaled_weight(k: f64, ws: Array1<f64>) -> Self {
         Self::ScaledWeight { k, ws }
     }
 
