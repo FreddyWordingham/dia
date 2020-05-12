@@ -16,14 +16,17 @@ struct Parameters {
     /// Input surfaces.
     surfs: Vec<(Group, Vec<String>)>,
     /// Physical attributes.
-    attrs: Vec<(Group, Vec<String>)>,
+    attrs: Vec<(Group, form::Properties)>,
 }
 
 /// Main function.
 pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, _out_dir) = init();
-    let _params = input(&in_dir, &params_path);
+    let params = input(&in_dir, &params_path);
+
+    let _attrs = dia::build_from_list(params.attrs, &in_dir);
+
     banner::section("Finished");
 }
 
