@@ -27,7 +27,28 @@ where
 /// # Errors
 /// if can not write values to string.
 #[inline]
-pub fn groups<T, S>(groups: &[(T, Vec<S>)]) -> Result<String, Error>
+pub fn groups<T, S>(groups: &[(T, S)]) -> Result<String, Error>
+where
+    T: Display,
+    S: Display,
+{
+    let mut s = String::new();
+    for (group, val) in groups {
+        writeln!(s, "{:>16} >  {}", format!("[{}]", group), val)?;
+    }
+
+    if !s.is_empty() {
+        s.pop();
+    }
+
+    Ok(s)
+}
+
+/// Print the group and vector of values to a string.
+/// # Errors
+/// if can not write values to string.
+#[inline]
+pub fn groups_list<T, S>(groups: &[(T, Vec<S>)]) -> Result<String, Error>
 where
     T: Display,
     S: Display,
@@ -35,7 +56,7 @@ where
     let mut s = String::new();
     for (group, vals) in groups {
         let vs = values(vals.as_slice())?;
-        writeln!(s, "{:>16} -> {}", format!("[{}]", group), vs)?;
+        writeln!(s, "{:>16} >  {}", format!("[{}]", group), vs)?;
     }
 
     if !s.is_empty() {

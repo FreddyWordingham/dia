@@ -15,8 +15,8 @@ struct Parameters {
     light: form::Light,
     /// Input surfaces.
     surfs: Vec<(Group, Vec<String>)>,
-    // /// Physical attributes.
-    // attrs: Vec<(Group, form::Properties)>,
+    /// Physical attributes.
+    props: Vec<(Group, Redirect<form::Properties>)>,
 }
 
 /// Main function.
@@ -67,7 +67,20 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
         "surfaces",
         format!(
             "_\n{}",
-            slice::groups(params.surfs.as_slice()).expect("Could not format list.")
+            slice::groups_list(params.surfs.as_slice()).expect("Could not format list.")
+        )
+    );
+
+    banner::sub_sub_section("Properties");
+    // for (group, prop) in &params.props {
+    //     let g = format!("[{}]", group);
+    //     report!(g, prop);
+    // }
+    report!(
+        "properties",
+        format!(
+            "_\n{}",
+            slice::groups(params.props.as_slice()).expect("Could not format list.")
         )
     );
 

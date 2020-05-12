@@ -18,5 +18,10 @@
         [0, ["beans", "rice", "cheese"]],
         [2, ["pinecone", "woodlice"]],
         [3, ["one"]]
+    ],
+    "props": [
+        [0, {
+            "There": "air.json"
+        }]
     ]
 }

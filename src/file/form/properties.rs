@@ -2,6 +2,7 @@
 
 use crate::{Build, Error, Formula};
 use attr::load;
+use std::fmt::{Display, Formatter};
 use std::path::Path;
 
 /// Loadable physical properties structure.
@@ -37,5 +38,12 @@ impl Build for Properties {
             shift_coeff,
             asym_fact,
         ))
+    }
+}
+
+impl Display for Properties {
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        writeln!(fmt, "_some_optical_properties_")
     }
 }
