@@ -2,8 +2,8 @@
 
 use crate::{access, mcrt::Environment, Formula};
 
-/// Physical properties structure.
-pub struct Properties {
+/// Physical attributes structure.
+pub struct Attributes {
     /// Refractive index.
     ref_index: Formula,
     /// Scattering coefficient [1/m].
@@ -16,7 +16,7 @@ pub struct Properties {
     asym_fact: Formula,
 }
 
-impl Properties {
+impl Attributes {
     access!(ref_index, Formula);
     access!(scat_coeff, Formula);
     access!(abs_coeff, Option<Formula>);

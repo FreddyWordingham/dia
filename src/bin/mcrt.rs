@@ -11,10 +11,12 @@ struct Parameters {
     amr: settings::Adaptive,
     /// MCRT runtime settings.
     sett: mcrt::Settings,
-    /// Input surfaces.
-    surfs: Vec<(Group, Vec<String>)>,
     /// Light settings.
     light: form::Light,
+    /// Input surfaces.
+    surfs: Vec<(Group, Vec<String>)>,
+    /// Physical attributes.
+    attrs: Vec<(Group, Vec<String>)>,
 }
 
 /// Main function.
