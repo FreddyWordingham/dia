@@ -1,9 +1,9 @@
 //! Monte-Carlo radiative transfer module.
 
-pub mod attributes;
-pub mod environment;
 pub mod light;
+pub mod optics;
 pub mod photon;
+pub mod properties;
 pub mod settings;
 
-pub use self::{attributes::*, environment::*, light::*, photon::*, settings::*};
+pub use self::{light::*, optics::*, photon::*, properties::*, settings::*};

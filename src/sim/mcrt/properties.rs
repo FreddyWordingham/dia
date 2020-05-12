@@ -1,9 +1,9 @@
 //! Light module.
 
-use crate::{access, mcrt::Environment, Formula};
+use crate::{access, mcrt::Optics, Formula};
 
 /// Physical attributes structure.
-pub struct Attributes {
+pub struct Properties {
     /// Refractive index.
     ref_index: Formula,
     /// Scattering coefficient [1/m].
@@ -16,7 +16,7 @@ pub struct Attributes {
     asym_fact: Formula,
 }
 
-impl Attributes {
+impl Properties {
     access!(ref_index, Formula);
     access!(scat_coeff, Formula);
     access!(abs_coeff, Option<Formula>);
@@ -26,7 +26,7 @@ impl Attributes {
     /// Generate an optical environment for a given wavelength.
     #[inline]
     #[must_use]
-    pub fn env(&self, w: f64) -> Environment {
+    pub fn env(&self, w: f64) -> Optics {
         let index = self.ref_index.y(w);
 
         let scat = self.scat_coeff.y(w);
@@ -45,6 +45,6 @@ impl Attributes {
 
         let g = self.asym_fact.y(w);
 
-        Environment::new(index, scat, abs, shift, g)
+        Optics::new(index, scat, abs, shift, g)
     }
 }

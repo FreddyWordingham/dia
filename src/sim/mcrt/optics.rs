@@ -2,8 +2,8 @@
 
 use crate::clone;
 
-/// Local optical properties structure.
-pub struct Environment {
+/// Local optical environment structure.
+pub struct Optics {
     /// Refractive index.
     ref_index: f64,
     /// Scattering coefficient. [m^-1]
@@ -16,7 +16,7 @@ pub struct Environment {
     asym: f64,
 }
 
-impl Environment {
+impl Optics {
     clone!(ref_index, f64);
     clone!(scat_coeff, f64);
     clone!(abs_coeff, f64);
