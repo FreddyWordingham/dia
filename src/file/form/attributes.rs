@@ -1,4 +1,4 @@
-//! Camera form implementation.
+//! Rendering attributes form implementation.
 
 use crate::{render::Attribute, Group, Set};
 use attr::load;
