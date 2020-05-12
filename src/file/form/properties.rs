@@ -1,30 +1,35 @@
 //! Physical properties form implementation.
 
-use crate::{mcrt::Properties, Group, Set};
+use crate::{Build, Error, Formula};
 use attr::load;
+use std::path::Path;
 
-/// Loadable attributes structure.
+/// Loadable physical properties structure.
 #[load]
 pub struct Properties {
-    /// Properties mappings.
-    props: Vec<(Group, Properties)>,
+    /// Refractive index.
+    ref_index: Formula,
+    /// Scattering coefficient [1/m].
+    scat_coeff: Formula,
+    /// Absorption coefficient [1/m].
+    abs_coeff: Option<Formula>,
+    /// Shifting coefficient [1/m].
+    shift_coeff: Option<Formula>,
+    /// Asymmetry factor.
+    asym_fact: Formula,
 }
 
-impl Properties {
-    /// Build an attribute set.
+impl Build for Properties {
+    type Inst = crate::mcrt::Properties;
+
     #[inline]
-    #[must_use]
-    pub fn build(&self) -> Set<Properties> {
-        let mut props = Set::new();
-
-        for (group, attr) in &self.props {
-            if props.contains_key(group) {
-                panic!("Duplicate properties for group: {}", group);
-            }
-
-            props.insert(*group, attr.clone());
-        }
-
-        props
+    fn build(self, _in_dir: &Path) -> Result<Self::Inst, Error> {
+        Ok(Self::Inst::new(
+            self.ref_index,
+            self.scat_coeff,
+            self.abs_coeff,
+            self.shift_coeff,
+            self.asym_fact,
+        ))
     }
 }

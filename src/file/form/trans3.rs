@@ -1,8 +1,9 @@
 //! Transform form implementation.
 
-use crate::{Trans3 as Trans3Inst, Vec3};
+use crate::{Build, Error, Vec3};
 use attr::load;
 use nalgebra::{Translation3, UnitQuaternion};
+use std::path::Path;
 
 /// Loadable transform structure.
 #[load]
@@ -16,13 +17,11 @@ pub struct Trans3 {
     scale: Option<f64>,
 }
 
-impl Trans3 {
-    crate::access!(scale, Option<f64>);
+impl Build for Trans3 {
+    type Inst = crate::Trans3;
 
-    /// Build a transformation.
     #[inline]
-    #[must_use]
-    pub fn build(&self) -> Trans3Inst {
+    fn build(self, _in_dir: &Path) -> Result<Self::Inst, Error> {
         let trans = self
             .trans
             .unwrap_or_else(|| Translation3::new(0.0, 0.0, 0.0));
@@ -34,6 +33,6 @@ impl Trans3 {
         );
         let scale = self.scale.unwrap_or(1.0);
 
-        Trans3Inst::from_parts(trans, rot, scale)
+        Ok(Self::Inst::from_parts(trans, rot, scale))
     }
 }

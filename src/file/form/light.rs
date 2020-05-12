@@ -1,6 +1,6 @@
 //! Light form implementation.
 
-use crate::{access, clone, mcrt::Light as LightInst, Error, Load, Mesh, Redirect, Spectrum};
+use crate::{Build, Error, Load, Mesh, Redirect, Spectrum};
 use attr::load;
 use std::path::Path;
 
@@ -15,19 +15,13 @@ pub struct Light {
     power: f64,
 }
 
-impl Light {
-    access!(mesh, String);
-    access!(spec, Redirect<Spectrum>);
-    clone!(power, f64);
+impl Build for Light {
+    type Inst = crate::mcrt::Light;
 
-    /// Build a light.
-    /// # Errors
-    /// if the surface mesh
-    /// or the spectrum can not be loaded.
     #[inline]
-    pub fn build(&self, in_dir: &Path) -> Result<LightInst, Error> {
+    fn build(self, in_dir: &Path) -> Result<Self::Inst, Error> {
         let surf = Mesh::load(&in_dir.join(&self.mesh))?;
 
-        Ok(LightInst::new(surf, self.spec.get(in_dir)?, self.power))
+        Ok(Self::Inst::new(surf, self.spec.get(in_dir)?, self.power))
     }
 }

@@ -23,6 +23,25 @@ impl Properties {
     access!(shift_coeff, Option<Formula>);
     access!(asym_fact, Formula);
 
+    /// Construct a new instance.
+    #[inline]
+    #[must_use]
+    pub fn new(
+        ref_index: Formula,
+        scat_coeff: Formula,
+        abs_coeff: Option<Formula>,
+        shift_coeff: Option<Formula>,
+        asym_fact: Formula,
+    ) -> Self {
+        Self {
+            ref_index,
+            scat_coeff,
+            abs_coeff,
+            shift_coeff,
+            asym_fact,
+        }
+    }
+
     /// Generate an optical environment for a given wavelength.
     #[inline]
     #[must_use]

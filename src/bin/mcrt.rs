@@ -66,9 +66,9 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
         format!("\n{}", slice::groups(&params.surfs).expect("Print failed."))
     );
 
-    let x = params.light.spec().get(&in_dir).expect("Sub load failed.");
-    let mut rng = rand::thread_rng();
-    report!("x", x.sample(&mut rng));
+    // let x = params.light.spec().get(&in_dir).expect("Sub load failed.");
+    // let mut rng = rand::thread_rng();
+    // report!("x", x.sample(&mut rng));
 
     params
 }
