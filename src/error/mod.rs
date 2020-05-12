@@ -22,12 +22,12 @@ pub enum Error {
     WritePng(png::EncodingError),
     /// Environment variable error.
     EnvVar(std::env::VarError),
-    /// Parallelisation poison.
-    Parallel,
-    // /// Unexpected None error.
-    // None(std::option::NoneError),
     /// Formatting error.
     Format(std::fmt::Error),
+    /// Parallelisation poison.
+    Parallel,
+    /// String error.
+    Text(String),
 }
 
 macro_rules! impl_from_for_err {
@@ -59,9 +59,12 @@ impl<T> From<std::sync::PoisonError<T>> for Error {
     }
 }
 
-// TODO: This Requires nightly compiler but would allow us properly to handle unwraping None's as errors.
-// // #![feature(try_trait)] // This goes in lib.rs.
-// impl_from_for_err!(Self::None, std::option::NoneError);
+impl From<&str> for Error {
+    #[inline]
+    fn from(err: &str) -> Self {
+        Self::Text(err.to_string())
+    }
+}
 
 impl Debug for Error {
     #[inline]
@@ -79,8 +82,9 @@ impl Debug for Error {
                 Self::WriteNetCDF { .. } => "NetCDF writing",
                 Self::WritePng { .. } => "PNG writing",
                 Self::EnvVar { .. } => "Environment variable missing",
-                Self::Parallel { .. } => "Parallelisation poison",
                 Self::Format { .. } => "Formatting",
+                Self::Parallel { .. } => "Parallelisation poison",
+                Self::Text { .. } => "Text string",
             },
             match self {
                 Self::Load { 0: err } => format!("{:?}", err),
@@ -92,8 +96,9 @@ impl Debug for Error {
                 Self::WriteNetCDF { 0: err } => format!("{:?}", err),
                 Self::WritePng { 0: err } => format!("{:?}", err),
                 Self::EnvVar { 0: err } => format!("{:?}", err),
-                Self::Parallel => "Parallelisation fail".to_string(),
                 Self::Format { 0: err } => format!("{:?}", err),
+                Self::Parallel => "Parallelisation fail".to_string(),
+                Self::Text { 0: err } => format!("{:?}", err),
             }
         )
     }

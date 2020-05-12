@@ -40,16 +40,18 @@ pub fn io_dirs(
     input: Option<PathBuf>,
     output: Option<PathBuf>,
 ) -> Result<(PathBuf, PathBuf), crate::Error> {
+    let exec_name = exec::name().expect("Could not determine executable name.");
+
     let in_dir = if let Some(input) = input {
         input
     } else {
-        root()?.join("input").join(exec::name())
+        root()?.join("input").join(&exec_name)
     };
 
     let out_dir = if let Some(output) = output {
         output
     } else {
-        root()?.join("output").join(exec::name())
+        root()?.join("output").join(exec_name)
     };
 
     let in_dir = input_dir(&in_dir)?;

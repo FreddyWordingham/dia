@@ -1,18 +1,19 @@
 //! Executable information.
 
+use crate::Error;
 use std::{env::args, path::Path};
 
 /// Determine the name of the executable.
 #[inline]
 #[must_use]
-pub fn name() -> String {
+pub fn name() -> Result<String, Error> {
     let args: Vec<String> = args().collect();
     let name = &args[0];
 
-    Path::new(name)
+    Ok(Path::new(name)
         .file_name()
-        .unwrap()
+        .ok_or("Missing filename.")?
         .to_str()
-        .unwrap()
-        .to_string()
+        .ok_or("Missing string.")?
+        .to_string())
 }
