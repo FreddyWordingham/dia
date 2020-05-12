@@ -13,7 +13,7 @@ where
 {
     let mut s = String::new();
     for v in vals {
-        write!(s, "{:>28} ", v)?;
+        write!(s, "{:>15} ", v)?;
     }
 
     if !s.is_empty() {
@@ -35,7 +35,7 @@ where
     let mut s = String::new();
     for (group, vals) in groups {
         let vs = values(vals.as_slice())?;
-        writeln!(s, "{:>32} -> {}", format!("[{}]", group), vs)?;
+        writeln!(s, "{:>16} -> {}", format!("[{}]", group), vs)?;
     }
 
     if !s.is_empty() {

@@ -13,8 +13,8 @@ struct Parameters {
     sett: mcrt::Settings,
     /// Light settings.
     light: form::Light,
-    // /// Input surfaces.
-    // surfs: Vec<(Group, Vec<String>)>,
+    /// Input surfaces.
+    surfs: Vec<(Group, Vec<String>)>,
     // /// Physical attributes.
     // attrs: Vec<(Group, form::Properties)>,
 }
@@ -55,10 +55,21 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 
     banner::sub_sub_section("Grid");
     report!("grid", format!("_\n{}", params.amr));
+
     banner::sub_sub_section("Settings");
     report!("mcrt", format!("_\n{}", params.sett));
+
     banner::sub_sub_section("Light");
     report!("light", format!("_\n{}", params.light));
+
+    banner::sub_sub_section("Surfaces");
+    report!(
+        "surfaces",
+        format!(
+            "_\n{}",
+            slice::groups(params.surfs.as_slice()).expect("Could not format list.")
+        )
+    );
 
     params
 }
