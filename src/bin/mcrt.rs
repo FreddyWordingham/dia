@@ -9,8 +9,8 @@ use std::path::{Path, PathBuf};
 struct Parameters {
     /// Adaptive mesh settings.
     amr: settings::Adaptive,
-    // /// MCRT runtime settings.
-    // sett: mcrt::Settings,
+    /// MCRT runtime settings.
+    sett: mcrt::Settings,
     // /// Light settings.
     // light: form::Light,
     // /// Input surfaces.
@@ -23,9 +23,7 @@ struct Parameters {
 pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, _out_dir) = init();
-    let params = input(&in_dir, &params_path);
-
-    // let _attrs = dia::build_from_list(params.attrs, &in_dir);
+    let _params = input(&in_dir, &params_path);
 
     banner::section("Finished");
 }
@@ -57,6 +55,8 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 
     banner::sub_sub_section("Grid");
     report!("grid", format!("_\n{}", params.amr));
+    banner::sub_sub_section("Settings");
+    report!("mcrt", format!("_\n{}", params.sett));
 
     params
 }
