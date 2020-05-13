@@ -1,8 +1,10 @@
 //! File re-direction implementation.
 
 use crate::{Build, Error, Load};
-use std::fmt::{Display, Formatter};
-use std::path::Path;
+use std::{
+    fmt::{Display, Formatter},
+    path::Path,
+};
 
 /// Possible file redirection structure.
 #[derive(Debug, serde::Deserialize)]

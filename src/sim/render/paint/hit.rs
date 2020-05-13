@@ -71,7 +71,7 @@ pub fn colour(
                 weight *= 0.9;
                 let grad = Gradient::new(vec![
                     LinSrgba::default(),
-                    scene.cols()[&hit.group()].get(x as f32),
+                    scene.cols().map()[&hit.group()].get(x as f32),
                 ]);
                 col += grad.get(illumination as f32) * MIRROR_COLOURING * weight as f32;
                 *ray.dir_mut() = Crossing::init_ref_dir(
@@ -86,7 +86,7 @@ pub fn colour(
                 weight *= 0.9;
                 let grad = Gradient::new(vec![
                     LinSrgba::default(),
-                    scene.cols()[&hit.group()].get(x as f32),
+                    scene.cols().map()[&hit.group()].get(x as f32),
                 ]);
                 col += grad.get(illumination as f32) * MIRROR_COLOURING * weight as f32;
 
@@ -124,7 +124,7 @@ pub fn colour(
             }
             4..=5 => {
                 // Astro.
-                col += scene.cols()[&hit.group()].get(x as f32) * weight as f32;
+                col += scene.cols().map()[&hit.group()].get(x as f32) * weight as f32;
                 sky = false;
                 break;
             }
@@ -133,7 +133,7 @@ pub fn colour(
                 weight *= 0.5;
                 let grad = Gradient::new(vec![
                     LinSrgba::default(),
-                    scene.cols()[&hit.group()].get(x as f32),
+                    scene.cols().map()[&hit.group()].get(x as f32),
                 ]);
                 col += grad.get(illumination as f32) * 0.5 * weight as f32;
                 sky = true;
@@ -144,7 +144,7 @@ pub fn colour(
                 weight *= 0.25;
                 let grad = Gradient::new(vec![
                     LinSrgba::default(),
-                    scene.cols()[&hit.group()].get(x as f32),
+                    scene.cols().map()[&hit.group()].get(x as f32),
                 ]);
                 col += grad.get(illumination as f32) * weight as f32;
                 ray.travel(scene.sett().bump_dist());
@@ -153,7 +153,7 @@ pub fn colour(
                 // Opaque.
                 let grad = Gradient::new(vec![
                     LinSrgba::default(),
-                    scene.cols()[&hit.group()].get(((x + 3.0) / 4.0) as f32),
+                    scene.cols().map()[&hit.group()].get(((x + 3.0) / 4.0) as f32),
                 ]);
                 col += grad.get(illumination as f32) * weight as f32;
                 sky = false;
@@ -163,7 +163,7 @@ pub fn colour(
                 // Opaque.
                 let grad = Gradient::new(vec![
                     LinSrgba::default(),
-                    scene.cols()[&hit.group()].get(x as f32),
+                    scene.cols().map()[&hit.group()].get(x as f32),
                 ]);
                 col += grad.get(illumination as f32) * weight as f32;
                 sky = false;

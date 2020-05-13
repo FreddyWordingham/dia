@@ -1,46 +1,62 @@
 //! Set implementation.
 
-use crate::{Build, Error, Group};
-use std::collections::BTreeMap;
-use std::path::Path;
+use crate::{access, Build, Error, Group};
+use std::{collections::BTreeMap, path::Path};
 
 /// Set alias.
-pub type Set<T> = BTreeMap<Group, T>;
+type Map<T> = BTreeMap<Group, T>;
 
-/// Convert a set from a list.
-#[inline]
-#[must_use]
-pub fn convert_from_list<T>(list: Vec<(Group, T)>) -> Set<T> {
-    let mut set = Set::new();
-
-    for (group, item) in list {
-        if set.contains_key(&group) {
-            panic!("Duplicate entries for group: {}", group);
-        }
-
-        set.insert(group, item);
-    }
-
-    set
+/// Set map.
+pub struct Set<T> {
+    /// Internal mapping.
+    map: BTreeMap<Group, T>,
 }
 
-/// Build a set from a list.
-/// # Errors
-/// if an item could not be built.
-#[inline]
-pub fn build_from_list<T: Build>(
-    in_dir: &Path,
-    list: Vec<(Group, T)>,
-) -> Result<Set<T::Inst>, Error> {
-    let mut set = Set::new();
+impl<T> Set<T> {
+    access!(map, BTreeMap<Group, T>);
 
-    for (group, item) in list {
-        if set.contains_key(&group) {
-            panic!("Duplicate entries for group: {}", group);
-        }
+    /// Construct a new instance.
+    #[inline]
+    #[must_use]
+    pub fn new(map: BTreeMap<Group, T>) -> Self {
+        debug_assert!(!map.is_empty());
 
-        set.insert(group, item.build(in_dir)?);
+        Self { map }
     }
 
-    Ok(set)
+    /// Construct an instance from a vector.
+    #[inline]
+    #[must_use]
+    pub fn from_vec(list: Vec<(Group, T)>) -> Self {
+        let mut map = Map::new();
+
+        for (group, item) in list {
+            if map.contains_key(&group) {
+                panic!("Duplicate entries for group: {}", group);
+            }
+
+            map.insert(group, item);
+        }
+
+        Self::new(map)
+    }
+}
+
+impl<T: Build> Build for Set<T> {
+    type Inst = Set<T::Inst>;
+
+    #[inline]
+    fn build(self, in_dir: &Path) -> Result<Self::Inst, Error> {
+        let mut map = Map::new();
+
+        for (group, item) in self.map {
+            if map.contains_key(&group) {
+                panic!("Duplicate entries for group: {}", group);
+            }
+
+            map.insert(group, item.build(in_dir)?);
+        }
+
+        Ok(Self::Inst::new(map))
+    }
 }

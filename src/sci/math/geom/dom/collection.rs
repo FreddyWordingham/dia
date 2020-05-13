@@ -1,7 +1,6 @@
 //! Collection implementation.
 
-use crate::{access, Aabb, Error, Group, Load, Mesh, Set};
-use std::path::Path;
+use crate::{access, Aabb, Mesh, Set};
 
 /// Surface collection.
 pub struct Collection {
@@ -30,7 +29,7 @@ impl Collection {
         let mut mins = None;
         let mut maxs = None;
 
-        for meshes in surfs.values() {
+        for meshes in surfs.map().values() {
             for mesh in meshes {
                 let (mesh_mins, mesh_maxs) = mesh.boundary().mins_maxs();
 
@@ -61,31 +60,5 @@ impl Collection {
         }
 
         Aabb::new(mins.unwrap(), maxs.unwrap())
-    }
-
-    /// Load in a set of meshes.
-    /// # Errors
-    /// if a mesh can not be loaded from a file.
-    #[inline]
-    pub fn load<'a, I>(in_dir: &Path, names: I) -> Result<Self, Error>
-    where
-        I: Iterator<Item = (&'a Group, &'a Vec<String>)>,
-    {
-        let mut surfs: Set<Vec<Mesh>> = Set::new();
-        for (group, meshes) in names {
-            for mesh in meshes {
-                let path = in_dir.join(format!("{}.obj", mesh));
-                println!("Loading mesh: {}", mesh);
-                let mesh: Mesh = Mesh::load(&path)?;
-
-                if let Some(entry) = surfs.get_mut(group) {
-                    entry.push(mesh);
-                } else {
-                    surfs.insert(*group, vec![mesh]);
-                }
-            }
-        }
-
-        Ok(Self::new(surfs))
     }
 }

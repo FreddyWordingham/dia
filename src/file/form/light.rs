@@ -2,8 +2,10 @@
 
 use crate::{Build, Error, Load, Mesh, Redirect, Spectrum};
 use attr::load;
-use std::fmt::{Display, Formatter};
-use std::path::Path;
+use std::{
+    fmt::{Display, Formatter},
+    path::Path,
+};
 
 /// Loadable light structure.
 #[load]

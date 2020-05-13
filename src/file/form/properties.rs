@@ -2,8 +2,10 @@
 
 use crate::{Build, Error, Formula};
 use attr::load;
-use std::fmt::{Display, Formatter};
-use std::path::Path;
+use std::{
+    fmt::{Display, Formatter},
+    path::Path,
+};
 
 /// Loadable physical properties structure.
 #[load]

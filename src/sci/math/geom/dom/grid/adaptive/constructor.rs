@@ -13,7 +13,7 @@ impl<'a> super::Adaptive<'a> {
         boundary.expand(settings.padding());
 
         let mut tris = Vec::new();
-        for (group, meshes) in collection.surfs() {
+        for (group, meshes) in collection.surfs().map() {
             for mesh in meshes {
                 tris.reserve(mesh.tris().len());
                 for tri in mesh.tris() {

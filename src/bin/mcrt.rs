@@ -24,7 +24,7 @@ pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, _out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let grid = setup(&in_dir, params);
+    let _tree = setup(&in_dir, params);
     banner::section("Finished");
 }
 
@@ -87,6 +87,7 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 /// Load second-dependency files.
 fn setup(in_dir: &Path, params: Parameters) {
     banner::section("Setup");
-    banner::sub_section("Parameters");
-    let props = build_from_list(in_dir, params.props).expect("Could not load properties.");
+    banner::sub_section("Properties");
+    let _props = build_from_list(in_dir, params.props).expect("Could not load properties.");
+    // report!("properties", format!("_\n{}", props));
 }

@@ -1,6 +1,7 @@
 //! Light module.
 
 use crate::{access, mcrt::Optics, Formula};
+use std::fmt::{Display, Formatter};
 
 /// Physical attributes structure.
 pub struct Properties {
@@ -65,5 +66,12 @@ impl Properties {
         let g = self.asym_fact.y(w);
 
         Optics::new(index, scat, abs, shift, g)
+    }
+}
+
+impl Display for Properties {
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        write!(fmt, "TODO: PROPERTIES DISPLAY")
     }
 }
