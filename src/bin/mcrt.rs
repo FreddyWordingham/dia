@@ -24,11 +24,6 @@ pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, _out_dir) = init();
 
-    let mut map = std::collections::HashMap::new();
-    map.insert(0, Redirect::There::<i32>("where".to_string()));
-    let set = Set::new(map);
-    set.save(&in_dir.join("map.json5"));
-
     let params = input(&in_dir, &params_path);
     let _light = build(&in_dir, params);
     banner::section("Finished");

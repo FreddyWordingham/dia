@@ -1,6 +1,6 @@
 //! Adaptive gridding scheme.
 
-use crate::{Aabb, Group, SmoothTriangle};
+use crate::{Aabb, Set, SmoothTriangle};
 
 /// Adaptive cell enumeration.
 ///
@@ -29,7 +29,7 @@ pub enum Adaptive<'a> {
         /// Boundary.
         boundary: Aabb,
         /// Intersecting triangles.
-        tris: Vec<(Group, &'a SmoothTriangle)>,
+        tris: Set<Vec<&'a SmoothTriangle>>,
     },
     /// Terminal empty cell.
     Empty {
