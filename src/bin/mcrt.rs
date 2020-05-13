@@ -72,10 +72,6 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     );
 
     banner::sub_sub_section("Properties");
-    // for (group, prop) in &params.props {
-    //     let g = format!("[{}]", group);
-    //     report!(g, prop);
-    // }
     report!(
         "properties",
         format!(
