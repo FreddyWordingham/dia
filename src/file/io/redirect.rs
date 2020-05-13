@@ -1,13 +1,14 @@
 //! File re-direction implementation.
 
-use crate::{Build, Error, Load};
+use crate::{as_json, from_json, Build, Error, Load, Save};
+use serde::{Deserialize, Serialize};
 use std::{
     fmt::{Display, Formatter},
     path::Path,
 };
 
 /// Possible file redirection structure.
-#[derive(Debug, serde::Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub enum Redirect<T> {
     /// Path to file.
     There(String),
@@ -17,11 +18,18 @@ pub enum Redirect<T> {
 
 impl<T: Load> Load for Redirect<T>
 where
-    for<'de> T: serde::Deserialize<'de>,
+    for<'de> T: Deserialize<'de>,
 {
     #[inline]
-    fn load(path: &std::path::Path) -> std::result::Result<Self, crate::Error> {
-        crate::from_json(path)
+    fn load(path: &Path) -> Result<Self, Error> {
+        from_json(path)
+    }
+}
+
+impl<T: Serialize> Save for Redirect<T> {
+    #[inline]
+    fn save(&self, path: &Path) -> Result<(), Error> {
+        as_json(self, path)
     }
 }
 

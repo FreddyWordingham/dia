@@ -1,24 +1,27 @@
 //! Set implementation.
 
-use crate::{access, Build, Error, Group};
-use std::{collections::BTreeMap, path::Path};
+use crate::{access, as_json, from_json, Build, Error, Group, Load, Save};
+use serde::{Deserialize, Serialize};
+use std::{collections::HashMap, path::Path};
 
 /// Set alias.
-type Map<T> = BTreeMap<Group, T>;
+type Map<T> = HashMap<Group, T>;
 
 /// Set map.
+// #[load]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Set<T> {
     /// Internal mapping.
-    map: BTreeMap<Group, T>,
+    map: Map<T>,
 }
 
 impl<T> Set<T> {
-    access!(map, BTreeMap<Group, T>);
+    access!(map, Map<T>);
 
     /// Construct a new instance.
     #[inline]
     #[must_use]
-    pub fn new(map: BTreeMap<Group, T>) -> Self {
+    pub fn new(map: Map<T>) -> Self {
         debug_assert!(!map.is_empty());
 
         Self { map }
@@ -39,6 +42,23 @@ impl<T> Set<T> {
         }
 
         Self::new(map)
+    }
+}
+
+impl<T> Load for Set<T>
+where
+    for<'de> T: Deserialize<'de>,
+{
+    #[inline]
+    fn load(path: &Path) -> Result<Self, Error> {
+        from_json(path)
+    }
+}
+
+impl<T: Serialize> Save for Set<T> {
+    #[inline]
+    fn save(&self, path: &Path) -> Result<(), Error> {
+        as_json(self, path)
     }
 }
 

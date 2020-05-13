@@ -13,18 +13,24 @@ struct Parameters {
     sett: mcrt::Settings,
     /// Light settings.
     light: form::Light,
-    /// Input surfaces.
-    surfs: Vec<(Group, Vec<String>)>,
+    // /// Input surfaces.
+    // surfs: Set<Vec<String>>,
     /// Physical attributes.
-    props: Vec<(Group, Redirect<form::Properties>)>,
+    props: Set<Redirect<form::Properties>>,
 }
 
 /// Main function.
 pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, _out_dir) = init();
+
+    let mut map = std::collections::HashMap::new();
+    map.insert(0, Redirect::There::<i32>("where".to_string()));
+    let set = Set::new(map);
+    set.save(&in_dir.join("map.json5"));
+
     let params = input(&in_dir, &params_path);
-    let _tree = setup(&in_dir, params);
+    let _light = build(&in_dir, params);
     banner::section("Finished");
 }
 
@@ -63,31 +69,18 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::sub_sub_section("Light");
     report!("light", format!("_\n{}", params.light));
 
-    banner::sub_sub_section("Surfaces");
-    report!(
-        "surfaces",
-        format!(
-            "_\n{}",
-            slice::groups_list(params.surfs.as_slice()).expect("Could not format list.")
-        )
-    );
-
-    banner::sub_sub_section("Properties");
-    report!(
-        "properties",
-        format!(
-            "_\n{}",
-            slice::groups(params.props.as_slice()).expect("Could not format list.")
-        )
-    );
-
     params
 }
 
-/// Load second-dependency files.
-fn setup(in_dir: &Path, params: Parameters) {
-    banner::section("Setup");
-    banner::sub_section("Properties");
-    let _props = build_from_list(in_dir, params.props).expect("Could not load properties.");
-    // report!("properties", format!("_\n{}", props));
+/// Build instances.
+fn build(in_dir: &Path, params: Parameters) -> mcrt::Light {
+    banner::section("Building");
+    banner::sub_section("Light");
+    let light = params.light.build(in_dir).expect("Unable to build light.");
+    let _props = params
+        .props
+        .build(in_dir)
+        .expect("Unable to properties set.");
+
+    light
 }
