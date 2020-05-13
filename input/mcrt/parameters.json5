@@ -1,5 +1,5 @@
 {
-    amr: {
+    tree: {
         'tar_tris': 5,
         'max_depth': 12,
         padding: 0.01
@@ -9,18 +9,12 @@
     },
     light: {
         mesh: 'circle',
-        power: 1.0,
+        power: 1,
         spec: {
             There: 'spec/laser_830nm.json5'
         }
     },
-    surfs: [
-        [0, ['beans', 'rice', 'cheese']],
-        [2, ['pinecone', 'woodlice']],
-        [3, ['one']]
-    ],
-    props:[
-
-{"map":{"0":{"There":"where"}}}
-    ]
+    props: { map: {
+            zero: {There: 'where'}
+    }}
 }

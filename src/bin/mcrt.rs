@@ -8,10 +8,10 @@ use std::path::{Path, PathBuf};
 #[input]
 struct Parameters {
     /// Adaptive mesh settings.
-    amr: settings::Adaptive,
+    tree: settings::Adaptive,
     /// MCRT runtime settings.
     sett: mcrt::Settings,
-    /// Light settings.
+    /// Light settings.ccc
     light: form::Light,
     // /// Input surfaces.
     // surfs: Set<Vec<String>>,
@@ -23,9 +23,7 @@ struct Parameters {
 pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, _out_dir) = init();
-
     let params = input(&in_dir, &params_path);
-    let _light = build(&in_dir, params);
     banner::section("Finished");
 }
 
@@ -56,7 +54,7 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     let params = Parameters::load(&path).expect("Could not load parameters file");
 
     banner::sub_sub_section("Grid");
-    report!("grid", format!("_\n{}", params.amr));
+    report!("tree", format!("_\n{}", params.tree));
 
     banner::sub_sub_section("Settings");
     report!("mcrt", format!("_\n{}", params.sett));
@@ -64,18 +62,21 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::sub_sub_section("Light");
     report!("light", format!("_\n{}", params.light));
 
+    banner::sub_sub_section("Properties");
+    report!("properties", format!("_\n{}", params.props));
+
     params
 }
 
-/// Build instances.
-fn build(in_dir: &Path, params: Parameters) -> mcrt::Light {
-    banner::section("Building");
-    banner::sub_section("Light");
-    let light = params.light.build(in_dir).expect("Unable to build light.");
-    let _props = params
-        .props
-        .build(in_dir)
-        .expect("Unable to properties set.");
+// /// Build instances.
+// fn build(in_dir: &Path, params: Parameters) -> mcrt::Light {
+//     banner::section("Building");
+//     banner::sub_section("Light");
+//     let light = params.light.build(in_dir).expect("Unable to build light.");
+//     let _props = params
+//         .props
+//         .build(in_dir)
+//         .expect("Unable to properties set.");
 
-    light
-}
+//     light
+// }
