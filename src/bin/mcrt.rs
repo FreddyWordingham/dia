@@ -50,8 +50,9 @@ fn init() -> (PathBuf, PathBuf, PathBuf) {
 fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::section("Input");
     banner::sub_section("Parameters");
-    let params =
-        Parameters::load(&in_dir.join(params_path)).expect("Could not load parameters file");
+    let path = in_dir.join(params_path);
+    println!("loading: {}", path.display());
+    let params = Parameters::load(&path).expect("Could not load parameters file");
 
     banner::sub_sub_section("Grid");
     report!("grid", format!("_\n{}", params.amr));
@@ -87,5 +88,5 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 fn setup(in_dir: &Path, params: Parameters) {
     banner::section("Setup");
     banner::sub_section("Parameters");
-    build_from_list(in_dir, params.props);
+    let props = build_from_list(in_dir, params.props).expect("Could not load properties.");
 }

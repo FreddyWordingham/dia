@@ -1,0 +1,26 @@
+{
+    amr: {
+        'tar_tris': 5,
+        'max_depth': 12,
+        padding: 0.01
+    },
+    sett: {
+        'bump_dist': 1e-9
+    },
+    light: {
+        mesh: 'circle',
+        power: 1.0,
+        spec: {
+            There: 'spec/laser_830nm.json5'
+        }
+    },
+    surfs: [
+        [0, ['beans', 'rice', 'cheese']],
+        [2, ['pinecone', 'woodlice']],
+        [3, ['one']]
+    ],
+    props: [
+        [0, {There: 'props/air.json5'}],
+        [1, {There: 'props/fog.json5'}]
+    ]
+}

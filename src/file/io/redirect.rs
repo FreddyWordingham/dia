@@ -29,7 +29,11 @@ impl<T: Load> Build for Redirect<T> {
     #[inline]
     fn build(self, in_dir: &Path) -> Result<Self::Inst, Error> {
         match self {
-            Self::There(path) => T::load(&in_dir.join(path)),
+            Self::There(path) => {
+                let path = in_dir.join(path);
+                println!("loading: {}", path.display());
+                T::load(&path)
+            }
             Self::Here(val) => Ok(val),
         }
     }
