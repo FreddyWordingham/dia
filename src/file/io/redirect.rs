@@ -1,6 +1,6 @@
 //! File re-direction implementation.
 
-use crate::{Error, Load};
+use crate::{Build, Error, Load};
 use std::fmt::{Display, Formatter};
 use std::path::Path;
 
@@ -13,19 +13,6 @@ pub enum Redirect<T> {
     Here(T),
 }
 
-impl<T: Clone + Load> Redirect<T> {
-    /// Access the held value, or load it from the file.
-    /// # Errors
-    /// if the file can not be loaded.
-    #[inline]
-    pub fn get(&self, in_dir: &Path) -> Result<T, Error> {
-        match self {
-            Self::There(path) => T::load(&in_dir.join(path)),
-            Self::Here(val) => Ok((*val).clone()),
-        }
-    }
-}
-
 impl<T: Load> Load for Redirect<T>
 where
     for<'de> T: serde::Deserialize<'de>,
@@ -33,6 +20,18 @@ where
     #[inline]
     fn load(path: &std::path::Path) -> std::result::Result<Self, crate::Error> {
         crate::from_json(path)
+    }
+}
+
+impl<T: Load> Build for Redirect<T> {
+    type Inst = T;
+
+    #[inline]
+    fn build(self, in_dir: &Path) -> Result<Self::Inst, Error> {
+        match self {
+            Self::There(path) => T::load(&in_dir.join(path)),
+            Self::Here(val) => Ok(val),
+        }
     }
 }
 

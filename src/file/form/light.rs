@@ -22,7 +22,7 @@ impl Build for Light {
     #[inline]
     fn build(self, in_dir: &Path) -> Result<Self::Inst, Error> {
         let surf = Mesh::load(&in_dir.join(&self.mesh))?;
-        let spec = self.spec.get(in_dir)?;
+        let spec = self.spec.build(in_dir)?;
         let power = self.power;
 
         Ok(Self::Inst::new(surf, spec, power))

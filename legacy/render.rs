@@ -125,7 +125,7 @@ fn build<'a>(
         format!("{}x{}", cam.sensor().res().0, cam.sensor().res().1)
     );
     report!("total pixels", cam.sensor().num_pixels());
-
+ 
     banner::sub_section("Colours");
     let cols = params.cols.build().expect("Could not build colour map");
 

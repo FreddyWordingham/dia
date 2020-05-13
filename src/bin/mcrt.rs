@@ -23,8 +23,8 @@ struct Parameters {
 pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, _out_dir) = init();
-    let _params = input(&in_dir, &params_path);
-
+    let params = input(&in_dir, &params_path);
+    let grid = setup(&in_dir, params);
     banner::section("Finished");
 }
 
@@ -81,4 +81,11 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     );
 
     params
+}
+
+/// Load second-dependency files.
+fn setup(in_dir: &Path, params: Parameters) {
+    banner::section("Setup");
+    banner::sub_section("Parameters");
+    build_from_list(in_dir, params.props);
 }

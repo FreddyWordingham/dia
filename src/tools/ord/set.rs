@@ -29,8 +29,8 @@ pub fn convert_from_list<T>(list: Vec<(Group, T)>) -> Set<T> {
 /// if an item could not be built.
 #[inline]
 pub fn build_from_list<T: Build>(
-    list: Vec<(Group, T)>,
     in_dir: &Path,
+    list: Vec<(Group, T)>,
 ) -> Result<Set<T::Inst>, Error> {
     let mut set = Set::new();
 
