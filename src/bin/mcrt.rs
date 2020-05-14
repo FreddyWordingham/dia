@@ -23,7 +23,7 @@ struct Parameters {
 pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, _out_dir) = init();
-    let params = input(&in_dir, &params_path);
+    let _params = input(&in_dir, &params_path);
     banner::section("Finished");
 }
 

@@ -53,8 +53,8 @@ impl<T: Display> Display for Redirect<T> {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
         match self {
-            Self::There(path) => write!(fmt, "redirect -> {}", path),
-            Self::Here(item) => write!(fmt, "{}", item),
+            Self::There(path) => write!(fmt, "-> {}", path),
+            Self::Here(item) => write!(fmt, "_! {}", item),
         }
     }
 }
