@@ -15,6 +15,8 @@
         }
     },
     props: { map: {
-            zero: {There: 'where'}
+            _0: {There: 'where'},
+            _2: {There: 'Pies'},
+            _1: {There: 'pops'},
     }}
 }

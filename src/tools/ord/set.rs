@@ -2,10 +2,14 @@
 
 use crate::{access, as_json, from_json, Build, Error, Group, Load, Save};
 use serde::{Deserialize, Serialize};
-use std::{collections::HashMap, path::Path};
+use std::{
+    collections::BTreeMap,
+    fmt::{Display, Formatter},
+    path::Path,
+};
 
 /// Set alias.
-type Map<T> = HashMap<Group, T>;
+type Map<T> = BTreeMap<Group, T>;
 
 /// Set map.
 // #[load]
@@ -78,5 +82,22 @@ impl<T: Build> Build for Set<T> {
         }
 
         Ok(Self::Inst::new(map))
+    }
+}
+
+impl<T: Display> Display for Set<T> {
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        let mut items = self.map.iter();
+
+        if let Some((group, item)) = items.next() {
+            write!(fmt, "{:>16} >  {}", format!("[{}]", group), item)?;
+        }
+
+        for (group, item) in items {
+            write!(fmt, "\n{:>16} >  {}", format!("[{}]", group), item)?;
+        }
+
+        Ok(())
     }
 }
