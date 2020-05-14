@@ -31,6 +31,6 @@ fn main() {
     let accuracy = pi_estimate / PI;
 
     // Print values.
-    report!(pi_estimate);
-    report!(accuracy);
+    report!("pi estimate", pi_estimate);
+    report!("delta", (accuracy - 1.0) * 100.0, "%");
 }

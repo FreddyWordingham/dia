@@ -1,10 +1,12 @@
 //! Report macro.
 
+use std::fmt::Display;
+
 /// Report a value and either its associated name, or a human readable string if supplied.
 #[macro_export]
 macro_rules! report {
     ($var: expr) => {
-        println!("{:>32} :  {:?}", stringify!($var), $var);
+        println!("{:>32} :  {}", stringify!($var), $var);
     };
 
     ($desc: tt, $var: expr) => {
