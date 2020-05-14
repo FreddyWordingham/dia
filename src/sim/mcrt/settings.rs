@@ -9,15 +9,19 @@ use std::fmt::{Display, Formatter, Result};
 pub struct Settings {
     /// Bump distance [m].
     bump_dist: f64,
+    /// Number of photons to simulate.
+    num_phot: u64,
 }
 
 impl Settings {
     clone!(bump_dist, f64);
+    clone!(num_phot, u64);
 }
 
 impl Display for Settings {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
-        write!(fmt, "{:>16} :  {} [m]", "bump_dist", self.bump_dist)
+        writeln!(fmt, "{:>16} :  {} [m]", "bump dist", self.bump_dist)?;
+        write!(fmt, "{:>16} :  {} [m]", "num phot", self.num_phot)
     }
 }

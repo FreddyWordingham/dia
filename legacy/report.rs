@@ -47,7 +47,8 @@ pub fn obj_units<T: Display>(name: &str, obj: T, units: &str) {
 pub fn list<T: Display>(name: &str, list: &[T]) {
     let mut s = String::new();
     for item in list {
-        write!(s, "{:>15} ", item).expect("Unable to format item.");
+        write!(s, "{:>item_len$} ", item, item_len = NAME_LENGTH / 2)
+            .expect("Unable to format item.");
     }
 
     if !s.is_empty() {
