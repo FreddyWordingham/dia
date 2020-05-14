@@ -7,28 +7,24 @@
     sett: {
         'bump_dist': 1e-9
     },
-    light: {
-        mesh: 'circle',
-        power: 1,
-        spec: {
-            There: 'spec/laser_830nm.json5'
-        }
-    },
-    props: {
-        map: {
-            '_0': {
-                There: 'props/air.json5'
-            },
-            '_1': {
-                There: 'props/fog.json5'
-            },
-            '_2': {
-                Here: {
-                    'ref_index': {Constant: {c: 1}},
-                    'scat_coeff': {Constant: {c: 0.000001}},
-                    'asym_fact': {Constant: {c: 0.1}}
-                }
-            }
-        }
-    }
+    surfs: [
+        "zero", "one", "two"
+    ],
+    // props: {
+    //     map: {
+    //         '_0': {
+    //             There: 'props/air.json5'
+    //         },
+    //         '_1': {
+    //             There: 'props/fog.json5'
+    //         },
+    //         '_2': {
+    //             Here: {
+    //                 'ref_index': {Constant: {c: 1}},
+    //                 'scat_coeff': {Constant: {c: 0.000001}},
+    //                 'asym_fact': {Constant: {c: 0.1}}
+    //             }
+    //         }
+    //     }
+    // }
 }
