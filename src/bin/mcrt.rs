@@ -61,8 +61,8 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::sub_sub_section("Settings");
     report::obj("settings", &params.sett);
 
-    // banner::sub_sub_section("Surfaces");
-    // report::obj("surfs", params.surfs);
+    banner::sub_sub_section("Surfaces");
+    report::list("surfs", &params.surfs);
 
     params
 }

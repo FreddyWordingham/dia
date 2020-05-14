@@ -42,32 +42,17 @@ pub fn obj_units<T: Display>(name: &str, obj: T, units: &str) {
     }
 }
 
-// /// Report a value and either its associated name, or a human readable string if supplied.
-// #[macro_export]
-// macro_rules! report {
-//     ($var: expr) => {};
+/// Report the a list of items.
+#[inline]
+pub fn list<T: Display>(name: &str, list: &[T]) {
+    let mut s = String::new();
+    for item in list {
+        write!(s, "{:>15} ", item).expect("Unable to format item.");
+    }
 
-//     ($desc: tt, $var: expr) => {
-//         println!("{:>32} :  {}", $desc, $var);
-//     };
+    if !s.is_empty() {
+        s.pop();
+    }
 
-//     ($desc: tt, $var: expr, $units: tt) => {
-//         println!("{:>32} :  {} [{}]", $desc, $var, $units);
-//     };
-// }
-
-// /// Report a list of values and either an associated name, or a human readable string if supplied.
-// #[macro_export]
-// macro_rules! report_list {
-//     ($var: expr) => {
-//         println!("{:>32} :  {}", stringify!($var), dia::fmt::list($var));
-//     };
-
-//     ($desc: tt, $var: expr) => {
-//         println!("{:>32$} :  {}", $desc, dia::fmt::list($var));
-//     };
-
-//     ($desc: tt, $var: expr, $units: tt) => {
-//         println!("{:>32} :  {} [{}]", $desc, dia::fmt::list($var), $units);
-//     };
-// }
+    obj(name, s)
+}
