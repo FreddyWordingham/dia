@@ -36,13 +36,13 @@ fn init() -> (PathBuf, PathBuf, PathBuf) {
     args!(bin_path: PathBuf;
         params_path: PathBuf
     );
-    report::obj("binary path", bin_path.display());
-    report::obj("parameters path", params_path.display());
+    report!("binary path", bin_path.display());
+    report!("parameters path", params_path.display());
 
     banner::sub_section("Directories");
     let (in_dir, out_dir) = dir::io_dirs(None, None).expect("Could not initialise directories");
-    report::obj("input directory", in_dir.display());
-    report::obj("output directory", out_dir.display());
+    report!("input directory", in_dir.display());
+    report!("output directory", out_dir.display());
 
     (params_path, in_dir, out_dir)
 }
@@ -56,10 +56,10 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     let params = Parameters::load(&path).expect("Could not load parameters file");
 
     banner::sub_sub_section("Grid");
-    report::obj("tree", &params.tree);
+    report!("tree", &params.tree);
 
     banner::sub_sub_section("Settings");
-    report::obj("settings", &params.sett);
+    report!("settings", &params.sett);
 
     banner::sub_sub_section("Surfaces");
     report::list("surfs", &params.surfs);
