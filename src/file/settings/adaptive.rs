@@ -1,6 +1,6 @@
 //! Adaptive grid settings implementation.
 
-use crate::clone;
+use crate::{clone, report};
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
@@ -24,8 +24,21 @@ impl Adaptive {
 impl Display for Adaptive {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
-        writeln!(fmt, "{:>16} :  {}", "tar_tris", self.tar_tris)?;
-        writeln!(fmt, "{:>16} :  {}", "max_depth", self.max_depth)?;
-        write!(fmt, "{:>16} :  {}", "padding", self.padding)
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("target triangles", self.tar_tris).expect("Could not format field.")
+        )?;
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("maximum depth", self.max_depth).expect("Could not format field.")
+        )?;
+        write!(
+            fmt,
+            "{}",
+            report::obj_units("padding", self.padding * 100.0, "%")
+                .expect("Could not format field.")
+        )
     }
 }

@@ -100,7 +100,7 @@ fn list_string<T: Display>(list: &[T]) -> Result<String, Error> {
     Ok(s)
 }
 
-/// Report the a list of items.
+/// Report a list of items.
 /// # Errors
 /// if a list item could not be written.
 #[inline]
@@ -108,10 +108,36 @@ pub fn list<T: Display>(name: &str, list: &[T]) -> Result<String, Error> {
     obj(name, list_string(list)?)
 }
 
-/// Report the a list of items.
+/// Report a list of items.
 /// # Errors
 /// if a list item could not be written.
 #[inline]
 pub fn list_units<T: Display>(name: &str, list: &[T], units: &str) -> Result<String, Error> {
     obj_units(name, list_string(list)?, units)
+}
+
+/// Report a list of items with an associated name, or a human readable string if supplied.
+#[macro_export]
+macro_rules! report_list {
+    ($expression: expr) => {
+        println!(
+            "{}",
+            dia::report::list(stringify!($expression), $expression)
+                .expect("Could not write object.")
+        );
+    };
+
+    ($desc: tt, $expression: expr) => {
+        println!(
+            "{}",
+            dia::report::list($desc, $expression).expect("Could not write object.")
+        );
+    };
+
+    ($desc: tt, $expression: expr, $units: tt) => {
+        println!(
+            "{}",
+            dia::report::list_units($desc, $expression, $units).expect("Could not write object.")
+        );
+    };
 }

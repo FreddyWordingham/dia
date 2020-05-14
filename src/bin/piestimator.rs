@@ -31,6 +31,6 @@ fn main() {
     let accuracy = pi_estimate / PI;
 
     // Print values.
-    report::obj("pi estimate", pi_estimate);
-    report::obj_units("delta", (accuracy - 1.0) * 100.0, "%");
+    report::obj("pi estimate", pi_estimate).unwrap();
+    report::obj_units("delta", (accuracy - 1.0) * 100.0, "%").unwrap();
 }

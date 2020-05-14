@@ -49,3 +49,19 @@ impl Display for Properties {
         writeln!(fmt, "_some_optical_properties_")
     }
 }
+
+// impl Display for Settings {
+//     #[inline]
+//     fn fmt(&self, fmt: &mut Formatter) -> Result {
+//         writeln!(
+//             fmt,
+//             "{}",
+//             report::obj("bump distance", self.bump_dist).expect("Could not format field.")
+//         )?;
+//         write!(
+//             fmt,
+//             "{}",
+//             report::obj("number of photons", self.num_phot).expect("Could not format field.")
+//         )
+//     }
+// }

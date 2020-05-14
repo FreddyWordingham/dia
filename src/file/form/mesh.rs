@@ -1,6 +1,6 @@
 //! Mesh form implementation.
 
-use crate::{Build, Error};
+use crate::{report, Build, Error};
 use attr::load;
 use std::{
     fmt::{Display, Formatter},
@@ -31,8 +31,10 @@ impl Build for Mesh {
 impl Display for Mesh {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        // let s = values(&self.0).expect("Could not ");
-        // write!(fmt, "{:>16} :  {}", "objs", s)
-        write!(fmt, "")
+        write!(
+            fmt,
+            "{}",
+            report::list("base objs", &self.0).expect("Could not format field.")
+        )
     }
 }

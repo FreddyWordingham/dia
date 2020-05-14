@@ -1,6 +1,6 @@
 //! Light form implementation.
 
-use crate::{Build, Error, Load, Mesh, Redirect, Spectrum};
+use crate::{report, Build, Error, Load, Mesh, Redirect, Spectrum};
 use attr::load;
 use std::{
     fmt::{Display, Formatter},
@@ -34,8 +34,20 @@ impl Build for Light {
 impl Display for Light {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        writeln!(fmt, "{:>16} :  {}", "mesh", self.mesh)?;
-        writeln!(fmt, "{:>16} :  {}", "spectrum", self.spec)?;
-        write!(fmt, "{:>16} :  {} [J/s]", "power", self.power)
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("mesh", &self.mesh).expect("Could not format field.")
+        )?;
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("spectrum", &self.spec).expect("Could not format field.")
+        )?;
+        write!(
+            fmt,
+            "{}",
+            report::obj_units("power", self.power, "J/s").expect("Could not format field.")
+        )
     }
 }

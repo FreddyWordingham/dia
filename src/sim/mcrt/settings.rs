@@ -1,6 +1,6 @@
 //! Settings implementation.
 
-use crate::clone;
+use crate::{clone, report};
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
@@ -21,7 +21,15 @@ impl Settings {
 impl Display for Settings {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
-        writeln!(fmt, "{:>16} :  {} [m]", "bump dist", self.bump_dist)?;
-        write!(fmt, "{:>16} :  {} [m]", "num phot", self.num_phot)
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("bump distance", self.bump_dist).expect("Could not format field.")
+        )?;
+        write!(
+            fmt,
+            "{}",
+            report::obj("number of photons", self.num_phot).expect("Could not format field.")
+        )
     }
 }

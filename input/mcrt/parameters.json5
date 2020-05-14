@@ -5,7 +5,8 @@
         padding: 0.01
     },
     sett: {
-        'bump_dist': 1e-9
+        'bump_dist': 1e-9,
+        'num_phot': 1e3,
     },
     surfs: [
         "zero", "one", "two"
