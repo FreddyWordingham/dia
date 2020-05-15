@@ -13,6 +13,8 @@ struct Parameters {
     sett: mcrt::Settings,
     /// Light settings.
     light: form::Light,
+    /// Surfaces map.
+    surfs: Set<form::Mesh>,
     /// Properties map.
     props: Set<Redirect<form::Properties>>,
 }
@@ -58,6 +60,9 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 
     banner::sub_sub_section("Light");
     report!("light", &params.light);
+
+    banner::sub_sub_section("Surfaces");
+    report!("surfaces", &params.surfs);
 
     banner::sub_sub_section("Properties");
     report!("properties", &params.props);

@@ -15,19 +15,25 @@
         },
         power: 1
     },
+    surfs: {
+        map: {
+            _0: ['some_mesh.obj', 'another_one.obj'],
+            _1: ['pinecone.obj', 'pies.obj']
+        }
+    },
     props: {
         map: {
-            '_0': {
+            _0: {
                 There: 'props/air.json5'
             },
-            '_1': {
+            _1: {
                 There: 'props/fog.json5'
             },
-            '_2': {
+            _2: {
                 Here: {
-                    'ref_index': {Constant: {c: 1}},
-                    'scat_coeff': {Constant: {c: 0.000001}},
-                    'asym_fact': {Constant: {c: 0.1}}
+                    ref_index: {Constant: {c: 1}},
+                    scat_coeff: {Constant: {c: 0.000001}},
+                    asym_fact: {Constant: {c: 0.1}}
                 }
             }
         }
