@@ -205,12 +205,12 @@ impl Display for Aabb {
         writeln!(
             fmt,
             "{}",
-            report::obj("mins", self.mins).expect("Could not format field.")
+            report::obj_units("mins", self.mins, "m").expect("Could not format field.")
         )?;
         write!(
             fmt,
             "{}",
-            report::obj("maxs", self.maxs).expect("Could not format field.")
+            report::obj_units("maxs", self.maxs, "m").expect("Could not format field.")
         )
     }
 }

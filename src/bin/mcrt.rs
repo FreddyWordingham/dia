@@ -92,4 +92,7 @@ fn build(in_dir: &Path, params: Parameters) {
         .build(in_dir)
         .expect("Unable to build properties.");
     report!(props);
+
+    banner::sub_section("Tree");
+    let tree = Tree::new();
 }
