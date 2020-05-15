@@ -9,7 +9,7 @@
         num_phot: 1000
     },
     light: {
-        surf: ['something.obj'],
+        surf: ['objs/circle.obj'],
         spec: {
             There: 'spec/laser_830nm.json5'
         },

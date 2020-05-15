@@ -1,6 +1,7 @@
 //! Light module.
 
-use crate::{access, clone, Mesh, Spectrum};
+use crate::{access, clone, report, Mesh, Spectrum};
+use std::fmt::{Display, Formatter, Result};
 
 /// Photon emission structure.
 pub struct Light {
@@ -24,5 +25,27 @@ impl Light {
         debug_assert!(power > 0.0);
 
         Self { surf, spec, power }
+    }
+}
+
+impl Display for Light {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> Result {
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("triangles", self.surf.tris().len()).expect("Could not format field.")
+        )?;
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("spectrum", &self.spec).expect("Could not format field.")
+        )?;
+        write!(
+            fmt,
+            "{}",
+            report::obj_units("power", self.power, "J/s").expect("Could not format field.")
+        )
     }
 }

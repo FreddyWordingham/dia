@@ -23,7 +23,8 @@ struct Parameters {
 pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, _out_dir) = init();
-    let _params = input(&in_dir, &params_path);
+    let params = input(&in_dir, &params_path);
+    build(&in_dir, params);
     banner::section("Finished");
 }
 
@@ -70,15 +71,12 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     params
 }
 
-// // /// Build instances.
-// // fn build(in_dir: &Path, params: Parameters) -> mcrt::Light {
-// //     banner::section("Building");
-// //     banner::sub_section("Light");
-// //     let light = params.light.build(in_dir).expect("Unable to build light.");
-// //     let _props = params
-// //         .props
-// //         .build(in_dir)
-// //         .expect("Unable to properties set.");
+/// Build instances.
+fn build(in_dir: &Path, params: Parameters) {
+    banner::section("Building");
+    banner::sub_section("Light");
+    let light = params.light.build(in_dir).expect("Unable to build light.");
+    report!(light);
 
-// //     light
-// // }
+    // light
+}

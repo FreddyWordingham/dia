@@ -11,6 +11,9 @@ use std::{
     result::Result,
 };
 
+/// Boundary padding.
+const PADDING: f64 = 1e-6;
+
 /// Mesh geometry.
 pub struct Mesh {
     /// Bounding box.
@@ -34,6 +37,8 @@ impl Mesh {
     }
 
     /// Initialise the bounding box for the mesh.
+    #[inline]
+    #[must_use]
     fn init_boundary(tris: &[SmoothTriangle]) -> Aabb {
         let mut mins = tris[X].tri().verts()[ALPHA];
         let mut maxs = mins;
@@ -48,6 +53,11 @@ impl Mesh {
                     }
                 }
             }
+        }
+
+        for (max, min) in maxs.iter_mut().zip(mins.iter_mut()) {
+            *min -= PADDING;
+            *max += PADDING;
         }
 
         Aabb::new(mins, maxs)
