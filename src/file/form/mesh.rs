@@ -1,6 +1,6 @@
 //! Mesh form implementation.
 
-use crate::{report, Build, Error};
+use crate::{report, Build, Error, Load};
 use attr::load;
 use std::{
     fmt::{Display, Formatter},
@@ -19,9 +19,10 @@ impl Build for Mesh {
 
     #[inline]
     fn build(self, in_dir: &Path) -> Result<Self::Inst, Error> {
-        let tris = Vec::new();
+        let mut tris = Vec::new();
         for name in self.0 {
-            // let surf = Mesh::load(&in_dir.join(&self.mesh))?;
+            let obj = Self::Inst::load(&in_dir.join(name))?;
+            tris.extend(obj.into_tris())
         }
 
         Ok(Self::Inst::new(tris))

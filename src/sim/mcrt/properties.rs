@@ -1,7 +1,10 @@
 //! Light module.
 
-use crate::{access, mcrt::Optics, Formula};
-use std::fmt::{Display, Formatter};
+use crate::{access, mcrt::Optics, report, Formula};
+use std::fmt::{Display, Formatter, Result};
+
+/// Wavelength [m] to use when printing example values.
+const PRINT_WAVELENGTH: f64 = 650e-9;
 
 /// Physical attributes structure.
 pub struct Properties {
@@ -71,23 +74,31 @@ impl Properties {
 
 impl Display for Properties {
     #[inline]
-    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        write!(fmt, "TODO: PROPERTIES DISPLAY")
+    fn fmt(&self, fmt: &mut Formatter) -> Result {
+        let sample = |fmt: &mut Formatter, name: &str, func: &Formula| -> Result {
+            writeln!(
+                fmt,
+                "{}",
+                report::obj(name, func.y(PRINT_WAVELENGTH)).expect("Could not format field.")
+            )
+        };
+
+        writeln!(
+            fmt,
+            "{}",
+            report::obj_units("(sample wavelength)", PRINT_WAVELENGTH * 1e9, "nm")
+                .expect("Could not format field.")
+        )?;
+        sample(fmt, "refractive index", &self.ref_index)?;
+        sample(fmt, "scattering coefficient", &self.scat_coeff)?;
+        if let Some(abs_coeff) = &self.abs_coeff {
+            sample(fmt, "absorption coefficient", abs_coeff)?;
+        }
+        if let Some(shift_coeff) = &self.shift_coeff {
+            sample(fmt, "shifting coefficient", shift_coeff)?;
+        }
+        sample(fmt, "asymmetry factor", &self.asym_fact)?;
+
+        Ok(())
     }
 }
-
-// impl Display for Settings {
-//     #[inline]
-//     fn fmt(&self, fmt: &mut Formatter) -> Result {
-//         writeln!(
-//             fmt,
-//             "{}",
-//             report::obj("bump distance", self.bump_dist).expect("Could not format field.")
-//         )?;
-//         write!(
-//             fmt,
-//             "{}",
-//             report::obj("number of photons", self.num_phot).expect("Could not format field.")
-//         )
-//     }
-// }

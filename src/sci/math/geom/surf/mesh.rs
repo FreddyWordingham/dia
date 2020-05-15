@@ -53,6 +53,13 @@ impl Mesh {
         Aabb::new(mins, maxs)
     }
 
+    /// Destruct the instance and retrieve the list of triangles.
+    #[inline]
+    #[must_use]
+    pub fn into_tris(self) -> Vec<SmoothTriangle> {
+        self.tris
+    }
+
     /// Calculate the total surface area.
     #[inline]
     #[must_use]

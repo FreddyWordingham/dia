@@ -1,31 +1,35 @@
 {
     tree: {
-        'tar_tris': 5,
-        'max_depth': 12,
+        tar_tris: 5,
+        max_depth: 12,
         padding: 0.01
     },
     sett: {
-        'bump_dist': 1e-9,
-        'num_phot': 1e3,
+        bump_dist: 1e-9,
+        num_phot: 1000
     },
-    surfs: [
-        "zero", "one", "two"
-    ],
-    // props: {
-    //     map: {
-    //         '_0': {
-    //             There: 'props/air.json5'
-    //         },
-    //         '_1': {
-    //             There: 'props/fog.json5'
-    //         },
-    //         '_2': {
-    //             Here: {
-    //                 'ref_index': {Constant: {c: 1}},
-    //                 'scat_coeff': {Constant: {c: 0.000001}},
-    //                 'asym_fact': {Constant: {c: 0.1}}
-    //             }
-    //         }
-    //     }
-    // }
+    light: {
+        surf: ['something.obj'],
+        spec: {
+            There: 'spec/laser_830nm.json5'
+        },
+        power: 1
+    },
+    props: {
+        map: {
+            '_0': {
+                There: 'props/air.json5'
+            },
+            '_1': {
+                There: 'props/fog.json5'
+            },
+            '_2': {
+                Here: {
+                    'ref_index': {Constant: {c: 1}},
+                    'scat_coeff': {Constant: {c: 0.000001}},
+                    'asym_fact': {Constant: {c: 0.1}}
+                }
+            }
+        }
+    }
 }

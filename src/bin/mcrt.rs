@@ -11,14 +11,10 @@ struct Parameters {
     tree: settings::Adaptive,
     /// MCRT runtime settings.
     sett: mcrt::Settings,
-    // /// Light settings.
-    // light: form::Light,
-    // /// Input surfaces.
-    // surfs: Set<form::Mesh>,
-    // /// Physical attributes.
-    // props: Set<Redirect<form::Properties>>,
-    /// Input surfaces.
-    surfs: Vec<String>,
+    /// Light settings.
+    light: form::Light,
+    /// Properties map.
+    props: Set<Redirect<form::Properties>>,
 }
 
 /// Main function.
@@ -60,8 +56,11 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::sub_sub_section("Settings");
     report!("settings", &params.sett);
 
-    banner::sub_sub_section("Surfaces");
-    report_list!("surfs", &params.surfs);
+    banner::sub_sub_section("Light");
+    report!("light", &params.light);
+
+    banner::sub_sub_section("Properties");
+    report!("properties", &params.props);
 
     params
 }
