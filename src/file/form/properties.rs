@@ -1,6 +1,6 @@
 //! Physical properties form implementation.
 
-use crate::{Build, Error, Formula};
+use crate::{mcrt::DISPLAY_WAVELENGTH, report, Build, Error, Formula};
 use attr::load;
 use std::{
     fmt::{Display, Formatter},
@@ -46,22 +46,54 @@ impl Build for Properties {
 impl Display for Properties {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        writeln!(fmt, "_some_optical_properties_")
+        writeln!(
+            fmt,
+            "{}",
+            report::obj_units("(sample wavelength)", DISPLAY_WAVELENGTH * 1e9, "nm")
+                .expect("Could not format field.")
+        )?;
+
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("refractive index", self.ref_index.y(DISPLAY_WAVELENGTH),)
+                .expect("Could not format field.")
+        )?;
+
+        writeln!(
+            fmt,
+            "{}",
+            report::obj_units(
+                "scattering coefficient",
+                self.scat_coeff.y(DISPLAY_WAVELENGTH),
+                "m^-1"
+            )
+            .expect("Could not format field.")
+        )?;
+
+        if let Some(abs_coeff) = &self.abs_coeff {
+            writeln!(
+                fmt,
+                "{}",
+                report::obj_units("absorption factor", abs_coeff.y(DISPLAY_WAVELENGTH), "m^-1")
+                    .expect("Could not format field.")
+            )?;
+        }
+
+        if let Some(shift_coeff) = &self.shift_coeff {
+            writeln!(
+                fmt,
+                "{}",
+                report::obj_units("shifting factor", shift_coeff.y(DISPLAY_WAVELENGTH), "m^-1")
+                    .expect("Could not format field.")
+            )?;
+        }
+
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("asymmetry factor", self.asym_fact.y(DISPLAY_WAVELENGTH))
+                .expect("Could not format field.")
+        )
     }
 }
-
-// impl Display for Settings {
-//     #[inline]
-//     fn fmt(&self, fmt: &mut Formatter) -> Result {
-//         writeln!(
-//             fmt,
-//             "{}",
-//             report::obj("bump distance", self.bump_dist).expect("Could not format field.")
-//         )?;
-//         write!(
-//             fmt,
-//             "{}",
-//             report::obj("number of photons", self.num_phot).expect("Could not format field.")
-//         )
-//     }
-// }

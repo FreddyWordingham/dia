@@ -4,7 +4,7 @@ use crate::{access, mcrt::Optics, report, Formula};
 use std::fmt::{Display, Formatter, Result};
 
 /// Wavelength [m] to use when printing example values.
-const PRINT_WAVELENGTH: f64 = 650e-9;
+pub const DISPLAY_WAVELENGTH: f64 = 650e-9;
 
 /// Physical attributes structure.
 pub struct Properties {
@@ -75,30 +75,54 @@ impl Properties {
 impl Display for Properties {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
-        let sample = |fmt: &mut Formatter, name: &str, func: &Formula| -> Result {
-            writeln!(
-                fmt,
-                "{}",
-                report::obj(name, func.y(PRINT_WAVELENGTH)).expect("Could not format field.")
-            )
-        };
+        writeln!(
+            fmt,
+            "{}",
+            report::obj_units("(sample wavelength)", DISPLAY_WAVELENGTH * 1e9, "nm")
+                .expect("Could not format field.")
+        )?;
 
         writeln!(
             fmt,
             "{}",
-            report::obj_units("(sample wavelength)", PRINT_WAVELENGTH * 1e9, "nm")
+            report::obj("refractive index", self.ref_index.y(DISPLAY_WAVELENGTH),)
                 .expect("Could not format field.")
         )?;
-        sample(fmt, "refractive index", &self.ref_index)?;
-        sample(fmt, "scattering coefficient", &self.scat_coeff)?;
-        if let Some(abs_coeff) = &self.abs_coeff {
-            sample(fmt, "absorption coefficient", abs_coeff)?;
-        }
-        if let Some(shift_coeff) = &self.shift_coeff {
-            sample(fmt, "shifting coefficient", shift_coeff)?;
-        }
-        sample(fmt, "asymmetry factor", &self.asym_fact)?;
 
-        Ok(())
+        writeln!(
+            fmt,
+            "{}",
+            report::obj_units(
+                "scattering coefficient",
+                self.scat_coeff.y(DISPLAY_WAVELENGTH),
+                "m^-1"
+            )
+            .expect("Could not format field.")
+        )?;
+
+        if let Some(abs_coeff) = &self.abs_coeff {
+            writeln!(
+                fmt,
+                "{}",
+                report::obj_units("absorption factor", abs_coeff.y(DISPLAY_WAVELENGTH), "m^-1")
+                    .expect("Could not format field.")
+            )?;
+        }
+
+        if let Some(shift_coeff) = &self.shift_coeff {
+            writeln!(
+                fmt,
+                "{}",
+                report::obj_units("shifting factor", shift_coeff.y(DISPLAY_WAVELENGTH), "m^-1")
+                    .expect("Could not format field.")
+            )?;
+        }
+
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("asymmetry factor", self.asym_fact.y(DISPLAY_WAVELENGTH))
+                .expect("Could not format field.")
+        )
     }
 }
