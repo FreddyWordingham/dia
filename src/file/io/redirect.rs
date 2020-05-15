@@ -41,7 +41,6 @@ impl<T: Load> Build for Redirect<T> {
         match self {
             Self::There(path) => {
                 let path = in_dir.join(path);
-                println!("loading: {}", path.display());
                 T::load(&path)
             }
             Self::Here(val) => Ok(val),
