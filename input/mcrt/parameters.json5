@@ -17,7 +17,8 @@
     },
     surfs: {
         map: {
-            cube: ['objs/cube.obj']
+            cube: ['objs/cube.obj'],
+            balls: ['objs/balls.obj']
         }
     },
     props: {
