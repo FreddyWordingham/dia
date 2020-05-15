@@ -54,6 +54,7 @@ impl Mesh {
     }
 
     /// Destruct the instance and retrieve the list of triangles.
+    #[allow(clippy::missing_const_for_fn)]
     #[inline]
     #[must_use]
     pub fn into_tris(self) -> Vec<SmoothTriangle> {

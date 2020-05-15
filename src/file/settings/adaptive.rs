@@ -22,6 +22,7 @@ impl Adaptive {
 }
 
 impl Display for Adaptive {
+    #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
         writeln!(

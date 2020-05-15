@@ -73,6 +73,7 @@ impl Properties {
 }
 
 impl Display for Properties {
+    #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
         writeln!(

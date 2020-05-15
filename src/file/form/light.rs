@@ -32,6 +32,7 @@ impl Build for Light {
 }
 
 impl Display for Light {
+    #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
         writeln!(
