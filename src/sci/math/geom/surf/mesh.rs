@@ -1,10 +1,11 @@
 //! Smooth triangle-mesh implementation.
 
 use crate::{
-    access, Aabb, Collide, Dir3, Error, Load, Pos3, Ray, Side, SmoothTriangle, Trace, Trans3,
-    Transform, Vec3, ALPHA, X,
+    access, report, Aabb, Collide, Dir3, Error, Load, Pos3, Ray, Side, SmoothTriangle, Trace,
+    Trans3, Transform, Vec3, ALPHA, X,
 };
 use std::{
+    fmt::{Display, Formatter},
     fs::File,
     io::{BufRead, BufReader},
     path::Path,
@@ -234,5 +235,22 @@ impl Load for Mesh {
         }
 
         Ok(Self::new(tris))
+    }
+}
+
+impl Display for Mesh {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("triangles", self.tris.len()).expect("Could not format field.")
+        )?;
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("boundary", &self.boundary).expect("Could not format field.")
+        )
     }
 }

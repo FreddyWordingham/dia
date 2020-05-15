@@ -1,7 +1,8 @@
 //! Axis-aligned-bounding-box implementation.
 
-use crate::{access, Collide, Pos3, Ray, Side, Trace, Vec3};
+use crate::{access, report, Collide, Pos3, Ray, Side, Trace, Vec3};
 use std::cmp::Ordering;
+use std::fmt::{Display, Formatter, Result};
 
 /// Axis-aligned bounding box geometry.
 /// Used for spatial partitioning.
@@ -194,5 +195,22 @@ impl Trace for Aabb {
     #[must_use]
     fn dist_side(&self, _ray: &Ray) -> Option<(f64, Side)> {
         unimplemented!("Tell me (Freddy) if you need this.");
+    }
+}
+
+impl Display for Aabb {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> Result {
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("mins", self.mins).expect("Could not format field.")
+        )?;
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("maxs", self.maxs).expect("Could not format field.")
+        )
     }
 }

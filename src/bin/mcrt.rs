@@ -74,9 +74,15 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 /// Build instances.
 fn build(in_dir: &Path, params: Parameters) {
     banner::section("Building");
+
     banner::sub_section("Light");
     let light = params.light.build(in_dir).expect("Unable to build light.");
     report!(light);
 
-    // light
+    banner::sub_section("Surfaces");
+    let surfs = params
+        .surfs
+        .build(in_dir)
+        .expect("Unable to build surfaces.");
+    report!(surfs);
 }

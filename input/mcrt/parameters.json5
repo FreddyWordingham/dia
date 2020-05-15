@@ -9,7 +9,7 @@
         num_phot: 1000
     },
     light: {
-        surf: ['objs/circle.obj'],
+        surf: ['objs/led.obj'],
         spec: {
             There: 'spec/laser_830nm.json5'
         },
@@ -17,24 +17,16 @@
     },
     surfs: {
         map: {
-            _0: ['some_mesh.obj', 'another_one.obj'],
-            _1: ['pinecone.obj', 'pies.obj']
+            cube: ['objs/cube.obj']
         }
     },
     props: {
         map: {
-            _0: {
+            air: {
                 There: 'props/air.json5'
             },
-            _1: {
+            fog: {
                 There: 'props/fog.json5'
-            },
-            _2: {
-                Here: {
-                    ref_index: {Constant: {c: 1}},
-                    scat_coeff: {Constant: {c: 0.000001}},
-                    asym_fact: {Constant: {c: 0.1}}
-                }
             }
         }
     }
