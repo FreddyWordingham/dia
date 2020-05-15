@@ -119,7 +119,7 @@ impl Display for Properties {
             )?;
         }
 
-        writeln!(
+        write!(
             fmt,
             "{}",
             report::obj("asymmetry factor", self.asym_fact.y(DISPLAY_WAVELENGTH))

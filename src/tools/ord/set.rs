@@ -1,6 +1,6 @@
 //! Set implementation.
 
-use crate::{access, as_json, from_json, Build, Error, Group, Load, Save};
+use crate::{access, as_json, from_json, report, Build, Error, Group, Load, Save};
 use serde::{Deserialize, Serialize};
 use std::{
     collections::BTreeMap,
@@ -86,16 +86,25 @@ impl<T: Build> Build for Set<T> {
 }
 
 impl<T: Display> Display for Set<T> {
+    #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
         let mut items = self.map.iter();
 
         if let Some((group, item)) = items.next() {
-            write!(fmt, "{:>16} >  {}", format!("[{}]", group), item)?;
+            write!(
+                fmt,
+                "{}",
+                report::obj(&format!("[{}]", group), item).expect("Could not format field.")
+            )?;
         }
 
         for (group, item) in items {
-            write!(fmt, "\n{:>16} >  {}", format!("[{}]", group), item)?;
+            write!(
+                fmt,
+                "\n{}",
+                report::obj(&format!("[{}]", group), item).expect("Could not format field.")
+            )?;
         }
 
         Ok(())

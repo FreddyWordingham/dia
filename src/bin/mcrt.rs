@@ -85,4 +85,11 @@ fn build(in_dir: &Path, params: Parameters) {
         .build(in_dir)
         .expect("Unable to build surfaces.");
     report!(surfs);
+
+    banner::sub_section("Properties");
+    let props = params
+        .props
+        .build(in_dir)
+        .expect("Unable to build properties.");
+    report!(props);
 }

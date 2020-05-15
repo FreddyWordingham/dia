@@ -247,7 +247,7 @@ impl Display for Mesh {
             "{}",
             report::obj("triangles", self.tris.len()).expect("Could not format field.")
         )?;
-        writeln!(
+        write!(
             fmt,
             "{}",
             report::obj("boundary", &self.boundary).expect("Could not format field.")
