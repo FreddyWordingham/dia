@@ -24,7 +24,8 @@ pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, _out_dir) = init();
     let params = input(&in_dir, &params_path);
-    build(&in_dir, params);
+    let (_light, surfs, _props, tree_sett) = build(&in_dir, params);
+    let _tree = grow(tree_sett, &surfs);
     banner::section("Finished");
 }
 
@@ -72,7 +73,15 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 }
 
 /// Build instances.
-fn build(in_dir: &Path, params: Parameters) -> (mcrt::Light, Set<Mesh>, Set<mcrt::Properties>) {
+fn build(
+    in_dir: &Path,
+    params: Parameters,
+) -> (
+    mcrt::Light,
+    Set<Mesh>,
+    Set<mcrt::Properties>,
+    tree::Settings,
+) {
     banner::section("Building");
 
     banner::sub_section("Light");
@@ -93,9 +102,16 @@ fn build(in_dir: &Path, params: Parameters) -> (mcrt::Light, Set<Mesh>, Set<mcrt
         .expect("Unable to build properties.");
     report!(&props);
 
-    banner::sub_section("Tree");
-    let tree = tree::Cell::new_root(&params.tree, &surfs);
-    report!(tree);
+    (light, surfs, props, params.tree)
+}
 
-    (light, surfs, props)
+/// Grow trees.
+fn grow<'a>(sett: tree::Settings, surfs: &'a Set<Mesh>) -> tree::Cell<'a> {
+    banner::section("Growing");
+
+    banner::sub_section("Adaptive Tree");
+    let tree = tree::Cell::new_root(&sett, &surfs);
+    report!(&tree);
+
+    tree
 }
