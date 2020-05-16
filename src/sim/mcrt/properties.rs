@@ -1,12 +1,14 @@
 //! Light module.
 
 use crate::{access, mcrt::Optics, report, Formula};
+use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
 /// Wavelength [m] to use when printing example values.
 pub const DISPLAY_WAVELENGTH: f64 = 650e-9;
 
 /// Physical attributes structure.
+#[load]
 pub struct Properties {
     /// Refractive index.
     ref_index: Formula,

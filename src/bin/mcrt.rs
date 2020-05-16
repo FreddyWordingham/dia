@@ -16,7 +16,7 @@ struct Parameters {
     /// Surfaces map.
     surfs: Set<form::Mesh>,
     /// Properties map.
-    props: Set<Redirect<form::Properties>>,
+    props: Set<Redirect<mcrt::Properties>>,
 }
 
 /// Main function.
@@ -72,12 +72,12 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 }
 
 /// Build instances.
-fn build(in_dir: &Path, params: Parameters) {
+fn build(in_dir: &Path, params: Parameters) -> (mcrt::Light, Set<Mesh>, Set<mcrt::Properties>) {
     banner::section("Building");
 
     banner::sub_section("Light");
     let light = params.light.build(in_dir).expect("Unable to build light.");
-    report!(light);
+    report!(&light);
 
     banner::sub_section("Surfaces");
     let surfs = params
@@ -91,9 +91,11 @@ fn build(in_dir: &Path, params: Parameters) {
         .props
         .build(in_dir)
         .expect("Unable to build properties.");
-    report!(props);
+    report!(&props);
 
     banner::sub_section("Tree");
     let tree = tree::Cell::new_root(&params.tree, &surfs);
     report!(tree);
+
+    (light, surfs, props)
 }
