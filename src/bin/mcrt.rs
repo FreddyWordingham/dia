@@ -22,10 +22,12 @@ struct Parameters {
 /// Main function.
 pub fn main() {
     banner::title("MCRT");
-    let (params_path, in_dir, _out_dir) = init();
+    let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
     let (_light, surfs, _props, tree_sett) = build(&in_dir, params);
     let _tree = grow(tree_sett, &surfs);
+    let data = simulate();
+    save(&out_dir, data);
     banner::section("Finished");
 }
 
@@ -105,7 +107,7 @@ fn build(
     (light, surfs, props, params.tree)
 }
 
-/// Grow trees.
+/// Grow domain tree.
 fn grow<'a>(sett: tree::Settings, surfs: &'a Set<Mesh>) -> tree::Cell<'a> {
     banner::section("Growing");
 
@@ -114,4 +116,22 @@ fn grow<'a>(sett: tree::Settings, surfs: &'a Set<Mesh>) -> tree::Cell<'a> {
     report!("Adaptive tree", &tree);
 
     tree
+}
+
+/// Run the simulation.
+fn simulate() -> f64 {
+    banner::section("Simulating");
+
+    banner::sub_section("Main Light");
+    let data = 1.23;
+
+    data
+}
+
+/// Save the output data.
+fn save(_out_dir: &Path, data: f64) {
+    banner::section("Saving");
+    banner::sub_section("Main Dump");
+
+    println!("Data > {}", data);
 }
