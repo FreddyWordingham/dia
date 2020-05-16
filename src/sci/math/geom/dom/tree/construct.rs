@@ -2,7 +2,7 @@
 
 use crate::{
     tree::{Cell, Settings},
-    Aabb, Collide, Group, Mesh, Pos3, Set, SmoothTriangle,
+    Aabb, Bar, Collide, Group, Mesh, Pos3, Set, SmoothTriangle,
 };
 
 impl<'a> Cell<'a> {
@@ -21,7 +21,10 @@ impl<'a> Cell<'a> {
                 tris.push((group, tri));
             }
         }
-        let children = Self::init_children(sett, &boundary, 1, &tris);
+
+        let mut pb = Bar::new("Growing tree", 8_u64.pow(sett.max_depth() as u32));
+        let children = Self::init_children(sett, &boundary, 1, &tris, &mut pb);
+        pb.finish_with_message("Tree grown.");
 
         Self::Root { boundary, children }
     }
@@ -71,18 +74,20 @@ impl<'a> Cell<'a> {
         parent_boundary: &Aabb,
         depth: i32,
         potential_tris: &[(&'a Group, &'a SmoothTriangle)],
+        mut pb: &mut Bar,
     ) -> [Box<Self>; 8] {
         debug_assert!(depth <= sett.max_depth());
         debug_assert!(!potential_tris.is_empty());
 
         let hws = parent_boundary.half_widths();
-        let make_child = |min_x: f64, min_y: f64, min_z: f64| {
+        let mut make_child = |min_x: f64, min_y: f64, min_z: f64| {
             let min = Pos3::new(min_x, min_y, min_z);
             Box::new(Self::init_child(
                 sett,
                 Aabb::new(min, min + hws),
                 depth,
                 potential_tris,
+                &mut pb,
             ))
         };
 
@@ -111,6 +116,7 @@ impl<'a> Cell<'a> {
         boundary: Aabb,
         depth: i32,
         potential_tris: &[(&'a Group, &'a SmoothTriangle)],
+        mut pb: &mut Bar,
     ) -> Self {
         debug_assert!(depth <= sett.max_depth());
 
@@ -125,14 +131,22 @@ impl<'a> Cell<'a> {
         }
 
         if tris.is_empty() {
+            pb.inc(8_u64.pow((sett.max_depth() - depth) as u32));
+
+            crate::pause!(10);
+
             return Self::Empty { boundary };
         }
 
         if (tris.len() <= sett.tar_tris()) || (depth >= sett.max_depth()) {
+            pb.inc(8_u64.pow((sett.max_depth() - depth) as u32));
+
+            crate::pause!(10);
+
             return Self::Leaf { boundary, tris };
         }
 
-        let children = Self::init_children(sett, &boundary, depth + 1, &tris);
+        let children = Self::init_children(sett, &boundary, depth + 1, &tris, &mut pb);
 
         Self::Branch { boundary, children }
     }
