@@ -94,5 +94,6 @@ fn build(in_dir: &Path, params: Parameters) {
     report!(props);
 
     banner::sub_section("Tree");
-    let _tree = tree::Cell::new_root(&params.tree, &surfs);
+    let tree = tree::Cell::new_root(&params.tree, &surfs);
+    report!(tree);
 }
