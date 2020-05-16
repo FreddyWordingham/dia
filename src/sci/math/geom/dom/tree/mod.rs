@@ -1,6 +1,6 @@
-//! Adaptive tree domain scheme.
+//! Adaptive tree cell scheme.
 
-use crate::{Aabb, Set, SmoothTriangle};
+use crate::{Aabb, Group, SmoothTriangle};
 
 /// Tree cell enumeration.
 ///
@@ -9,27 +9,27 @@ use crate::{Aabb, Set, SmoothTriangle};
 /// z  y    2npn   3ppn
 /// | /   0nnn   1pnn
 /// |/__x
-pub enum Tree<'a> {
+pub enum Cell<'a> {
     /// Root cell.
     Root {
         /// Boundary.
         boundary: Aabb,
         /// Children.
-        children: [Box<Tree<'a>>; 8],
+        children: [Box<Cell<'a>>; 8],
     },
     /// Branching cell.
     Branch {
         /// Boundary.
         boundary: Aabb,
         /// Children.
-        children: [Box<Tree<'a>>; 8],
+        children: [Box<Cell<'a>>; 8],
     },
     /// Terminal populated cell.
     Leaf {
         /// Boundary.
         boundary: Aabb,
         /// Intersecting triangles.
-        tris: Set<Vec<&'a SmoothTriangle>>,
+        tris: Vec<(&'a Group, &'a SmoothTriangle)>,
     },
     /// Terminal empty cell.
     Empty {
@@ -38,7 +38,7 @@ pub enum Tree<'a> {
     },
 }
 
-impl<'a> Tree<'a> {
+impl<'a> Cell<'a> {
     /// Reference the cell's boundary.
     #[inline]
     #[must_use]
@@ -52,9 +52,12 @@ impl<'a> Tree<'a> {
     }
 }
 
-// pub mod constructor;
+pub mod construct;
+pub mod settings;
 // pub mod properties;
 // pub mod scan;
 // pub mod search;
 
-// pub use self::{constructor::*, properties::*, scan::*, search::*};
+// pub use self::{construct::*, properties::*, scan::*, search::*};
+pub use self::construct::*;
+pub use self::settings::*;

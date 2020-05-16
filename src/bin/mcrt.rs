@@ -8,7 +8,7 @@ use std::path::{Path, PathBuf};
 #[input]
 struct Parameters {
     /// Adaptive mesh settings.
-    tree: settings::Adaptive,
+    tree: tree::Settings,
     /// MCRT runtime settings.
     sett: mcrt::Settings,
     /// Light settings.
@@ -94,5 +94,5 @@ fn build(in_dir: &Path, params: Parameters) {
     report!(props);
 
     banner::sub_section("Tree");
-    let tree = Tree::new();
+    let tree = tree::Cell::new_root(params.tree, &surfs);
 }

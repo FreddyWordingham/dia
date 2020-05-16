@@ -1,12 +1,12 @@
-//! Adaptive grid settings implementation.
+//! Adaptive tree settings implementation.
 
 use crate::{clone, report};
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
-/// Adaptive grid settings.
+/// Tree settings.
 #[load]
-pub struct Adaptive {
+pub struct Settings {
     /// Target maximum number of triangles per cell.
     tar_tris: usize,
     /// Maximum mesh depth.
@@ -15,13 +15,13 @@ pub struct Adaptive {
     padding: f64,
 }
 
-impl Adaptive {
+impl Settings {
     clone!(tar_tris, usize);
     clone!(max_depth, i32);
     clone!(padding, f64);
 }
 
-impl Display for Adaptive {
+impl Display for Settings {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
