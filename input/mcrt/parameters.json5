@@ -1,7 +1,7 @@
 {
     tree: {
         tar_tris: 5,
-        max_depth: 12,
+        max_depth: 8,
         padding: 0.01
     },
     sett: {

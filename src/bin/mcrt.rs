@@ -111,7 +111,7 @@ fn grow<'a>(sett: tree::Settings, surfs: &'a Set<Mesh>) -> tree::Cell<'a> {
 
     banner::sub_section("Adaptive Tree");
     let tree = tree::Cell::new_root(&sett, &surfs);
-    report!(&tree);
+    report!("Adaptive tree", &tree);
 
     tree
 }
