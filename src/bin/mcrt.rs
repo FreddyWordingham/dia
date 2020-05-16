@@ -84,7 +84,7 @@ fn build(in_dir: &Path, params: Parameters) {
         .surfs
         .build(in_dir)
         .expect("Unable to build surfaces.");
-    report!(surfs);
+    report!(&surfs);
 
     banner::sub_section("Properties");
     let props = params
@@ -94,5 +94,5 @@ fn build(in_dir: &Path, params: Parameters) {
     report!(props);
 
     banner::sub_section("Tree");
-    let tree = tree::Cell::new_root(params.tree, &surfs);
+    let _tree = tree::Cell::new_root(&params.tree, &surfs);
 }
