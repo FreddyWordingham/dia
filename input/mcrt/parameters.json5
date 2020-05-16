@@ -17,8 +17,8 @@
     },
     surfs: {
         map: {
-            cube: ['objs/cube.obj'],
-            balls: ['objs/balls.obj']
+            trunk: ['objs/tree.obj'],
+            leaves: ['objs/leaves.obj']
         }
     },
     props: {
