@@ -54,12 +54,10 @@ impl<'a> Cell<'a> {
 
 pub mod construct;
 pub mod display;
+pub mod info;
 pub mod settings;
-// pub mod properties;
-// pub mod scan;
-// pub mod search;
 
-// pub use self::{construct::*, properties::*, scan::*, search::*};
 pub use self::construct::*;
 pub use self::display::*;
+pub use self::info::*;
 pub use self::settings::*;

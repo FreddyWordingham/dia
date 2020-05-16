@@ -1,8 +1,11 @@
 //! Constructor methods.
 
-use crate::{tree::Settings, Aabb, Collide, Group, Mesh, Pos3, Set, SmoothTriangle};
+use crate::{
+    tree::{Cell, Settings},
+    Aabb, Collide, Group, Mesh, Pos3, Set, SmoothTriangle,
+};
 
-impl<'a> super::Cell<'a> {
+impl<'a> Cell<'a> {
     /// Construct a new tree root cell.
     /// Root cell has a depth of zero.
     #[inline]
