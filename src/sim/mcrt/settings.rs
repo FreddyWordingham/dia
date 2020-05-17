@@ -38,7 +38,8 @@ impl Display for Settings {
         write!(
             fmt,
             "{}",
-            report::obj("bump distance", self.bump_dist).expect("Could not format field.")
+            report::obj_units("bump distance", self.bump_dist, "m")
+                .expect("Could not format field.")
         )
     }
 }
