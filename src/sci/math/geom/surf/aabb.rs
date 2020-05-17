@@ -1,6 +1,7 @@
 //! Axis-aligned-bounding-box implementation.
 
 use crate::{access, report, Collide, Pos3, Ray, Side, Trace, Vec3};
+use attr::load;
 use std::{
     cmp::Ordering,
     fmt::{Display, Formatter, Result},
@@ -8,6 +9,7 @@ use std::{
 
 /// Axis-aligned bounding box geometry.
 /// Used for spatial partitioning.
+#[load]
 #[derive(Clone)]
 pub struct Aabb {
     /// Minimum bound.
