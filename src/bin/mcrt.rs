@@ -58,11 +58,14 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     let path = in_dir.join(params_path);
     let params = Parameters::load(&path).expect("Could not load parameters file");
 
-    banner::sub_sub_section("Tree Settings");
+    banner::sub_sub_section("Adaptive Tree Settings");
     report!("tree", &params.tree);
 
+    banner::sub_sub_section("Regular Grid Settings");
+    report!("grid", &params.grid);
+
     banner::sub_sub_section("MCRT Settings");
-    report!("settings", &params.sett);
+    report!("settings", &params.mcrt);
 
     banner::sub_sub_section("Light");
     report!("light", &params.light);
