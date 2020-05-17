@@ -9,7 +9,8 @@ pub fn main() {
     banner::title("Player");
     let (in_dir, _out_dir) = init();
 
-    let bytes = std::fs::read(&in_dir.join("72460.mid")).expect("Could not load file.");
+    let bytes =
+        std::fs::read(&in_dir.join("JennyWasaFriendofMine.mid")).expect("Could not load file.");
     let smf = midly::Smf::parse(&bytes).unwrap();
 
     let mut total_time = 0;
@@ -18,7 +19,9 @@ pub fn main() {
         for (_i, event) in track.iter().enumerate() {
             let t = event.delta.as_int();
             total_time += t;
-            // pause!(t as u64);
+            if total_time > 45000 {
+                pause!((t / 30) as u64);
+            }
             print!("{:>8} : ", format!("{:?}", total_time as f64 / 1000.0));
             // print!("{:<16} : ", format!("{:?}", t));
             // print!("{:<16} : ", i);
@@ -26,7 +29,7 @@ pub fn main() {
             match event.kind {
                 midly::EventKind::Midi { channel, message } => {
                     let ch = channel.as_int();
-                    // print!("{:^8} : ", ch);
+                    print!("{:^8} : ", ch);
 
                     if !music.contains_key(&ch) {
                         music.insert(ch, HashMap::new());
@@ -36,7 +39,7 @@ pub fn main() {
                     match message {
                         midly::MidiMessage::NoteOff { key, vel } => {
                             let key = key.as_int();
-                            let vel = vel.as_int();
+                            let _vel = vel.as_int();
 
                             if !instrument.contains_key(&key) {
                                 instrument.insert(key, 0);
@@ -46,13 +49,14 @@ pub fn main() {
                         }
                         midly::MidiMessage::NoteOn { key, vel } => {
                             let key = key.as_int();
-                            let vel = vel.as_int();
+                            let _vel = vel.as_int();
 
                             if !instrument.contains_key(&key) {
                                 instrument.insert(key, 0);
                             };
                             // *instrument.get_mut(&key).unwrap() = vel;
                             *instrument.get_mut(&key).unwrap() += 1;
+                            print!("{}", key);
                         }
                         _ => {}
                     }
