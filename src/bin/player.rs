@@ -25,42 +25,30 @@ pub fn main() {
             // print!("{:<16} : ", format!("{:?}", t));
             // print!("{:<16} : ", i);
 
-            match event.kind {
-                midly::EventKind::Midi { channel, message } => {
-                    let ch = channel.as_int();
-                    print!("{:^8} : ", ch);
+            if let midly::EventKind::Midi { channel, message } = event.kind {
+                let ch = channel.as_int();
+                print!("{:^8} : ", ch);
 
-                    if !music.contains_key(&ch) {
-                        music.insert(ch, HashMap::new());
-                    };
-                    let instrument = music.get_mut(&ch).unwrap();
+                music.entry(ch).or_insert_with(HashMap::new);
+                let instrument = music.get_mut(&ch).unwrap();
 
-                    match message {
-                        midly::MidiMessage::NoteOff { key, vel } => {
-                            let key = key.as_int();
-                            let _vel = vel.as_int();
+                match message {
+                    midly::MidiMessage::NoteOff { key, vel } => {
+                        let key = key.as_int();
+                        let _vel = vel.as_int();
 
-                            if !instrument.contains_key(&key) {
-                                instrument.insert(key, 0);
-                            };
-                            // *instrument.get_mut(&key).unwrap() = vel;
-                            // *instrument.get_mut(&key).unwrap() += 1;
-                        }
-                        midly::MidiMessage::NoteOn { key, vel } => {
-                            let key = key.as_int();
-                            let _vel = vel.as_int();
-
-                            if !instrument.contains_key(&key) {
-                                instrument.insert(key, 0);
-                            };
-                            // *instrument.get_mut(&key).unwrap() = vel;
-                            *instrument.get_mut(&key).unwrap() += 1;
-                            print!("{}", key);
-                        }
-                        _ => {}
+                        instrument.entry(key).or_insert(0);
                     }
+                    midly::MidiMessage::NoteOn { key, vel } => {
+                        let key = key.as_int();
+                        let _vel = vel.as_int();
+
+                        instrument.entry(key).or_insert(0);
+                        *instrument.get_mut(&key).unwrap() += 1;
+                        print!("{}", key);
+                    }
+                    _ => {}
                 }
-                _ => {}
             }
 
             println!();

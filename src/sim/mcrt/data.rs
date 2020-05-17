@@ -9,20 +9,10 @@ use std::{
 
 /// Output data structure.
 #[save]
+#[derive(Default)]
 pub struct Data {
     /// Emitted photons.
     pub emitted_photons: f64,
-}
-
-impl Data {
-    /// Construct a new instance.
-    #[inline]
-    #[must_use]
-    pub fn new() -> Self {
-        Self {
-            emitted_photons: 0.0,
-        }
-    }
 }
 
 impl AddAssign<&Self> for Data {

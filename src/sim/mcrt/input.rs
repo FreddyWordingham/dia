@@ -12,7 +12,7 @@ impl<'a> Input<'a> {
     /// Construct a new instance.
     #[inline]
     #[must_use]
-    pub fn new(sett: &'a Settings) -> Self {
+    pub const fn new(sett: &'a Settings) -> Self {
         Self { sett }
     }
 }
