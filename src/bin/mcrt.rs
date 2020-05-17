@@ -10,7 +10,7 @@ struct Parameters {
     /// Adaptive mesh settings.
     tree: tree::Settings,
     /// MCRT runtime settings.
-    sett: mcrt::Settings,
+    mcrt: mcrt::Settings,
     /// Light settings.
     light: form::Light,
     /// Surfaces map.
@@ -24,9 +24,9 @@ pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let (_light, surfs, _props, tree_sett) = build(&in_dir, params);
+    let (_light, surfs, _props, tree_sett, mcrt_sett) = build(&in_dir, params);
     let _tree = grow(tree_sett, &surfs);
-    let data = simulate();
+    let data = simulate(&mcrt_sett);
     save(&out_dir, data);
     banner::section("Finished");
 }
@@ -56,20 +56,20 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     let path = in_dir.join(params_path);
     let params = Parameters::load(&path).expect("Could not load parameters file");
 
-    banner::sub_sub_section("Grid");
-    report!("tree", &params.tree);
+    // banner::sub_sub_section("Tree Settings");
+    // report!("tree", &params.tree);
 
-    banner::sub_sub_section("Settings");
-    report!("settings", &params.sett);
+    // banner::sub_sub_section("MCRT Settings");
+    // report!("settings", &params.sett);
 
-    banner::sub_sub_section("Light");
-    report!("light", &params.light);
+    // banner::sub_sub_section("Light");
+    // report!("light", &params.light);
 
-    banner::sub_sub_section("Surfaces");
-    report!("surfaces", &params.surfs);
+    // banner::sub_sub_section("Surfaces");
+    // report!("surfaces", &params.surfs);
 
-    banner::sub_sub_section("Properties");
-    report!("properties", &params.props);
+    // banner::sub_sub_section("Properties");
+    // report!("properties", &params.props);
 
     params
 }
@@ -83,28 +83,37 @@ fn build(
     Set<Mesh>,
     Set<mcrt::Properties>,
     tree::Settings,
+    mcrt::Settings,
 ) {
     banner::section("Building");
 
     banner::sub_section("Light");
     let light = params.light.build(in_dir).expect("Unable to build light.");
-    report!(&light);
+    report!("light", &light);
 
     banner::sub_section("Surfaces");
     let surfs = params
         .surfs
         .build(in_dir)
         .expect("Unable to build surfaces.");
-    report!(&surfs);
+    report!("surfaces", &surfs);
 
     banner::sub_section("Properties");
     let props = params
         .props
         .build(in_dir)
         .expect("Unable to build properties.");
-    report!(&props);
+    report!("properties", &props);
 
-    (light, surfs, props, params.tree)
+    banner::sub_section("Tree Settings");
+    let tree_sett = params.tree;
+    report!("tree settings", &tree_sett);
+
+    banner::sub_section("MCRT Settings");
+    let mcrt_sett = params.mcrt;
+    report!("mcrt settings", &mcrt_sett);
+
+    (light, surfs, props, tree_sett, mcrt_sett)
 }
 
 /// Grow domain tree.
@@ -119,19 +128,21 @@ fn grow<'a>(sett: tree::Settings, surfs: &'a Set<Mesh>) -> tree::Cell<'a> {
 }
 
 /// Run the simulation.
-fn simulate() -> f64 {
+fn simulate(sett: &mcrt::Settings) -> mcrt::Data {
     banner::section("Simulating");
 
     banner::sub_section("Main Light");
-    let data = 1.23;
+    let input = mcrt::Input::new(&sett);
+    let data = mcrt::run::simulate(&input);
 
     data
 }
 
 /// Save the output data.
-fn save(_out_dir: &Path, data: f64) {
+fn save(out_dir: &Path, data: mcrt::Data) {
     banner::section("Saving");
     banner::sub_section("Main Dump");
-
-    println!("Data > {}", data);
+    report!("output data", &data);
+    data.save(&out_dir.join("output.json5"))
+        .expect("Could not save output data.");
 }

@@ -4,7 +4,7 @@
         max_depth: 4,
         padding: 0.01
     },
-    sett: {
+    mcrt: {
         bump_dist: 1e-9,
         num_phot: 1000,
         block_size: 100,
