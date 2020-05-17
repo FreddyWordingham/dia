@@ -137,7 +137,7 @@ fn grow<'a>(
 
     banner::sub_section("Regular Grid");
     let grid = grid::Grid::new(&grid_sett).expect("Could not build regular grid.");
-    report!("Adaptive tree", &tree);
+    report!("Regular grid", &grid);
 
     (tree, grid)
 }
