@@ -108,13 +108,13 @@ fn build(
         .expect("Unable to build properties.");
     report!("properties", &props);
 
-    banner::sub_section("Adaptive Tree Settings");
-    let tree_sett = params.tree;
-    report!("tree settings", &tree_sett);
+    // banner::sub_section("Adaptive Tree Settings");
+    // let tree_sett = params.tree;
+    // report!("tree settings", &tree_sett);
 
-    banner::sub_section("Regular Grid Settings");
-    let grid_sett = params.grid;
-    report!("grid settings", &grid_sett);
+    // banner::sub_section("Regular Grid Settings");
+    // let grid_sett = params.grid;
+    // report!("grid settings", &grid_sett);
 
     banner::sub_section("MCRT Settings");
     let mcrt_sett = params.mcrt;
