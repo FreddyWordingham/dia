@@ -33,7 +33,7 @@ pub fn simulate(input: &Input) -> Data {
 
 /// Simulate with a single thread.
 #[inline]
-fn single_thread(thread_id: usize, pb: &Arc<Mutex<ParBar>>, input: &Input) -> Data {
+fn single_thread(_thread_id: usize, pb: &Arc<Mutex<ParBar>>, input: &Input) -> Data {
     let mut data = Data::new();
 
     while let Some((start, end)) = {
@@ -42,8 +42,10 @@ fn single_thread(thread_id: usize, pb: &Arc<Mutex<ParBar>>, input: &Input) -> Da
         std::mem::drop(pb);
         b
     } {
-        // data.emitted_photons += thread_id as f64;
-        data.emitted_photons += 1.0;
+        for _ in start..end {
+            // data.emitted_photons += thread_id as f64;
+            data.emitted_photons += 1.0;
+        }
     }
 
     data
