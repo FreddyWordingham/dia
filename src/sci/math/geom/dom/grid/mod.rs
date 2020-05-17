@@ -6,8 +6,9 @@ pub mod voxel;
 pub use self::settings::*;
 pub use self::voxel::*;
 
-use crate::{access, Aabb, Error, Vec3, X, Y, Z};
+use crate::{access, report, Aabb, Error, Vec3, X, Y, Z};
 use ndarray::Array3;
+use std::fmt::{Display, Formatter};
 
 /// Regular grid structure.
 pub struct Grid {
@@ -56,5 +57,54 @@ impl Grid {
             bound: sett.bound().clone(),
             cells: Array3::from_shape_vec([res[X], res[Y], res[Z]], cells)?,
         })
+    }
+
+    /// Get the grid resolution.
+    #[inline]
+    #[must_use]
+    pub fn res(&self) -> [usize; 3] {
+        let shape = self.cells.shape();
+        [shape[X], shape[Y], shape[Z]]
+    }
+
+    /// Determine the total number of cells.
+    #[inline]
+    #[must_use]
+    pub fn total_cells(&self) -> usize {
+        let res = self.res();
+        res[X] * res[Y] * res[Z]
+    }
+}
+
+impl Display for Grid {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        writeln!(
+            fmt,
+            "{}",
+            report::obj("boundary", &self.bound).expect("Could not format field.")
+        )?;
+
+        writeln!(
+            fmt,
+            "{}",
+            report::obj(
+                "resolution",
+                format!(
+                    "{}x{}x{}",
+                    self.cells.shape()[X],
+                    self.cells.shape()[Y],
+                    self.cells.shape()[Z]
+                )
+            )
+            .expect("Could not format field.")
+        )?;
+
+        write!(
+            fmt,
+            "{}",
+            report::obj("total cells", self.total_cells()).expect("Could not format field.")
+        )
     }
 }

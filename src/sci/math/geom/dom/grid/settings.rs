@@ -38,17 +38,17 @@ impl Display for Settings {
         writeln!(
             fmt,
             "{}",
-            report::obj("total cells", self.total_cells()).expect("Could not format field.")
-        )?;
-
-        write!(
-            fmt,
-            "{}",
             report::obj(
                 "resolution",
                 format!("{}x{}x{}", self.res[X], self.res[Y], self.res[Z])
             )
             .expect("Could not format field.")
+        )?;
+
+        write!(
+            fmt,
+            "{}",
+            report::obj("total cells", self.total_cells()).expect("Could not format field.")
         )
     }
 }
