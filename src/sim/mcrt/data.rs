@@ -2,6 +2,7 @@
 
 use crate::report;
 use std::fmt::{Display, Formatter, Result};
+use std::ops::AddAssign;
 
 /// Output data structure.
 pub struct Data {
@@ -17,6 +18,13 @@ impl Data {
         Self {
             emitted_photons: 0.0,
         }
+    }
+}
+
+impl AddAssign<&Self> for Data {
+    #[inline]
+    fn add_assign(&mut self, rhs: &Self) {
+        self.emitted_photons += rhs.emitted_photons;
     }
 }
 

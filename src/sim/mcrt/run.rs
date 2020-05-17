@@ -17,7 +17,7 @@ pub fn simulate(input: &Input) -> Data {
     let threads: Vec<usize> = (0..num_cpus::get()).collect();
     let mut data: Vec<_> = threads
         .par_iter()
-        .map(|id| single_thread(*id, &Arc::clone(&pb)))
+        .map(|id| single_thread(*id, &Arc::clone(&pb), &input))
         .collect();
     pb.lock()
         .expect("Could not lock progress bar.")
@@ -25,7 +25,7 @@ pub fn simulate(input: &Input) -> Data {
 
     let mut base = data.pop().ok_or("Missing data result.").unwrap();
     for dat in data {
-        base += dat;
+        base += &dat;
     }
 
     base
@@ -33,10 +33,18 @@ pub fn simulate(input: &Input) -> Data {
 
 /// Simulate with a single thread.
 #[inline]
-fn single_thread(thread_id: usize, pb: &Arc<Mutex<ParBar>>) -> Data {
+fn single_thread(thread_id: usize, pb: &Arc<Mutex<ParBar>>, input: &Input) -> Data {
     let mut data = Data::new();
 
-    data.emitted_photons += thread_id as f64;
+    while let Some((start, end)) = {
+        let mut pb = pb.lock().expect("Could not lock progress bar.");
+        let b = pb.block(input.sett.block_size());
+        std::mem::drop(pb);
+        b
+    } {
+        // data.emitted_photons += thread_id as f64;
+        data.emitted_photons += 1.0;
+    }
 
     data
 }
