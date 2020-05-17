@@ -1,8 +1,9 @@
 //! Grid form implementation.
 
-use crate::{report, Aabb, X, Y, Z};
+use crate::{report, Aabb, Build, Error, X, Y, Z};
 use attr::load;
 use std::fmt::{Display, Formatter};
+use std::path::Path;
 
 /// Loadable triangle mesh conglomerate structure.
 #[load]
@@ -22,20 +23,14 @@ impl Grid {
     }
 }
 
-// impl Build for Grid {
-//     type Inst = crate::Grid;
+impl Build for Grid {
+    type Inst = crate::grid::Grid;
 
-//     #[inline]
-//     fn build(self, in_dir: &Path) -> Result<Self::Inst, Error> {
-//         let mut tris = Vec::new();
-//         for name in self.0 {
-//             let obj = Self::Inst::load(&in_dir.join(name))?;
-//             tris.extend(obj.into_tris())
-//         }
-
-//         Ok(Self::Inst::new(tris))
-//     }
-// }
+    #[inline]
+    fn build(self, _in_dir: &Path) -> Result<Self::Inst, Error> {
+        Ok(Self::Inst::new(self.bound, self.res)?)
+    }
+}
 
 impl Display for Grid {
     #[allow(clippy::result_expect_used)]
