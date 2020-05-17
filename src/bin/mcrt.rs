@@ -58,20 +58,20 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     let path = in_dir.join(params_path);
     let params = Parameters::load(&path).expect("Could not load parameters file");
 
-    // banner::sub_sub_section("Tree Settings");
-    // report!("tree", &params.tree);
+    banner::sub_sub_section("Tree Settings");
+    report!("tree", &params.tree);
 
-    // banner::sub_sub_section("MCRT Settings");
-    // report!("settings", &params.sett);
+    banner::sub_sub_section("MCRT Settings");
+    report!("settings", &params.sett);
 
-    // banner::sub_sub_section("Light");
-    // report!("light", &params.light);
+    banner::sub_sub_section("Light");
+    report!("light", &params.light);
 
-    // banner::sub_sub_section("Surfaces");
-    // report!("surfaces", &params.surfs);
+    banner::sub_sub_section("Surfaces");
+    report!("surfaces", &params.surfs);
 
-    // banner::sub_sub_section("Properties");
-    // report!("properties", &params.props);
+    banner::sub_sub_section("Properties");
+    report!("properties", &params.props);
 
     params
 }
@@ -108,13 +108,13 @@ fn build(
         .expect("Unable to build properties.");
     report!("properties", &props);
 
-    // banner::sub_section("Adaptive Tree Settings");
-    // let tree_sett = params.tree;
-    // report!("tree settings", &tree_sett);
+    banner::sub_section("Adaptive Tree Settings");
+    let tree_sett = params.tree;
+    report!("tree settings", &tree_sett);
 
-    // banner::sub_section("Regular Grid Settings");
-    // let grid_sett = params.grid;
-    // report!("grid settings", &grid_sett);
+    banner::sub_section("Regular Grid Settings");
+    let grid_sett = params.grid;
+    report!("grid settings", &grid_sett);
 
     banner::sub_section("MCRT Settings");
     let mcrt_sett = params.mcrt;
