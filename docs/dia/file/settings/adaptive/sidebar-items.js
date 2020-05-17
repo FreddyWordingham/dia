@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Adaptive","Adaptive grid settings."]]});

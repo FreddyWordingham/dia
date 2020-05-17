@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["collect","Collection module."],["grid","Grid module."]]});
+initSidebarItems({"mod":[["tree","Adaptive tree cell scheme."]]});

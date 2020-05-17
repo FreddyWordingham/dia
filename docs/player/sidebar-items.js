@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["init","Initialise the command line arguments and directories."],["main","Main function."]]});

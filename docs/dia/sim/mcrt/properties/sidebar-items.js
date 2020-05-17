@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["DISPLAY_WAVELENGTH","Wavelength [m] to use when printing example values."]],"struct":[["Properties","Physical attributes structure."]]});

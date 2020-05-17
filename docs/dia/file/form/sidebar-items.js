@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["attributes","Camera form implementation."],["camera","Camera form implementation."],["colours","Camera form implementation."],["trans3","Transform form implementation."]]});
+initSidebarItems({"mod":[["light","Light form implementation."],["mesh","Mesh form implementation."],["trans3","Transform form implementation."]]});

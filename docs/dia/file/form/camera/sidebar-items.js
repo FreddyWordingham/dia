@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Camera","Loadable camera structure."]]});

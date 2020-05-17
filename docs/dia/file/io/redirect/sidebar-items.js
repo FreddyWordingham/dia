@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Redirect","Redirect the loading path."]]});
+initSidebarItems({"enum":[["Redirect","Possible file redirection structure."]]});

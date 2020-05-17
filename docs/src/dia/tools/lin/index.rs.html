@@ -15,15 +15,15 @@
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Index producing functions.</span>
 
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">Cartesian</span>::{<span class="ident">Y</span>, <span class="ident">Z</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Y</span>, <span class="ident">Z</span>};
 
 <span class="doccomment">/// Create the next three-dimensional index from the given linear index.</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">three_dim</span>(<span class="ident">n</span>: <span class="ident">usize</span>, <span class="ident">res</span>: [<span class="ident">usize</span>; <span class="number">3</span>]) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">usize</span>; <span class="number">3</span>] {
-    <span class="kw">let</span> <span class="ident">zi</span> <span class="op">=</span> <span class="ident">n</span> <span class="op">%</span> <span class="ident">res</span>.<span class="ident">get</span>(<span class="ident">Z</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">yi</span> <span class="op">=</span> (<span class="ident">n</span> <span class="op">/</span> <span class="ident">res</span>.<span class="ident">get</span>(<span class="ident">Z</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">unwrap</span>()) <span class="op">%</span> <span class="ident">res</span>.<span class="ident">get</span>(<span class="ident">Y</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">xi</span> <span class="op">=</span> <span class="ident">n</span> <span class="op">/</span> (<span class="ident">res</span>.<span class="ident">get</span>(<span class="ident">Y</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">unwrap</span>() <span class="op">*</span> <span class="ident">res</span>.<span class="ident">get</span>(<span class="ident">Z</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">unwrap</span>());
+<span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">three_dim</span>(<span class="ident">n</span>: <span class="ident">usize</span>, <span class="ident">res</span>: [<span class="ident">usize</span>; <span class="number">3</span>]) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">usize</span>; <span class="number">3</span>] {
+    <span class="kw">let</span> <span class="ident">zi</span> <span class="op">=</span> <span class="ident">n</span> <span class="op">%</span> <span class="ident">res</span>[<span class="ident">Z</span>];
+    <span class="kw">let</span> <span class="ident">yi</span> <span class="op">=</span> (<span class="ident">n</span> <span class="op">/</span> <span class="ident">res</span>[<span class="ident">Z</span>]) <span class="op">%</span> <span class="ident">res</span>[<span class="ident">Y</span>];
+    <span class="kw">let</span> <span class="ident">xi</span> <span class="op">=</span> <span class="ident">n</span> <span class="op">/</span> (<span class="ident">res</span>[<span class="ident">Y</span>] <span class="op">*</span> <span class="ident">res</span>[<span class="ident">Z</span>]);
 
     [<span class="ident">xi</span>, <span class="ident">yi</span>, <span class="ident">zi</span>]
 }

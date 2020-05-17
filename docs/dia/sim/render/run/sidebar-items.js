@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["capture","Render an image. # Errors if an invalid thread image was created."]]});

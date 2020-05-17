@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["crossing","Crossing implementation."]]});
+initSidebarItems({"mod":[["crossing","Crossing implementation."],["spectrum","Spectrum implementation."]]});

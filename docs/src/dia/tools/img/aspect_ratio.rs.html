@@ -170,7 +170,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vt_res</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hr_res</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
         <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">hr_res</span> <span class="op">&gt;</span> <span class="number">0</span>);
 
-        (<span class="self">self</span>.<span class="ident">ratio</span>() <span class="op">*</span> <span class="ident">hr_res</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">usize</span>
+        (<span class="ident">hr_res</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="self">self</span>.<span class="ident">ratio</span>()).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">usize</span>
     }
 }
 

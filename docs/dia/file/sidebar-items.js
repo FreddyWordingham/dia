@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["form","Form module."],["io","Input and output module."],["settings","Settings module."]]});
+initSidebarItems({"mod":[["form","Form module."],["io","Input and output module."]]});

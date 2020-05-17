@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Colours","Loadable colours structure."]]});

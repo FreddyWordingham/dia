@@ -1,1 +1,1 @@
-initSidebarItems({"type":[["Set","Set alias."]]});
+initSidebarItems({"struct":[["Set","Set map."]]});

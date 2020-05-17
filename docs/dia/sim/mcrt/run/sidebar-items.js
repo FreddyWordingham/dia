@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["simulate","Run an MCRT simulation."]]});

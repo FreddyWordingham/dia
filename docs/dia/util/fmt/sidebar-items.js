@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["banner","Banner printing functions."],["columns","Columns macro."],["gradient","Gradient formatting function."],["report","Report macro."],["term","Terminal width calculation function."]]});
+initSidebarItems({"mod":[["banner","Banner printing functions."],["report","Reporting functions."],["term","Terminal width calculation function."]]});

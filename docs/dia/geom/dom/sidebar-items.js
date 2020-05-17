@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["grid","Grid module."],["ord","Ordering module."]]});

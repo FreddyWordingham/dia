@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["render","Rendering module."]]});
+initSidebarItems({"mod":[["mcrt","Monte-Carlo radiative transfer module."]]});
