@@ -1,8 +1,10 @@
 //! Axis-aligned-bounding-box implementation.
 
 use crate::{access, report, Collide, Pos3, Ray, Side, Trace, Vec3};
-use std::cmp::Ordering;
-use std::fmt::{Display, Formatter, Result};
+use std::{
+    cmp::Ordering,
+    fmt::{Display, Formatter, Result},
+};
 
 /// Axis-aligned bounding box geometry.
 /// Used for spatial partitioning.

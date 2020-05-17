@@ -133,7 +133,7 @@ fn simulate(sett: &mcrt::Settings) -> mcrt::Data {
 
     banner::sub_section("Main Light");
     let input = mcrt::Input::new(&sett);
-    let data = mcrt::run::simulate(&input);
+    let data = mcrt::run::simulate(&input, mcrt::life::test);
 
     data
 }

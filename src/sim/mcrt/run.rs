@@ -1,23 +1,24 @@
 //! Simulation run functions.
 
 use crate::{
-    mcrt::{Data, Input},
+    mcrt::{life::Life, Data, Input},
     ParBar,
 };
+use rand::thread_rng;
 use rayon::prelude::*;
 use std::sync::{Arc, Mutex};
 
 /// Run an MCRT simulation.
 #[inline]
 #[must_use]
-pub fn simulate(input: &Input) -> Data {
+pub fn simulate(input: &Input, func: Life) -> Data {
     let pb = ParBar::new("Randomising", input.sett.num_phot());
     let pb = Arc::new(Mutex::new(pb));
 
     let threads: Vec<usize> = (0..num_cpus::get()).collect();
     let mut data: Vec<_> = threads
         .par_iter()
-        .map(|id| single_thread(*id, &Arc::clone(&pb), &input))
+        .map(|id| single_thread(*id, &Arc::clone(&pb), &input, func))
         .collect();
     pb.lock()
         .expect("Could not lock progress bar.")
@@ -33,8 +34,10 @@ pub fn simulate(input: &Input) -> Data {
 
 /// Simulate with a single thread.
 #[inline]
-fn single_thread(_thread_id: usize, pb: &Arc<Mutex<ParBar>>, input: &Input) -> Data {
+fn single_thread(_thread_id: usize, pb: &Arc<Mutex<ParBar>>, input: &Input, func: Life) -> Data {
     let mut data = Data::new();
+
+    let mut rng = thread_rng();
 
     while let Some((start, end)) = {
         let mut pb = pb.lock().expect("Could not lock progress bar.");
@@ -43,8 +46,7 @@ fn single_thread(_thread_id: usize, pb: &Arc<Mutex<ParBar>>, input: &Input) -> D
         b
     } {
         for _ in start..end {
-            // data.emitted_photons += thread_id as f64;
-            data.emitted_photons += 1.0;
+            func(&input, &mut data, &mut rng);
         }
     }
 

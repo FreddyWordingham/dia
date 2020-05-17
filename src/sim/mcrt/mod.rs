@@ -2,6 +2,7 @@
 
 pub mod data;
 pub mod input;
+pub mod life;
 pub mod light;
 pub mod optics;
 pub mod photon;

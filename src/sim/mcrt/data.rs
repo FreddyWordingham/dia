@@ -2,8 +2,10 @@
 
 use crate::report;
 use attr::save;
-use std::fmt::{Display, Formatter, Result};
-use std::ops::AddAssign;
+use std::{
+    fmt::{Display, Formatter, Result},
+    ops::AddAssign,
+};
 
 /// Output data structure.
 #[save]

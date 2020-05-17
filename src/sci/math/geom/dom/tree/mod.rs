@@ -57,7 +57,4 @@ pub mod display;
 pub mod info;
 pub mod settings;
 
-pub use self::construct::*;
-pub use self::display::*;
-pub use self::info::*;
-pub use self::settings::*;
+pub use self::{construct::*, display::*, info::*, settings::*};
