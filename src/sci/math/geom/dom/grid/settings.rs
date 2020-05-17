@@ -1,20 +1,22 @@
-//! Grid form implementation.
+//! Regular grid settings implementation.
 
-use crate::{report, Aabb, Build, Error, X, Y, Z};
+use crate::{access, report, Aabb, X, Y, Z};
 use attr::load;
 use std::fmt::{Display, Formatter};
-use std::path::Path;
 
 /// Loadable triangle mesh conglomerate structure.
 #[load]
-pub struct Grid {
+pub struct Settings {
     /// Boundary.
     bound: Aabb,
     /// Resolution.
     res: [usize; 3],
 }
 
-impl Grid {
+impl Settings {
+    access!(bound, Aabb);
+    access!(res, [usize; 3]);
+
     /// Determine the total number of cells.
     #[inline]
     #[must_use]
@@ -23,16 +25,7 @@ impl Grid {
     }
 }
 
-impl Build for Grid {
-    type Inst = crate::grid::Grid;
-
-    #[inline]
-    fn build(self, _in_dir: &Path) -> Result<Self::Inst, Error> {
-        Ok(Self::Inst::new(self.bound, self.res)?)
-    }
-}
-
-impl Display for Grid {
+impl Display for Settings {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {

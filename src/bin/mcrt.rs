@@ -9,6 +9,8 @@ use std::path::{Path, PathBuf};
 struct Parameters {
     /// Adaptive mesh settings.
     tree: tree::Settings,
+    /// Regular grid settings.
+    grid: grid::Settings,
     /// MCRT runtime settings.
     mcrt: mcrt::Settings,
     /// Light settings.
@@ -24,8 +26,8 @@ pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let (_light, surfs, _props, tree_sett, mcrt_sett) = build(&in_dir, params);
-    let _tree = grow(tree_sett, &surfs);
+    let (_light, surfs, _props, tree_sett, grid_sett, mcrt_sett) = build(&in_dir, params);
+    let (_tree, _grid) = grow(tree_sett, grid_sett, &surfs);
     let data = simulate(&mcrt_sett);
     save(&out_dir, data);
     banner::section("Finished");
@@ -83,6 +85,7 @@ fn build(
     Set<Mesh>,
     Set<mcrt::Properties>,
     tree::Settings,
+    grid::Settings,
     mcrt::Settings,
 ) {
     banner::section("Building");
@@ -105,26 +108,38 @@ fn build(
         .expect("Unable to build properties.");
     report!("properties", &props);
 
-    banner::sub_section("Tree Settings");
+    banner::sub_section("Adaptive Tree Settings");
     let tree_sett = params.tree;
     report!("tree settings", &tree_sett);
+
+    banner::sub_section("Regular Grid Settings");
+    let grid_sett = params.grid;
+    report!("grid settings", &grid_sett);
 
     banner::sub_section("MCRT Settings");
     let mcrt_sett = params.mcrt;
     report!("mcrt settings", &mcrt_sett);
 
-    (light, surfs, props, tree_sett, mcrt_sett)
+    (light, surfs, props, tree_sett, grid_sett, mcrt_sett)
 }
 
 /// Grow domain tree.
-fn grow<'a>(sett: tree::Settings, surfs: &'a Set<Mesh>) -> tree::Cell<'a> {
+fn grow<'a>(
+    tree_sett: tree::Settings,
+    grid_sett: grid::Settings,
+    surfs: &'a Set<Mesh>,
+) -> (tree::Cell<'a>, grid::Grid) {
     banner::section("Growing");
 
     banner::sub_section("Adaptive Tree");
-    let tree = tree::Cell::new_root(&sett, &surfs);
+    let tree = tree::Cell::new_root(&tree_sett, &surfs);
     report!("Adaptive tree", &tree);
 
-    tree
+    banner::sub_section("Regular Grid");
+    let grid = grid::Grid::new(&grid_sett).expect("Could not build regular grid.");
+    report!("Adaptive tree", &tree);
+
+    (tree, grid)
 }
 
 /// Run the simulation.
