@@ -1,4 +1,4 @@
-//! Light module.
+//! Light structure.
 
 use crate::{access, clone, report, Mesh, Spectrum};
 use std::fmt::{Display, Formatter, Result};
