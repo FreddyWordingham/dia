@@ -1,10 +1,12 @@
 //! Output data structure.
 
 use crate::report;
+use attr::save;
 use std::fmt::{Display, Formatter, Result};
 use std::ops::AddAssign;
 
 /// Output data structure.
+#[save]
 pub struct Data {
     /// Emitted photons.
     pub emitted_photons: f64,

@@ -1,12 +1,13 @@
 {
     tree: {
         tar_tris: 5,
-        max_depth: 8,
+        max_depth: 4,
         padding: 0.01
     },
     sett: {
         bump_dist: 1e-9,
-        num_phot: 1000
+        num_phot: 1000,
+        block_size: 100,
     },
     light: {
         surf: ['objs/led.obj'],
