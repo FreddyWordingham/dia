@@ -42,6 +42,7 @@
 <span id="42">42</span>
 <span id="43">43</span>
 <span id="44">44</span>
+<span id="45">45</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Settings implementation.</span>
 
@@ -83,7 +84,8 @@
         <span class="macro">write</span><span class="macro">!</span>(
             <span class="ident">fmt</span>,
             <span class="string">&quot;{}&quot;</span>,
-            <span class="ident">report</span>::<span class="ident">obj</span>(<span class="string">&quot;bump distance&quot;</span>, <span class="self">self</span>.<span class="ident">bump_dist</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
+            <span class="ident">report</span>::<span class="ident">obj_units</span>(<span class="string">&quot;bump distance&quot;</span>, <span class="self">self</span>.<span class="ident">bump_dist</span>, <span class="string">&quot;m&quot;</span>)
+                .<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
         )
     }
 }

@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["simulate","Run an MCRT simulation."]]});
+initSidebarItems({"fn":[["simulate","Run an MCRT simulation. # Errors if the progress bar can not be locked."]]});

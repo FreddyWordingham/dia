@@ -146,6 +146,27 @@
 <span id="146">146</span>
 <span id="147">147</span>
 <span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! MCRT binary.</span>
 
@@ -158,6 +179,8 @@
 <span class="kw">struct</span> <span class="ident">Parameters</span> {
     <span class="doccomment">/// Adaptive mesh settings.</span>
     <span class="ident">tree</span>: <span class="ident">tree</span>::<span class="ident">Settings</span>,
+    <span class="doccomment">/// Regular grid settings.</span>
+    <span class="ident">grid</span>: <span class="ident">grid</span>::<span class="ident">Settings</span>,
     <span class="doccomment">/// MCRT runtime settings.</span>
     <span class="ident">mcrt</span>: <span class="ident">mcrt</span>::<span class="ident">Settings</span>,
     <span class="doccomment">/// Light settings.</span>
@@ -173,9 +196,9 @@
     <span class="ident">banner</span>::<span class="ident">title</span>(<span class="string">&quot;MCRT&quot;</span>);
     <span class="kw">let</span> (<span class="ident">params_path</span>, <span class="ident">in_dir</span>, <span class="ident">out_dir</span>) <span class="op">=</span> <span class="ident">init</span>();
     <span class="kw">let</span> <span class="ident">params</span> <span class="op">=</span> <span class="ident">input</span>(<span class="kw-2">&amp;</span><span class="ident">in_dir</span>, <span class="kw-2">&amp;</span><span class="ident">params_path</span>);
-    <span class="kw">let</span> (<span class="ident">_light</span>, <span class="ident">surfs</span>, <span class="ident">_props</span>, <span class="ident">tree_sett</span>, <span class="ident">mcrt_sett</span>) <span class="op">=</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="ident">in_dir</span>, <span class="ident">params</span>);
-    <span class="kw">let</span> <span class="ident">_tree</span> <span class="op">=</span> <span class="ident">grow</span>(<span class="ident">tree_sett</span>, <span class="kw-2">&amp;</span><span class="ident">surfs</span>);
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">simulate</span>(<span class="kw-2">&amp;</span><span class="ident">mcrt_sett</span>);
+    <span class="kw">let</span> (<span class="ident">light</span>, <span class="ident">surfs</span>, <span class="ident">_props</span>, <span class="ident">tree_sett</span>, <span class="ident">grid_sett</span>, <span class="ident">mcrt_sett</span>) <span class="op">=</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="ident">in_dir</span>, <span class="ident">params</span>);
+    <span class="kw">let</span> (<span class="ident">tree</span>, <span class="ident">grid</span>) <span class="op">=</span> <span class="ident">grow</span>(<span class="ident">tree_sett</span>, <span class="ident">grid_sett</span>, <span class="kw-2">&amp;</span><span class="ident">surfs</span>);
+    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">simulate</span>(<span class="kw-2">&amp;</span><span class="ident">mcrt_sett</span>, <span class="kw-2">&amp;</span><span class="ident">light</span>, <span class="kw-2">&amp;</span><span class="ident">grid</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>);
     <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">out_dir</span>, <span class="ident">data</span>);
     <span class="ident">banner</span>::<span class="ident">section</span>(<span class="string">&quot;Finished&quot;</span>);
 }
@@ -205,20 +228,23 @@
     <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">in_dir</span>.<span class="ident">join</span>(<span class="ident">params_path</span>);
     <span class="kw">let</span> <span class="ident">params</span> <span class="op">=</span> <span class="ident">Parameters</span>::<span class="ident">load</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not load parameters file&quot;</span>);
 
-    <span class="comment">// banner::sub_sub_section(&quot;Tree Settings&quot;);</span>
-    <span class="comment">// report!(&quot;tree&quot;, &amp;params.tree);</span>
+    <span class="ident">banner</span>::<span class="ident">sub_sub_section</span>(<span class="string">&quot;Adaptive Tree Settings&quot;</span>);
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;tree&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">tree</span>);
 
-    <span class="comment">// banner::sub_sub_section(&quot;MCRT Settings&quot;);</span>
-    <span class="comment">// report!(&quot;settings&quot;, &amp;params.sett);</span>
+    <span class="ident">banner</span>::<span class="ident">sub_sub_section</span>(<span class="string">&quot;Regular Grid Settings&quot;</span>);
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;grid&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">grid</span>);
 
-    <span class="comment">// banner::sub_sub_section(&quot;Light&quot;);</span>
-    <span class="comment">// report!(&quot;light&quot;, &amp;params.light);</span>
+    <span class="ident">banner</span>::<span class="ident">sub_sub_section</span>(<span class="string">&quot;MCRT Settings&quot;</span>);
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;settings&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">mcrt</span>);
 
-    <span class="comment">// banner::sub_sub_section(&quot;Surfaces&quot;);</span>
-    <span class="comment">// report!(&quot;surfaces&quot;, &amp;params.surfs);</span>
+    <span class="ident">banner</span>::<span class="ident">sub_sub_section</span>(<span class="string">&quot;Light&quot;</span>);
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;light&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">light</span>);
 
-    <span class="comment">// banner::sub_sub_section(&quot;Properties&quot;);</span>
-    <span class="comment">// report!(&quot;properties&quot;, &amp;params.props);</span>
+    <span class="ident">banner</span>::<span class="ident">sub_sub_section</span>(<span class="string">&quot;Surfaces&quot;</span>);
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;surfaces&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">surfs</span>);
+
+    <span class="ident">banner</span>::<span class="ident">sub_sub_section</span>(<span class="string">&quot;Properties&quot;</span>);
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;properties&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">props</span>);
 
     <span class="ident">params</span>
 }
@@ -232,6 +258,7 @@
     <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">Mesh</span><span class="op">&gt;</span>,
     <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">mcrt</span>::<span class="ident">Properties</span><span class="op">&gt;</span>,
     <span class="ident">tree</span>::<span class="ident">Settings</span>,
+    <span class="ident">grid</span>::<span class="ident">Settings</span>,
     <span class="ident">mcrt</span>::<span class="ident">Settings</span>,
 ) {
     <span class="ident">banner</span>::<span class="ident">section</span>(<span class="string">&quot;Building&quot;</span>);
@@ -254,37 +281,52 @@
         .<span class="ident">expect</span>(<span class="string">&quot;Unable to build properties.&quot;</span>);
     <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;properties&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">props</span>);
 
-    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Tree Settings&quot;</span>);
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Adaptive Tree Settings&quot;</span>);
     <span class="kw">let</span> <span class="ident">tree_sett</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">tree</span>;
     <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;tree settings&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">tree_sett</span>);
+
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Regular Grid Settings&quot;</span>);
+    <span class="kw">let</span> <span class="ident">grid_sett</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">grid</span>;
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;grid settings&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">grid_sett</span>);
 
     <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;MCRT Settings&quot;</span>);
     <span class="kw">let</span> <span class="ident">mcrt_sett</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">mcrt</span>;
     <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;mcrt settings&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">mcrt_sett</span>);
 
-    (<span class="ident">light</span>, <span class="ident">surfs</span>, <span class="ident">props</span>, <span class="ident">tree_sett</span>, <span class="ident">mcrt_sett</span>)
+    (<span class="ident">light</span>, <span class="ident">surfs</span>, <span class="ident">props</span>, <span class="ident">tree_sett</span>, <span class="ident">grid_sett</span>, <span class="ident">mcrt_sett</span>)
 }
 
 <span class="doccomment">/// Grow domain tree.</span>
-<span class="kw">fn</span> <span class="ident">grow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">sett</span>: <span class="ident">tree</span>::<span class="ident">Settings</span>, <span class="ident">surfs</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">Mesh</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">tree</span>::<span class="ident">Cell</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">grow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
+    <span class="ident">tree_sett</span>: <span class="ident">tree</span>::<span class="ident">Settings</span>,
+    <span class="ident">grid_sett</span>: <span class="ident">grid</span>::<span class="ident">Settings</span>,
+    <span class="ident">surfs</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">Mesh</span><span class="op">&gt;</span>,
+) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">tree</span>::<span class="ident">Cell</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">grid</span>::<span class="ident">Grid</span>) {
     <span class="ident">banner</span>::<span class="ident">section</span>(<span class="string">&quot;Growing&quot;</span>);
 
     <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Adaptive Tree&quot;</span>);
-    <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">tree</span>::<span class="ident">Cell</span>::<span class="ident">new_root</span>(<span class="kw-2">&amp;</span><span class="ident">sett</span>, <span class="kw-2">&amp;</span><span class="ident">surfs</span>);
+    <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">tree</span>::<span class="ident">Cell</span>::<span class="ident">new_root</span>(<span class="kw-2">&amp;</span><span class="ident">tree_sett</span>, <span class="kw-2">&amp;</span><span class="ident">surfs</span>);
     <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;Adaptive tree&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>);
 
-    <span class="ident">tree</span>
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Regular Grid&quot;</span>);
+    <span class="kw">let</span> <span class="ident">grid</span> <span class="op">=</span> <span class="ident">grid</span>::<span class="ident">Grid</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">grid_sett</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not build regular grid.&quot;</span>);
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;Regular grid&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">grid</span>);
+
+    (<span class="ident">tree</span>, <span class="ident">grid</span>)
 }
 
 <span class="doccomment">/// Run the simulation.</span>
-<span class="kw">fn</span> <span class="ident">simulate</span>(<span class="ident">sett</span>: <span class="kw-2">&amp;</span><span class="ident">mcrt</span>::<span class="ident">Settings</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">mcrt</span>::<span class="ident">Data</span> {
+<span class="kw">fn</span> <span class="ident">simulate</span>(
+    <span class="ident">sett</span>: <span class="kw-2">&amp;</span><span class="ident">mcrt</span>::<span class="ident">Settings</span>,
+    <span class="ident">light</span>: <span class="kw-2">&amp;</span><span class="ident">mcrt</span>::<span class="ident">Light</span>,
+    <span class="ident">grid</span>: <span class="kw-2">&amp;</span><span class="ident">grid</span>::<span class="ident">Grid</span>,
+    <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">tree</span>::<span class="ident">Cell</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">mcrt</span>::<span class="ident">Data</span> {
     <span class="ident">banner</span>::<span class="ident">section</span>(<span class="string">&quot;Simulating&quot;</span>);
 
     <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Main Light&quot;</span>);
-    <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="ident">mcrt</span>::<span class="ident">Input</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">sett</span>);
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">mcrt</span>::<span class="ident">run</span>::<span class="ident">simulate</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>, <span class="ident">mcrt</span>::<span class="ident">life</span>::<span class="ident">test</span>);
-
-    <span class="ident">data</span>
+    <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="ident">mcrt</span>::<span class="ident">Input</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">sett</span>, <span class="kw-2">&amp;</span><span class="ident">light</span>, <span class="kw-2">&amp;</span><span class="ident">grid</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>);
+    <span class="ident">mcrt</span>::<span class="ident">run</span>::<span class="ident">simulate</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>, <span class="ident">mcrt</span>::<span class="ident">life</span>::<span class="ident">test</span>).<span class="ident">expect</span>(<span class="string">&quot;Simulation failed.&quot;</span>)
 }
 
 <span class="doccomment">/// Save the output data.</span>

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Voxel","Regular grid structure."]]});
