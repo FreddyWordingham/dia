@@ -24,6 +24,8 @@ pub enum Error {
     EnvVar(std::env::VarError),
     /// Formatting error.
     Format(std::fmt::Error),
+    /// Shape error.
+    Shape(ndarray::ShapeError),
     /// Parallelisation poison.
     Parallel,
     /// String error.
@@ -51,6 +53,7 @@ impl_from_for_err!(Self::WriteNetCDF, netcdf::error::Error);
 impl_from_for_err!(Self::WritePng, png::EncodingError);
 impl_from_for_err!(Self::EnvVar, std::env::VarError);
 impl_from_for_err!(Self::Format, std::fmt::Error);
+impl_from_for_err!(Self::Shape, ndarray::ShapeError);
 
 impl<T> From<std::sync::PoisonError<T>> for Error {
     #[inline]
@@ -83,6 +86,7 @@ impl Debug for Error {
                 Self::WritePng { .. } => "PNG writing",
                 Self::EnvVar { .. } => "Environment variable missing",
                 Self::Format { .. } => "Formatting",
+                Self::Shape { .. } => "Shape",
                 Self::Parallel { .. } => "Parallelisation poison",
                 Self::Text { .. } => "Text string",
             },
@@ -97,6 +101,7 @@ impl Debug for Error {
                 Self::WritePng { 0: err } => format!("{:?}", err),
                 Self::EnvVar { 0: err } => format!("{:?}", err),
                 Self::Format { 0: err } => format!("{:?}", err),
+                Self::Shape { 0: err } => format!("{:?}", err),
                 Self::Parallel => "Parallelisation fail".to_string(),
                 Self::Text { 0: err } => format!("{:?}", err),
             }
