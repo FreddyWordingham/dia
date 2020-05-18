@@ -10,7 +10,7 @@ use std::{
 /// Loadable triangle mesh conglomerate structure.
 #[load]
 pub struct Mesh(
-    /// List of object files
+    /// List of object files.
     Vec<String>,
 );
 

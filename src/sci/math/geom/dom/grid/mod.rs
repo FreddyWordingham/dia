@@ -3,8 +3,7 @@
 pub mod settings;
 pub mod voxel;
 
-pub use self::settings::*;
-pub use self::voxel::*;
+pub use self::{settings::*, voxel::*};
 
 use crate::{access, report, Aabb, Error, Vec3, X, Y, Z};
 use ndarray::Array3;

@@ -7,6 +7,4 @@ use rand::rngs::ThreadRng;
 #[inline]
 pub fn test(_input: &Input, data: &mut Data, _rng: &mut ThreadRng) {
     data.emitted_photons += 1.0;
-
-    
 }
