@@ -9,8 +9,8 @@ use std::path::{Path, PathBuf};
 struct Parameters {
     /// Adaptive mesh settings.
     tree: tree::Settings,
-    // /// Render runtime settings.
-    // render: render::Settings,
+    /// Render runtime settings.
+    render: render::Settings,
     /// Surfaces map.
     surfs: Set<form::Mesh>,
     // /// Attributes map.
