@@ -13,8 +13,10 @@ struct Parameters {
     render: render::Settings,
     /// Surfaces map.
     surfs: Set<form::Mesh>,
-    // /// Attributes map.
-    // attrs: Set<render::Attribute>,
+    /// Colour map.
+    cols: Set<form::Gradient>,
+    /// Attributes map.
+    attrs: Set<Redirect<render::Attribute>>,
 }
 
 /// Main function.
@@ -63,8 +65,11 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::sub_sub_section("Surfaces");
     report!("surfaces", &params.surfs);
 
-    // banner::sub_sub_section("Attributes");
-    // report!("attributes", &params.attrs);
+    banner::sub_sub_section("Colours");
+    report!("colours", &params.cols);
+
+    banner::sub_sub_section("Attributes");
+    report!("attributes", &params.attrs);
 
     params
 }
