@@ -1,0 +1,22 @@
+{
+    tree: {
+        tar_tris: 5,
+        max_depth: 3,
+        padding: 0.01
+    },
+    render: {
+        bump_dist: 1e-9,
+    },
+    surfs: {
+        map: {
+            trunk: ['objs/tree.obj'],
+            leaves: ['objs/leaves.obj']
+        }
+    },
+    attrs: {
+        map: {
+            water: {There: 'attr/water.json5'},
+            glass: {There: 'attr/glass.json5'}
+        }
+    }
+}

@@ -14,14 +14,14 @@ struct Parameters {
     /// Surfaces map.
     surfs: Set<form::Mesh>,
     // /// Attributes map.
-    // props: Set<render::Attribute>,
+    // attrs: Set<render::Attribute>,
 }
 
 /// Main function.
 pub fn main() {
     banner::title("RENDER");
-    // let (params_path, in_dir, out_dir) = init();
-    // let params = input(&in_dir, &params_path);
+    let (params_path, in_dir, out_dir) = init();
+    let params = input(&in_dir, &params_path);
     // let (light, surfs, _props, tree_sett, grid_sett, mcrt_sett) = build(&in_dir, params);
     // let (tree, grid) = grow(tree_sett, grid_sett, &surfs);
     // let data = simulate(&mcrt_sett, &light, &grid, &tree);
@@ -29,51 +29,45 @@ pub fn main() {
     banner::section("Finished");
 }
 
-// /// Initialise the command line arguments and directories.
-// fn init() -> (PathBuf, PathBuf, PathBuf) {
-//     banner::section("Initialisation");
-//     banner::sub_section("Command line args");
-//     args!(bin_path: PathBuf;
-//         params_path: PathBuf
-//     );
-//     report!("binary path", bin_path.display());
-//     report!("parameters path", params_path.display());
+/// Initialise the command line arguments and directories.
+fn init() -> (PathBuf, PathBuf, PathBuf) {
+    banner::section("Initialisation");
+    banner::sub_section("Command line args");
+    args!(bin_path: PathBuf;
+        params_path: PathBuf
+    );
+    report!("binary path", bin_path.display());
+    report!("parameters path", params_path.display());
 
-//     banner::sub_section("Directories");
-//     let (in_dir, out_dir) = dir::io_dirs(None, None).expect("Could not initialise directories");
-//     report!("input directory", in_dir.display());
-//     report!("output directory", out_dir.display());
+    banner::sub_section("Directories");
+    let (in_dir, out_dir) = dir::io_dirs(None, None).expect("Could not initialise directories");
+    report!("input directory", in_dir.display());
+    report!("output directory", out_dir.display());
 
-//     (params_path, in_dir, out_dir)
-// }
+    (params_path, in_dir, out_dir)
+}
 
-// /// Load the input files.
-// fn input(in_dir: &Path, params_path: &Path) -> Parameters {
-//     banner::section("Input");
-//     banner::sub_section("Parameters");
-//     let path = in_dir.join(params_path);
-//     let params = Parameters::load(&path).expect("Could not load parameters file");
+/// Load the input files.
+fn input(in_dir: &Path, params_path: &Path) -> Parameters {
+    banner::section("Input");
+    banner::sub_section("Parameters");
+    let path = in_dir.join(params_path);
+    let params = Parameters::load(&path).expect("Could not load parameters file");
 
-//     banner::sub_sub_section("Adaptive Tree Settings");
-//     report!("tree", &params.tree);
+    banner::sub_sub_section("Adaptive Tree Settings");
+    report!("tree", &params.tree);
 
-//     banner::sub_sub_section("Regular Grid Settings");
-//     report!("grid", &params.grid);
+    // banner::sub_sub_section("Render Settings");
+    // report!("settings", &params.render);
 
-//     banner::sub_sub_section("MCRT Settings");
-//     report!("settings", &params.mcrt);
+    banner::sub_sub_section("Surfaces");
+    report!("surfaces", &params.surfs);
 
-//     banner::sub_sub_section("Light");
-//     report!("light", &params.light);
+    // banner::sub_sub_section("Attributes");
+    // report!("attributes", &params.attrs);
 
-//     banner::sub_sub_section("Surfaces");
-//     report!("surfaces", &params.surfs);
-
-//     banner::sub_sub_section("Properties");
-//     report!("properties", &params.props);
-
-//     params
-// }
+    params
+}
 
 // /// Build instances.
 // fn build(
