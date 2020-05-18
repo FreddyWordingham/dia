@@ -1,4 +1,4 @@
-//! Light module.
+//! Properties structure.
 
 use crate::{access, mcrt::Optics, report, Formula};
 use attr::load;
