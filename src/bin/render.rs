@@ -20,8 +20,8 @@ struct Parameters {
 /// Main function.
 pub fn main() {
     banner::title("RENDER");
-    let (params_path, in_dir, out_dir) = init();
-    let params = input(&in_dir, &params_path);
+    let (params_path, in_dir, _out_dir) = init();
+    let _params = input(&in_dir, &params_path);
     // let (light, surfs, _props, tree_sett, grid_sett, mcrt_sett) = build(&in_dir, params);
     // let (tree, grid) = grow(tree_sett, grid_sett, &surfs);
     // let data = simulate(&mcrt_sett, &light, &grid, &tree);
@@ -57,8 +57,8 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::sub_sub_section("Adaptive Tree Settings");
     report!("tree", &params.tree);
 
-    // banner::sub_sub_section("Render Settings");
-    // report!("settings", &params.render);
+    banner::sub_sub_section("Render Settings");
+    report!("settings", &params.render);
 
     banner::sub_sub_section("Surfaces");
     report!("surfaces", &params.surfs);
