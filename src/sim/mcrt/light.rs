@@ -1,6 +1,7 @@
 //! Light structure.
 
-use crate::{access, clone, report, Mesh, Spectrum};
+use crate::{access, clone, mcrt::Photon, report, Emit, Mesh, Spectrum};
+use rand::rngs::ThreadRng;
 use std::fmt::{Display, Formatter, Result};
 
 /// Photon emission structure.
@@ -25,6 +26,19 @@ impl Light {
         debug_assert!(power > 0.0);
 
         Self { surf, spec, power }
+    }
+
+    /// Emit a photon.
+    #[inline]
+    #[must_use]
+    pub fn emit(&self, total_phot: u64, rng: &mut ThreadRng) -> Photon {
+        debug_assert!(total_phot > 0);
+
+        let ray = self.surf.cast(rng);
+        let wavelength = self.spec.sample(rng);
+        let power = self.power / total_phot as f64;
+
+        Photon::new(ray, wavelength, power)
     }
 }
 

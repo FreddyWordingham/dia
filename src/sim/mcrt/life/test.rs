@@ -8,5 +8,5 @@ use rand::rngs::ThreadRng;
 pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
     data.emitted_photons += 1.0;
 
-    let phot = input.light.emit(rng);
+    let _phot = input.light.emit(input.sett.num_phot(), rng);
 }

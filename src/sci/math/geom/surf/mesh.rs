@@ -115,7 +115,7 @@ impl Emit for Mesh {
     fn cast(&self, rng: &mut ThreadRng) -> Ray {
         let r = rng.gen_range(0.0, self.area);
         let mut total_area = 0.0;
-        for tri in self.tris {
+        for tri in &self.tris {
             total_area += tri.tri().area();
             if total_area >= r {
                 return tri.cast(rng);
