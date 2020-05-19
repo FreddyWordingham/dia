@@ -1,9 +1,10 @@
 //! Flat triangle implementation.
 
 use crate::{
-    access, Aabb, Collide, Dir3, Pos3, Ray, Side, Trace, Trans3, Transform, Vec3, ALPHA, BETA,
-    GAMMA,
+    access, Aabb, Collide, Dir3, Emit, Pos3, Ray, Side, Trace, Trans3, Transform, Vec3, ALPHA,
+    BETA, GAMMA,
 };
+use rand::{rngs::ThreadRng, Rng};
 
 /// Triangle.
 pub struct Triangle {
@@ -251,5 +252,26 @@ impl Transform for Triangle {
         }
 
         self.plane_norm = Dir3::new_normalize(trans.transform_vector(&self.plane_norm));
+    }
+}
+
+impl Emit for Triangle {
+    #[inline]
+    #[must_use]
+    fn cast(&self, rng: &mut ThreadRng) -> Ray {
+        let mut u = rng.gen::<f64>();
+        let mut v = rng.gen::<f64>();
+
+        if (u + v) > 1.0 {
+            u = 1.0 - u;
+            v = 1.0 - v;
+        }
+
+        let edge_a_b = self.verts[BETA] - self.verts[ALPHA];
+        let edge_a_c = self.verts[GAMMA] - self.verts[ALPHA];
+
+        let pos = self.verts[ALPHA] + (edge_a_b * u) + (edge_a_c * v);
+
+        Ray::new(pos, self.plane_norm)
     }
 }
