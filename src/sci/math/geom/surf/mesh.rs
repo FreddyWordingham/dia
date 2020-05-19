@@ -1,8 +1,8 @@
 //! Smooth triangle-mesh implementation.
 
 use crate::{
-    access, report, Aabb, Collide, Dir3, Error, Load, Pos3, Ray, Side, SmoothTriangle, Trace,
-    Trans3, Transform, Vec3, ALPHA, X,
+    access, clone, report, Aabb, Collide, Dir3, Error, Load, Pos3, Ray, Side, SmoothTriangle,
+    Trace, Trans3, Transform, Vec3, ALPHA, X,
 };
 use std::{
     fmt::{Display, Formatter},
@@ -21,19 +21,25 @@ pub struct Mesh {
     boundary: Aabb,
     /// List of component triangles.
     tris: Vec<SmoothTriangle>,
+    /// Total surface area.
+    area: f64,
 }
 
 impl Mesh {
     access!(boundary, Aabb);
     access!(tris, Vec<SmoothTriangle>);
+    clone!(area, f64);
 
     /// Construct a new instance.
     #[inline]
     #[must_use]
     pub fn new(tris: Vec<SmoothTriangle>) -> Self {
+        let area = tris.iter().map(|tri| tri.tri().area()).sum();
+
         Self {
             boundary: Self::init_boundary(&tris),
             tris,
+            area,
         }
     }
 
