@@ -77,19 +77,6 @@ impl Mesh {
     pub fn into_tris(self) -> Vec<SmoothTriangle> {
         self.tris
     }
-
-    /// Calculate the total surface area.
-    #[inline]
-    #[must_use]
-    pub fn area(&self) -> f64 {
-        let mut area = 0.0;
-
-        for tri in &self.tris {
-            area += tri.tri().area();
-        }
-
-        area
-    }
 }
 
 impl Collide for Mesh {
@@ -252,6 +239,11 @@ impl Display for Mesh {
             fmt,
             "{}",
             report::obj("triangles", self.tris.len()).expect("Could not format field.")
+        )?;
+        writeln!(
+            fmt,
+            "{}",
+            report::obj_units("area", self.area, "m^2").expect("Could not format field.")
         )?;
         write!(
             fmt,
