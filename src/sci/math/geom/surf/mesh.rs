@@ -1,9 +1,10 @@
 //! Smooth triangle-mesh implementation.
 
 use crate::{
-    access, clone, report, Aabb, Collide, Dir3, Error, Load, Pos3, Ray, Side, SmoothTriangle,
+    access, clone, report, Aabb, Collide, Dir3, Emit, Error, Load, Pos3, Ray, Side, SmoothTriangle,
     Trace, Trans3, Transform, Vec3, ALPHA, X,
 };
+use rand::{rngs::ThreadRng, Rng};
 use std::{
     fmt::{Display, Formatter},
     fs::File,
@@ -105,6 +106,23 @@ impl Transform for Mesh {
         }
 
         self.boundary = Self::init_boundary(&self.tris);
+    }
+}
+
+impl Emit for Mesh {
+    #[inline]
+    #[must_use]
+    fn cast(&self, rng: &mut ThreadRng) -> Ray {
+        let r = rng.gen_range(0.0, self.area);
+        let mut total_area = 0.0;
+        for tri in self.tris {
+            total_area += tri.tri().area();
+            if total_area >= r {
+                return tri.cast(rng);
+            }
+        }
+
+        unreachable!()
     }
 }
 
