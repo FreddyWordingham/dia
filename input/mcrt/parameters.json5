@@ -11,8 +11,8 @@
     },
     grid: {
         bound: {
-            mins: [-1.0, -1.0, -1.0],
-            maxs: [1.0, 1.0, 1.0]
+            mins: [-2.0, -2.0, -2.0],
+            maxs: [2.0, 2.0, 2.0]
         },
         res: [32, 32, 32]
     },
@@ -25,8 +25,7 @@
     },
     surfs: {
         map: {
-            trunk: ['objs/tree.obj'],
-            leaves: ['objs/leaves.obj']
+            chunk: ['objs/chunk.obj']
         }
     },
     props: {
