@@ -1,9 +1,10 @@
 //! Smooth triangle implementation.
 
 use crate::{
-    access, Aabb, Collide, Dir3, Pos3, Ray, Side, Trace, Trans3, Transform, Triangle, ALPHA, BETA,
-    GAMMA,
+    access, Aabb, Collide, Dir3, Emit, Pos3, Ray, Side, Trace, Trans3, Transform, Triangle, ALPHA,
+    BETA, GAMMA,
 };
+use rand::{rngs::ThreadRng, Rng};
 
 /// Triangle geometry with normal interpolation.
 pub struct SmoothTriangle {
@@ -84,5 +85,32 @@ impl Transform for SmoothTriangle {
         for n in &mut self.norms {
             *n = Dir3::new_normalize(trans.transform_vector(n.as_ref()));
         }
+    }
+}
+
+impl Emit for SmoothTriangle {
+    #[inline]
+    #[must_use]
+    fn cast(&self, rng: &mut ThreadRng) -> Ray {
+        let mut u = rng.gen::<f64>();
+        let mut v = rng.gen::<f64>();
+
+        if (u + v) > 1.0 {
+            u = 1.0 - u;
+            v = 1.0 - v;
+        }
+        let w = 1.0 - u - v;
+
+        let edge_a_b = self.tri.verts()[BETA] - self.tri.verts()[ALPHA];
+        let edge_a_c = self.tri.verts()[GAMMA] - self.tri.verts()[ALPHA];
+
+        let pos = self.tri.verts()[ALPHA] + (edge_a_b * u) + (edge_a_c * v);
+        let dir = Dir3::new_normalize(
+            (self.norms[BETA].as_ref() * u)
+                + (self.norms[GAMMA].as_ref() * v)
+                + (self.norms[ALPHA].as_ref() * w),
+        );
+
+        Ray::new(pos, dir)
     }
 }
