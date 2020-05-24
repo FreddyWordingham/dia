@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Gradient","Loadable colour gradient structure."]]});

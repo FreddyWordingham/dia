@@ -2,7 +2,7 @@
     tree: {
         tar_tris: 5,
         max_depth: 5,
-        padding: 0.01
+        padding: 0.1
     },
     mcrt: {
         bump_dist: 1e-3,

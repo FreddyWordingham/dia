@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["collide","Collide trait."],["trace","Trace trait."],["transform","Transform trait."]]});
+initSidebarItems({"mod":[["collide","Collide trait."],["emit","Emit trait."],["trace","Trace trait."],["transform","Transform trait."]]});

@@ -30,6 +30,11 @@
 <span id="30">30</span>
 <span id="31">31</span>
 <span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Photon implementation.</span>
 
@@ -43,23 +48,28 @@
     <span class="ident">weight</span>: <span class="ident">f64</span>,
     <span class="doccomment">/// Wavelength [m].</span>
     <span class="ident">wavelength</span>: <span class="ident">f64</span>,
+    <span class="doccomment">/// Power [J/s].</span>
+    <span class="ident">power</span>: <span class="ident">f64</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Photon</span> {
     <span class="macro">access</span><span class="macro">!</span>(<span class="ident">ray</span>, <span class="ident">ray_mut</span>, <span class="ident">Ray</span>);
     <span class="macro">clone</span><span class="macro">!</span>(<span class="ident">weight</span>, <span class="ident">weight_mut</span>, <span class="ident">f64</span>);
     <span class="macro">clone</span><span class="macro">!</span>(<span class="ident">wavelength</span>, <span class="ident">wavelength_mut</span>, <span class="ident">f64</span>);
+    <span class="macro">clone</span><span class="macro">!</span>(<span class="ident">power</span>, <span class="ident">f64</span>);
 
     <span class="doccomment">/// Construct a new instance.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">wavelength</span>: <span class="ident">f64</span>, <span class="ident">ray</span>: <span class="ident">Ray</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">ray</span>: <span class="ident">Ray</span>, <span class="ident">wavelength</span>: <span class="ident">f64</span>, <span class="ident">power</span>: <span class="ident">f64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">wavelength</span> <span class="op">&gt;</span> <span class="number">0.0</span>);
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">power</span> <span class="op">&gt;</span> <span class="number">0.0</span>);
 
         <span class="self">Self</span> {
             <span class="ident">ray</span>,
             <span class="ident">weight</span>: <span class="number">1.0</span>,
             <span class="ident">wavelength</span>,
+            <span class="ident">power</span>,
         }
     }
 }

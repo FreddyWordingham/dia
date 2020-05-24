@@ -80,6 +80,7 @@ ALIASES["rayon"] = {};
 ALIASES["rayon_core"] = {};
 ALIASES["regex"] = {};
 ALIASES["regex_syntax"] = {};
+ALIASES["render"] = {};
 ALIASES["rgb"] = {};
 ALIASES["rustc_demangle"] = {};
 ALIASES["ryu"] = {};

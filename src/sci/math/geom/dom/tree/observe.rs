@@ -67,7 +67,7 @@ impl<'a> Cell<'a> {
 
                 let boundary_dist = boundary.dist(ray).unwrap();
                 if let Some(hit) = nearest {
-                    if hit.dist() < boundary_dist {
+                    if hit.dist() < (boundary_dist + bump_dist) {
                         return Scan::new_surface(hit);
                     }
                 }

@@ -253,13 +253,36 @@
 <span id="253">253</span>
 <span id="254">254</span>
 <span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Flat triangle implementation.</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">access</span>, <span class="ident">Aabb</span>, <span class="ident">Collide</span>, <span class="ident">Dir3</span>, <span class="ident">Pos3</span>, <span class="ident">Ray</span>, <span class="ident">Side</span>, <span class="ident">Trace</span>, <span class="ident">Trans3</span>, <span class="ident">Transform</span>, <span class="ident">Vec3</span>, <span class="ident">ALPHA</span>, <span class="ident">BETA</span>,
-    <span class="ident">GAMMA</span>,
+    <span class="ident">access</span>, <span class="ident">Aabb</span>, <span class="ident">Collide</span>, <span class="ident">Dir3</span>, <span class="ident">Emit</span>, <span class="ident">Pos3</span>, <span class="ident">Ray</span>, <span class="ident">Side</span>, <span class="ident">Trace</span>, <span class="ident">Trans3</span>, <span class="ident">Transform</span>, <span class="ident">Vec3</span>, <span class="ident">ALPHA</span>,
+    <span class="ident">BETA</span>, <span class="ident">GAMMA</span>,
 };
+<span class="kw">use</span> <span class="ident">rand</span>::{<span class="ident">rngs</span>::<span class="ident">ThreadRng</span>, <span class="ident">Rng</span>};
 
 <span class="doccomment">/// Triangle.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Triangle</span> {
@@ -507,6 +530,27 @@
         }
 
         <span class="self">self</span>.<span class="ident">plane_norm</span> <span class="op">=</span> <span class="ident">Dir3</span>::<span class="ident">new_normalize</span>(<span class="ident">trans</span>.<span class="ident">transform_vector</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">plane_norm</span>));
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Emit</span> <span class="kw">for</span> <span class="ident">Triangle</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="attribute">#[<span class="ident">must_use</span>]</span>
+    <span class="kw">fn</span> <span class="ident">cast</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ThreadRng</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Ray</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">u</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>();
+
+        <span class="kw">if</span> (<span class="ident">u</span> <span class="op">+</span> <span class="ident">v</span>) <span class="op">&gt;</span> <span class="number">1.0</span> {
+            <span class="ident">u</span> <span class="op">=</span> <span class="number">1.0</span> <span class="op">-</span> <span class="ident">u</span>;
+            <span class="ident">v</span> <span class="op">=</span> <span class="number">1.0</span> <span class="op">-</span> <span class="ident">v</span>;
+        }
+
+        <span class="kw">let</span> <span class="ident">edge_a_b</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">verts</span>[<span class="ident">BETA</span>] <span class="op">-</span> <span class="self">self</span>.<span class="ident">verts</span>[<span class="ident">ALPHA</span>];
+        <span class="kw">let</span> <span class="ident">edge_a_c</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">verts</span>[<span class="ident">GAMMA</span>] <span class="op">-</span> <span class="self">self</span>.<span class="ident">verts</span>[<span class="ident">ALPHA</span>];
+
+        <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">verts</span>[<span class="ident">ALPHA</span>] <span class="op">+</span> (<span class="ident">edge_a_b</span> <span class="op">*</span> <span class="ident">u</span>) <span class="op">+</span> (<span class="ident">edge_a_c</span> <span class="op">*</span> <span class="ident">v</span>);
+
+        <span class="ident">Ray</span>::<span class="ident">new</span>(<span class="ident">pos</span>, <span class="self">self</span>.<span class="ident">plane_norm</span>)
     }
 }
 </pre></div>

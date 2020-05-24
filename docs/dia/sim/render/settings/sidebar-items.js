@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Settings","Rendering settings structure."]]});
