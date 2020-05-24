@@ -26,11 +26,6 @@ impl<'a> Cell<'a> {
             }
         }
 
-        // Illumination at limbs of the tree can lead to piercing in and out again.
-        // if !self.boundary().contains(ray.pos()) {
-        //     return None;
-        // }
-
         while let Some(cell) = self.find_terminal_cell(ray.pos()) {
             if dist_travelled > max_dist {
                 return None;

@@ -39,18 +39,22 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
             .dist(phot.ray())
             .expect("Could not determine voxel distance.");
         let scat_dist = -(rng.gen_range(0.0_f64, 1.0)).ln() / env.inter_coeff();
-        let surf_dist = input.tree.observe(
+        let surf_hit = input.tree.observe(
             phot.ray().clone(),
             input.sett.bump_dist(),
             voxel_dist.min(scat_dist),
         );
 
         // Handle event.
-        match Event::new(voxel_dist, scat_dist, bump_dist) {
+        match Event::new(voxel_dist, scat_dist, surf_hit, bump_dist) {
             Event::Voxel(dist) => move_phot(data, index, &mut phot, dist + bump_dist),
             Event::Scattering(dist) => {
                 move_phot(data, index, &mut phot, dist);
                 scatter_phot(data, index, &mut phot, &env, rng);
+            }
+            Event::Surface(hit) => {
+                move_phot(data, index, &mut phot, hit.dist());
+                break;
             }
         }
     }

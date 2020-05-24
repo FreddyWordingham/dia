@@ -7,7 +7,9 @@ impl<'a> Cell<'a> {
     #[inline]
     #[must_use]
     pub fn find_terminal_cell(&self, pos: &Pos3) -> Option<&Self> {
-        debug_assert!(self.boundary().contains(pos));
+        if !self.boundary().contains(pos) {
+            return None;
+        }
 
         match self {
             Self::Leaf { .. } | Self::Empty { .. } => Some(self),

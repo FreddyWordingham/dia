@@ -1,11 +1,11 @@
 {
     tree: {
         tar_tris: 5,
-        max_depth: 3,
+        max_depth: 5,
         padding: 0.01
     },
     mcrt: {
-        bump_dist: 1e-9,
+        bump_dist: 1e-3,
         num_phot: 1000000,
         block_size: 100,
     },
@@ -14,7 +14,7 @@
             mins: [-2.0, -2.0, -2.0],
             maxs: [2.0, 2.0, 2.0]
         },
-        res: [64, 64, 64]
+        res: [5,5,5]
     },
     light: {
         surf: ['objs/led.obj'],
