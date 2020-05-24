@@ -56,7 +56,7 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
 #[must_use]
 fn emit_phot<'a>(input: &'a Input, rng: &mut ThreadRng) -> (Photon, &'a Properties) {
     let phot = input.light.emit(input.sett.num_phot(), rng);
-    let prop = &input.props.map()["air"];
+    let prop = &input.props.map()["fog"];
 
     (phot, prop)
 }
