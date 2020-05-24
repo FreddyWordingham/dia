@@ -2,7 +2,7 @@
 
 use crate::{
     distribution,
-    mcrt::{Data, Hit, Input, Optics, Photon, Properties},
+    mcrt::{Data, Event, Input, Optics, Photon, Properties},
     Trace,
 };
 use rand::{rngs::ThreadRng, Rng};
@@ -41,9 +41,9 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
         let scat_dist = -(rng.gen_range(0.0_f64, 1.0)).ln() / env.inter_coeff();
 
         // Handle event.
-        match Hit::new(voxel_dist, scat_dist, bump_dist) {
-            Hit::Voxel(dist) => move_phot(data, index, &mut phot, dist + bump_dist),
-            Hit::Scattering(dist) => {
+        match Event::new(voxel_dist, scat_dist, bump_dist) {
+            Event::Voxel(dist) => move_phot(data, index, &mut phot, dist + bump_dist),
+            Event::Scattering(dist) => {
                 move_phot(data, index, &mut phot, dist);
                 scatter_phot(data, index, &mut phot, &env, rng);
             }

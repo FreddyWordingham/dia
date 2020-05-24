@@ -1,17 +1,17 @@
-//! Hit enumeration.
+//! Event enumeration.
 
 use crate::report;
 use std::fmt::{Display, Formatter, Result};
 
-/// Hit determination enumeration.
-pub enum Hit {
+/// Event determination enumeration.
+pub enum Event {
     /// Voxel boundary collision.
     Voxel(f64),
     /// Scattering event.
     Scattering(f64),
 }
 
-impl Hit {
+impl Event {
     /// Construct a new instance.
     #[inline]
     #[must_use]
@@ -28,7 +28,7 @@ impl Hit {
     }
 }
 
-impl Display for Hit {
+impl Display for Event {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
