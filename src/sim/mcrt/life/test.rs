@@ -12,17 +12,35 @@ use std::f64::consts::PI;
 #[allow(clippy::option_expect_used)]
 #[inline]
 pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
-    let (mut phot, mat) = emit_phot(input, rng);
-    let env = mat.env(phot.wavelength());
+    // Useful constants.
     let bump_dist = input.sett.bump_dist();
 
-    if let Some((index, voxel)) = input.grid.gen_index_voxel(phot.ray().pos()) {
+    // Photon variable initialisation.
+    let (mut phot, mat) = emit_phot(input, rng);
+    let env = mat.env(phot.wavelength());
+
+    // Check photon can be placed within the grid domain.
+    if let Some(index) = input.grid.gen_index(phot.ray().pos()) {
         data.emitted_photons[index] += phot.weight();
+    } else {
+        panic!("Photon was not emitted within the grid.");
+    }
+
+    // Loop photon life until it leaves the grid.
+    while let Some((index, voxel)) = input.grid.gen_index_voxel(phot.ray().pos()) {
+        //
+
+        // println!("mins  : {}", voxel.mins());
+        // println!("maxs  : {}", voxel.maxs());
+        // println!("pos   : {}\n", phot.ray().pos());
+
+        // Determine possible event distances.
         let voxel_dist = voxel
             .dist(phot.ray())
             .expect("Could not determine voxel distance.");
         let scat_dist = -(rng.gen_range(0.0_f64, 1.0)).ln() / env.inter_coeff();
 
+        // Handle event.
         match Hit::new(voxel_dist, scat_dist, bump_dist) {
             Hit::Voxel(dist) => move_phot(data, index, &mut phot, dist + bump_dist),
             Hit::Scattering(dist) => {
@@ -64,8 +82,8 @@ fn scatter_phot(
 ) {
     data.scatters[index] += phot.weight();
 
-    phot.ray_mut().rotate(
-        distribution::henyey_greenstein(rng, env.asym()),
-        rng.gen_range(0.0, 2.0 * PI),
-    );
+    let phi = distribution::henyey_greenstein(rng, env.asym());
+    data.rotations[index] += phi;
+
+    phot.ray_mut().rotate(phi, rng.gen_range(0.0, 2.0 * PI));
 }

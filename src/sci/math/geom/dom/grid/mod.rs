@@ -32,6 +32,17 @@ impl Grid {
             *w /= *n as f64;
         }
 
+        // println!(
+        //     "Boundary size: {} x {} x {}",
+        //     sett.bound().widths().x,
+        //     sett.bound().widths().y,
+        //     sett.bound().widths().z
+        // );
+        // println!(
+        //     "Voxel size: {} x {} x {}",
+        //     voxel_size.x, voxel_size.y, voxel_size.z
+        // );
+
         Ok(Self {
             bound: sett.bound().clone(),
             res: *sett.res(),
@@ -54,6 +65,7 @@ impl Grid {
         if self.bound.contains(p) {
             let mins = self.bound.mins();
             let maxs = self.bound.maxs();
+
             Some([
                 (((p.x - mins.x) / (maxs.x - mins.x)) * self.res[X] as f64).floor() as usize,
                 (((p.y - mins.y) / (maxs.y - mins.y)) * self.res[Y] as f64).floor() as usize,
@@ -73,9 +85,12 @@ impl Grid {
             let mut min = *self.bound.mins();
             min.x += self.voxel_size[X] * index[X] as f64;
             min.y += self.voxel_size[Y] * index[Y] as f64;
-            min.x += self.voxel_size[Z] * index[Z] as f64;
+            min.z += self.voxel_size[Z] * index[Z] as f64;
 
-            Some((index, Aabb::new(min, min + self.voxel_size)))
+            let boundary = Aabb::new(min, min + self.voxel_size);
+            debug_assert!(boundary.contains(p));
+
+            Some((index, boundary))
         } else {
             None
         }
