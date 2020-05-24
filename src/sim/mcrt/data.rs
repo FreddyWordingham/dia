@@ -18,6 +18,8 @@ pub struct Data {
     pub scatters: Array3<f64>,
     /// Local rotations made by photons [rad].
     pub rotations: Array3<f64>,
+    /// Local total weight of photon surface hits.
+    pub hits: Array3<f64>,
 }
 
 impl Data {
@@ -34,6 +36,7 @@ impl Data {
             dist_travelled: Array3::zeros(res),
             scatters: Array3::zeros(res),
             rotations: Array3::zeros(res),
+            hits: Array3::zeros(res),
         }
     }
 }
@@ -45,6 +48,7 @@ impl AddAssign<&Self> for Data {
         self.dist_travelled += &rhs.dist_travelled;
         self.scatters += &rhs.scatters;
         self.rotations += &rhs.rotations;
+        self.hits += &rhs.hits;
     }
 }
 
@@ -64,16 +68,21 @@ impl Display for Data {
             report::obj_units("total distance travelled", self.dist_travelled.sum(), "m")
                 .expect("Could not format field.")
         )?;
-        write!(
+        writeln!(
             fmt,
             "{}",
             report::obj("total scatterings", self.scatters.sum()).expect("Could not format field.")
         )?;
+        writeln!(
+            fmt,
+            "{}",
+            report::obj_units("total rotation", self.rotations.sum().to_degrees(), "deg")
+                .expect("Could not format field.")
+        )?;
         write!(
             fmt,
             "{}",
-            report::obj("total rotation", self.rotations.sum().to_degrees())
-                .expect("Could not format field.")
+            report::obj("total surface hits", self.hits.sum()).expect("Could not format field.")
         )
     }
 }
@@ -95,6 +104,10 @@ impl Save for Data {
 
         let path = out_dir.join("rotations.nc");
         println!("saving: {}", path.display());
-        self.rotations.save(&path)
+        self.rotations.save(&path)?;
+
+        let path = out_dir.join("hits.nc");
+        println!("saving: {}", path.display());
+        self.hits.save(&path)
     }
 }

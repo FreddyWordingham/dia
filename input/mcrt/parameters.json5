@@ -6,7 +6,7 @@
     },
     mcrt: {
         bump_dist: 1e-3,
-        num_phot: 1000000,
+        num_phot: 100000,
         block_size: 100,
     },
     grid: {
@@ -14,7 +14,7 @@
             mins: [-2.0, -2.0, -2.0],
             maxs: [2.0, 2.0, 2.0]
         },
-        res: [5,5,5]
+        res: [32,32,32]
     },
     light: {
         surf: ['objs/led.obj'],

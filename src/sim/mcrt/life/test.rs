@@ -54,6 +54,7 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
             }
             Event::Surface(hit) => {
                 move_phot(data, index, &mut phot, hit.dist());
+                data.hits[index] += phot.weight();
                 break;
             }
         }

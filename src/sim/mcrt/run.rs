@@ -16,8 +16,8 @@ pub fn simulate(input: &Input, func: Life) -> Result<Data, Error> {
     let pb = ParBar::new("Randomising", input.sett.num_phot());
     let pb = Arc::new(Mutex::new(pb));
 
-    // let threads: Vec<usize> = (0..num_cpus::get()).collect();
-    let threads = vec![0];
+    let threads: Vec<usize> = (0..num_cpus::get()).collect(); // Multi-thread.
+                                                              // let threads = vec![0]; // Single thread.
     let mut data: Vec<_> = threads
         .par_iter()
         .map(|id| single_thread(*id, &Arc::clone(&pb), input, func))
