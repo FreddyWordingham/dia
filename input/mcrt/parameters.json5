@@ -25,7 +25,8 @@
     },
     surfs: {
         map: {
-            chunk: ['objs/chunk.obj']
+            // chunk: ['objs/chunk.obj'],
+            cancers: ['objs/cancers.obj']
         }
     },
     props: {
@@ -35,7 +36,10 @@
             },
             fog: {
                 There: 'props/fog.json5'
-            }
+            },
+            // raman: {
+            //     There: 'props/raman.json5'
+            // }
         }
     }
 }

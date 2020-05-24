@@ -1,7 +1,6 @@
 //! Regular grid cell scheme.
 
 pub mod settings;
-pub mod voxel;
 
 pub use self::{settings::*, voxel::*};
 
@@ -13,13 +12,10 @@ use std::fmt::{Display, Formatter};
 pub struct Grid {
     /// Boundary.
     bound: Aabb,
-    /// Cells.
-    cells: Array3<Voxel>,
 }
 
 impl Grid {
     access!(bound, Aabb);
-    access!(cells, Array3<Voxel>);
 
     /// Construct a new instance.
     /// # Errors
