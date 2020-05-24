@@ -56,6 +56,7 @@ pub mod construct;
 pub mod display;
 pub mod info;
 pub mod scan;
+pub mod search;
 pub mod settings;
 
-pub use self::{construct::*, display::*, info::*, scan::*, settings::*};
+pub use self::{construct::*, display::*, info::*, scan::*, search::*, settings::*};
