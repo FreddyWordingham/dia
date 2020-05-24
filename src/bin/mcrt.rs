@@ -26,9 +26,9 @@ pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let (light, surfs, _props, tree_sett, grid_sett, mcrt_sett) = build(&in_dir, params);
+    let (light, surfs, props, tree_sett, grid_sett, mcrt_sett) = build(&in_dir, params);
     let (tree, grid) = grow(tree_sett, grid_sett, &surfs);
-    let data = simulate(&mcrt_sett, &light, &grid, &tree);
+    let data = simulate(&mcrt_sett, &props, &light, &grid, &tree);
     save(&out_dir, data);
     banner::section("Finished");
 }
@@ -148,6 +148,7 @@ fn grow<'a>(
 /// Run the simulation.
 fn simulate(
     sett: &mcrt::Settings,
+    props: &Set<mcrt::Properties>,
     light: &mcrt::Light,
     grid: &grid::Grid,
     tree: &tree::Cell,
@@ -155,7 +156,7 @@ fn simulate(
     banner::section("Simulating");
 
     banner::sub_section("Main Light");
-    let input = mcrt::Input::new(&sett, &light, &grid, &tree);
+    let input = mcrt::Input::new(&sett, &props, &light, &grid, &tree);
     mcrt::run::simulate(&input, mcrt::life::test).expect("Simulation failed.")
 }
 
