@@ -2,6 +2,7 @@
 
 use crate::report;
 use attr::save;
+use ndarray::Array3;
 use std::{
     fmt::{Display, Formatter, Result},
     ops::AddAssign,
@@ -9,16 +10,26 @@ use std::{
 
 /// Output data structure.
 #[save]
-#[derive(Default)]
 pub struct Data {
     /// Emitted photons.
-    pub emitted_photons: f64,
+    pub emitted_photons: Array3<f64>,
+}
+
+impl Data {
+    /// Construct a new instance.
+    #[inline]
+    #[must_use]
+    pub fn new(res: [usize; 3]) -> Self {
+        Self {
+            emitted_photons: Array3::zeros(res),
+        }
+    }
 }
 
 impl AddAssign<&Self> for Data {
     #[inline]
     fn add_assign(&mut self, rhs: &Self) {
-        self.emitted_photons += rhs.emitted_photons;
+        self.emitted_photons += &rhs.emitted_photons;
     }
 }
 
@@ -29,7 +40,8 @@ impl Display for Data {
         write!(
             fmt,
             "{}",
-            report::obj("emitted photons", self.emitted_photons).expect("Could not format field.")
+            report::obj("emitted photons sum", self.emitted_photons.sum())
+                .expect("Could not format field.")
         )
     }
 }

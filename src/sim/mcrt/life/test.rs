@@ -12,5 +12,7 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
     // let mat_key = &"air".to_string();
     let _mat = &input.props.map()["air"];
 
-    if let Some((_index, _voxel)) = input.grid.gen_index_voxel(phot.ray().pos()) {}
+    if let Some((_index, _voxel)) = input.grid.gen_index_voxel(phot.ray().pos()) {
+        
+    }
 }
