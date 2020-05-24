@@ -165,6 +165,5 @@ fn save(out_dir: &Path, data: mcrt::Data) {
     banner::section("Saving");
     banner::sub_section("Main Dump");
     report!("output data", &data);
-    data.save(&out_dir.join("output.json5"))
-        .expect("Could not save output data.");
+    data.save(&out_dir).expect("Could not save output data.");
 }
