@@ -55,8 +55,9 @@ impl<'a> Cell<'a> {
 pub mod construct;
 pub mod display;
 pub mod info;
+pub mod observe;
 pub mod scan;
 pub mod search;
 pub mod settings;
 
-pub use self::{construct::*, display::*, info::*, scan::*, search::*, settings::*};
+pub use self::{construct::*, display::*, info::*, observe::*, scan::*, search::*, settings::*};
