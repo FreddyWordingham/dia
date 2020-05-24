@@ -39,6 +39,7 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
             .dist(phot.ray())
             .expect("Could not determine voxel distance.");
         let scat_dist = -(rng.gen_range(0.0_f64, 1.0)).ln() / env.inter_coeff();
+        let surf_dist = input.tree.observe(phot.ray());
 
         // Handle event.
         match Event::new(voxel_dist, scat_dist, bump_dist) {
