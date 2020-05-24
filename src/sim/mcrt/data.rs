@@ -1,15 +1,14 @@
 //! Output data structure.
 
-use crate::report;
-use attr::save;
+use crate::{report, Error, Save};
 use ndarray::Array3;
 use std::{
-    fmt::{Display, Formatter, Result},
+    fmt::{Display, Formatter},
     ops::AddAssign,
+    path::Path,
 };
 
 /// Output data structure.
-#[save]
 pub struct Data {
     /// Emitted photons.
     pub emitted_photons: Array3<f64>,
@@ -36,12 +35,21 @@ impl AddAssign<&Self> for Data {
 impl Display for Data {
     #[allow(clippy::result_expect_used)]
     #[inline]
-    fn fmt(&self, fmt: &mut Formatter) -> Result {
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
         write!(
             fmt,
             "{}",
             report::obj("emitted photons sum", self.emitted_photons.sum())
                 .expect("Could not format field.")
         )
+    }
+}
+
+impl Save for Data {
+    #[inline]
+    fn save(&self, out_dir: &Path) -> Result<(), Error> {
+        let path = out_dir.join("emitted_photon.nc");
+        println!("saving: {}", path.display());
+        self.emitted_photons.save(&path)
     }
 }
