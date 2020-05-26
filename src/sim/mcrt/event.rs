@@ -24,25 +24,24 @@ impl<'a> Event<'a> {
 
         if let Some(hit) = surf_hit {
             if voxel_dist <= scat_dist {
-                if hit.dist() < voxel_dist {
+                return if hit.dist() < voxel_dist {
                     Self::Surface(hit)
                 } else {
                     Self::Voxel(voxel_dist)
-                }
-            } else {
-                if hit.dist() < scat_dist {
-                    Self::Surface(hit)
-                } else {
-                    Self::Scattering(scat_dist)
-                }
+                };
             }
-        } else {
-            if voxel_dist <= scat_dist {
-                Self::Voxel(voxel_dist)
+            return if hit.dist() < scat_dist {
+                Self::Surface(hit)
             } else {
                 Self::Scattering(scat_dist)
-            }
+            };
         }
+
+        if voxel_dist <= scat_dist {
+            return Self::Voxel(voxel_dist);
+        }
+
+        Self::Scattering(scat_dist)
     }
 }
 
