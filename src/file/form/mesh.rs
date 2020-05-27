@@ -1,6 +1,6 @@
 //! Mesh form implementation.
 
-use crate::{report, Build, Error, Load};
+use crate::{form::Trans3, report, Build, Error, Load, Transform};
 use attr::load;
 use std::{
     fmt::{Display, Formatter},
@@ -12,6 +12,8 @@ use std::{
 pub struct Mesh(
     /// List of object files.
     Vec<String>,
+    /// Optional transformation.
+    Option<Trans3>,
 );
 
 impl Build for Mesh {
@@ -19,9 +21,18 @@ impl Build for Mesh {
 
     #[inline]
     fn build(self, in_dir: &Path) -> Result<Self::Inst, Error> {
+        let trans = if let Some(t) = self.1 {
+            Some(t.build(in_dir)?)
+        } else {
+            None
+        };
+
         let mut tris = Vec::new();
         for name in self.0 {
-            let obj = Self::Inst::load(&in_dir.join(name))?;
+            let mut obj = Self::Inst::load(&in_dir.join(name))?;
+            if let Some(t) = trans {
+                obj.transform(&t);
+            }
             tris.extend(obj.into_tris())
         }
 
