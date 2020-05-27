@@ -3,7 +3,7 @@
 use crate::{
     distribution,
     mcrt::{Data, Event, Input, Optics, Photon, Properties},
-    Trace,
+    Crossing, Hit, Set, Trace,
 };
 use rand::{rngs::ThreadRng, Rng};
 use std::f64::consts::PI;
@@ -17,7 +17,7 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
 
     // Photon variable initialisation.
     let (mut phot, mat) = emit_phot(input, rng);
-    let env = mat.env(phot.wavelength());
+    let mut env = mat.env(phot.wavelength());
 
     // Check photon can be placed within the grid domain.
     if let Some(index) = input.grid.gen_index(phot.ray().pos()) {
@@ -28,12 +28,6 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
 
     // Loop photon life until it leaves the grid.
     while let Some((index, voxel)) = input.grid.gen_index_voxel(phot.ray().pos()) {
-        //
-
-        // println!("mins  : {}", voxel.mins());
-        // println!("maxs  : {}", voxel.maxs());
-        // println!("pos   : {}\n", phot.ray().pos());
-
         // Determine possible event distances.
         let voxel_dist = voxel
             .dist(phot.ray())
@@ -53,9 +47,25 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
                 scatter_phot(data, index, &mut phot, &env, rng);
             }
             Event::Surface(hit) => {
-                move_phot(data, index, &mut phot, hit.dist());
+                let curr_ref = env.ref_index();
+                let next_env = select_property(input.props, &hit).env(phot.wavelength());
+                let next_ref = next_env.ref_index();
+
+                let crossing =
+                    Crossing::new(phot.ray().dir(), hit.side().norm(), curr_ref, next_ref);
+
+                if rng.gen_range(0.0, 1.0) <= crossing.ref_prob() {
+                    // Reflect.
+                    move_phot(data, index, &mut phot, (hit.dist() - bump_dist).max(0.0));
+                    *phot.ray_mut().dir_mut() = *crossing.ref_dir();
+                } else {
+                    // Refract
+                    move_phot(data, index, &mut phot, hit.dist() + bump_dist);
+                    *phot.ray_mut().dir_mut() = crossing.trans_dir().expect("Invalid refraction.");
+                    env = next_env;
+                }
+
                 data.hits[index] += phot.weight();
-                break;
             }
         }
     }
@@ -66,7 +76,7 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
 #[must_use]
 fn emit_phot<'a>(input: &'a Input, rng: &mut ThreadRng) -> (Photon, &'a Properties) {
     let phot = input.light.emit(input.sett.num_phot(), rng);
-    let prop = &input.props.map()["fog"];
+    let prop = &input.props.map()["air"];
 
     (phot, prop)
 }
@@ -96,4 +106,24 @@ fn scatter_phot(
     data.rotations[index] += phi;
 
     phot.ray_mut().rotate(phi, rng.gen_range(0.0, 2.0 * PI));
+}
+
+/// Determine the next property from the hit event information.
+#[must_use]
+#[inline]
+pub fn select_property<'a>(props: &'a Set<Properties>, hit: &Hit) -> &'a Properties {
+    let group = hit.group();
+    match group.as_str() {
+        "chunk" => {
+            if hit.side().is_inside() {
+                &props.map()["fog"]
+            } else {
+                &props.map()["air"]
+            }
+        }
+        _ => panic!(format!(
+            "Do not know how to handle collision with group {}",
+            group
+        )),
+    }
 }
