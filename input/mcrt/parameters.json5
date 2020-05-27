@@ -11,8 +11,8 @@
     },
     grid: {
         bound: {
-            mins: [-10e-3, -10e-3, -10e-3],
-            maxs: [ 10e-3,  10e-3,  10e-3]
+            mins: [-5e-3, -5e-3, -5e-3],
+            maxs: [ 5e-3,  5e-3,  5e-3]
         },
         res: [64,64,64]
     },
@@ -26,7 +26,8 @@
     surfs: {
         map: {
             skin: [['objs/skin.obj'], {scale:1.0e-3}],
-            tumour: [['objs/tumour.obj'], {scale:1.0e-3}]
+            tumour_cap: [['objs/tumour_cap.obj'], {scale:1.0e-3}],
+            tumour: [['objs/tumour_2000.obj'], {scale:1.0e-3}],
         }
     },
     props: {
