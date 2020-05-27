@@ -151,7 +151,7 @@
 
                 <span class="kw">let</span> <span class="ident">boundary_dist</span> <span class="op">=</span> <span class="ident">boundary</span>.<span class="ident">dist</span>(<span class="ident">ray</span>).<span class="ident">unwrap</span>();
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">hit</span>) <span class="op">=</span> <span class="ident">nearest</span> {
-                    <span class="kw">if</span> <span class="ident">hit</span>.<span class="ident">dist</span>() <span class="op">&lt;</span> <span class="ident">boundary_dist</span> {
+                    <span class="kw">if</span> <span class="ident">hit</span>.<span class="ident">dist</span>() <span class="op">&lt;</span> (<span class="ident">boundary_dist</span> <span class="op">+</span> <span class="ident">bump_dist</span>) {
                         <span class="kw">return</span> <span class="ident">Scan</span>::<span class="ident">new_surface</span>(<span class="ident">hit</span>);
                     }
                 }
