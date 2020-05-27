@@ -6,15 +6,15 @@
     },
     mcrt: {
         bump_dist: 1e-3,
-        num_phot: 100000,
-        block_size: 100,
+        num_phot: 1000000,
+        block_size: 1000,
     },
     grid: {
         bound: {
-            mins: [-2.5, -2.5, -2.5],
-            maxs: [2.5, 2.5, 2.5]
+            mins: [-5, -5, -5],
+            maxs: [5, 5, 5]
         },
-        res: [32,32,32]
+        res: [64,64,64]
     },
     light: {
         surf: ['objs/led.obj'],
@@ -25,16 +25,24 @@
     },
     surfs: {
         map: {
-            chunk: ['objs/chunk.obj']
+            skin: ['objs/skin.obj'],
+            tumour: ['objs/tumour.obj']
         }
     },
     props: {
         map: {
             air: {
-                There: 'props/air.json5'
+                Here: {
+                    ref_index: {Constant: {c: 1.0}},
+                    scat_coeff: {Constant: {c: 1.0e-6}},
+                    asym_fact: {Constant: {c: 0.1}}
+                }
             },
-            fog: {
-                There: 'props/fog.json5'
+            flesh: {
+                There: 'props/flesh.json5'
+            },
+            tumour: {
+                There: 'props/tumour.json5'
             }
         }
     }

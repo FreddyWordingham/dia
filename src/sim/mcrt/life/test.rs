@@ -114,11 +114,25 @@ fn scatter_phot(
 pub fn select_property<'a>(props: &'a Set<Properties>, hit: &Hit) -> &'a Properties {
     let group = hit.group();
     match group.as_str() {
-        "chunk" => {
+        "skin" => {
             if hit.side().is_inside() {
-                &props.map()["fog"]
-            } else {
                 &props.map()["air"]
+            } else {
+                &props.map()["flesh"]
+            }
+        }
+        "tumour" => {
+            if hit.side().is_inside() {
+                &props.map()["flesh"]
+            } else {
+                &props.map()["tumour"]
+            }
+        }
+        "tumour_cap" => {
+            if hit.side().is_inside() {
+                &props.map()["air"]
+            } else {
+                &props.map()["tumour"]
             }
         }
         _ => panic!(format!(
