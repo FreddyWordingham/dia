@@ -33,6 +33,14 @@ impl Average {
     }
 }
 
+impl AddAssign<Self> for Average {
+    #[inline]
+    fn add_assign(&mut self, rhs: Self) {
+        self.total += rhs.total;
+        self.counts += rhs.counts;
+    }
+}
+
 impl AddAssign<&Self> for Average {
     #[inline]
     fn add_assign(&mut self, rhs: &Self) {
