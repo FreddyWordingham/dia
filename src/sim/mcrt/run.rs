@@ -42,7 +42,7 @@ fn single_thread(
     input: &Input,
     func: Life,
 ) -> Result<Data, Error> {
-    let mut data = Data::new(*input.grid.res());
+    let mut data = Data::new(input.grid.bound().clone(), *input.grid.res());
 
     let mut rng = thread_rng();
 

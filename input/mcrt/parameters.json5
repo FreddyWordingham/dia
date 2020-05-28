@@ -25,9 +25,9 @@
     },
     surfs: {
         map: {
-            skin: [['objs/slab.obj'], {scale:1.0e-3}],
-            // tumour_cap: [['objs/tumour_cap.obj'], {scale:1.0e-3}],
-            // tumour: [['objs/tumour_2000.obj'], {scale:1.0e-3}],
+            skin: [['objs/skin.obj'], {scale:1.0e-3}],
+            tumour_cap: [['objs/tumour_cap.obj'], {scale:1.0e-3}],
+            tumour: [['objs/tumour_2000.obj'], {scale:1.0e-3}],
         }
     },
     props: {

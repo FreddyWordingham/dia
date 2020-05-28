@@ -1,6 +1,6 @@
 //! Output data structure.
 
-use crate::{report, Average, Error, Save, X, Y, Z};
+use crate::{report, Aabb, Average, Error, Save, X, Y, Z};
 use ndarray::Array3;
 use std::{
     fmt::{Display, Formatter},
@@ -10,6 +10,8 @@ use std::{
 
 /// Output data structure.
 pub struct Data {
+    /// Measured volume.
+    boundary: Aabb,
     /// Local total weight of emitted photons.
     pub emitted_photons: Array3<f64>,
     /// Dist travelled by photons [m].
@@ -20,23 +22,27 @@ pub struct Data {
     pub rotations: Array3<Average>,
     /// Local total weight of photon surface hits.
     pub hits: Array3<f64>,
+    /// Local photo-energy.
+    pub energy: Array3<f64>,
 }
 
 impl Data {
     /// Construct a new instance.
     #[inline]
     #[must_use]
-    pub fn new(res: [usize; 3]) -> Self {
+    pub fn new(boundary: Aabb, res: [usize; 3]) -> Self {
         debug_assert!(res[X] > 0);
         debug_assert!(res[Y] > 0);
         debug_assert!(res[Z] > 0);
 
         Self {
+            boundary,
             emitted_photons: Array3::zeros(res),
             dist_travelled: Array3::zeros(res),
             scatters: Array3::zeros(res),
             rotations: Array3::default(res),
             hits: Array3::zeros(res),
+            energy: Array3::zeros(res),
         }
     }
 }
@@ -49,6 +55,7 @@ impl AddAssign<&Self> for Data {
         self.scatters += &rhs.scatters;
         self.rotations += &rhs.rotations;
         self.hits += &rhs.hits;
+        self.energy += &rhs.energy;
     }
 }
 
@@ -83,10 +90,16 @@ impl Display for Data {
             )
             .expect("Could not format field.")
         )?;
-        write!(
+        writeln!(
             fmt,
             "{}",
             report::obj("total surface hits", self.hits.sum()).expect("Could not format field.")
+        )?;
+        write!(
+            fmt,
+            "{}",
+            report::obj_units("total energy", self.energy.sum(), "J")
+                .expect("Could not format field.")
         )
     }
 }
@@ -112,6 +125,11 @@ impl Save for Data {
 
         let path = out_dir.join("hits.nc");
         println!("saving: {}", path.display());
-        self.hits.save(&path)
+        self.hits.save(&path)?;
+
+        let path = out_dir.join("energy_density.nc");
+        println!("saving: {}", path.display());
+        let cell_vol = self.boundary.vol() / self.energy.len() as f64;
+        self.energy.map(|x| x / cell_vol).save(&path)
     }
 }
