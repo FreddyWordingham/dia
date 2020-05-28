@@ -141,14 +141,25 @@
 <span id="141">141</span>
 <span id="142">142</span>
 <span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Test photon lifetime function.</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">distribution</span>,
-    <span class="ident">mcrt</span>::{<span class="ident">Data</span>, <span class="ident">Event</span>, <span class="ident">Input</span>, <span class="ident">Optics</span>, <span class="ident">Photon</span>, <span class="ident">Properties</span>},
+    <span class="ident">mcrt</span>::{<span class="ident">Data</span>, <span class="ident">Environment</span>, <span class="ident">Event</span>, <span class="ident">Input</span>, <span class="ident">Photon</span>, <span class="ident">Properties</span>},
     <span class="ident">Crossing</span>, <span class="ident">Hit</span>, <span class="ident">Set</span>, <span class="ident">Trace</span>,
 };
+<span class="kw">use</span> <span class="ident">physical_constants</span>::<span class="ident">SPEED_OF_LIGHT_IN_VACUUM</span>;
 <span class="kw">use</span> <span class="ident">rand</span>::{<span class="ident">rngs</span>::<span class="ident">ThreadRng</span>, <span class="ident">Rng</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">f64</span>::<span class="ident">consts</span>::<span class="ident">PI</span>;
 
@@ -185,9 +196,9 @@
 
         <span class="comment">// Handle event.</span>
         <span class="kw">match</span> <span class="ident">Event</span>::<span class="ident">new</span>(<span class="ident">voxel_dist</span>, <span class="ident">scat_dist</span>, <span class="ident">surf_hit</span>, <span class="ident">bump_dist</span>) {
-            <span class="ident">Event</span>::<span class="ident">Voxel</span>(<span class="ident">dist</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">move_phot</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">dist</span> <span class="op">+</span> <span class="ident">bump_dist</span>),
+            <span class="ident">Event</span>::<span class="ident">Voxel</span>(<span class="ident">dist</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">move_phot</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="ident">env</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">dist</span> <span class="op">+</span> <span class="ident">bump_dist</span>),
             <span class="ident">Event</span>::<span class="ident">Scattering</span>(<span class="ident">dist</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">move_phot</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">dist</span>);
+                <span class="ident">move_phot</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="ident">env</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">dist</span>);
                 <span class="ident">scatter_phot</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="kw-2">&amp;</span><span class="ident">env</span>, <span class="ident">rng</span>);
             }
             <span class="ident">Event</span>::<span class="ident">Surface</span>(<span class="ident">hit</span>) <span class="op">=</span><span class="op">&gt;</span> {
@@ -200,11 +211,17 @@
 
                 <span class="kw">if</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0.0</span>, <span class="number">1.0</span>) <span class="op">&lt;</span><span class="op">=</span> <span class="ident">crossing</span>.<span class="ident">ref_prob</span>() {
                     <span class="comment">// Reflect.</span>
-                    <span class="ident">move_phot</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, (<span class="ident">hit</span>.<span class="ident">dist</span>() <span class="op">-</span> <span class="ident">bump_dist</span>).<span class="ident">max</span>(<span class="number">0.0</span>));
+                    <span class="ident">move_phot</span>(
+                        <span class="ident">data</span>,
+                        <span class="ident">index</span>,
+                        <span class="kw-2">&amp;</span><span class="ident">env</span>,
+                        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>,
+                        (<span class="ident">hit</span>.<span class="ident">dist</span>() <span class="op">-</span> <span class="ident">bump_dist</span>).<span class="ident">max</span>(<span class="number">0.0</span>),
+                    );
                     <span class="kw-2">*</span><span class="ident">phot</span>.<span class="ident">ray_mut</span>().<span class="ident">dir_mut</span>() <span class="op">=</span> <span class="kw-2">*</span><span class="ident">crossing</span>.<span class="ident">ref_dir</span>();
                 } <span class="kw">else</span> {
                     <span class="comment">// Refract</span>
-                    <span class="ident">move_phot</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">hit</span>.<span class="ident">dist</span>() <span class="op">+</span> <span class="ident">bump_dist</span>);
+                    <span class="ident">move_phot</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="ident">env</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">hit</span>.<span class="ident">dist</span>() <span class="op">+</span> <span class="ident">bump_dist</span>);
                     <span class="kw-2">*</span><span class="ident">phot</span>.<span class="ident">ray_mut</span>().<span class="ident">dir_mut</span>() <span class="op">=</span> <span class="ident">crossing</span>.<span class="ident">trans_dir</span>().<span class="ident">expect</span>(<span class="string">&quot;Invalid refraction.&quot;</span>);
                     <span class="ident">env</span> <span class="op">=</span> <span class="ident">next_env</span>;
                 }
@@ -227,10 +244,13 @@
 
 <span class="doccomment">/// Move the photon and record relevant data.</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">fn</span> <span class="ident">move_phot</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Data</span>, <span class="ident">index</span>: [<span class="ident">usize</span>; <span class="number">3</span>], <span class="ident">phot</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Photon</span>, <span class="ident">dist</span>: <span class="ident">f64</span>) {
+<span class="kw">fn</span> <span class="ident">move_phot</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Data</span>, <span class="ident">index</span>: [<span class="ident">usize</span>; <span class="number">3</span>], <span class="ident">env</span>: <span class="kw-2">&amp;</span><span class="ident">Environment</span>, <span class="ident">phot</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Photon</span>, <span class="ident">dist</span>: <span class="ident">f64</span>) {
     <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">dist</span> <span class="op">&gt;</span> <span class="number">0.0</span>);
 
     <span class="ident">data</span>.<span class="ident">dist_travelled</span>[<span class="ident">index</span>] <span class="op">+</span><span class="op">=</span> <span class="ident">dist</span>;
+    <span class="ident">data</span>.<span class="ident">energy</span>[<span class="ident">index</span>] <span class="op">+</span><span class="op">=</span>
+        <span class="ident">phot</span>.<span class="ident">weight</span>() <span class="op">*</span> <span class="ident">phot</span>.<span class="ident">power</span>() <span class="op">*</span> (<span class="ident">env</span>.<span class="ident">ref_index</span>() <span class="op">/</span> <span class="ident">SPEED_OF_LIGHT_IN_VACUUM</span>) <span class="op">*</span> <span class="ident">dist</span>;
+    <span class="ident">data</span>.<span class="ident">absorptions</span>[<span class="ident">index</span>] <span class="op">+</span><span class="op">=</span> <span class="ident">phot</span>.<span class="ident">weight</span>() <span class="op">*</span> <span class="ident">phot</span>.<span class="ident">power</span>() <span class="op">*</span> <span class="ident">dist</span> <span class="op">*</span> <span class="ident">env</span>.<span class="ident">abs_coeff</span>();
 
     <span class="ident">phot</span>.<span class="ident">ray_mut</span>().<span class="ident">travel</span>(<span class="ident">dist</span>);
 }
@@ -241,7 +261,7 @@
     <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Data</span>,
     <span class="ident">index</span>: [<span class="ident">usize</span>; <span class="number">3</span>],
     <span class="ident">phot</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Photon</span>,
-    <span class="ident">env</span>: <span class="kw-2">&amp;</span><span class="ident">Optics</span>,
+    <span class="ident">env</span>: <span class="kw-2">&amp;</span><span class="ident">Environment</span>,
     <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ThreadRng</span>,
 ) {
     <span class="ident">data</span>.<span class="ident">scatters</span>[<span class="ident">index</span>] <span class="op">+</span><span class="op">=</span> <span class="ident">phot</span>.<span class="ident">weight</span>();

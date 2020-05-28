@@ -21,5 +21,5 @@ git clone https://github.com/FreddyWordingham/dia.git;
 cd dia;
 cargo check;
 
-# Run the binary with the parameters input file.
-cargo run --bin main parameters.json;
+# Run the binary, in release (optimised) mode, with the parameters input file.
+cargo run --bin mcrt --release parameters.json5;

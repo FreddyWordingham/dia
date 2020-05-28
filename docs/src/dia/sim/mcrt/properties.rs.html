@@ -132,7 +132,7 @@
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Properties structure.</span>
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">access</span>, <span class="ident">mcrt</span>::<span class="ident">Optics</span>, <span class="ident">report</span>, <span class="ident">Formula</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">access</span>, <span class="ident">mcrt</span>::<span class="ident">Environment</span>, <span class="ident">report</span>, <span class="ident">Formula</span>};
 <span class="kw">use</span> <span class="ident">attr</span>::<span class="ident">load</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span>};
 
@@ -183,7 +183,7 @@
     <span class="doccomment">/// Generate an optical environment for a given wavelength.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">env</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">w</span>: <span class="ident">f64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Optics</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">env</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">w</span>: <span class="ident">f64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Environment</span> {
         <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">ref_index</span>.<span class="ident">y</span>(<span class="ident">w</span>);
 
         <span class="kw">let</span> <span class="ident">scat</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">scat_coeff</span>.<span class="ident">y</span>(<span class="ident">w</span>);
@@ -202,7 +202,7 @@
 
         <span class="kw">let</span> <span class="ident">g</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">asym_fact</span>.<span class="ident">y</span>(<span class="ident">w</span>);
 
-        <span class="ident">Optics</span>::<span class="ident">new</span>(<span class="ident">index</span>, <span class="ident">scat</span>, <span class="ident">abs</span>, <span class="ident">shift</span>, <span class="ident">g</span>)
+        <span class="ident">Environment</span>::<span class="ident">new</span>(<span class="ident">index</span>, <span class="ident">scat</span>, <span class="ident">abs</span>, <span class="ident">shift</span>, <span class="ident">g</span>)
     }
 }
 
