@@ -241,6 +241,7 @@ dependencies = [
  "netcdf",
  "num_cpus",
  "palette",
+ "physical_constants",
  "png",
  "proc",
  "rand",
@@ -735,6 +736,12 @@ checksum = "c00cf8b9eafe68dde5e9eaa2cef8ee84a9336a47d566ec55ca16589633b65af7"
 dependencies = [
  "siphasher",
 ]
+
+[[package]]
+name = "physical_constants"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b8d31a9d6f22a20369d201bcba3424105f09afd38bad0d854d3fe88c145c4489"
 
 [[package]]
 name = "png"

@@ -2,9 +2,10 @@
 
 use crate::{
     distribution,
-    mcrt::{Data, Event, Input, Optics, Photon, Properties},
+    mcrt::{Data, Environment, Event, Input, Photon, Properties},
     Crossing, Hit, Set, Trace,
 };
+use physical_constants::SPEED_OF_LIGHT_IN_VACUUM;
 use rand::{rngs::ThreadRng, Rng};
 use std::f64::consts::PI;
 
@@ -41,9 +42,9 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
 
         // Handle event.
         match Event::new(voxel_dist, scat_dist, surf_hit, bump_dist) {
-            Event::Voxel(dist) => move_phot(data, index, &mut phot, dist + bump_dist),
+            Event::Voxel(dist) => move_phot(data, index, &env, &mut phot, dist + bump_dist),
             Event::Scattering(dist) => {
-                move_phot(data, index, &mut phot, dist);
+                move_phot(data, index, &env, &mut phot, dist);
                 scatter_phot(data, index, &mut phot, &env, rng);
             }
             Event::Surface(hit) => {
@@ -56,11 +57,17 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
 
                 if rng.gen_range(0.0, 1.0) <= crossing.ref_prob() {
                     // Reflect.
-                    move_phot(data, index, &mut phot, (hit.dist() - bump_dist).max(0.0));
+                    move_phot(
+                        data,
+                        index,
+                        &env,
+                        &mut phot,
+                        (hit.dist() - bump_dist).max(0.0),
+                    );
                     *phot.ray_mut().dir_mut() = *crossing.ref_dir();
                 } else {
                     // Refract
-                    move_phot(data, index, &mut phot, hit.dist() + bump_dist);
+                    move_phot(data, index, &env, &mut phot, hit.dist() + bump_dist);
                     *phot.ray_mut().dir_mut() = crossing.trans_dir().expect("Invalid refraction.");
                     env = next_env;
                 }
@@ -83,10 +90,12 @@ fn emit_phot<'a>(input: &'a Input, rng: &mut ThreadRng) -> (Photon, &'a Properti
 
 /// Move the photon and record relevant data.
 #[inline]
-fn move_phot(data: &mut Data, index: [usize; 3], phot: &mut Photon, dist: f64) {
+fn move_phot(data: &mut Data, index: [usize; 3], env: &Environment, phot: &mut Photon, dist: f64) {
     debug_assert!(dist > 0.0);
 
     data.dist_travelled[index] += dist;
+    data.energy[index] +=
+        phot.weight() + phot.power() * (env.ref_index() / SPEED_OF_LIGHT_IN_VACUUM) * dist;
 
     phot.ray_mut().travel(dist);
 }
@@ -97,7 +106,7 @@ fn scatter_phot(
     data: &mut Data,
     index: [usize; 3],
     phot: &mut Photon,
-    env: &Optics,
+    env: &Environment,
     rng: &mut ThreadRng,
 ) {
     data.scatters[index] += phot.weight();

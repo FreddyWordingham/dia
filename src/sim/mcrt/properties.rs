@@ -1,6 +1,6 @@
 //! Properties structure.
 
-use crate::{access, mcrt::Optics, report, Formula};
+use crate::{access, mcrt::Environment, report, Formula};
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
@@ -51,7 +51,7 @@ impl Properties {
     /// Generate an optical environment for a given wavelength.
     #[inline]
     #[must_use]
-    pub fn env(&self, w: f64) -> Optics {
+    pub fn env(&self, w: f64) -> Environment {
         let index = self.ref_index.y(w);
 
         let scat = self.scat_coeff.y(w);
@@ -70,7 +70,7 @@ impl Properties {
 
         let g = self.asym_fact.y(w);
 
-        Optics::new(index, scat, abs, shift, g)
+        Environment::new(index, scat, abs, shift, g)
     }
 }
 
