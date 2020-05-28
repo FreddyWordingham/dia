@@ -95,8 +95,8 @@ fn move_phot(data: &mut Data, index: [usize; 3], env: &Environment, phot: &mut P
 
     data.dist_travelled[index] += dist;
     data.energy[index] +=
-        (phot.power() * (env.ref_index() / SPEED_OF_LIGHT_IN_VACUUM)).mul_add(dist, phot.weight());
-    data.absorptions += ;
+        phot.weight() * phot.power() * (env.ref_index() / SPEED_OF_LIGHT_IN_VACUUM) * dist;
+    data.absorptions[index] += phot.weight() * phot.power() * dist * env.abs_coeff();
 
     phot.ray_mut().travel(dist);
 }

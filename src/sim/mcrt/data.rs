@@ -24,7 +24,7 @@ pub struct Data {
     pub hits: Array3<f64>,
     /// Local photo-energy.
     pub energy: Array3<f64>,
-    /// Local absobed photo-energy.
+    /// Local absorbed photo-energy.
     pub absorptions: Array3<f64>,
 }
 
@@ -140,12 +140,12 @@ impl Save for Data {
         let path = out_dir.join("energy_density.nc");
         println!("saving: {}", path.display());
         let cell_vol = self.boundary.vol() / self.energy.len() as f64;
-        let energy_dens = self.energy / cell_vol;
+        let energy_dens = self.energy.clone() / cell_vol;
         energy_dens.save(&path)?;
 
         let path = out_dir.join("absorption_density.nc");
         println!("saving: {}", path.display());
-        let absorption_dens = self.absorptions / cell_vol;
+        let absorption_dens = self.absorptions.clone() / cell_vol;
         absorption_dens.save(&path)
     }
 }
