@@ -24,6 +24,8 @@ pub struct Data {
     pub hits: Array3<f64>,
     /// Local photo-energy.
     pub energy: Array3<f64>,
+    /// Local absobed photo-energy.
+    pub absorptions: Array3<f64>,
 }
 
 impl Data {
@@ -43,6 +45,7 @@ impl Data {
             rotations: Array3::default(res),
             hits: Array3::zeros(res),
             energy: Array3::zeros(res),
+            absorptions: Array3::zeros(res),
         }
     }
 }
@@ -56,6 +59,7 @@ impl AddAssign<&Self> for Data {
         self.rotations += &rhs.rotations;
         self.hits += &rhs.hits;
         self.energy += &rhs.energy;
+        self.absorptions += &rhs.absorptions;
     }
 }
 
@@ -98,6 +102,12 @@ impl Display for Data {
         write!(
             fmt,
             "{}",
+            report::obj_units("total absorptions", self.absorptions.sum(), "J")
+                .expect("Could not format field.")
+        )?;
+        write!(
+            fmt,
+            "{}",
             report::obj_units("total energy", self.energy.sum(), "J")
                 .expect("Could not format field.")
         )
@@ -130,6 +140,12 @@ impl Save for Data {
         let path = out_dir.join("energy_density.nc");
         println!("saving: {}", path.display());
         let cell_vol = self.boundary.vol() / self.energy.len() as f64;
-        self.energy.map(|x| x / cell_vol).save(&path)
+        let energy_dens = self.energy / cell_vol;
+        energy_dens.save(&path)?;
+
+        let path = out_dir.join("absorption_density.nc");
+        println!("saving: {}", path.display());
+        let absorption_dens = self.absorptions / cell_vol;
+        absorption_dens.save(&path)
     }
 }
