@@ -1,6 +1,6 @@
 //! Output data structure.
 
-use crate::{report, Error, Save, X, Y, Z};
+use crate::{report, Average, Error, Save, X, Y, Z};
 use ndarray::Array3;
 use std::{
     fmt::{Display, Formatter},
@@ -16,8 +16,8 @@ pub struct Data {
     pub dist_travelled: Array3<f64>,
     /// Local total weight of scattering events.
     pub scatters: Array3<f64>,
-    /// Local rotations made by photons [rad].
-    pub rotations: Array3<f64>,
+    /// Average rotations made by photons [rad].
+    pub rotations: Array3<Average>,
     /// Local total weight of photon surface hits.
     pub hits: Array3<f64>,
 }
@@ -35,7 +35,7 @@ impl Data {
             emitted_photons: Array3::zeros(res),
             dist_travelled: Array3::zeros(res),
             scatters: Array3::zeros(res),
-            rotations: Array3::zeros(res),
+            rotations: Array3::default(res),
             hits: Array3::zeros(res),
         }
     }
@@ -76,8 +76,12 @@ impl Display for Data {
         writeln!(
             fmt,
             "{}",
-            report::obj_units("total rotation", self.rotations.sum().to_degrees(), "deg")
-                .expect("Could not format field.")
+            report::obj_units(
+                "Average rotation",
+                self.rotations.map(|x| x.ave()).sum().to_degrees(),
+                "deg"
+            )
+            .expect("Could not format field.")
         )?;
         write!(
             fmt,
@@ -102,9 +106,9 @@ impl Save for Data {
         println!("saving: {}", path.display());
         self.scatters.save(&path)?;
 
-        let path = out_dir.join("rotations.nc");
+        let path = out_dir.join("ave_rotations.nc");
         println!("saving: {}", path.display());
-        self.rotations.save(&path)?;
+        self.rotations.map(|x| x.ave()).save(&path)?;
 
         let path = out_dir.join("hits.nc");
         println!("saving: {}", path.display());

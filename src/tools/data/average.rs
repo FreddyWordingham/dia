@@ -4,7 +4,7 @@ use crate::clone;
 use std::ops::AddAssign;
 
 /// Rolling average value recording.
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Average {
     /// Current average value.
     total: f64,
@@ -16,11 +16,28 @@ impl Average {
     clone!(total, f64);
     clone!(counts, i32);
 
+    /// Construct a new instance.
+    #[inline]
+    #[must_use]
+    pub fn new(total: f64, counts: i32) -> Self {
+        debug_assert!(counts >= 0);
+
+        Self { total, counts }
+    }
+
     /// Calculate the average value.
     #[inline]
     #[must_use]
     pub fn ave(&self) -> f64 {
         self.total / self.counts as f64
+    }
+}
+
+impl AddAssign<&Self> for Average {
+    #[inline]
+    fn add_assign(&mut self, rhs: &Self) {
+        self.total += rhs.total;
+        self.counts += rhs.counts;
     }
 }
 
