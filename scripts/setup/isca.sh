@@ -6,6 +6,7 @@ ssh fjmw201@login.isca.ex.ac.uk;
 # We need the Rust and NetCDF modules. The GCC module conflicts with the NetCDF module we need.
 module load Rust/1.41.0-GCCcore-8.2.0;
 module unload GCCcore/8.2.0;
+module unload binutils/2.31.1
 module load netCDF/4.6.1-foss-2018b;
 
 # So executable can find the install location.
