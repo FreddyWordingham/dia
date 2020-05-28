@@ -2,6 +2,7 @@
 
 use crate::{access, Binner, Range};
 use ndarray::Array1;
+use std::ops::AddAssign;
 
 /// Static range, constant bin width, Histogram.
 pub struct Histogram {
@@ -64,12 +65,12 @@ impl Histogram {
     }
 }
 
-// impl AddAssign<&Self> for Histogram {
-//     #[inline]
-//     fn add_assign(&mut self, rhs: &Self) {
-//         debug_assert!(self.binner == rhs.binner);
-//         debug_assert!(self.counts.len() == rhs.counts.len());
+impl AddAssign<&Self> for Histogram {
+    #[inline]
+    fn add_assign(&mut self, rhs: &Self) {
+        debug_assert!(self.binner == rhs.binner);
+        debug_assert!(self.counts.len() == rhs.counts.len());
 
-//         self.counts += &rhs.counts;
-//     }
-// }
+        self.counts += &rhs.counts;
+    }
+}
