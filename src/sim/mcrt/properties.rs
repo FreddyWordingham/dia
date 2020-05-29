@@ -8,7 +8,6 @@ use std::fmt::{Display, Formatter, Result};
 pub const DISPLAY_WAVELENGTH: f64 = 650e-9;
 
 /// Physical attributes structure.
-#[load]
 pub struct Properties {
     /// Refractive index.
     ref_index: Formula,

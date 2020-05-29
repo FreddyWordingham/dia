@@ -49,5 +49,5 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 fn simulate(_params: &Parameters) {
     banner::section("Simulating");
 
-    let formula = Formula::Polynomial::
+    // let formula = Formula::Polynomial::
 }
