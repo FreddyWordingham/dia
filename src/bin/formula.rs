@@ -2,18 +2,31 @@
 
 use attr::input;
 use dia::*;
+use std::fs::File;
+use std::io::Write;
 use std::path::{Path, PathBuf};
 
 /// Input parameters.
 #[input]
-struct Parameters {}
+struct Parameters {
+    /// Formula.
+    formula: form::Formula,
+    /// Starting value.
+    start: f64,
+    /// End value.
+    end: f64,
+    /// Number of sample to take of the formula.
+    samples: u64,
+}
 
 /// Main function.
 pub fn main() {
     banner::title("Formula Testing");
-    let (params_path, in_dir, _out_dir) = init();
+    let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let _data = simulate(&params);
+    let (formula, start, end, samples) = build(&in_dir, params);
+    let data = simulate(&formula, start, end, samples);
+    save(&out_dir, data);
     banner::section("Finished");
 }
 
@@ -45,9 +58,43 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     params
 }
 
+/// Build instances.
+fn build(in_dir: &Path, params: Parameters) -> (Formula, f64, f64, u64) {
+    banner::section("Building");
+
+    (
+        params
+            .formula
+            .build(in_dir)
+            .expect("Could not build formula."),
+        params.start,
+        params.end,
+        params.samples,
+    )
+}
+
 /// Run the simulation.
-fn simulate(_params: &Parameters) {
+fn simulate(formula: &Formula, start: f64, end: f64, samples: u64) -> Vec<(f64, f64)> {
     banner::section("Simulating");
 
-    // let formula = Formula::Polynomial::
+    let delta = (end - start) / (samples - 1) as f64;
+    let mut data = Vec::with_capacity(samples as usize);
+    for n in 0..samples {
+        let x = start + (delta * n as f64);
+        let y = formula.y(x);
+        data.push((x, y));
+    }
+
+    data
+}
+
+/// Save the output data.
+fn save(out_dir: &Path, data: Vec<(f64, f64)>) {
+    banner::section("Saving");
+    let path = out_dir.join("points.csv");
+    let mut file = File::create(path).expect("Could not create output file.");
+
+    for (x, y) in data {
+        writeln!(file, "{:>32}, {:<32}", x, y).expect("Could not write to output file.");
+    }
 }
