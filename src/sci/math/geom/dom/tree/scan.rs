@@ -23,7 +23,7 @@ impl<'a> Scan<'a> {
     /// Construct a new surface instance.
     #[inline]
     #[must_use]
-    pub const fn new_surface(hit: Hit<'a>) -> Self {
+    pub fn new_surface(hit: Hit<'a>) -> Self {
         Self::Surface(hit)
     }
 }
