@@ -11,13 +11,13 @@
     },
     grid: {
         bound: {
-            mins: [-5e-3, -5e-3, -5e-3],
-            maxs: [ 5e-3,  5e-3,  5e-3]
+            mins: [-5e-3, -5e-3, -9e-3],
+            maxs: [ 5e-3,  5e-3,  1e-3]
         },
         res: [64,64,64]
     },
     light: {
-        surf: [['objs/led.obj'], {scale:1.0e-3}],
+        surf: [['objs/led.obj'], {scale:1.0e-3, trans:[0.0,0.0,-0.5e-3]}],
         spec: {
             There: 'spec/laser_830nm.json5'
         },
