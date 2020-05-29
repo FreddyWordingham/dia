@@ -1,4 +1,4 @@
-//! Light form implementation.
+//! Formula form implementation.
 
 use crate::{Build, Error};
 use attr::load;
@@ -14,6 +14,7 @@ pub enum Formula {
     /// Bifurcation formula. = x < y ? a : b.
     Bifurcation(f64, f64, f64),
 }
+
 impl Build for Formula {
     type Inst = crate::Formula;
 

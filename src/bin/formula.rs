@@ -13,7 +13,7 @@ pub fn main() {
     banner::title("Formula Testing");
     let (params_path, in_dir, _out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let data = simulate(&params);
+    let _data = simulate(&params);
     banner::section("Finished");
 }
 

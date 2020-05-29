@@ -18,7 +18,7 @@ struct Parameters {
     /// Surfaces map.
     surfs: Set<form::Mesh>,
     /// Properties map.
-    props: Set<Redirect<mcrt::Properties>>,
+    props: Set<Redirect<form::Properties>>,
 }
 
 /// Main function.
@@ -74,7 +74,7 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     report!("surfaces", &params.surfs);
 
     banner::sub_sub_section("Properties");
-    report!("properties", &params.props);
+    // report!("properties", &params.props);
 
     params
 }
@@ -108,8 +108,10 @@ fn build(
     let props = params
         .props
         .build(in_dir)
+        .expect("Unable to build properties.")
+        .build(in_dir)
         .expect("Unable to build properties.");
-    report!("properties", &props);
+    // report!("properties", &props);
 
     banner::sub_section("Adaptive Tree Settings");
     let tree_sett = params.tree;
