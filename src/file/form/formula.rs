@@ -2,6 +2,7 @@
 
 use crate::{Build, Error};
 use attr::load;
+use ndarray::Array1;
 use std::path::Path;
 
 /// Mathematical formulae accepting a single scalar argument.
@@ -13,6 +14,8 @@ pub enum Formula {
     Linear(f64, f64),
     /// Bifurcation formula. = x < y ? a : b.
     Bifurcation(f64, f64, f64),
+    /// Linear interpolation between points.
+    LinearInterpolation(Array1<f64>, Array1<f64>),
 }
 
 impl Build for Formula {
@@ -24,6 +27,7 @@ impl Build for Formula {
             Self::Constant(c) => Self::Inst::Constant { c },
             Self::Linear(c, m) => Self::Inst::Linear { c, m },
             Self::Bifurcation(t, under, over) => Self::Inst::Bifurcation { t, under, over },
+            Self::LinearInterpolation(xs, ys) => Self::Inst::new_linear_interpolation(xs, ys),
         })
     }
 }
