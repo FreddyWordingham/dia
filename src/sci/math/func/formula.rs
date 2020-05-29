@@ -43,7 +43,7 @@ impl Formula {
     pub fn new_linear_interpolation(xs: Array1<f64>, ys: Array1<f64>) -> Self {
         debug_assert!(xs.len() >= 2);
         debug_assert!(xs.len() == ys.len());
-        debug_assert!(order::is_ascending(xs.as_slice().unwrap()));
+        // debug_assert!(order::is_ascending(xs.as_slice().unwrap()));
 
         let mut grads = Vec::with_capacity(xs.len() - 1);
         for (curr_x, (next_x, (curr_y, next_y))) in xs
@@ -81,6 +81,23 @@ impl Formula {
                 } else {
                     *over
                 }
+            }
+            Self::LinearInterpolation {
+                xs,
+                ys,
+                grads,
+                range,
+            } => {
+                debug_assert!(range.contains(x));
+
+                for (xn, (yn, grad)) in xs.iter().skip(1).zip(ys.iter().skip(1).zip(grads.iter())) {
+                    if x <= *xn {
+                        let delta = x - *xn;
+                        return *yn + (delta * grad);
+                    }
+                }
+
+                unreachable!();
             }
         }
     }

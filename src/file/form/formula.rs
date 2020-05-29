@@ -15,7 +15,7 @@ pub enum Formula {
     /// Bifurcation formula. = x < y ? a : b.
     Bifurcation(f64, f64, f64),
     /// Linear interpolation between points.
-    LinearInterpolation(Array1<f64>, Array1<f64>),
+    LinearInterpolation(Vec<f64>, Vec<f64>),
 }
 
 impl Build for Formula {
@@ -27,7 +27,9 @@ impl Build for Formula {
             Self::Constant(c) => Self::Inst::Constant { c },
             Self::Linear(c, m) => Self::Inst::Linear { c, m },
             Self::Bifurcation(t, under, over) => Self::Inst::Bifurcation { t, under, over },
-            Self::LinearInterpolation(xs, ys) => Self::Inst::new_linear_interpolation(xs, ys),
+            Self::LinearInterpolation(xs, ys) => {
+                Self::Inst::new_linear_interpolation(Array1::from(xs), Array1::from(ys))
+            }
         })
     }
 }
