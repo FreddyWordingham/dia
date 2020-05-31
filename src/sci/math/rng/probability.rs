@@ -77,27 +77,16 @@ impl Probability {
         debug_assert!(xs.len() == (ps.len() + 1));
         debug_assert!(ps.iter().all(|x| *x >= 0.0));
 
-        println!("xs: {:?}", xs);
-        println!("ps: {:?}", ps);
-
-        let mut areas = Vec::with_capacity(ps.len());
-        for ((x_curr, x_next), prob) in xs.iter().zip(xs.iter().skip(1)).zip(ps.iter()) {
-            areas.push((x_next - x_curr) * prob);
-        }
-        println!("areas: {:?}", areas);
-
         let mut cdf = Vec::with_capacity(ps.len());
         let mut total = 0.0;
         cdf.push(total);
-        for a in areas {
-            total += a;
+        for ((x_curr, x_next), prob) in xs.iter().zip(xs.iter().skip(1)).zip(ps.iter()) {
+            let area = (x_next - x_curr) * prob;
+            total += area;
             cdf.push(total);
         }
         let mut cdf = Array1::from(cdf);
         cdf /= cdf[cdf.len() - 1];
-
-        println!("xs  : {:?}", xs);
-        println!("cdf : {:?}", cdf);
 
         Self::ConstantInterpolation {
             cdf: Formula::new_linear(cdf, xs),
@@ -113,12 +102,7 @@ impl Probability {
             Self::Points { cs } => cs[rng.gen_range(0, cs.len())],
             Self::Uniform { min, max } => rng.gen_range(*min, *max),
             Self::Gaussian { mu, sigma } => distribution::gaussian(rng, *mu, *sigma),
-            Self::ConstantInterpolation { cdf } => {
-                let x = rng.gen();
-                let y = cdf.y(x);
-                // println!("{}\t{}", x, y);
-                y
-            }
+            Self::ConstantInterpolation { cdf } => cdf.y(rng.gen()),
         }
     }
 }
