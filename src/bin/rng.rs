@@ -2,7 +2,7 @@
 
 use attr::input;
 use dia::*;
-use rand::{thread_rng, Rng};
+use rand::thread_rng;
 use rayon::prelude::*;
 use std::{
     path::{Path, PathBuf},
@@ -102,8 +102,8 @@ fn single_thread(_thread_id: usize, pb: &Arc<Mutex<ParBar>>, input: &Parameters)
         b
     } {
         for _ in start..end {
-            let x = rng.gen();
-            data.collect(x);
+            let x = input.dist.gen(&mut rng);
+            data.try_collect(x);
         }
     }
 
