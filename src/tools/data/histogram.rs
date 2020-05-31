@@ -79,8 +79,10 @@ impl Save for Histogram {
     fn save(&self, path: &Path) -> Result<(), Error> {
         let mut file = File::create(path).expect("Could not create output file.");
 
-        let center = self.binner.range().min();
+        let mut center = self.binner.range().min();
+        let delta = self.binner.range().width() / (self.counts.len() - 1) as f64;
         for count in &self.counts {
+            center += delta;
             writeln!(file, "{:>32}, {:<32}", center, count)
                 .expect("Could not write to output file.");
         }
