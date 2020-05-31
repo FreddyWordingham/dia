@@ -1,10 +1,10 @@
 {
     samples: 1e9,
-    block_size: 1e3,
+    block_size: 1e7,
     min: -4.0,
     max: 8.0,
     bins: 1000,
     dist: {
-        Gaussian: {mu: 2.0, sigma: 0.5}
+        Gaussian: {mu: 2.0, sigma: 2.5}
     }
 }
