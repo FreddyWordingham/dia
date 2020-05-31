@@ -1,6 +1,6 @@
 //! Formula implementation.
 
-use crate::{order, Range};
+use crate::Range;
 use ndarray::Array1;
 
 /// Mathematical formulae accepting a single scalar argument.
