@@ -23,7 +23,23 @@ struct Parameters {
     /// Number of bins.
     bins: u64,
     /// Probability distribution.
-    dist: Probability,
+    dist: form::Probability,
+}
+
+/// Runtime parameters.
+pub struct Input {
+    /// Number of sample to take of the distribution.
+    pub samples: u64,
+    /// Block size.
+    pub block_size: u64,
+    /// Histogram minimum bound.
+    pub min: f64,
+    /// Histogram maximum bound.
+    pub max: f64,
+    /// Number of bins.
+    pub bins: u64,
+    /// Probability distribution.
+    pub dist: Probability,
 }
 
 /// Main function.
@@ -31,7 +47,8 @@ pub fn main() {
     banner::title("RNG Testing");
     let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let data = simulate(&params);
+    let input = build(&in_dir, params);
+    let data = simulate(&input);
     save(&out_dir, data);
     banner::section("Finished");
 }
@@ -64,8 +81,29 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     params
 }
 
+/// Build instances.
+fn build(in_dir: &Path, params: Parameters) -> Input {
+    banner::section("Building");
+
+    let samples = params.samples;
+    let block_size = params.block_size;
+    let min = params.min;
+    let max = params.max;
+    let bins = params.bins;
+    let dist = params.dist.build(in_dir).expect("Could not build formula.");
+
+    Input {
+        samples,
+        block_size,
+        min,
+        max,
+        bins,
+        dist,
+    }
+}
+
 /// Run the simulation.
-fn simulate(input: &Parameters) -> Histogram {
+fn simulate(input: &Input) -> Histogram {
     banner::section("Simulating");
 
     let pb = ParBar::new("Randomising", input.samples);
@@ -90,7 +128,7 @@ fn simulate(input: &Parameters) -> Histogram {
 }
 
 /// Simulate on a single thread.
-fn single_thread(_thread_id: usize, pb: &Arc<Mutex<ParBar>>, input: &Parameters) -> Histogram {
+fn single_thread(_thread_id: usize, pb: &Arc<Mutex<ParBar>>, input: &Input) -> Histogram {
     let mut data = Histogram::new(input.min, input.max, input.bins);
 
     let mut rng = thread_rng();

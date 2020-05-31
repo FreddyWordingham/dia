@@ -5,6 +5,6 @@
     max: 8.0,
     bins: 1000,
     dist: {
-        Gaussian: {mu: 2.0, sigma: 2.5}
+        Gaussian: [2.0, 2.5]
     }
 }
