@@ -33,13 +33,6 @@ pub enum Probability {
         /// Variance.
         sigma: f64,
     },
-    /// Linear distribution.
-    Linear {
-        /// Gradient.
-        m: f64,
-        /// Constant.
-        c: f64,
-    },
     // /// Linear interpolation.
     // LinearInterpolation {
 
@@ -78,13 +71,6 @@ impl Probability {
         Self::Gaussian { mu, sigma }
     }
 
-    /// Construct a new linear instance.
-    #[inline]
-    #[must_use]
-    pub const fn new_linear(m: f64, c: f64) -> Self {
-        Self::Linear { m, c }
-    }
-
     /// Generate a random number from the described distribution.
     #[inline]
     #[must_use]
@@ -94,10 +80,6 @@ impl Probability {
             Self::Points { cs } => cs[rng.gen_range(0, cs.len())],
             Self::Uniform { min, max } => rng.gen_range(*min, *max),
             Self::Gaussian { mu, sigma } => distribution::gaussian(rng, *mu, *sigma),
-            Self::Linear { .. } => {
-                let e: f64 = rng.gen();
-                1.0 - e.sqrt()
-            }
         }
     }
 }
