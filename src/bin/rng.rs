@@ -2,13 +2,24 @@
 
 use attr::input;
 use dia::*;
-use std::path::{Path, PathBuf};
+use rand::{thread_rng, Rng};
+use rayon::prelude::*;
+use std::{
+    path::{Path, PathBuf},
+    sync::{Arc, Mutex},
+};
 
 /// Input parameters.
 #[input]
 struct Parameters {
     /// Number of sample to take of the distribution.
     samples: u64,
+    /// Block size.
+    block_size: u64,
+
+    min: f64,
+    max: f64,
+    bins: u64,
 }
 
 /// Main function.
@@ -16,8 +27,7 @@ pub fn main() {
     banner::title("RNG Testing");
     let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let samples = build(&in_dir, params);
-    let data = simulate(samples);
+    let data = simulate(&params);
     save(&out_dir, data);
     banner::section("Finished");
 }
@@ -50,27 +60,49 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     params
 }
 
-/// Build instances.
-fn build(_in_dir: &Path, params: Parameters) -> u64 {
-    banner::section("Building");
-
-    params.samples
-}
-
 /// Run the simulation.
-fn simulate(samples: u64) -> Histogram {
+fn simulate(input: &Parameters) -> Histogram {
     banner::section("Simulating");
 
-    for _ in 0..samples {
-        //     let x = start + (delta * n as f64);
-        //     let y = formula.y(x);
-        //     data.push((x, y));
+    let pb = ParBar::new("Randomising", input.samples);
+    let pb = Arc::new(Mutex::new(pb));
+
+    let threads: Vec<usize> = (0..num_cpus::get()).collect(); // Multi-thread.
+                                                              // let threads = vec![0]; // Single thread.
+    let mut data: Vec<_> = threads
+        .par_iter()
+        .map(|id| single_thread(*id, &Arc::clone(&pb), input))
+        .collect();
+    pb.lock()
+        .expect("Unable to lock progress bar.")
+        .finish_with_message("Render complete");
+
+    let mut base = data.pop().ok_or("Missing data result.").unwrap();
+    for dat in data {
+        base += &dat;
     }
 
-    let min = 0.0;
-    let max = 1.0;
-    let bins = 100;
-    let data = Histogram::new(min, max, bins);
+    base
+}
+
+/// Simulate on a single thread.
+fn single_thread(_thread_id: usize, pb: &Arc<Mutex<ParBar>>, input: &Parameters) -> Histogram {
+    let mut data = Histogram::new(input.min, input.max, input.bins);
+
+    let mut rng = thread_rng();
+
+    while let Some((start, end)) = {
+        let mut pb = pb.lock().expect("Could not lock progress bar.");
+        let b = pb.block(input.block_size);
+        std::mem::drop(pb);
+        b
+    } {
+        for _ in start..end {
+            let x = rng.gen();
+            data.collect(x);
+        }
+    }
+
     data
 }
 

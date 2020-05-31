@@ -2,9 +2,11 @@
 
 use attr::input;
 use dia::*;
-use std::fs::File;
-use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::{
+    fs::File,
+    io::Write,
+    path::{Path, PathBuf},
+};
 
 /// Input parameters.
 #[input]

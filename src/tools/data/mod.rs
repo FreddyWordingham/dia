@@ -3,5 +3,4 @@
 pub mod average;
 pub mod histogram;
 
-pub use self::average::*;
-pub use self::histogram::*;
+pub use self::{average::*, histogram::*};
