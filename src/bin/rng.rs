@@ -16,10 +16,14 @@ struct Parameters {
     samples: u64,
     /// Block size.
     block_size: u64,
-
+    /// Histogram minimum bound.
     min: f64,
+    /// Histogram maximum bound.
     max: f64,
+    /// Number of bins.
     bins: u64,
+    /// Probability distribution.
+    dist: Probability,
 }
 
 /// Main function.
