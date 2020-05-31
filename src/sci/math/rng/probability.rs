@@ -1,13 +1,10 @@
 //! Probability distribution implementation.
 
-use crate::distribution;
-use attr::load;
+use crate::{distribution, Formula};
 use ndarray::Array1;
 use rand::{rngs::ThreadRng, Rng};
 
 /// Probability distribution formulae.
-#[load]
-#[derive(Clone)]
 pub enum Probability {
     /// Point.
     Point {
@@ -33,10 +30,11 @@ pub enum Probability {
         /// Variance.
         sigma: f64,
     },
-    // /// Linear interpolation.
-    // LinearInterpolation {
-
-    // }
+    /// Constant interpolation.
+    ConstantInterpolation {
+        /// Cumulative distribution function.
+        cdf: Formula,
+    },
 }
 
 impl Probability {
@@ -71,6 +69,41 @@ impl Probability {
         Self::Gaussian { mu, sigma }
     }
 
+    /// Construct a new constant interpolation instance.
+    #[inline]
+    #[must_use]
+    pub fn new_constant_interpolation(xs: Array1<f64>, ps: Array1<f64>) -> Self {
+        debug_assert!(xs.len() > 1);
+        debug_assert!(xs.len() == (ps.len() + 1));
+        debug_assert!(ps.iter().all(|x| *x >= 0.0));
+
+        println!("xs: {:?}", xs);
+        println!("ps: {:?}", ps);
+
+        let mut areas = Vec::with_capacity(ps.len());
+        for ((x_curr, x_next), prob) in xs.iter().zip(xs.iter().skip(1)).zip(ps.iter()) {
+            areas.push((x_next - x_curr) * prob);
+        }
+        println!("areas: {:?}", areas);
+
+        let mut cdf = Vec::with_capacity(ps.len());
+        let mut total = 0.0;
+        cdf.push(total);
+        for a in areas {
+            total += a;
+            cdf.push(total);
+        }
+        let mut cdf = Array1::from(cdf);
+        cdf /= cdf[cdf.len() - 1];
+
+        println!("xs  : {:?}", xs);
+        println!("cdf : {:?}", cdf);
+
+        Self::ConstantInterpolation {
+            cdf: Formula::new_linear(cdf, xs),
+        }
+    }
+
     /// Generate a random number from the described distribution.
     #[inline]
     #[must_use]
@@ -80,6 +113,12 @@ impl Probability {
             Self::Points { cs } => cs[rng.gen_range(0, cs.len())],
             Self::Uniform { min, max } => rng.gen_range(*min, *max),
             Self::Gaussian { mu, sigma } => distribution::gaussian(rng, *mu, *sigma),
+            Self::ConstantInterpolation { cdf } => {
+                let x = rng.gen();
+                let y = cdf.y(x);
+                // println!("{}\t{}", x, y);
+                y
+            }
         }
     }
 }

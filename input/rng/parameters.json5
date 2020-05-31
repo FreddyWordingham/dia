@@ -1,10 +1,16 @@
 {
-    samples: 1e6,
-    block_size: 1e2,
+    samples: 1e8,
+    block_size: 1e6,
     min: 0.0,
-    max: 3.0,
+    max: 15.0,
     bins: 1000,
     dist: {
-        Uniform: [0.5, 2.0]
+        ConstantInterpolation: [
+            [2.0, 4.0, 5.0, 8.0, 9.0, 10., 11., 12.],
+            [2.0, 5.0, 1.0, 3.0, 0.0, 2.0, 1.0]
+        ]
+        // Gaussian: [
+        //     3.14159, 1.25
+        // ]
     }
 }

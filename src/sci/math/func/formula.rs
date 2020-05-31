@@ -11,8 +11,8 @@ pub enum Formula {
         /// Constant.
         c: f64,
     },
-    /// Linear formula. = mx + c
-    Linear {
+    /// Line formula. = mx + c
+    Line {
         /// Offset.
         c: f64,
         /// Gradient.
@@ -28,7 +28,7 @@ pub enum Formula {
         over: f64,
     },
     /// Linear interpolation between points.
-    LinearInterpolation {
+    Linear {
         /// X points.
         xs: Array1<f64>,
         /// Y points.
@@ -44,7 +44,7 @@ impl Formula {
     /// Construct a new linear interpolation instance.
     #[inline]
     #[must_use]
-    pub fn new_linear_interpolation(xs: Array1<f64>, ys: Array1<f64>) -> Self {
+    pub fn new_linear(xs: Array1<f64>, ys: Array1<f64>) -> Self {
         debug_assert!(xs.len() >= 2);
         debug_assert!(xs.len() == ys.len());
         debug_assert!(order::is_ascending(xs.as_slice().unwrap()));
@@ -62,7 +62,7 @@ impl Formula {
 
         let range = Range::new(xs[0], xs[xs.len() - 1]);
 
-        Self::LinearInterpolation {
+        Self::Linear {
             xs,
             ys,
             grads: Array1::from(grads),
@@ -76,7 +76,7 @@ impl Formula {
     pub fn y(&self, x: f64) -> f64 {
         match self {
             Self::Constant { c } => *c,
-            Self::Linear { c, m } => (x * m) + c,
+            Self::Line { c, m } => (x * m) + c,
             Self::Bifurcation { t, under, over } => {
                 if x < *t {
                     *under
@@ -84,7 +84,7 @@ impl Formula {
                     *over
                 }
             }
-            Self::LinearInterpolation {
+            Self::Linear {
                 xs,
                 ys,
                 grads,

@@ -10,12 +10,12 @@ use std::path::Path;
 pub enum Formula {
     /// Constant value. = c
     Constant(f64),
-    /// Linear formula. = (x * m) + c
-    Linear(f64, f64),
+    /// Line formula. = (x * m) + c
+    Line(f64, f64),
     /// Bifurcation formula. = x < y ? a : b.
     Bifurcation(f64, f64, f64),
     /// Linear interpolation between points.
-    LinearInterpolation(Vec<f64>, Vec<f64>),
+    Linear(Vec<f64>, Vec<f64>),
 }
 
 impl Build for Formula {
@@ -25,11 +25,9 @@ impl Build for Formula {
     fn build(self, _in_dir: &Path) -> Result<Self::Inst, Error> {
         Ok(match self {
             Self::Constant(c) => Self::Inst::Constant { c },
-            Self::Linear(c, m) => Self::Inst::Linear { c, m },
+            Self::Line(c, m) => Self::Inst::Line { c, m },
             Self::Bifurcation(t, under, over) => Self::Inst::Bifurcation { t, under, over },
-            Self::LinearInterpolation(xs, ys) => {
-                Self::Inst::new_linear_interpolation(Array1::from(xs), Array1::from(ys))
-            }
+            Self::Linear(xs, ys) => Self::Inst::new_linear(Array1::from(xs), Array1::from(ys)),
         })
     }
 }

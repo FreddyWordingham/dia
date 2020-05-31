@@ -19,7 +19,7 @@ pub fn max(vec: &[f64]) -> f64 {
 #[must_use]
 pub fn is_ascending(vec: &[f64]) -> bool {
     for (b, a) in vec.iter().zip(vec.iter().skip(1)) {
-        if a <= b {
+        if a < b {
             return false;
         }
     }
@@ -32,7 +32,7 @@ pub fn is_ascending(vec: &[f64]) -> bool {
 #[must_use]
 pub fn is_descending(vec: &[f64]) -> bool {
     for (b, a) in vec.iter().zip(vec.iter().skip(1)) {
-        if a >= b {
+        if a > b {
             return false;
         }
     }
