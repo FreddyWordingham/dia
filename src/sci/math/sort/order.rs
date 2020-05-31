@@ -26,3 +26,16 @@ pub fn is_ascending(vec: &[f64]) -> bool {
 
     true
 }
+
+/// Determine if the list is sorted in descending order.
+#[inline]
+#[must_use]
+pub fn is_descending(vec: &[f64]) -> bool {
+    for (b, a) in vec.iter().zip(vec.iter().skip(1)) {
+        if a >= b {
+            return false;
+        }
+    }
+
+    true
+}
