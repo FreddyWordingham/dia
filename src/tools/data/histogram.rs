@@ -1,8 +1,8 @@
 //! Histogram implementation.
 
-use crate::{access, Binner, Range};
+use crate::{access, Binner, Error, Range, Save};
 use ndarray::Array1;
-use std::ops::AddAssign;
+use std::{fs::File, io::Write, ops::AddAssign, path::Path};
 
 /// Static range, constant bin width, Histogram.
 pub struct Histogram {
@@ -72,5 +72,19 @@ impl AddAssign<&Self> for Histogram {
         debug_assert!(self.counts.len() == rhs.counts.len());
 
         self.counts += &rhs.counts;
+    }
+}
+
+impl Save for Histogram {
+    fn save(&self, path: &Path) -> Result<(), Error> {
+        let mut file = File::create(path).expect("Could not create output file.");
+
+        let center = self.binner.range().min();
+        for count in &self.counts {
+            writeln!(file, "{:>32}, {:<32}", center, count)
+                .expect("Could not write to output file.");
+        }
+
+        Ok(())
     }
 }

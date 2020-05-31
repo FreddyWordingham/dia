@@ -40,6 +40,10 @@ pub enum Probability {
         /// Constant.
         c: f64,
     },
+    // /// Linear interpolation.
+    // LinearInterpolation {
+
+    // }
 }
 
 impl Probability {
