@@ -1,6 +1,6 @@
 {
-    samples: 1e9,
-    block_size: 1e7,
+    samples: 1e6,
+    block_size: 1e2,
     min: -4.0,
     max: 8.0,
     bins: 1000,
