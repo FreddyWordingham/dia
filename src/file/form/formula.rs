@@ -16,6 +16,8 @@ pub enum Formula {
     Bifurcation(f64, f64, f64),
     /// Linear interpolation between points.
     Linear(Vec<f64>, Vec<f64>),
+    /// Constant value spline.
+    ConstantSpline(Vec<f64>, Vec<f64>),
 }
 
 impl Build for Formula {
@@ -28,6 +30,9 @@ impl Build for Formula {
             Self::Line(c, m) => Self::Inst::Line { c, m },
             Self::Bifurcation(t, under, over) => Self::Inst::Bifurcation { t, under, over },
             Self::Linear(xs, ys) => Self::Inst::new_linear(Array1::from(xs), Array1::from(ys)),
+            Self::ConstantSpline(xs, ys) => {
+                Self::Inst::new_constant_spline(Array1::from(xs), Array1::from(ys))
+            }
         })
     }
 }

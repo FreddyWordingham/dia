@@ -1,9 +1,8 @@
 {
-    formula: {LinearInterpolation: [
-        [-3, -2, -1, 0, 1, 2, 3, 3.5, 4.0, 4.5, 5.0, 10.0],
-        [-1, -2, -1, 0, 1, 4, 9, 8.5, 9,   4,   1,   0]
+    formula: {ConstantSpline: [
+        [2,4,5,8],[2,3,1]
     ]},
-    start: -3.0,
-    end: 10.0,
+    start: 2,
+    end: 8,
     samples: 1001,
 }

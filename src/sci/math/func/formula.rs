@@ -38,6 +38,13 @@ pub enum Formula {
         /// Valid domain range.
         range: Range,
     },
+    /// Constant value spline.
+    ConstantSpline {
+        /// X change points.
+        xs: Array1<f64>,
+        /// Y values.
+        ys: Array1<f64>,
+    },
 }
 
 impl Formula {
@@ -70,6 +77,17 @@ impl Formula {
         }
     }
 
+    /// Construct a constant spline instance.
+    #[inline]
+    #[must_use]
+    pub fn new_constant_spline(xs: Array1<f64>, ys: Array1<f64>) -> Self {
+        debug_assert!(xs.len() >= 2);
+        debug_assert!(xs.len() == (ys.len() + 1));
+        debug_assert!(order::is_ascending(xs.as_slice().unwrap()));
+
+        Self::ConstantSpline { xs, ys }
+    }
+
     /// Determine the corresponding output value for the given input.
     #[inline]
     #[must_use]
@@ -100,6 +118,17 @@ impl Formula {
                 }
 
                 unreachable!();
+            }
+            Self::ConstantSpline { xs, ys } => {
+                debug_assert!(x >= xs[0]);
+                debug_assert!(x <= xs[xs.len() - 1]);
+
+                for (index, xn) in xs.iter().enumerate() {
+                    if *xn > x {
+                        return ys[index - 1];
+                    }
+                }
+                return ys[ys.len() - 1];
             }
         }
     }
