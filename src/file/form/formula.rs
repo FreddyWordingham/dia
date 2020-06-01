@@ -18,6 +18,10 @@ pub enum Formula {
     Linear(Vec<f64>, Vec<f64>),
     /// Constant value spline.
     ConstantSpline(Vec<f64>, Vec<f64>),
+    /// Linear spline between points.
+    LinearSpline(Vec<f64>, Vec<f64>, Vec<f64>),
+    /// Connected linear spline between points.
+    LinearSplineAuto(Vec<f64>, Vec<f64>),
 }
 
 impl Build for Formula {
@@ -32,6 +36,14 @@ impl Build for Formula {
             Self::Linear(xs, ys) => Self::Inst::new_linear(Array1::from(xs), Array1::from(ys)),
             Self::ConstantSpline(xs, ys) => {
                 Self::Inst::new_constant_spline(Array1::from(xs), Array1::from(ys))
+            }
+            Self::LinearSpline(xs, ys, grads) => Self::Inst::new_linear_spline(
+                Array1::from(xs),
+                Array1::from(ys),
+                Array1::from(grads),
+            ),
+            Self::LinearSplineAuto(xs, ys) => {
+                Self::Inst::new_linear_spline_auto(Array1::from(xs), Array1::from(ys))
             }
         })
     }
