@@ -1,6 +1,6 @@
 //! Formula implementation.
 
-use crate::{order, Range};
+use crate::order;
 use ndarray::Array1;
 
 /// Mathematical formulae accepting a single scalar argument.
@@ -26,17 +26,6 @@ pub enum Formula {
         under: f64,
         /// Over value.
         over: f64,
-    },
-    /// Linear interpolation between points.
-    Linear {
-        /// X points.
-        xs: Array1<f64>,
-        /// Y points.
-        ys: Array1<f64>,
-        /// Gradient between points.
-        grads: Array1<f64>,
-        /// Valid domain range.
-        range: Range,
     },
     /// Constant value spline.
     ConstantSpline {
@@ -68,35 +57,6 @@ pub enum Formula {
 }
 
 impl Formula {
-    /// Construct a new linear interpolation instance.
-    #[inline]
-    #[must_use]
-    pub fn new_linear(xs: Array1<f64>, ys: Array1<f64>) -> Self {
-        debug_assert!(xs.len() >= 2);
-        debug_assert!(xs.len() == ys.len());
-        debug_assert!(order::is_ascending(xs.as_slice().unwrap()));
-
-        let mut grads = Vec::with_capacity(xs.len() - 1);
-        for (curr_x, (next_x, (curr_y, next_y))) in xs
-            .iter()
-            .zip(xs.iter().skip(1).zip(ys.iter().zip(ys.iter().skip(1))))
-        {
-            let delta_x = next_x - curr_x;
-            let delta_y = next_y - curr_y;
-
-            grads.push(delta_y / delta_x);
-        }
-
-        let range = Range::new(xs[0], xs[xs.len() - 1]);
-
-        Self::Linear {
-            xs,
-            ys,
-            grads: Array1::from(grads),
-            range,
-        }
-    }
-
     /// Construct a constant spline instance.
     #[inline]
     #[must_use]
@@ -177,23 +137,6 @@ impl Formula {
                     *over
                 }
             }
-            Self::Linear {
-                xs,
-                ys,
-                grads,
-                range,
-            } => {
-                debug_assert!(range.contains(x));
-
-                for (xn, (yn, grad)) in xs.iter().skip(1).zip(ys.iter().skip(1).zip(grads.iter())) {
-                    if x <= *xn {
-                        let delta = x - *xn;
-                        return *yn + (delta * grad);
-                    }
-                }
-
-                unreachable!();
-            }
             Self::ConstantSpline { xs, ys } => {
                 debug_assert!(x >= xs[0]);
                 debug_assert!(x <= xs[xs.len() - 1]);
@@ -203,7 +146,7 @@ impl Formula {
                         return ys[index - 1];
                     }
                 }
-                return ys[ys.len() - 1];
+                ys[ys.len() - 1]
             }
             Self::LinearSpline { xs, ys, grads } => {
                 debug_assert!(x >= xs[0]);
@@ -215,7 +158,7 @@ impl Formula {
                         return ys[index - 1] + (grads[index - 1] * dx);
                     }
                 }
-                return ys[ys.len() - 1];
+                ys[ys.len() - 1]
             }
             Self::QuadraticSpline {
                 xs,
@@ -234,7 +177,7 @@ impl Formula {
                             + (quads[index - 1] * dx * dx);
                     }
                 }
-                return ys[ys.len() - 1];
+                ys[ys.len() - 1]
             }
         }
     }

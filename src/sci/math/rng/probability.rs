@@ -89,7 +89,7 @@ impl Probability {
         cdf /= cdf[cdf.len() - 1];
 
         Self::ConstantInterpolation {
-            cdf: Formula::new_linear(cdf, xs),
+            cdf: Formula::new_linear_spline_auto(cdf, xs),
         }
     }
 
