@@ -22,6 +22,8 @@ pub enum Formula {
     LinearSpline(Vec<f64>, Vec<f64>, Vec<f64>),
     /// Connected linear spline between points.
     LinearSplineAuto(Vec<f64>, Vec<f64>),
+    /// Quadratic spline between points.
+    QuadraticSpline(Vec<f64>, Vec<f64>, Vec<f64>, Vec<f64>),
 }
 
 impl Build for Formula {
@@ -45,6 +47,12 @@ impl Build for Formula {
             Self::LinearSplineAuto(xs, ys) => {
                 Self::Inst::new_linear_spline_auto(Array1::from(xs), Array1::from(ys))
             }
+            Self::QuadraticSpline(xs, ys, grads, quads) => Self::Inst::new_quadratic_spline(
+                Array1::from(xs),
+                Array1::from(ys),
+                Array1::from(grads),
+                Array1::from(quads),
+            ),
         })
     }
 }
