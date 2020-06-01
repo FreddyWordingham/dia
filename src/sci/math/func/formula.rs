@@ -155,7 +155,12 @@ impl Formula {
         debug_assert!((grads.len() + 1) == xs.len());
         debug_assert!((quads.len() + 1) == xs.len());
 
-        Self::LinearSpline { xs, ys, grads }
+        Self::QuadraticSpline {
+            xs,
+            ys,
+            grads,
+            quads,
+        }
     }
 
     /// Determine the corresponding output value for the given input.
