@@ -1,5 +1,5 @@
 {
-    samples: 1e8,
+    samples: 1e9,
     block_size: 1e6,
     min: 0.0,
     max: 15.0,
