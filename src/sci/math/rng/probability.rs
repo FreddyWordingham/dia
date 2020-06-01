@@ -72,7 +72,7 @@ impl Probability {
     /// Construct a new constant interpolation instance.
     #[inline]
     #[must_use]
-    pub fn new_constant_interpolation(xs: Array1<f64>, ps: Array1<f64>) -> Self {
+    pub fn new_constant_interpolation(xs: Array1<f64>, ps: &Array1<f64>) -> Self {
         debug_assert!(xs.len() > 1);
         debug_assert!(xs.len() == (ps.len() + 1));
         debug_assert!(ps.iter().all(|x| *x >= 0.0));

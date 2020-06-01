@@ -76,8 +76,9 @@ impl AddAssign<&Self> for Histogram {
 }
 
 impl Save for Histogram {
+    #[inline]
     fn save(&self, path: &Path) -> Result<(), Error> {
-        let mut file = File::create(path).expect("Could not create output file.");
+        let mut file = File::create(path)?;
 
         let mut center = self.binner.range().min();
         let delta = self.binner.range().width() / (self.counts.len() - 1) as f64;

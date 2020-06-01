@@ -55,9 +55,8 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::section("Input");
     banner::sub_section("Parameters");
     let path = in_dir.join(params_path);
-    let params = Parameters::load(&path).expect("Could not load parameters file");
 
-    params
+    Parameters::load(&path).expect("Could not load parameters file")
 }
 
 /// Build instances.

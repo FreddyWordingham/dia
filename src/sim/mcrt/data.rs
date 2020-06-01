@@ -89,7 +89,7 @@ impl Display for Data {
             "{}",
             report::obj_units(
                 "Average rotation",
-                self.rotations.map(|x| x.ave()).sum().to_degrees(),
+                self.rotations.map(Average::ave).sum().to_degrees(),
                 "deg"
             )
             .expect("Could not format field.")
@@ -131,7 +131,7 @@ impl Save for Data {
 
         let path = out_dir.join("ave_rotations.nc");
         println!("saving: {}", path.display());
-        self.rotations.map(|x| x.ave()).save(&path)?;
+        self.rotations.map(Average::ave).save(&path)?;
 
         let path = out_dir.join("hits.nc");
         println!("saving: {}", path.display());

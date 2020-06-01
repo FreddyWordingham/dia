@@ -30,7 +30,7 @@ impl Average {
     #[must_use]
     pub fn ave(&self) -> f64 {
         if self.counts > 0 {
-            self.total / self.counts as f64
+            self.total / f64::from(self.counts)
         } else {
             0.0
         }

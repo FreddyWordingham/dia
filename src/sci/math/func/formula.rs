@@ -155,7 +155,7 @@ impl Formula {
                 for (index, xn) in xs.iter().enumerate() {
                     if *xn > x {
                         let dx = x - xs[index - 1];
-                        return ys[index - 1] + (grads[index - 1] * dx);
+                        return grads[index - 1].mul_add(dx, ys[index - 1]);
                     }
                 }
                 ys[ys.len() - 1]
@@ -172,9 +172,8 @@ impl Formula {
                 for (index, xn) in xs.iter().enumerate() {
                     if *xn > x {
                         let dx = x - xs[index - 1];
-                        return ys[index - 1]
-                            + (grads[index - 1] * dx)
-                            + (quads[index - 1] * dx * dx);
+                        return (quads[index - 1] * dx)
+                            .mul_add(dx, grads[index - 1].mul_add(dx, ys[index - 1]));
                     }
                 }
                 ys[ys.len() - 1]
