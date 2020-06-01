@@ -54,6 +54,17 @@ pub enum Formula {
         /// Gradient between points.
         grads: Array1<f64>,
     },
+    /// Quadratic spline.
+    QuadraticSpline {
+        /// X change points.
+        xs: Array1<f64>,
+        /// Y values.
+        ys: Array1<f64>,
+        /// Gradient between points.
+        grads: Array1<f64>,
+        /// Second order term between points.
+        quads: Array1<f64>,
+    },
 }
 
 impl Formula {
@@ -91,8 +102,8 @@ impl Formula {
     #[must_use]
     pub fn new_constant_spline(xs: Array1<f64>, ys: Array1<f64>) -> Self {
         debug_assert!(xs.len() >= 2);
-        debug_assert!(xs.len() == (ys.len() + 1));
         debug_assert!(order::is_ascending(xs.as_slice().unwrap()));
+        debug_assert!(ys.len() == xs.len());
 
         Self::ConstantSpline { xs, ys }
     }
@@ -102,9 +113,9 @@ impl Formula {
     #[must_use]
     pub fn new_linear_spline(xs: Array1<f64>, ys: Array1<f64>, grads: Array1<f64>) -> Self {
         debug_assert!(xs.len() >= 2);
-        debug_assert!(xs.len() == ys.len());
-        debug_assert!(xs.len() == (grads.len() + 1));
         debug_assert!(order::is_ascending(xs.as_slice().unwrap()));
+        debug_assert!(ys.len() == xs.len());
+        debug_assert!((grads.len() + 1) == xs.len());
 
         Self::LinearSpline { xs, ys, grads }
     }
@@ -114,8 +125,8 @@ impl Formula {
     #[must_use]
     pub fn new_linear_spline_auto(xs: Array1<f64>, ys: Array1<f64>) -> Self {
         debug_assert!(xs.len() >= 2);
-        debug_assert!(xs.len() == ys.len());
         debug_assert!(order::is_ascending(xs.as_slice().unwrap()));
+        debug_assert!(ys.len() == xs.len());
 
         let mut grads = Vec::with_capacity(xs.len() - 1);
         for ((x_curr, x_next), (y_curr, y_next)) in xs
@@ -127,6 +138,24 @@ impl Formula {
         }
 
         Self::new_linear_spline(xs, ys, Array1::from(grads))
+    }
+
+    /// Construct a quadratic spline instance.
+    #[inline]
+    #[must_use]
+    pub fn new_quadratic_spline(
+        xs: Array1<f64>,
+        ys: Array1<f64>,
+        grads: Array1<f64>,
+        quads: Array1<f64>,
+    ) -> Self {
+        debug_assert!(xs.len() >= 2);
+        debug_assert!(order::is_ascending(xs.as_slice().unwrap()));
+        debug_assert!(ys.len() == xs.len());
+        debug_assert!((grads.len() + 1) == xs.len());
+        debug_assert!((quads.len() + 1) == xs.len());
+
+        Self::LinearSpline { xs, ys, grads }
     }
 
     /// Determine the corresponding output value for the given input.
@@ -179,6 +208,25 @@ impl Formula {
                     if *xn > x {
                         let dx = x - xs[index - 1];
                         return ys[index - 1] + (grads[index - 1] * dx);
+                    }
+                }
+                return ys[ys.len() - 1];
+            }
+            Self::QuadraticSpline {
+                xs,
+                ys,
+                grads,
+                quads,
+            } => {
+                debug_assert!(x >= xs[0]);
+                debug_assert!(x <= xs[xs.len() - 1]);
+
+                for (index, xn) in xs.iter().enumerate() {
+                    if *xn > x {
+                        let dx = x - xs[index - 1];
+                        return ys[index - 1]
+                            + (grads[index - 1] * dx)
+                            + (quads[index - 1] * dx * dx);
                     }
                 }
                 return ys[ys.len() - 1];
