@@ -1,6 +1,6 @@
 //! Output data structure.
 
-use crate::{report, Aabb, Average, Error, Save, X, Y, Z};
+use crate::{report, Aabb, Average, Error, Histogram, Save, X, Y, Z};
 use ndarray::Array3;
 use std::{
     fmt::{Display, Formatter},
@@ -28,6 +28,8 @@ pub struct Data {
     pub absorptions: Array3<f64>,
     /// Local shifted photo-energy.
     pub shifts: Array3<f64>,
+    /// Recording spectrum.
+    pub spec_0: Histogram,
 }
 
 impl Data {
@@ -49,6 +51,7 @@ impl Data {
             energy: Array3::zeros(res),
             absorptions: Array3::zeros(res),
             shifts: Array3::zeros(res),
+            spec_0: Histogram::new(300.0e-9, 800e-9, 500),
         }
     }
 }

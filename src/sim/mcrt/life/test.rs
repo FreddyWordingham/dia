@@ -48,6 +48,12 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
                 scatter_phot(data, index, &mut phot, &env, rng);
             }
             Event::Surface(hit) => {
+                if hit.group() == "spectrometer" {
+                    move_phot(data, index, &env, &mut phot, hit.dist() + bump_dist);
+                    data.spec_0.collect_weight(phot.wavelength(), phot.weight());
+                    continue;
+                }
+
                 let curr_ref = env.ref_index();
                 let next_env = select_property(input.props, &hit).env(phot.wavelength());
                 let next_ref = next_env.ref_index();
