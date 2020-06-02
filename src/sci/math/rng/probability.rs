@@ -82,7 +82,7 @@ impl Probability {
         debug_assert!(xs.len() == (ps.len() + 1));
         debug_assert!(ps.iter().all(|p| *p >= 0.0));
 
-        let mut cdf = Vec::with_capacity(ps.len());
+        let mut cdf = Vec::with_capacity(xs.len());
         let mut total = 0.0;
         cdf.push(total);
         for ((x_curr, x_next), prob) in xs.iter().zip(xs.iter().skip(1)).zip(ps.iter()) {
@@ -107,10 +107,8 @@ impl Probability {
         debug_assert!(xs.len() == ps.len());
         debug_assert!(ps.iter().all(|x| *x >= 0.0));
 
-        let mut grads = Vec::with_capacity(xs.len());
-        let mut quads = Vec::with_capacity(xs.len());
-
-        let mut cdf = Vec::with_capacity(ps.len());
+        let mut coeffs = Vec::with_capacity(ps.len());
+        let mut cdf = Vec::with_capacity(xs.len());
         let mut total = 0.0;
         cdf.push(total);
         for ((x_curr, x_next), (prob_curr, prob_next)) in xs
@@ -121,26 +119,17 @@ impl Probability {
             let area = (x_next - x_curr) * (prob_next + prob_curr) * 0.5;
             total += area;
             cdf.push(total);
-
-            grads.push(*x_curr);
-            quads.push((prob_next - prob_curr) / (x_next - x_curr));
+            coeffs.push((x_next - x_curr) * (prob_next - prob_curr).sign());
         }
         let mut cdf = Array1::from(cdf);
         cdf /= total;
 
-        // let mut grads = Vec::with_capacity(xs.len());
-        // let mut quads = Vec::with_capacity(xs.len());
-        // for ((x_curr, x_next), (cdf_curr, cdf_next)) in xs
-        //     .iter()
-        //     .zip(xs.iter().skip(1))
-        //     .zip(cdf.iter().zip(cdf.iter().skip(1)))
-        // {
-        //     grads.push(3.0);
-        //     quads.push(1.0);
+        // for (cdf_curr, cdf_next) in cdf.iter().zip(cdf.iter().skip(1)) {
+        //     coeffs.push(cdf_next - cdf_curr);
         // }
 
         Self::LinearSpline {
-            cdf: Formula::new_quadratic_spline(cdf, xs, Array1::from(grads), Array1::from(quads)),
+            cdf: Formula::new_sqrt_spline(cdf, xs, Array1::from(coeffs)),
         }
     }
 

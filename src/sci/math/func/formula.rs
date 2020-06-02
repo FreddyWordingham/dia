@@ -54,6 +54,15 @@ pub enum Formula {
         /// Second order term between points.
         quads: Array1<f64>,
     },
+    /// Square-root spline.
+    SqrtSpline {
+        /// X change points.
+        xs: Array1<f64>,
+        /// Y values.
+        ys: Array1<f64>,
+        /// Square-root coefficients.
+        coeffs: Array1<f64>,
+    },
 }
 
 impl Formula {
@@ -123,6 +132,18 @@ impl Formula {
         }
     }
 
+    /// Construct a square-root spline instance.
+    #[inline]
+    #[must_use]
+    pub fn new_sqrt_spline(xs: Array1<f64>, ys: Array1<f64>, coeffs: Array1<f64>) -> Self {
+        debug_assert!(xs.len() >= 2);
+        debug_assert!(order::is_ascending(xs.as_slice().unwrap()));
+        debug_assert!(ys.len() == xs.len());
+        debug_assert!((coeffs.len() + 1) == xs.len());
+
+        Self::SqrtSpline { xs, ys, coeffs }
+    }
+
     /// Determine the corresponding output value for the given input.
     #[inline]
     #[must_use]
@@ -172,10 +193,24 @@ impl Formula {
                 for (index, xn) in xs.iter().enumerate() {
                     if *xn > x {
                         let dx = x - xs[index - 1];
-                        let c = grads[index - 1];
-                        let m = quads[index - 1];
-                        // return (((c * c) + (2.0 * m * dx)).sqrt() - c) / m;
-                        return 15.0;
+                        let y = ys[index - 1];
+                        let g = grads[index - 1];
+                        let q = quads[index - 1];
+                        return q.mul_add(dx.powi(2), g.mul_add(dx, y));
+                    }
+                }
+                ys[ys.len() - 1]
+            }
+            Self::SqrtSpline { xs, ys, coeffs } => {
+                debug_assert!(x >= xs[0]);
+                debug_assert!(x <= xs[xs.len() - 1]);
+
+                for (index, xn) in xs.iter().enumerate() {
+                    if *xn > x {
+                        let dx = x - xs[index - 1];
+                        let y = ys[index - 1];
+                        let c = coeffs[index - 1];
+                        return y + (c * (dx / (xs[index] - xs[index - 1])).sqrt());
                     }
                 }
                 ys[ys.len() - 1]
