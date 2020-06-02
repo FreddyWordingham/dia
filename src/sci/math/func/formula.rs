@@ -210,7 +210,7 @@ impl Formula {
                         let dx = x - xs[index - 1];
                         let y = ys[index - 1];
                         let c = coeffs[index - 1];
-                        return y + (c * (dx / (xs[index] - xs[index - 1])).sqrt());
+                        return y + (c * dx.sqrt());
                     }
                 }
                 ys[ys.len() - 1]
