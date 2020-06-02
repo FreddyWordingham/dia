@@ -241,7 +241,7 @@
             <span class="string">&quot;{}&quot;</span>,
             <span class="ident">report</span>::<span class="ident">obj_units</span>(
                 <span class="string">&quot;Average rotation&quot;</span>,
-                <span class="self">self</span>.<span class="ident">rotations</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">ave</span>()).<span class="ident">sum</span>().<span class="ident">to_degrees</span>(),
+                <span class="self">self</span>.<span class="ident">rotations</span>.<span class="ident">map</span>(<span class="ident">Average</span>::<span class="ident">ave</span>).<span class="ident">sum</span>().<span class="ident">to_degrees</span>(),
                 <span class="string">&quot;deg&quot;</span>
             )
             .<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
@@ -283,7 +283,7 @@
 
         <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">out_dir</span>.<span class="ident">join</span>(<span class="string">&quot;ave_rotations.nc&quot;</span>);
         <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;saving: {}&quot;</span>, <span class="ident">path</span>.<span class="ident">display</span>());
-        <span class="self">self</span>.<span class="ident">rotations</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">ave</span>()).<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">rotations</span>.<span class="ident">map</span>(<span class="ident">Average</span>::<span class="ident">ave</span>).<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">out_dir</span>.<span class="ident">join</span>(<span class="string">&quot;hits.nc&quot;</span>);
         <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;saving: {}&quot;</span>, <span class="ident">path</span>.<span class="ident">display</span>());

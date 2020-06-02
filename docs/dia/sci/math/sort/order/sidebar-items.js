@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["max","Determine the maximum value within a vector."],["min","Determine the minimum value within a vector."]]});
+initSidebarItems({"fn":[["is_ascending","Determine if the list is sorted in ascending order."],["is_descending","Determine if the list is sorted in descending order."],["max","Determine the maximum value within a list."],["min","Determine the minimum value within a list."]]});

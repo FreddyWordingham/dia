@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["alias","Aliases."],["geom","Geometry module."],["lambda","Lambda sub-module."],["rng","Random-Number-Generation module."],["sample","Sampling module."],["sort","Sorting module."]]});
+initSidebarItems({"mod":[["alias","Aliases."],["func","Mathematical function module."],["geom","Geometry module."],["rng","Random-Number-Generation module."],["sample","Sampling module."],["sort","Sorting module."]]});

@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["gradient","Gradient form implementation."],["light","Light form implementation."],["mesh","Mesh form implementation."],["trans3","Transform form implementation."]]});
+initSidebarItems({"mod":[["formula","Formula form implementation."],["gradient","Gradient form implementation."],["light","Light form implementation."],["mesh","Mesh form implementation."],["probability","Probability form implementation."],["properties","Properties form implementation."],["trans3","Transform form implementation."]]});
