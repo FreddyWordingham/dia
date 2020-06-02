@@ -6,8 +6,8 @@
     },
     mcrt: {
         bump_dist: 1e-9,
-        num_phot: 1e5,
-        block_size: 1000,
+        num_phot: 1e9,
+        block_size: 1e6,
     },
     grid: {
         bound: {

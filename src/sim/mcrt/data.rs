@@ -164,6 +164,10 @@ impl Save for Data {
         let path = out_dir.join("shift_density.nc");
         println!("saving: {}", path.display());
         let shift_dens = self.shifts.clone() / cell_vol;
-        shift_dens.save(&path)
+        shift_dens.save(&path)?;
+
+        let path = out_dir.join("spec_0.csv");
+        println!("saving: {}", path.display());
+        self.spec_0.save(&path)
     }
 }
