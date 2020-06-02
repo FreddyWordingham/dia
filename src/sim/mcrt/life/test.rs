@@ -65,11 +65,13 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
                         (hit.dist() - bump_dist).max(0.0),
                     );
                     *phot.ray_mut().dir_mut() = *crossing.ref_dir();
+                    *phot.weight_mut() *= crossing.ref_prob();
                 } else {
                     // Refract
                     move_phot(data, index, &env, &mut phot, hit.dist() + bump_dist);
                     *phot.ray_mut().dir_mut() = crossing.trans_dir().expect("Invalid refraction.");
                     env = next_env;
+                    *phot.weight_mut() *= crossing.trans_prob();
                 }
 
                 data.hits[index] += phot.weight();
