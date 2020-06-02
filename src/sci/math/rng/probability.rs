@@ -1,6 +1,6 @@
 //! Probability distribution implementation.
 
-use crate::{distribution, Formula};
+use crate::{distribution, report, Formula};
 use ndarray::Array1;
 use rand::{rngs::ThreadRng, Rng};
 use std::fmt::{Display, Formatter, Result};
@@ -112,7 +112,18 @@ impl Display for Probability {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
-        // TODO!
-        Ok(())
+        let name = match self {
+            Self::Point { .. } => "Point",
+            Self::Points { .. } => "Points",
+            Self::Uniform { .. } => "Uniform",
+            Self::Gaussian { .. } => "Gaussian",
+            Self::ConstantSpline { .. } => "Constant spline",
+        };
+
+        write!(
+            fmt,
+            "{}",
+            report::obj("type", name).expect("Could not format name.")
+        )
     }
 }

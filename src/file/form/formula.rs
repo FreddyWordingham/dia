@@ -1,6 +1,6 @@
 //! Formula form implementation.
 
-use crate::{Build, Error};
+use crate::{report, Build, Error};
 use attr::load;
 use ndarray::Array1;
 use std::fmt::{Display, Formatter};
@@ -59,7 +59,20 @@ impl Display for Formula {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        // TODO!
-        Ok(())
+        let name = match self {
+            Self::Constant { .. } => "Constant",
+            Self::Line { .. } => "Line",
+            Self::Bifurcation { .. } => "Bifurcation",
+            Self::ConstantSpline { .. } => "Constant spline",
+            Self::LinearSpline { .. } => "Linear spline",
+            Self::LinearSplineAuto { .. } => "Linear spline (auto)",
+            Self::QuadraticSpline { .. } => "Quadratic spline",
+        };
+
+        write!(
+            fmt,
+            "{}",
+            report::obj("type", name).expect("Could not format name.")
+        )
     }
 }

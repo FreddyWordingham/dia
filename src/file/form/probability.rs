@@ -1,6 +1,6 @@
 //! Probability form implementation.
 
-use crate::{Build, Error};
+use crate::{report, Build, Error};
 use attr::load;
 use ndarray::Array1;
 use std::{
@@ -44,7 +44,18 @@ impl Display for Probability {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        // TODO!
-        Ok(())
+        let name = match self {
+            Self::Point { .. } => "Point",
+            Self::Points { .. } => "Points",
+            Self::Uniform { .. } => "Uniform",
+            Self::Gaussian { .. } => "Gaussian",
+            Self::ConstantSpline { .. } => "Constant spline",
+        };
+
+        write!(
+            fmt,
+            "{}",
+            report::obj("type", name).expect("Could not format name.")
+        )
     }
 }
