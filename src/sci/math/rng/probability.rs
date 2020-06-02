@@ -30,8 +30,8 @@ pub enum Probability {
         /// Variance.
         sigma: f64,
     },
-    /// Constant interpolation.
-    ConstantInterpolation {
+    /// Constant spline.
+    ConstantSpline {
         /// Cumulative distribution function.
         cdf: Formula,
     },
@@ -69,10 +69,10 @@ impl Probability {
         Self::Gaussian { mu, sigma }
     }
 
-    /// Construct a new constant interpolation instance.
+    /// Construct a new constant spline instance.
     #[inline]
     #[must_use]
-    pub fn new_constant_interpolation(xs: Array1<f64>, ps: &Array1<f64>) -> Self {
+    pub fn new_constant_spline(xs: Array1<f64>, ps: &Array1<f64>) -> Self {
         debug_assert!(xs.len() > 1);
         debug_assert!(xs.len() == (ps.len() + 1));
         debug_assert!(ps.iter().all(|x| *x >= 0.0));
@@ -88,7 +88,7 @@ impl Probability {
         let mut cdf = Array1::from(cdf);
         cdf /= cdf[cdf.len() - 1];
 
-        Self::ConstantInterpolation {
+        Self::ConstantSpline {
             cdf: Formula::new_linear_spline_auto(cdf, xs),
         }
     }
@@ -102,7 +102,7 @@ impl Probability {
             Self::Points { cs } => cs[rng.gen_range(0, cs.len())],
             Self::Uniform { min, max } => rng.gen_range(*min, *max),
             Self::Gaussian { mu, sigma } => distribution::gaussian(rng, *mu, *sigma),
-            Self::ConstantInterpolation { cdf } => cdf.y(rng.gen()),
+            Self::ConstantSpline { cdf } => cdf.y(rng.gen()),
         }
     }
 }
