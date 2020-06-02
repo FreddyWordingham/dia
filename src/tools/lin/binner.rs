@@ -38,7 +38,8 @@ impl Binner {
         debug_assert!(self.range.contains(x));
 
         let frac = (x - self.range.min()) / self.range.width();
-        (frac * self.bins as f64).floor() as usize
+        let bin = (frac * self.bins as f64).floor() as u64;
+        bin.min(self.bins - 1) as usize
     }
 
     /// Determine the corresponding bin if the value is within the range.

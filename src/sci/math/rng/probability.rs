@@ -35,6 +35,11 @@ pub enum Probability {
         /// Cumulative distribution function.
         cdf: Formula,
     },
+    /// Linear spline.
+    LinearSpline {
+        /// Cumulative distribution function.
+        cdf: Formula,
+    },
 }
 
 impl Probability {
@@ -75,7 +80,7 @@ impl Probability {
     pub fn new_constant_spline(xs: Array1<f64>, ps: &Array1<f64>) -> Self {
         debug_assert!(xs.len() > 1);
         debug_assert!(xs.len() == (ps.len() + 1));
-        debug_assert!(ps.iter().all(|x| *x >= 0.0));
+        debug_assert!(ps.iter().all(|p| *p >= 0.0));
 
         let mut cdf = Vec::with_capacity(ps.len());
         let mut total = 0.0;
@@ -86,10 +91,56 @@ impl Probability {
             cdf.push(total);
         }
         let mut cdf = Array1::from(cdf);
-        cdf /= cdf[cdf.len() - 1];
+        cdf /= total;
 
         Self::ConstantSpline {
             cdf: Formula::new_linear_spline_auto(cdf, xs),
+        }
+    }
+
+    /// Construct a new linear spline instance.
+    /// Determine the cumulative distribution function for a given
+    #[inline]
+    #[must_use]
+    pub fn new_linear_spline(xs: Array1<f64>, ps: &Array1<f64>) -> Self {
+        debug_assert!(xs.len() > 1);
+        debug_assert!(xs.len() == ps.len());
+        debug_assert!(ps.iter().all(|x| *x >= 0.0));
+
+        let mut grads = Vec::with_capacity(xs.len());
+        let mut quads = Vec::with_capacity(xs.len());
+
+        let mut cdf = Vec::with_capacity(ps.len());
+        let mut total = 0.0;
+        cdf.push(total);
+        for ((x_curr, x_next), (prob_curr, prob_next)) in xs
+            .iter()
+            .zip(xs.iter().skip(1))
+            .zip(ps.iter().zip(ps.iter().skip(1)))
+        {
+            let area = (x_next - x_curr) * (prob_next + prob_curr) * 0.5;
+            total += area;
+            cdf.push(total);
+
+            grads.push(*x_curr);
+            quads.push((prob_next - prob_curr) / (x_next - x_curr));
+        }
+        let mut cdf = Array1::from(cdf);
+        cdf /= total;
+
+        // let mut grads = Vec::with_capacity(xs.len());
+        // let mut quads = Vec::with_capacity(xs.len());
+        // for ((x_curr, x_next), (cdf_curr, cdf_next)) in xs
+        //     .iter()
+        //     .zip(xs.iter().skip(1))
+        //     .zip(cdf.iter().zip(cdf.iter().skip(1)))
+        // {
+        //     grads.push(3.0);
+        //     quads.push(1.0);
+        // }
+
+        Self::LinearSpline {
+            cdf: Formula::new_quadratic_spline(cdf, xs, Array1::from(grads), Array1::from(quads)),
         }
     }
 
@@ -103,6 +154,7 @@ impl Probability {
             Self::Uniform { min, max } => rng.gen_range(*min, *max),
             Self::Gaussian { mu, sigma } => distribution::gaussian(rng, *mu, *sigma),
             Self::ConstantSpline { cdf } => cdf.y(rng.gen()),
+            Self::LinearSpline { cdf } => cdf.y(rng.gen()),
         }
     }
 }

@@ -172,8 +172,10 @@ impl Formula {
                 for (index, xn) in xs.iter().enumerate() {
                     if *xn > x {
                         let dx = x - xs[index - 1];
-                        return (quads[index - 1] * dx)
-                            .mul_add(dx, grads[index - 1].mul_add(dx, ys[index - 1]));
+                        let c = grads[index - 1];
+                        let m = quads[index - 1];
+                        // return (((c * c) + (2.0 * m * dx)).sqrt() - c) / m;
+                        return 15.0;
                     }
                 }
                 ys[ys.len() - 1]
