@@ -97,6 +97,7 @@ fn move_phot(data: &mut Data, index: [usize; 3], env: &Environment, phot: &mut P
     data.energy[index] +=
         phot.weight() * phot.power() * (env.ref_index() / SPEED_OF_LIGHT_IN_VACUUM) * dist;
     data.absorptions[index] += phot.weight() * phot.power() * dist * env.abs_coeff();
+    data.shifts[index] += phot.weight() * phot.power() * dist * env.shift_coeff();
 
     phot.ray_mut().travel(dist);
 }
@@ -116,6 +117,8 @@ fn scatter_phot(
     data.rotations[index] += phi;
 
     phot.ray_mut().rotate(phi, rng.gen_range(0.0, 2.0 * PI));
+
+    *phot.weight_mut() *= env.albedo();
 }
 
 /// Determine the next property from the hit event information.

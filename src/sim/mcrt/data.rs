@@ -26,6 +26,8 @@ pub struct Data {
     pub energy: Array3<f64>,
     /// Local absorbed photo-energy.
     pub absorptions: Array3<f64>,
+    /// Local shifted photo-energy.
+    pub shifts: Array3<f64>,
 }
 
 impl Data {
@@ -46,6 +48,7 @@ impl Data {
             hits: Array3::zeros(res),
             energy: Array3::zeros(res),
             absorptions: Array3::zeros(res),
+            shifts: Array3::zeros(res),
         }
     }
 }
@@ -60,6 +63,7 @@ impl AddAssign<&Self> for Data {
         self.hits += &rhs.hits;
         self.energy += &rhs.energy;
         self.absorptions += &rhs.absorptions;
+        self.shifts += &rhs.shifts;
     }
 }
 
@@ -109,6 +113,12 @@ impl Display for Data {
             fmt,
             "{}",
             report::obj_units("total energy", self.energy.sum(), "J")
+                .expect("Could not format field.")
+        )?;
+        write!(
+            fmt,
+            "{}",
+            report::obj_units("total shifts", self.shifts.sum(), "J")
                 .expect("Could not format field.")
         )
     }
