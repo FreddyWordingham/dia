@@ -6,7 +6,7 @@
     },
     mcrt: {
         bump_dist: 1e-9,
-        num_phot: 1e6,
+        num_phot: 1e5,
         block_size: 1000,
     },
     grid: {

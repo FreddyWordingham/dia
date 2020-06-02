@@ -156,6 +156,11 @@ impl Save for Data {
         let path = out_dir.join("absorption_density.nc");
         println!("saving: {}", path.display());
         let absorption_dens = self.absorptions.clone() / cell_vol;
-        absorption_dens.save(&path)
+        absorption_dens.save(&path)?;
+
+        let path = out_dir.join("shift_density.nc");
+        println!("saving: {}", path.display());
+        let shift_dens = self.shifts.clone() / cell_vol;
+        shift_dens.save(&path)
     }
 }
