@@ -6,7 +6,7 @@
     },
     mcrt: {
         bump_dist: 1e-9,
-        num_phot: 1000000,
+        num_phot: 1e6,
         block_size: 1000,
     },
     grid: {
@@ -19,7 +19,7 @@
     light: {
         surf: [['objs/led.obj'], {scale:1.0e-3, trans:[0.0,0.0,-0.5e-3]}],
         spec: {
-            There: 'spec/laser_830nm.json5'
+            There: 'spec/aktilite.json5'
         },
         power: 1
     },

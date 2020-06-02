@@ -1,6 +1,6 @@
 //! Light form implementation.
 
-use crate::{form, report, Build, Error, Redirect, Spectrum};
+use crate::{form, report, Build, Error, Redirect};
 use attr::load;
 use std::{
     fmt::{Display, Formatter},
@@ -13,7 +13,7 @@ pub struct Light {
     /// Mesh surface.
     surf: form::Mesh,
     /// Light spectrum.
-    spec: Redirect<Spectrum>,
+    spec: Redirect<form::Probability>,
     /// Light power [J/s].
     power: f64,
 }
@@ -24,7 +24,7 @@ impl Build for Light {
     #[inline]
     fn build(self, in_dir: &Path) -> Result<Self::Inst, Error> {
         let surf = self.surf.build(in_dir)?;
-        let spec = self.spec.build(in_dir)?;
+        let spec = self.spec.build(in_dir)?.build(in_dir)?;
         let power = self.power;
 
         Ok(Self::Inst::new(surf, spec, power))

@@ -3,6 +3,7 @@
 use crate::{distribution, Formula};
 use ndarray::Array1;
 use rand::{rngs::ThreadRng, Rng};
+use std::fmt::{Display, Formatter, Result};
 
 /// Probability distribution formulae.
 pub enum Probability {
@@ -104,5 +105,14 @@ impl Probability {
             Self::Gaussian { mu, sigma } => distribution::gaussian(rng, *mu, *sigma),
             Self::ConstantSpline { cdf } => cdf.y(rng.gen()),
         }
+    }
+}
+
+impl Display for Probability {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> Result {
+        // TODO!
+        Ok(())
     }
 }

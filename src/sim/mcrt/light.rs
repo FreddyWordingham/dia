@@ -1,6 +1,6 @@
 //! Light structure.
 
-use crate::{access, clone, mcrt::Photon, report, Emit, Mesh, Spectrum};
+use crate::{access, clone, mcrt::Photon, report, Emit, Mesh, Probability};
 use rand::rngs::ThreadRng;
 use std::fmt::{Display, Formatter, Result};
 
@@ -8,21 +8,21 @@ use std::fmt::{Display, Formatter, Result};
 pub struct Light {
     /// Surface.
     surf: Mesh,
-    /// Emission spectrum.
-    spec: Spectrum,
+    /// Emission Formula.
+    spec: Probability,
     /// Power [J/s].
     power: f64,
 }
 
 impl Light {
     access!(surf, Mesh);
-    access!(spec, Spectrum);
+    access!(spec, Probability);
     clone!(power, f64);
 
     /// Construct a new instance.
     #[inline]
     #[must_use]
-    pub fn new(surf: Mesh, spec: Spectrum, power: f64) -> Self {
+    pub fn new(surf: Mesh, spec: Probability, power: f64) -> Self {
         debug_assert!(power > 0.0);
 
         Self { surf, spec, power }
@@ -35,7 +35,7 @@ impl Light {
         debug_assert!(total_phot > 0);
 
         let ray = self.surf.cast(rng);
-        let wavelength = self.spec.sample(rng);
+        let wavelength = self.spec.gen(rng);
         let power = self.power / total_phot as f64;
 
         Photon::new(ray, wavelength, power)
@@ -54,7 +54,7 @@ impl Display for Light {
         writeln!(
             fmt,
             "{}",
-            report::obj("spectrum", &self.spec).expect("Could not format field.")
+            report::obj("Formula", &self.spec).expect("Could not format field.")
         )?;
         write!(
             fmt,

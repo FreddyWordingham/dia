@@ -3,6 +3,7 @@
 use crate::{Build, Error};
 use attr::load;
 use ndarray::Array1;
+use std::fmt::{Display, Formatter};
 use std::path::Path;
 
 /// Mathematical formulae accepting a single scalar argument.
@@ -51,5 +52,14 @@ impl Build for Formula {
                 Array1::from(quads),
             ),
         })
+    }
+}
+
+impl Display for Formula {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        // TODO!
+        Ok(())
     }
 }

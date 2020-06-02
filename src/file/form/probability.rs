@@ -3,7 +3,10 @@
 use crate::{Build, Error};
 use attr::load;
 use ndarray::Array1;
-use std::path::Path;
+use std::{
+    fmt::{Display, Formatter},
+    path::Path,
+};
 
 /// Probability distribution.
 #[load]
@@ -34,5 +37,14 @@ impl Build for Probability {
                 Self::Inst::new_constant_spline(Array1::from(xs), &Array1::from(ps))
             }
         })
+    }
+}
+
+impl Display for Probability {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        // TODO!
+        Ok(())
     }
 }
