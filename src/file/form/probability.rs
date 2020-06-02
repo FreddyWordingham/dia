@@ -18,8 +18,6 @@ pub enum Probability {
     Gaussian(f64, f64),
     /// Constant spline.
     ConstantSpline(Vec<f64>, Vec<f64>),
-    /// Linear spline.
-    LinearSpline(Vec<f64>, Vec<f64>),
 }
 
 impl Build for Probability {
@@ -34,9 +32,6 @@ impl Build for Probability {
             Self::Gaussian(mu, sigma) => Self::Inst::new_gaussian(mu, sigma),
             Self::ConstantSpline(xs, ps) => {
                 Self::Inst::new_constant_spline(Array1::from(xs), &Array1::from(ps))
-            }
-            Self::LinearSpline(xs, ps) => {
-                Self::Inst::new_linear_spline(Array1::from(xs), &Array1::from(ps))
             }
         })
     }
