@@ -12,24 +12,16 @@ struct Parameters {
     /// Regular grid settings.
     grid: grid::Settings,
     /// Render runtime settings.
-    mcrt: mcrt::Settings,
-    /// Light settings.
-    light: form::Light,
-    /// Surfaces map.
-    surfs: Set<form::Mesh>,
-    /// Properties map.
-    props: Set<Redirect<form::Properties>>,
+    sett: render::Settings,
 }
 
 /// Main function.
 pub fn main() {
-    banner::title("MCRT");
-    let (params_path, in_dir, out_dir) = init();
+    banner::title("Render");
+    let (params_path, in_dir, _out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let (light, surfs, props, tree_sett, grid_sett, mcrt_sett) = build(&in_dir, params);
-    let (tree, grid) = grow(tree_sett, grid_sett, &surfs);
-    let data = simulate(&mcrt_sett, &props, &light, &grid, &tree);
-    save(&out_dir, data);
+    let (_tree_sett, _grid_sett, _render_sett) = build(&in_dir, params);
+
     banner::section("Finished");
 }
 
@@ -64,54 +56,15 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::sub_sub_section("Regular Grid Settings");
     report!("grid", &params.grid);
 
-    banner::sub_sub_section("MCRT Settings");
-    report!("settings", &params.mcrt);
-
-    banner::sub_sub_section("Light");
-    report!("light", &params.light);
-
-    banner::sub_sub_section("Surfaces");
-    report!("surfaces", &params.surfs);
-
-    banner::sub_sub_section("Properties");
-    // report!("properties", &params.props);
+    banner::sub_sub_section("Render Settings");
+    report!("settings", &params.sett);
 
     params
 }
 
 /// Build instances.
-fn build(
-    in_dir: &Path,
-    params: Parameters,
-) -> (
-    mcrt::Light,
-    Set<Mesh>,
-    Set<mcrt::Properties>,
-    tree::Settings,
-    grid::Settings,
-    mcrt::Settings,
-) {
+fn build(_in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings, render::Settings) {
     banner::section("Building");
-
-    banner::sub_section("Light");
-    let light = params.light.build(in_dir).expect("Unable to build light.");
-    report!("light", &light);
-
-    banner::sub_section("Surfaces");
-    let surfs = params
-        .surfs
-        .build(in_dir)
-        .expect("Unable to build surfaces.");
-    report!("surfaces", &surfs);
-
-    banner::sub_section("Properties");
-    let props = params
-        .props
-        .build(in_dir)
-        .expect("Unable to build properties.")
-        .build(in_dir)
-        .expect("Unable to build properties.");
-    // report!("properties", &props);
 
     banner::sub_section("Adaptive Tree Settings");
     let tree_sett = params.tree;
@@ -121,51 +74,9 @@ fn build(
     let grid_sett = params.grid;
     report!("grid settings", &grid_sett);
 
-    banner::sub_section("MCRT Settings");
-    let mcrt_sett = params.mcrt;
-    report!("mcrt settings", &mcrt_sett);
+    banner::sub_section("Render Settings");
+    let render_sett = params.sett;
+    report!("render settings", &render_sett);
 
-    (light, surfs, props, tree_sett, grid_sett, mcrt_sett)
-}
-
-/// Grow domain tree.
-fn grow<'a>(
-    tree_sett: tree::Settings,
-    grid_sett: grid::Settings,
-    surfs: &'a Set<Mesh>,
-) -> (tree::Cell<'a>, grid::Grid) {
-    banner::section("Growing");
-
-    banner::sub_section("Adaptive Tree");
-    let tree = tree::Cell::new_root(&tree_sett, &surfs);
-    report!("Adaptive tree", &tree);
-
-    banner::sub_section("Regular Grid");
-    let grid = grid::Grid::new(&grid_sett).expect("Could not build regular grid.");
-    report!("Regular grid", &grid);
-
-    (tree, grid)
-}
-
-/// Run the simulation.
-fn simulate(
-    sett: &mcrt::Settings,
-    props: &Set<mcrt::Properties>,
-    light: &mcrt::Light,
-    grid: &grid::Grid,
-    tree: &tree::Cell,
-) -> mcrt::Data {
-    banner::section("Simulating");
-
-    banner::sub_section("Main Light");
-    let input = mcrt::Input::new(&sett, &props, &light, &grid, &tree);
-    mcrt::run::simulate(&input, mcrt::life::test).expect("Simulation failed.")
-}
-
-/// Save the output data.
-fn save(out_dir: &Path, data: mcrt::Data) {
-    banner::section("Saving");
-    banner::sub_section("Main Dump");
-    report!("output data", &data);
-    data.save(&out_dir).expect("Could not save output data.");
+    (tree_sett, grid_sett, render_sett)
 }
