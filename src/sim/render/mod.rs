@@ -1,5 +1,7 @@
 //! Rendering module.
 
+pub mod attributes;
 pub mod settings;
 
+pub use self::attributes::*;
 pub use self::settings::*;

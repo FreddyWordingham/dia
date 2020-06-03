@@ -17,8 +17,8 @@ struct Parameters {
     surfs: Set<form::Mesh>,
     /// Colour map.
     cols: Set<form::Gradient>,
-    // /// Attributes map.
-    // attrs: Set<Redirect<render::Attribute>>,
+    /// Attributes map.
+    attrs: Set<Redirect<render::Attributes>>,
 }
 
 /// Main function.
@@ -90,6 +90,13 @@ fn build(
     for (name, grad) in cols.map() {
         report!(name, gradient::to_string(grad, 60));
     }
+
+    banner::sub_section("Attributes");
+    let attrs = params
+        .attrs
+        .build(in_dir)
+        .expect("Unable to build attributes.");
+    report!("attributes", &attrs);
 
     (tree_sett, grid_sett, render_sett, surfs)
 }

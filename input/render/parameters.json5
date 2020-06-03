@@ -31,5 +31,12 @@
             blues: ['#2c2cf9ff', '#2222c5ff', '#175bd5ff', '#4d0ff4ff'],
             greens: ['#2cf92cff', '#22c522ff', '#5bd517ff', '#0ff44dff']
         }
+    },
+    attrs: {
+        map: {
+            mirror: {
+                There: 'attrs/mirror.json5'
+            }
+        }
     }
 }
