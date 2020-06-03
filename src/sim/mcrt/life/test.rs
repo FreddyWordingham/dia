@@ -48,10 +48,33 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
                 scatter_phot(data, index, &mut phot, &env, rng);
             }
             Event::Surface(hit) => {
-                if hit.group() == "spectrometer" {
-                    move_phot(data, index, &env, &mut phot, hit.dist() + bump_dist);
-                    data.spec_0.collect_weight(phot.wavelength(), phot.weight());
-                    continue;
+                match hit.group().as_str() {
+                    "spectrometer_0" => {
+                        move_phot(data, index, &env, &mut phot, hit.dist() + bump_dist);
+                        data.spec_0.collect_weight(phot.wavelength(), phot.weight());
+                        continue;
+                    }
+                    "spectrometer_1" => {
+                        move_phot(data, index, &env, &mut phot, hit.dist() + bump_dist);
+                        data.spec_1.collect_weight(phot.wavelength(), phot.weight());
+                        continue;
+                    }
+                    "spectrometer_2" => {
+                        move_phot(data, index, &env, &mut phot, hit.dist() + bump_dist);
+                        data.spec_2.collect_weight(phot.wavelength(), phot.weight());
+                        continue;
+                    }
+                    "spectrometer_3" => {
+                        move_phot(data, index, &env, &mut phot, hit.dist() + bump_dist);
+                        data.spec_3.collect_weight(phot.wavelength(), phot.weight());
+                        continue;
+                    }
+                    "spectrometer_4" => {
+                        move_phot(data, index, &env, &mut phot, hit.dist() + bump_dist);
+                        data.spec_4.collect_weight(phot.wavelength(), phot.weight());
+                        continue;
+                    }
+                    _ => {}
                 }
 
                 let curr_ref = env.ref_index();
@@ -90,7 +113,11 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
 #[inline]
 #[must_use]
 fn emit_phot<'a>(input: &'a Input, rng: &mut ThreadRng) -> (Photon, &'a Properties) {
-    let phot = input.light.emit(input.sett.num_phot(), rng);
+    let mut phot = input.light.emit(input.sett.num_phot(), rng);
+    while phot.wavelength() <= 450.0e-9 || phot.wavelength() >= 800.0e-9 {
+        phot = input.light.emit(input.sett.num_phot(), rng);
+    }
+
     let prop = &input.props.map()["air"];
 
     (phot, prop)

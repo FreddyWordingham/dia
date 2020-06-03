@@ -29,7 +29,11 @@
             skin: [['objs/skin.obj'], {scale:1.0e-3}],
             tumour_cap: [['objs/tumour_cap.obj'], {scale:1.0e-3}],
             tumour: [['objs/tumour_2000.obj'], {scale:1.0e-3}],
-            spectrometer: [['objs/spectrometer.obj'], {scale:10.0e-3,trans:[0.0,0.0,-50.0e-6]}],
+            spectrometer_0: [['objs/square.obj'], {scale:0.5e-3,trans:[0.0,0.0,-500.0e-6]}],
+            spectrometer_1: [['objs/square.obj'], {scale:0.5e-3,trans:[0.0,0.0,-1000.0e-6]}],
+            spectrometer_2: [['objs/square.obj'], {scale:0.5e-3,trans:[0.0,0.0,-1500.0e-6]}],
+            spectrometer_3: [['objs/square.obj'], {scale:0.5e-3,trans:[0.0,0.0,-2000.0e-6]}],
+            spectrometer_4: [['objs/square.obj'], {scale:0.5e-3,trans:[0.0,0.0,-2500.0e-6]}],
         }
     },
     props: {
@@ -42,7 +46,7 @@
                 }
             },
             flesh: {
-                There: 'props/flesh.json5'
+                There: 'props/dermis.json5'
             },
             tumour: {
                 There: 'props/tumour.json5'

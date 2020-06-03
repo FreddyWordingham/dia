@@ -28,8 +28,16 @@ pub struct Data {
     pub absorptions: Array3<f64>,
     /// Local shifted photo-energy.
     pub shifts: Array3<f64>,
-    /// Recording spectrum.
+    /// Recording spectrum 0.
     pub spec_0: Histogram,
+    /// Recording spectrum 1.
+    pub spec_1: Histogram,
+    /// Recording spectrum 2.
+    pub spec_2: Histogram,
+    /// Recording spectrum 3.
+    pub spec_3: Histogram,
+    /// Recording spectrum 4.
+    pub spec_4: Histogram,
 }
 
 impl Data {
@@ -52,6 +60,10 @@ impl Data {
             absorptions: Array3::zeros(res),
             shifts: Array3::zeros(res),
             spec_0: Histogram::new(300.0e-9, 800e-9, 500),
+            spec_1: Histogram::new(300.0e-9, 800e-9, 500),
+            spec_2: Histogram::new(300.0e-9, 800e-9, 500),
+            spec_3: Histogram::new(300.0e-9, 800e-9, 500),
+            spec_4: Histogram::new(300.0e-9, 800e-9, 500),
         }
     }
 }
@@ -67,6 +79,11 @@ impl AddAssign<&Self> for Data {
         self.energy += &rhs.energy;
         self.absorptions += &rhs.absorptions;
         self.shifts += &rhs.shifts;
+        self.spec_0 += &rhs.spec_0;
+        self.spec_1 += &rhs.spec_1;
+        self.spec_2 += &rhs.spec_2;
+        self.spec_3 += &rhs.spec_3;
+        self.spec_4 += &rhs.spec_4;
     }
 }
 
@@ -168,6 +185,22 @@ impl Save for Data {
 
         let path = out_dir.join("spec_0.csv");
         println!("saving: {}", path.display());
-        self.spec_0.save(&path)
+        self.spec_0.save(&path)?;
+
+        let path = out_dir.join("spec_1.csv");
+        println!("saving: {}", path.display());
+        self.spec_1.save(&path)?;
+
+        let path = out_dir.join("spec_2.csv");
+        println!("saving: {}", path.display());
+        self.spec_2.save(&path)?;
+
+        let path = out_dir.join("spec_3.csv");
+        println!("saving: {}", path.display());
+        self.spec_3.save(&path)?;
+
+        let path = out_dir.join("spec_4.csv");
+        println!("saving: {}", path.display());
+        self.spec_4.save(&path)
     }
 }
