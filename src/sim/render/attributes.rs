@@ -8,7 +8,10 @@ use std::fmt::{Display, Formatter};
 #[load]
 pub enum Attributes {
     /// Mirror.
-    Mirror { reflectivity: f64 },
+    Mirror {
+        /// Probability of reflection from the surface.
+        reflectivity: f64,
+    },
 }
 
 impl Display for Attributes {
