@@ -15,6 +15,10 @@ struct Parameters {
     sett: render::Settings,
     /// Surfaces map.
     surfs: Set<form::Mesh>,
+    /// Colour map.
+    cols: Set<form::Gradient>,
+    // /// Attributes map.
+    // attrs: Set<Redirect<render::Attribute>>,
 }
 
 /// Main function.
@@ -52,15 +56,6 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     let path = in_dir.join(params_path);
     let params = Parameters::load(&path).expect("Could not load parameters file");
 
-    banner::sub_sub_section("Adaptive Tree Settings");
-    report!("tree", &params.tree);
-
-    banner::sub_sub_section("Regular Grid Settings");
-    report!("grid", &params.grid);
-
-    banner::sub_sub_section("Render Settings");
-    report!("settings", &params.sett);
-
     params
 }
 
@@ -89,6 +84,12 @@ fn build(
         .build(in_dir)
         .expect("Unable to build surfaces.");
     report!("surfaces", &surfs);
+
+    banner::sub_section("Colours");
+    let cols = params.cols.build(in_dir).expect("Unable to build colours.");
+    for (name, grad) in cols.map() {
+        report!(name, gradient::to_string(grad, 60));
+    }
 
     (tree_sett, grid_sett, render_sett, surfs)
 }
