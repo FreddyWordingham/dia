@@ -14,5 +14,15 @@
     sett: {
         bump_dist: 1e-3,
         block_size: 1e2,
+        sun_pos: [-15, 5, 15],
+        cam_pos: [-5, 12, 7],
+        tar_pos: [0, 0, 4.5]
+    },
+    surfs: {
+        map: {
+            leaves: [['objs/leaves.obj'], null],
+            tree: [['objs/tree.obj'], null],
+            ground: [['objs/ground.obj'], null],
+        }
     },
 }

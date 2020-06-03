@@ -13,6 +13,8 @@ struct Parameters {
     grid: grid::Settings,
     /// Render runtime settings.
     sett: render::Settings,
+    /// Surfaces map.
+    surfs: Set<form::Mesh>,
 }
 
 /// Main function.
@@ -20,7 +22,7 @@ pub fn main() {
     banner::title("Render");
     let (params_path, in_dir, _out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let (_tree_sett, _grid_sett, _render_sett) = build(&in_dir, params);
+    let (_tree_sett, _grid_sett, _render_sett, _surfs) = build(&in_dir, params);
 
     banner::section("Finished");
 }
@@ -63,7 +65,10 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 }
 
 /// Build instances.
-fn build(_in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings, render::Settings) {
+fn build(
+    in_dir: &Path,
+    params: Parameters,
+) -> (tree::Settings, grid::Settings, render::Settings, Set<Mesh>) {
     banner::section("Building");
 
     banner::sub_section("Adaptive Tree Settings");
@@ -78,5 +83,12 @@ fn build(_in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings,
     let render_sett = params.sett;
     report!("render settings", &render_sett);
 
-    (tree_sett, grid_sett, render_sett)
+    banner::sub_section("Surfaces");
+    let surfs = params
+        .surfs
+        .build(in_dir)
+        .expect("Unable to build surfaces.");
+    report!("surfaces", &surfs);
+
+    (tree_sett, grid_sett, render_sett, surfs)
 }
