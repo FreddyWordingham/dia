@@ -6,16 +6,16 @@
     },
     mcrt: {
         bump_dist: 1e-9,
-        num_phot: 1e6,
-        block_size: 1e3,
+        num_phot: 1e9,
+        block_size: 1e6,
     },
     grid: {
         bound: {
             mins: [-5e-3, -5e-3, -9e-3],
             maxs: [ 5e-3,  5e-3,  1e-3]
         },
-        // res: [64,64,64]
-        res: [4,4,4]
+        res: [64,64,64]
+        // res: [4,4,4]
     },
     light: {
         surf: [['objs/led.obj'], {scale:1.0e-3, trans:[0.0,0.0,-0.5e-3]}],
