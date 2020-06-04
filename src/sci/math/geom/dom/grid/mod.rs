@@ -89,13 +89,13 @@ impl Display for Grid {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
-        display_field_ln!(fmt, "boundary", &self.boundary)?;
         display_field_ln!(
             fmt,
             "resolution",
             format!("{}x{}x{}", self.res[X], self.res[Y], self.res[Z])
         )?;
         display_field_ln!(fmt, "total cells", self.total_cells())?;
-        display_field!(fmt, "voxel size", self.voxel_size, "m")
+        display_field_ln!(fmt, "voxel size", self.voxel_size, "m")?;
+        display_field!(fmt, "boundary", &self.boundary)
     }
 }

@@ -64,7 +64,7 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 }
 
 /// Build instances.
-fn build(_in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings, render::Settings) {
+fn build(in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings, render::Settings) {
     banner::section("Building");
     banner::sub_section("Adaptive Tree Settings");
     let tree_sett = params.tree;
@@ -77,6 +77,13 @@ fn build(_in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings,
     banner::sub_section("Render Settings");
     let render_sett = params.sett;
     report!("Render settings", &render_sett);
+
+    banner::sub_section("Surfaces");
+    let surfs = params
+        .surfs
+        .build(in_dir)
+        .expect("Unable to build surfaces.");
+    report!("Surfaces", &surfs);
 
     (tree_sett, grid_sett, render_sett)
 }

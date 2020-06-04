@@ -167,6 +167,7 @@ impl Trace for Mesh {
 impl Load for Mesh {
     #[inline]
     fn load(path: &Path) -> Result<Self, Error> {
+        println!("loading: {}", path.display());
         let vertex_lines: Vec<_> = BufReader::new(File::open(path)?)
             .lines()
             .map(Result::unwrap)
@@ -253,8 +254,8 @@ impl Display for Mesh {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        display_field_ln!(fmt, "boundary", &self.boundary)?;
         display_field_ln!(fmt, "number of triangles", self.tris.len())?;
-        display_field!(fmt, "area", self.area, "m^2")
+        display_field_ln!(fmt, "area", self.area, "m^2")?;
+        display_field!(fmt, "boundary", &self.boundary)
     }
 }
