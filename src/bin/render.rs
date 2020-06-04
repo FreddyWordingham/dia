@@ -1,4 +1,4 @@
-//! MCRT binary.
+//! Rendering binary.
 
 use attr::input;
 use dia::*;
