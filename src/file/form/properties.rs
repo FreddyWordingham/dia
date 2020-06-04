@@ -1,7 +1,8 @@
 //! Properties form implementation.
 
-use crate::{form, Build, Error};
+use crate::{display_field, display_field_ln, form, Build, Error};
 use attr::load;
+use std::fmt::{Display, Formatter};
 use std::path::Path;
 
 /// Physical attributes structure.
@@ -45,5 +46,21 @@ impl Build for Properties {
             shift_coeff,
             asym_fact,
         ))
+    }
+}
+
+impl Display for Properties {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        display_field_ln!(fmt, "refractive index", &self.ref_index)?;
+        display_field_ln!(fmt, "scattering coefficient", &self.scat_coeff)?;
+        if let Some(abs_coeff) = &self.abs_coeff {
+            display_field_ln!(fmt, "absorption coefficient", abs_coeff)?;
+        }
+        if let Some(shift_coeff) = &self.shift_coeff {
+            display_field_ln!(fmt, "shift coefficient", shift_coeff)?;
+        }
+        display_field!(fmt, "asymmetry factor", &self.asym_fact)
     }
 }

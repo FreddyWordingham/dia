@@ -46,8 +46,9 @@ impl Display for Mesh {
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
         display_field_ln!(fmt, "number of objects", self.0.len())?;
         if let Some(trans) = &self.1 {
-            display_field!(fmt, "transform", trans)?;
+            display_field!(fmt, "transform", trans)
+        } else {
+            display_field!(fmt, "transform", "none")
         }
-        Ok(())
     }
 }
