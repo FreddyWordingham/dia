@@ -1,43 +1,45 @@
 //! Input module.
 
 use crate::{
-    access, display_field, display_field_ln,
+    display_field, display_field_ln,
+    grid::Grid,
     render::{Attributes, Camera, Settings},
+    tree::Cell,
     Mesh, Set,
 };
 use palette::{Gradient, LinSrgba};
 use std::fmt::{Display, Formatter, Result};
 
 /// Render simulation input structure.
-pub struct Input {
+pub struct Input<'a> {
     /// Settings.
-    sett: Settings,
+    pub sett: &'a Settings,
     /// Surfaces.
-    surfs: Set<Mesh>,
+    pub surfs: &'a Set<Mesh>,
     /// Colours.
-    cols: Set<Gradient<LinSrgba>>,
+    pub cols: &'a Set<Gradient<LinSrgba>>,
     /// Attributes.
-    attrs: Set<Attributes>,
+    pub attrs: &'a Set<Attributes>,
     /// Camera.
-    cam: Camera,
+    pub cam: &'a Camera,
+    /// Adaptive tree.
+    pub tree: &'a Cell<'a>,
+    /// Surface tree.
+    pub grid: &'a Grid,
 }
 
-impl Input {
-    access!(sett, Settings);
-    access!(surfs, Set<Mesh>);
-    access!(cols, Set<Gradient<LinSrgba>>);
-    access!(attrs, Set<Attributes>);
-    access!(cam, Camera);
-
+impl<'a> Input<'a> {
     /// Construct a new instance.
     #[inline]
     #[must_use]
     pub const fn new(
-        sett: Settings,
-        surfs: Set<Mesh>,
-        cols: Set<Gradient<LinSrgba>>,
-        attrs: Set<Attributes>,
-        cam: Camera,
+        sett: &'a Settings,
+        surfs: &'a Set<Mesh>,
+        cols: &'a Set<Gradient<LinSrgba>>,
+        attrs: &'a Set<Attributes>,
+        cam: &'a Camera,
+        tree: &'a Cell<'a>,
+        grid: &'a Grid,
     ) -> Self {
         Self {
             sett,
@@ -45,11 +47,13 @@ impl Input {
             cols,
             attrs,
             cam,
+            tree,
+            grid,
         }
     }
 }
 
-impl Display for Input {
+impl<'a> Display for Input<'a> {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {

@@ -2,6 +2,7 @@
 
 use attr::input;
 use dia::*;
+use palette::{Gradient, LinSrgba};
 use std::path::{Path, PathBuf};
 
 /// Input parameters.
@@ -26,11 +27,13 @@ struct Parameters {
 /// Main function.
 pub fn main() {
     banner::title("Render");
-    let (params_path, in_dir, _out_dir) = init();
+    let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let (tree_sett, grid_sett, input) = build(&in_dir, params);
-    let (_tree, _grid) = grow(tree_sett, grid_sett, input.surfs());
-
+    let (tree_sett, grid_sett, render_sett, surfs, cols, attrs, cam) = build(&in_dir, params);
+    let (tree, grid) = grow(tree_sett, grid_sett, &surfs);
+    let input = render::Input::new(&render_sett, &surfs, &cols, &attrs, &cam, &tree, &grid);
+    let data = render(&input);
+    save(&out_dir, data);
     banner::section("Finished");
 }
 
@@ -62,7 +65,18 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 }
 
 /// Build instances.
-fn build(in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings, render::Input) {
+fn build(
+    in_dir: &Path,
+    params: Parameters,
+) -> (
+    tree::Settings,
+    grid::Settings,
+    render::Settings,
+    Set<Mesh>,
+    Set<Gradient<LinSrgba>>,
+    Set<render::Attributes>,
+    render::Camera,
+) {
     banner::section("Building");
     banner::sub_section("Adaptive Tree Settings");
     let tree_sett = params.tree;
@@ -103,11 +117,7 @@ fn build(in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings, 
     let cam = params.cam.build(in_dir).expect("Unable to build camera.");
     report!("Camera", &cam);
 
-    (
-        tree_sett,
-        grid_sett,
-        render::Input::new(render_sett, surfs, cols, attrs, cam),
-    )
+    (tree_sett, grid_sett, render_sett, surfs, cols, attrs, cam)
 }
 
 /// Grow domains.
@@ -127,4 +137,18 @@ fn grow<'a>(
     report!("Regular grid", &grid);
 
     (tree, grid)
+}
+
+/// Run the renderer.
+fn render(input: &render::Input) -> render::Output {
+    banner::section("Rendering");
+    banner::sub_section("Main Camera");
+    render::run::simulate(&input, render::painter::test).expect("Simulation failed.")
+}
+
+/// Save the output data.
+fn save(out_dir: &Path, data: render::Output) {
+    banner::section("Saving");
+    banner::sub_section("Main Dump");
+    data.save(&out_dir).expect("Could not save output data.");
 }
