@@ -1,6 +1,7 @@
 //! Formatting module.
 
-pub mod gradient;
 pub mod banner;
+pub mod display;
+pub mod gradient;
 pub mod report;
 pub mod term;

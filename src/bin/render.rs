@@ -57,10 +57,7 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::sub_section("Parameters");
     let path = in_dir.join(params_path);
 
-    let params = Parameters::load(&path).expect("Could not load parameters file");
-    // report!("Input parameters", format!("{:#?}", params));
-
-    params
+    Parameters::load(&path).expect("Could not load parameters file")
 }
 
 /// Build instances.
@@ -84,6 +81,15 @@ fn build(in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings, 
         .build(in_dir)
         .expect("Unable to build surfaces.");
     report!("Surfaces", &surfs);
+
+    banner::sub_section("Colours");
+    let cols = params
+        .cols
+        .build(in_dir)
+        .expect("Unable to build surfaces.");
+    for (group, grad) in cols.map() {
+        report!(&format!("grad [{}]", group), gradient::to_string(&grad, 32));
+    }
 
     (tree_sett, grid_sett, render_sett)
 }

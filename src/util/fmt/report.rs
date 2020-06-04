@@ -67,14 +67,14 @@ macro_rules! report {
         );
     };
 
-    ($desc: tt, $expression: expr) => {
+    ($desc: expr, $expression: expr) => {
         println!(
             "{}",
             dia::report::obj($desc, $expression).expect("Could not write object.")
         );
     };
 
-    ($desc: tt, $expression: expr, $units: tt) => {
+    ($desc: expr, $expression: expr, $units: tt) => {
         println!(
             "{}",
             dia::report::obj_units($desc, $expression, $units).expect("Could not write object.")
@@ -127,53 +127,17 @@ macro_rules! report_list {
         );
     };
 
-    ($desc: tt, $expression: expr) => {
+    ($desc: expr, $expression: expr) => {
         println!(
             "{}",
             dia::report::list($desc, $expression).expect("Could not write object.")
         );
     };
 
-    ($desc: tt, $expression: expr, $units: tt) => {
+    ($desc: expr, $expression: expr, $units: tt) => {
         println!(
             "{}",
             dia::report::list_units($desc, $expression, $units).expect("Could not write object.")
         );
-    };
-}
-
-#[macro_export]
-macro_rules! display_field {
-    ($fmt: expr, $name: expr, $field: expr) => {
-        write!(
-            $fmt,
-            "{}",
-            crate::report::obj($name, $field).expect("Could not format field.")
-        )
-    };
-    ($fmt: expr, $name: expr, $field: expr, $units: expr) => {
-        write!(
-            $fmt,
-            "{}",
-            crate::report::obj_units($name, $field, $units).expect("Could not format field.")
-        )
-    };
-}
-
-#[macro_export]
-macro_rules! display_field_ln {
-    ($fmt: expr, $name: expr, $field: expr) => {
-        writeln!(
-            $fmt,
-            "{}",
-            crate::report::obj($name, $field).expect("Could not format field.")
-        )
-    };
-    ($fmt: expr, $name: expr, $field: expr, $units: expr) => {
-        writeln!(
-            $fmt,
-            "{}",
-            crate::report::obj_units($name, $field, $units).expect("Could not format field.")
-        )
     };
 }
