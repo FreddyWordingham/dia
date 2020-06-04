@@ -28,7 +28,7 @@ pub fn main() {
     banner::title("Render");
     let (params_path, in_dir, _out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let (_tree_sett, _grid_sett) = build(&in_dir, params);
+    let (_tree_sett, _grid_sett, _render_sett) = build(&in_dir, params);
 
     banner::section("Finished");
 }
@@ -64,7 +64,7 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 }
 
 /// Build instances.
-fn build(_in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings) {
+fn build(_in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings, render::Settings) {
     banner::section("Building");
     banner::sub_section("Adaptive Tree Settings");
     let tree_sett = params.tree;
@@ -74,5 +74,9 @@ fn build(_in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings)
     let grid_sett = params.grid;
     report!("Grid settings", &grid_sett);
 
-    (tree_sett, grid_sett)
+    banner::sub_section("Render Settings");
+    let render_sett = params.sett;
+    report!("Render settings", &render_sett);
+
+    (tree_sett, grid_sett, render_sett)
 }

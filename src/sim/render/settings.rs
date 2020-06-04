@@ -1,6 +1,6 @@
 //! Settings implementation.
 
-use crate::{clone, report};
+use crate::{clone, display_field, display_field_ln, report};
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
@@ -22,16 +22,7 @@ impl Display for Settings {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
-        writeln!(
-            fmt,
-            "{}",
-            report::obj("block size", self.block_size).expect("Could not format field.")
-        )?;
-        write!(
-            fmt,
-            "{}",
-            report::obj_units("bump distance", self.bump_dist, "m")
-                .expect("Could not format field.")
-        )
+        display_field_ln!(fmt, "block size", self.block_size)?;
+        display_field!(fmt, "bump distance", self.bump_dist)
     }
 }
