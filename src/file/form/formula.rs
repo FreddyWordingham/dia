@@ -1,6 +1,6 @@
 //! Formula form implementation.
 
-use crate::{display_field, Build, Error};
+use crate::{Build, Error};
 use attr::load;
 use ndarray::Array1;
 use std::fmt::{Display, Formatter};
@@ -68,6 +68,6 @@ impl Display for Formula {
             Self::LinearSplineAuto { .. } => "Linear Spline [auto]",
             Self::QuadraticSpline { .. } => "Quadratic Spline",
         };
-        display_field!(fmt, "[kind]", kind)
+        write!(fmt, "{}", kind)
     }
 }

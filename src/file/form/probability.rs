@@ -1,6 +1,6 @@
 //! Probability form implementation.
 
-use crate::{display_field, Build, Error};
+use crate::{Build, Error};
 use attr::load;
 use ndarray::Array1;
 use std::{
@@ -51,6 +51,6 @@ impl Display for Probability {
             Self::Gaussian { .. } => "Gaussian",
             Self::ConstantSpline { .. } => "Constant Spline",
         };
-        display_field!(fmt, "[kind]", kind)
+        write!(fmt, "{}", kind)
     }
 }

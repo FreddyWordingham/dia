@@ -1,6 +1,5 @@
 //! Formula implementation.
 
-use crate::display_field;
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
@@ -91,6 +90,6 @@ impl Display for AspectRatio {
             Self::IPhoneXS { .. } => "IPhoneXS",
             Self::IPhone7 { .. } => "IPhone7",
         };
-        display_field!(fmt, "[kind]", kind)
+        write!(fmt, "{}", kind)
     }
 }

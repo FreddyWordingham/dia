@@ -1,6 +1,5 @@
 //! Attributes implementation.
 
-use crate::display_field;
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
@@ -21,6 +20,6 @@ impl Display for Attributes {
         let kind = match self {
             Self::Mirror { .. } => "Mirror",
         };
-        display_field!(fmt, "[kind]", kind)
+        write!(fmt, "{}", kind)
     }
 }
