@@ -38,6 +38,13 @@ impl Grid {
         }
     }
 
+    /// Calculate the voxel volume.
+    #[inline]
+    #[must_use]
+    pub fn voxel_vol(&self) -> f64 {
+        self.voxel_size.x * self.voxel_size.y * self.voxel_size.z
+    }
+
     /// Determine the total number of cells.
     #[inline]
     #[must_use]
@@ -95,7 +102,16 @@ impl Display for Grid {
             format!("{}x{}x{}", self.res[X], self.res[Y], self.res[Z])
         )?;
         display_field_ln!(fmt, "total cells", self.total_cells())?;
-        display_field_ln!(fmt, "voxel size", self.voxel_size, "m")?;
+        display_field_ln!(
+            fmt,
+            "voxel size",
+            &format!(
+                "[{:.2}, {:.2}, {:.2}]",
+                self.voxel_size.x, self.voxel_size.y, self.voxel_size.z
+            ),
+            "m"
+        )?;
+        display_field_ln!(fmt, "voxel volume", self.voxel_vol(), "m^3")?;
         display_field!(fmt, "boundary", &self.boundary)
     }
 }

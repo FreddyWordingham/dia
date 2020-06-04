@@ -28,7 +28,8 @@ pub fn main() {
     banner::title("Render");
     let (params_path, in_dir, _out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let (_tree_sett, _grid_sett, _render_input) = build(&in_dir, params);
+    let (tree_sett, grid_sett, input) = build(&in_dir, params);
+    let (_tree, _grid) = grow(tree_sett, grid_sett, input.surfs());
 
     banner::section("Finished");
 }
@@ -109,5 +110,21 @@ fn build(in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings, 
     )
 }
 
-/// Pre-simulation checks and building.
-fn pre_flight() {}
+/// Grow domains.
+fn grow<'a>(
+    tree_sett: tree::Settings,
+    grid_sett: grid::Settings,
+    surfs: &'a Set<Mesh>,
+) -> (tree::Cell<'a>, grid::Grid) {
+    banner::section("Growing");
+
+    banner::sub_section("Adaptive Tree");
+    let tree = tree::Cell::new_root(&tree_sett, &surfs);
+    report!("Adaptive tree", &tree);
+
+    banner::sub_section("Regular Grid");
+    let grid = grid::Grid::new(&grid_sett);
+    report!("Regular grid", &grid);
+
+    (tree, grid)
+}
