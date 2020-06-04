@@ -1,6 +1,6 @@
 //! Set implementation.
 
-use crate::{access, as_json, from_json, report, Build, Error, Group, Load, Save};
+use crate::{as_json, from_json, report, Build, Error, Group, Load, Save};
 use serde::{Deserialize, Serialize};
 use std::{
     collections::BTreeMap,
@@ -12,23 +12,17 @@ use std::{
 type Map<T> = BTreeMap<Group, T>;
 
 /// Set map.
-// #[load]
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Set<T> {
-    /// Internal mapping.
-    map: Map<T>,
-}
+pub struct Set<T>(Map<T>);
 
 impl<T> Set<T> {
-    access!(map, Map<T>);
-
     /// Construct a new instance.
     #[inline]
     #[must_use]
     pub fn new(map: Map<T>) -> Self {
         debug_assert!(!map.is_empty());
 
-        Self { map }
+        Self(map)
     }
 
     /// Construct an instance from a vector.
@@ -46,6 +40,20 @@ impl<T> Set<T> {
         }
 
         Self::new(map)
+    }
+
+    /// Access the stored map.
+    #[inline]
+    #[must_use]
+    pub fn map(&self) -> &Map<T> {
+        &self.0
+    }
+
+    /// Access the stored map mutably.
+    #[inline]
+    #[must_use]
+    pub fn mut_map(&mut self) -> &mut Map<T> {
+        &mut self.0
     }
 }
 
@@ -73,7 +81,7 @@ impl<T: Build> Build for Set<T> {
     fn build(self, in_dir: &Path) -> Result<Self::Inst, Error> {
         let mut map = Map::new();
 
-        for (group, item) in self.map {
+        for (group, item) in self.0 {
             if map.contains_key(&group) {
                 panic!("Duplicate entries for group: {}", group);
             }
@@ -89,7 +97,7 @@ impl<T: Display> Display for Set<T> {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        let mut items = self.map.iter();
+        let mut items = self.0.iter();
 
         if let Some((group, item)) = items.next() {
             write!(

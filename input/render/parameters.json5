@@ -5,7 +5,7 @@
         padding: 0.1
     },
     grid: {
-        bound: {
+        boundary: {
             mins: [-100, -100, -100],
             maxs: [ 100,  100,  100]
         },
@@ -13,29 +13,22 @@
     },
     sett: {
         bump_dist: 1e-3,
-        block_size: 1e2,
-        sun_pos: [-15, 5, 15]
+        block_size: 1e2
     },
     surfs: {
-        map: {
             leaves: [['objs/leaves.obj'], null],
             tree: [['objs/tree.obj'], null],
             ground: [['objs/ground.obj'], null],
-        }
     },
     cols: {
-        map: {
             reds: ['#f92c2cff', '#c52222ff', '#d5175bff', '#f44d0fff'],
             blues: ['#2c2cf9ff', '#2222c5ff', '#175bd5ff', '#4d0ff4ff'],
             greens: ['#2cf92cff', '#22c522ff', '#5bd517ff', '#0ff44dff']
-        }
     },
     attrs: {
-        map: {
             mirror: {
                 There: 'attrs/mirror.json5'
             }
-        }
     },
     cam: {
         pos: [-5, 12, 7],
