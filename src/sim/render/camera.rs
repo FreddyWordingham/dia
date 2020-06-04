@@ -9,6 +9,7 @@ pub use self::{focus::*, lens::*, sensor::*};
 use crate::{access, Ray, Rot3};
 
 /// Camera structure.
+#[derive(Debug)]
 pub struct Camera {
     /// Focus.
     focus: Focus,

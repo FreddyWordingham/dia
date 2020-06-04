@@ -1,6 +1,9 @@
 //! Axis-aligned-bounding-box implementation.
 
-use crate::{access, report, Collide, Pos3, Ray, Side, Trace, Vec3};
+use crate::{
+    access, display_field_units, display_field_units_ln, report, Collide, Pos3, Ray, Side, Trace,
+    Vec3,
+};
 use attr::load;
 use std::{
     cmp::Ordering,
@@ -206,15 +209,7 @@ impl Display for Aabb {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
-        writeln!(
-            fmt,
-            "{}",
-            report::obj_units("mins", self.mins, "m").expect("Could not format field.")
-        )?;
-        write!(
-            fmt,
-            "{}",
-            report::obj_units("maxs", self.maxs, "m").expect("Could not format field.")
-        )
+        display_field_units_ln!(fmt, "mins", self.mins, "m")?;
+        display_field_units!(fmt, "maxs", self.maxs, "m")
     }
 }

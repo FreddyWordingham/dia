@@ -248,25 +248,3 @@ impl Load for Mesh {
         Ok(Self::new(tris))
     }
 }
-
-impl Display for Mesh {
-    #[allow(clippy::result_expect_used)]
-    #[inline]
-    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        writeln!(
-            fmt,
-            "{}",
-            report::obj("triangles", self.tris.len()).expect("Could not format field.")
-        )?;
-        writeln!(
-            fmt,
-            "{}",
-            report::obj_units("area", self.area, "m^2").expect("Could not format field.")
-        )?;
-        write!(
-            fmt,
-            "{}",
-            report::obj("boundary", &self.boundary).expect("Could not format field.")
-        )
-    }
-}

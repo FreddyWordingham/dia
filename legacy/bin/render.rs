@@ -28,7 +28,7 @@ pub fn main() {
     banner::title("Render");
     let (params_path, in_dir, _out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let (_tree_sett, _grid_sett) = build(&in_dir, params);
+    let (_tree_sett, _grid_sett, _render_sett, _surfs) = build(&in_dir, params);
 
     banner::section("Finished");
 }
@@ -36,7 +36,7 @@ pub fn main() {
 /// Initialise the command line arguments and directories.
 fn init() -> (PathBuf, PathBuf, PathBuf) {
     banner::section("Initialisation");
-    banner::sub_section("Command line arguments");
+    banner::sub_section("Command line args");
     args!(bin_path: PathBuf;
         params_path: PathBuf
     );
@@ -57,22 +57,51 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
     banner::sub_section("Parameters");
     let path = in_dir.join(params_path);
 
-    let params = Parameters::load(&path).expect("Could not load parameters file");
-    // report!("Input parameters", format!("{:#?}", params));
-
-    params
+    Parameters::load(&path).expect("Could not load parameters file")
 }
 
 /// Build instances.
-fn build(_in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings) {
+fn build(
+    in_dir: &Path,
+    params: Parameters,
+) -> (tree::Settings, grid::Settings, render::Settings, Set<Mesh>) {
     banner::section("Building");
+
     banner::sub_section("Adaptive Tree Settings");
     let tree_sett = params.tree;
-    report!("Tree settings", &tree_sett);
+    report!("tree settings", &tree_sett);
 
-    banner::sub_section("Grid Settings");
+    banner::sub_section("Regular Grid Settings");
     let grid_sett = params.grid;
-    report!("Grid settings", &grid_sett);
+    report!("grid settings", &grid_sett);
 
-    (tree_sett, grid_sett)
+    banner::sub_section("Render Settings");
+    let render_sett = params.sett;
+    report!("render settings", &render_sett);
+
+    banner::sub_section("Surfaces");
+    let surfs = params
+        .surfs
+        .build(in_dir)
+        .expect("Unable to build surfaces.");
+    report!("surfaces", &surfs);
+
+    banner::sub_section("Colours");
+    let cols = params.cols.build(in_dir).expect("Unable to build colours.");
+    for (name, grad) in cols.map() {
+        report!(name, gradient::to_string(grad, 60));
+    }
+
+    banner::sub_section("Attributes");
+    let attrs = params
+        .attrs
+        .build(in_dir)
+        .expect("Unable to build attributes.");
+    report!("attributes", &attrs);
+
+    banner::sub_section("Camera");
+    let cam = params.cam.build(in_dir).expect("Unable to build camera.");
+    report!("camera", format!("{:#?}", cam));
+
+    (tree_sett, grid_sett, render_sett, surfs)
 }

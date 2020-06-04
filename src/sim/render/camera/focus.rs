@@ -3,6 +3,7 @@
 use crate::{access, clone, golden, Dir3, Orient, Pos3, Ray};
 
 /// Focus structure.
+#[derive(Debug)]
 pub struct Focus {
     /// Orientation.
     orient: Orient,

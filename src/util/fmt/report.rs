@@ -15,9 +15,9 @@ pub fn obj<T: Display>(name: &str, obj: T) -> Result<String, Error> {
     write!(s, "{}", obj)?;
     if s.contains('\n') {
         Ok(format!(
-            "{:>name_len$} :  _\n{}",
+            "{:>name_len$}   .\n  {}",
             name,
-            s,
+            s.replace('\n', "\n  "),
             name_len = NAME_LENGTH
         ))
     } else {
@@ -39,9 +39,9 @@ pub fn obj_units<T: Display>(name: &str, obj: T, units: &str) -> Result<String, 
     write!(s, "{}", obj)?;
     if s.contains('\n') {
         Ok(format!(
-            "{:>name_len$} :  _\n{} [{}]",
+            "{:>name_len$}  .\n  {} [{}]",
             name,
-            s,
+            s.replace('\n', "\n  "),
             units,
             name_len = NAME_LENGTH
         ))
@@ -139,5 +139,49 @@ macro_rules! report_list {
             "{}",
             dia::report::list_units($desc, $expression, $units).expect("Could not write object.")
         );
+    };
+}
+
+#[macro_export]
+macro_rules! display_field {
+    ($fmt: expr, $name: expr, $field: expr) => {
+        write!(
+            $fmt,
+            "{}",
+            report::obj($name, $field).expect("Could not format field.")
+        )
+    };
+}
+
+#[macro_export]
+macro_rules! display_field_ln {
+    ($fmt: expr, $name: expr, $field: expr) => {
+        writeln!(
+            $fmt,
+            "{}",
+            report::obj($name, $field).expect("Could not format field.")
+        )
+    };
+}
+
+#[macro_export]
+macro_rules! display_field_units {
+    ($fmt: expr, $name: expr, $field: expr, $units: expr) => {
+        write!(
+            $fmt,
+            "{}",
+            report::obj_units($name, $field, $units).expect("Could not format field.")
+        )
+    };
+}
+
+#[macro_export]
+macro_rules! display_field_units_ln {
+    ($fmt: expr, $name: expr, $field: expr, $units: expr) => {
+        writeln!(
+            $fmt,
+            "{}",
+            report::obj_units($name, $field, $units).expect("Could not format field.")
+        )
     };
 }

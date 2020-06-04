@@ -39,23 +39,3 @@ impl Build for Probability {
         })
     }
 }
-
-impl Display for Probability {
-    #[allow(clippy::result_expect_used)]
-    #[inline]
-    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        let name = match self {
-            Self::Point { .. } => "Point",
-            Self::Points { .. } => "Points",
-            Self::Uniform { .. } => "Uniform",
-            Self::Gaussian { .. } => "Gaussian",
-            Self::ConstantSpline { .. } => "Constant spline",
-        };
-
-        write!(
-            fmt,
-            "{}",
-            report::obj("type", name).expect("Could not format name.")
-        )
-    }
-}

@@ -3,6 +3,7 @@
 use crate::{access, Dir3, Pos3, Ray, Vec3};
 
 /// Orientation structure.
+#[derive(Debug)]
 pub struct Orient {
     /// Position.
     pos: Pos3,

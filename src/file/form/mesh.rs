@@ -39,15 +39,3 @@ impl Build for Mesh {
         Ok(Self::Inst::new(tris))
     }
 }
-
-impl Display for Mesh {
-    #[allow(clippy::result_expect_used)]
-    #[inline]
-    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        write!(
-            fmt,
-            "{}",
-            report::list("base objs", &self.0).expect("Could not format field.")
-        )
-    }
-}

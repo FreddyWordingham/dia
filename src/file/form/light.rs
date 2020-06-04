@@ -30,25 +30,3 @@ impl Build for Light {
         Ok(Self::Inst::new(surf, spec, power))
     }
 }
-
-impl Display for Light {
-    #[allow(clippy::result_expect_used)]
-    #[inline]
-    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        writeln!(
-            fmt,
-            "{}",
-            report::obj("surface", &self.surf).expect("Could not format field.")
-        )?;
-        writeln!(
-            fmt,
-            "{}",
-            report::obj("spectrum", &self.spec).expect("Could not format field.")
-        )?;
-        write!(
-            fmt,
-            "{}",
-            report::obj_units("power", self.power, "J/s").expect("Could not format field.")
-        )
-    }
-}

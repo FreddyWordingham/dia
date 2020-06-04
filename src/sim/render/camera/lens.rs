@@ -3,6 +3,7 @@
 use crate::clone;
 
 /// Lens structure.
+#[derive(Debug)]
 pub struct Lens {
     /// Field of view.
     fov: f64,

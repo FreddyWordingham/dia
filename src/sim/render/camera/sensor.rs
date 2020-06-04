@@ -3,6 +3,7 @@
 use crate::{clone, AspectRatio};
 
 /// Sensor structure.
+#[derive(Debug)]
 pub struct Sensor {
     /// Image resolution.
     res: (usize, usize),

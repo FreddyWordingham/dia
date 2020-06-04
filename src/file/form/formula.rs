@@ -54,25 +54,3 @@ impl Build for Formula {
         })
     }
 }
-
-impl Display for Formula {
-    #[allow(clippy::result_expect_used)]
-    #[inline]
-    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        let name = match self {
-            Self::Constant { .. } => "Constant",
-            Self::Line { .. } => "Line",
-            Self::Bifurcation { .. } => "Bifurcation",
-            Self::ConstantSpline { .. } => "Constant spline",
-            Self::LinearSpline { .. } => "Linear spline",
-            Self::LinearSplineAuto { .. } => "Linear spline (auto)",
-            Self::QuadraticSpline { .. } => "Quadratic spline",
-        };
-
-        write!(
-            fmt,
-            "{}",
-            report::obj("type", name).expect("Could not format name.")
-        )
-    }
-}
