@@ -25,7 +25,7 @@ pub struct Camera {
     /// Aspect ratio.
     aspect_ratio: AspectRatio,
     /// Horizontal resolution.
-    res: usize,
+    res: u64,
     /// Optional depth-of-field samples and maximum angular sample [deg].
     dof: Option<(i32, f64)>,
     /// Optional super-sampling power.

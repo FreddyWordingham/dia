@@ -41,7 +41,7 @@ impl Camera {
     #[must_use]
     pub fn gen_ray(
         &self,
-        pixel: (usize, usize),
+        pixel: (u64, u64),
         offset: f64,
         sub_sample: i32,
         depth_sample: i32,

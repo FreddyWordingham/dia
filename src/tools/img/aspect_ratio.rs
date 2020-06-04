@@ -45,11 +45,11 @@ impl AspectRatio {
     /// Determine a resolution for the target number of pixels.
     #[inline]
     #[must_use]
-    pub fn resolution(&self, total_target: usize, mult: (usize, usize)) -> (usize, usize) {
+    pub fn resolution(&self, total_target: u64, mult: (u64, u64)) -> (u64, u64) {
         debug_assert!(total_target > 0);
 
-        let fx = (total_target as f64 * self.ratio()).sqrt().ceil() as usize;
-        let fy = (total_target as f64 / self.ratio()).sqrt().ceil() as usize;
+        let fx = (total_target as f64 * self.ratio()).sqrt().ceil() as u64;
+        let fy = (total_target as f64 / self.ratio()).sqrt().ceil() as u64;
 
         // Round up to nearest multiple if required.
         let mx = if fx % mult.0 == 0 {
@@ -69,10 +69,10 @@ impl AspectRatio {
     /// Calculate the vertical resolution for a given horizontal resolution.
     #[inline]
     #[must_use]
-    pub fn vt_res(&self, hr_res: usize) -> usize {
+    pub fn vt_res(&self, hr_res: u64) -> u64 {
         debug_assert!(hr_res > 0);
 
-        (hr_res as f64 / self.ratio()).ceil() as usize
+        (hr_res as f64 / self.ratio()).ceil() as u64
     }
 }
 

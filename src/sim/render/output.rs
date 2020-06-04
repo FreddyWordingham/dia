@@ -17,10 +17,11 @@ impl Output {
 
 impl AddAssign<&Self> for Output {
     #[inline]
-    fn add_assign(&mut self, rhs: &Self) {}
+    fn add_assign(&mut self, _rhs: &Self) {}
 }
 
 impl Save for Output {
+    #[inline]
     fn save(&self, _out_dir: &Path) -> Result<(), Error> {
         Ok(())
     }
