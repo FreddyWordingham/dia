@@ -28,6 +28,9 @@
     attrs: {
             mirror: {
                 There: 'attrs/mirror.json5'
+            },
+            veil: {
+                There: 'attrs/mirror.json5'
             }
     },
     cam: {

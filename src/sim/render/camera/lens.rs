@@ -1,6 +1,8 @@
 //! Lens implementation.
 
 use crate::clone;
+use crate::display_field;
+use std::fmt::{Display, Formatter, Result};
 
 /// Lens structure.
 #[derive(Debug)]
@@ -19,5 +21,13 @@ impl Lens {
         debug_assert!(fov > 0.0);
 
         Self { fov }
+    }
+}
+
+impl Display for Lens {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> Result {
+        display_field!(fmt, "field of view", self.fov.to_degrees(), "deg")
     }
 }

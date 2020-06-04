@@ -1,6 +1,8 @@
 //! Orientation implementation.
 
+use crate::display_field_ln;
 use crate::{access, Dir3, Pos3, Ray, Vec3};
+use std::fmt::{Display, Formatter, Result};
 
 /// Orientation structure.
 #[derive(Debug)]
@@ -105,5 +107,37 @@ impl Orient {
     #[must_use]
     pub fn left_ray(&self) -> Ray {
         Ray::new(self.pos, -self.right)
+    }
+}
+
+impl Display for Orient {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> Result {
+        display_field_ln!(fmt, "position", self.pos, "m")?;
+        display_field_ln!(
+            fmt,
+            "forward",
+            &format!(
+                "[{:.2}, {:.2}, {:.2}]",
+                self.forward.x, self.forward.y, self.forward.z
+            ),
+            "m"
+        )?;
+        display_field_ln!(
+            fmt,
+            "right",
+            &format!(
+                "[{:.2}, {:.2}, {:.2}]",
+                self.right.x, self.right.y, self.right.z
+            ),
+            "m"
+        )?;
+        display_field_ln!(
+            fmt,
+            "up",
+            &format!("[{:.2}, {:.2}, {:.2}]", self.up.x, self.up.y, self.up.z),
+            "m"
+        )
     }
 }

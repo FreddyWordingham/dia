@@ -6,7 +6,8 @@ pub mod sensor;
 
 pub use self::{focus::*, lens::*, sensor::*};
 
-use crate::{access, Ray, Rot3};
+use crate::{access, display_field, display_field_ln, Ray, Rot3};
+use std::fmt::{Display, Formatter, Result};
 
 /// Camera structure.
 #[derive(Debug)]
@@ -67,5 +68,15 @@ impl Camera {
             * ray.dir();
 
         ray
+    }
+}
+
+impl Display for Camera {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> Result {
+        display_field_ln!(fmt, "focus", &self.focus)?;
+        display_field_ln!(fmt, "lens", &self.lens)?;
+        display_field!(fmt, "sensor", &self.sensor)
     }
 }

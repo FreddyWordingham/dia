@@ -86,10 +86,24 @@ fn build(in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings, 
     let cols = params
         .cols
         .build(in_dir)
-        .expect("Unable to build surfaces.");
+        .expect("Unable to build gradients.");
     for (group, grad) in cols.map() {
-        report!(&format!("grad [{}]", group), gradient::to_string(&grad, 32));
+        report!(&format!("[{}]", group), gradient::to_string(&grad, 32));
     }
+
+    banner::sub_section("Attributes");
+    let attrs = params
+        .attrs
+        .build(in_dir)
+        .expect("Unable to build attributes.");
+    report!("Attributes", &attrs);
+
+    banner::sub_section("Camera");
+    let cam = params.cam.build(in_dir).expect("Unable to build camera.");
+    report!("Camera", &cam);
 
     (tree_sett, grid_sett, render_sett)
 }
+
+/// Pre-simulation checks and building.
+fn pre_flight() {}

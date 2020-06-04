@@ -1,6 +1,8 @@
 //! Sensor implementation.
 
 use crate::{clone, AspectRatio};
+use crate::{display_field, display_field_ln};
+use std::fmt::{Display, Formatter, Result};
 
 /// Sensor structure.
 #[derive(Debug)]
@@ -42,6 +44,19 @@ impl Sensor {
             power.pow(2)
         } else {
             1
+        }
+    }
+}
+
+impl Display for Sensor {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> Result {
+        display_field_ln!(fmt, "res", &format!("{} x {}", self.res.0, self.res.1))?;
+        if let Some(super_sample_power) = self.super_sample_power {
+            display_field!(fmt, "super-sampling power", super_sample_power)
+        } else {
+            display_field!(fmt, "super-sampling power", "[OFF]")
         }
     }
 }

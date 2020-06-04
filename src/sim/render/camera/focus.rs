@@ -1,6 +1,8 @@
 //! Focus implementation.
 
 use crate::{access, clone, golden, Dir3, Orient, Pos3, Ray};
+use crate::{display_field, display_field_ln};
+use std::fmt::{Display, Formatter, Result};
 
 /// Focus structure.
 #[derive(Debug)]
@@ -66,5 +68,20 @@ impl Focus {
 
         let pos = self.observation_pos(offset, n);
         Ray::new(pos, Dir3::new_normalize(self.tar - pos))
+    }
+}
+
+impl Display for Focus {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> Result {
+        display_field_ln!(fmt, "orientation", &self.orient)?;
+        display_field_ln!(fmt, "target", self.tar, "m")?;
+        if let Some((dof_samples, dof_ang)) = self.dof {
+            display_field_ln!(fmt, "depth-of-field samples", dof_samples)?;
+            display_field!(fmt, "depth-of-field angle", dof_ang.to_degrees(), "deg")
+        } else {
+            display_field!(fmt, "depth-of-field", "[OFF]")
+        }
     }
 }
