@@ -38,9 +38,19 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
 fn single_thread(
     _thread_id: usize,
     pb: &Arc<Mutex<ParBar>>,
-    _input: &Input,
+    input: &Input,
     _paint: Painter,
 ) -> Result<Output, Error> {
     let data = Output::new();
+
+    while let Some((start, end)) = {
+        let mut pb = pb.lock()?;
+        let b = pb.block(input.sett.block_size());
+        std::mem::drop(pb);
+        b
+    } {
+        for _ in start..end {}
+    }
+
     Ok(data)
 }
