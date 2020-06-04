@@ -24,6 +24,7 @@ impl Grid {
 
     /// Construct a new instance.
     #[inline]
+    #[must_use]
     pub fn new(sett: &Settings) -> Self {
         let mut voxel_size = sett.boundary().widths();
         for (w, n) in voxel_size.iter_mut().zip(sett.res()) {
