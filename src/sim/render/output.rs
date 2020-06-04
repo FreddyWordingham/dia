@@ -1,7 +1,7 @@
 //! Input module.
 
 use crate::{Error, Save};
-use std::path::Path;
+use std::{ops::AddAssign, path::Path};
 
 /// Render simulation output structure.
 pub struct Output {}
@@ -13,6 +13,11 @@ impl Output {
     pub const fn new() -> Self {
         Self {}
     }
+}
+
+impl AddAssign<&Self> for Output {
+    #[inline]
+    fn add_assign(&mut self, rhs: &Self) {}
 }
 
 impl Save for Output {
