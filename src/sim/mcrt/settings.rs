@@ -1,6 +1,6 @@
 //! Settings implementation.
 
-use crate::{clone, display_field_ln, display_field_units, report};
+use crate::{clone, display_field, display_field_ln, report};
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
@@ -27,6 +27,6 @@ impl Display for Settings {
     fn fmt(&self, fmt: &mut Formatter) -> Result {
         display_field_ln!(fmt, "block size", self.block_size)?;
         display_field_ln!(fmt, "number of photons", self.num_phot)?;
-        display_field_units!(fmt, "bump distance", self.bump_dist, "m")
+        display_field!(fmt, "bump distance", self.bump_dist, "m")
     }
 }

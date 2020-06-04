@@ -1,6 +1,6 @@
 //! Probability form implementation.
 
-use crate::{report, Build, Error};
+use crate::{display_field, report, Build, Error};
 use attr::load;
 use ndarray::Array1;
 use std::{
@@ -37,5 +37,20 @@ impl Build for Probability {
                 Self::Inst::new_constant_spline(Array1::from(xs), &Array1::from(ps))
             }
         })
+    }
+}
+
+impl Display for Probability {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        let kind = match self {
+            Self::Point { .. } => "Constant",
+            Self::Points { .. } => "Line",
+            Self::Uniform { .. } => "Bifurcation",
+            Self::Gaussian { .. } => "Gaussian",
+            Self::ConstantSpline { .. } => "Constant Spline",
+        };
+        display_field!(fmt, "[kind]", kind)
     }
 }

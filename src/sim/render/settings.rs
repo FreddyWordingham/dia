@@ -23,6 +23,6 @@ impl Display for Settings {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
         display_field_ln!(fmt, "block size", self.block_size)?;
-        display_field!(fmt, "bump distance", self.bump_dist)
+        display_field!(fmt, "bump distance", self.bump_dist, "m")
     }
 }

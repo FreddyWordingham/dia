@@ -1,6 +1,6 @@
 //! Formula form implementation.
 
-use crate::{report, Build, Error};
+use crate::{display_field, report, Build, Error};
 use attr::load;
 use ndarray::Array1;
 use std::fmt::{Display, Formatter};
@@ -52,5 +52,22 @@ impl Build for Formula {
                 Array1::from(quads),
             ),
         })
+    }
+}
+
+impl Display for Formula {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        let kind = match self {
+            Self::Constant { .. } => "Constant",
+            Self::Line { .. } => "Line",
+            Self::Bifurcation { .. } => "Bifurcation",
+            Self::ConstantSpline { .. } => "Constant Spline",
+            Self::LinearSpline { .. } => "Linear Spline",
+            Self::LinearSplineAuto { .. } => "Linear Spline [auto]",
+            Self::QuadraticSpline { .. } => "Quadratic Spline",
+        };
+        display_field!(fmt, "[kind]", kind)
     }
 }

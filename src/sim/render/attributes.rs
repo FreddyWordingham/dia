@@ -1,8 +1,8 @@
 //! Attributes implementation.
 
-use crate::report;
+use crate::{display_field, report};
 use attr::load;
-use std::fmt::{Display, Formatter};
+use std::fmt::{Display, Formatter, Result};
 
 /// Rendering attributes.
 #[load]
@@ -17,15 +17,10 @@ pub enum Attributes {
 impl Display for Attributes {
     #[allow(clippy::result_expect_used)]
     #[inline]
-    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        let name = match self {
+    fn fmt(&self, fmt: &mut Formatter) -> Result {
+        let kind = match self {
             Self::Mirror { .. } => "Mirror",
         };
-
-        write!(
-            fmt,
-            "{}",
-            report::obj("type", name).expect("Could not format name.")
-        )
+        display_field!(fmt, "[kind]", kind)
     }
 }

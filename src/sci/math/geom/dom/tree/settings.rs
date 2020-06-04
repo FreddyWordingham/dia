@@ -1,6 +1,6 @@
 //! Adaptive tree settings implementation.
 
-use crate::{clone, report};
+use crate::{clone, display_field, display_field_ln, report};
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
@@ -25,21 +25,8 @@ impl Display for Settings {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
-        writeln!(
-            fmt,
-            "{}",
-            report::obj("target triangles", self.tar_tris).expect("Could not format field.")
-        )?;
-        writeln!(
-            fmt,
-            "{}",
-            report::obj("maximum depth", self.max_depth).expect("Could not format field.")
-        )?;
-        write!(
-            fmt,
-            "{}",
-            report::obj_units("padding", self.padding * 100.0, "%")
-                .expect("Could not format field.")
-        )
+        display_field_ln!(fmt, "target triangles", self.tar_tris)?;
+        display_field_ln!(fmt, "max depth", self.max_depth)?;
+        display_field!(fmt, "cell padding", self.padding * 100.0, "%")
     }
 }

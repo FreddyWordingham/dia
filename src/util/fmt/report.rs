@@ -151,6 +151,13 @@ macro_rules! display_field {
             report::obj($name, $field).expect("Could not format field.")
         )
     };
+    ($fmt: expr, $name: expr, $field: expr, $units: expr) => {
+        write!(
+            $fmt,
+            "{}",
+            report::obj_units($name, $field, $units).expect("Could not format field.")
+        )
+    };
 }
 
 #[macro_export]
@@ -162,21 +169,6 @@ macro_rules! display_field_ln {
             report::obj($name, $field).expect("Could not format field.")
         )
     };
-}
-
-#[macro_export]
-macro_rules! display_field_units {
-    ($fmt: expr, $name: expr, $field: expr, $units: expr) => {
-        write!(
-            $fmt,
-            "{}",
-            report::obj_units($name, $field, $units).expect("Could not format field.")
-        )
-    };
-}
-
-#[macro_export]
-macro_rules! display_field_units_ln {
     ($fmt: expr, $name: expr, $field: expr, $units: expr) => {
         writeln!(
             $fmt,

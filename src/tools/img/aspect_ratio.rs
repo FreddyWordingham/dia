@@ -1,5 +1,6 @@
 //! Formula implementation.
 
+use crate::{display_field, report};
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
@@ -73,5 +74,23 @@ impl AspectRatio {
         debug_assert!(hr_res > 0);
 
         (hr_res as f64 / self.ratio()).ceil() as usize
+    }
+}
+
+impl Display for AspectRatio {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> Result {
+        let kind = match self {
+            Self::Square { .. } => "Square",
+            Self::Classic { .. } => "Classic",
+            Self::Golden { .. } => "Golden",
+            Self::Silver { .. } => "Silver",
+            Self::Standard { .. } => "Standard",
+            Self::Widescreen { .. } => "Widescreen",
+            Self::IPhoneXS { .. } => "IPhoneXS",
+            Self::IPhone7 { .. } => "IPhone7",
+        };
+        display_field!(fmt, "[kind]", kind)
     }
 }

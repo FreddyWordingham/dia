@@ -1,8 +1,8 @@
 //! Smooth triangle-mesh implementation.
 
 use crate::{
-    access, clone, report, Aabb, Collide, Dir3, Emit, Error, Load, Pos3, Ray, Side, SmoothTriangle,
-    Trace, Trans3, Transform, Vec3, ALPHA, X,
+    access, clone, display_field, display_field_ln, report, Aabb, Collide, Dir3, Emit, Error, Load,
+    Pos3, Ray, Side, SmoothTriangle, Trace, Trans3, Transform, Vec3, ALPHA, X,
 };
 use rand::{rngs::ThreadRng, Rng};
 use std::{
@@ -246,5 +246,15 @@ impl Load for Mesh {
         }
 
         Ok(Self::new(tris))
+    }
+}
+
+impl Display for Mesh {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        display_field_ln!(fmt, "boundary", &self.boundary)?;
+        display_field_ln!(fmt, "number of triangles", self.tris.len())?;
+        display_field!(fmt, "area", self.area, "m^2")
     }
 }

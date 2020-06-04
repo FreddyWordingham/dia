@@ -1,22 +1,20 @@
 //! Regular grid settings implementation.
 
-use crate::{
-    access, display_field, display_field_ln, display_field_units_ln, report, Aabb, X, Y, Z,
-};
+use crate::{access, display_field, display_field_ln, report, Aabb, X, Y, Z};
 use attr::load;
-use std::fmt::{Display, Formatter, Result, Write};
+use std::fmt::{Display, Formatter, Result};
 
 /// Loadable triangle mesh conglomerate structure.
 #[load]
 pub struct Settings {
     /// Boundary.
-    bound: Aabb,
+    boundary: Aabb,
     /// Resolution.
     res: [usize; 3],
 }
 
 impl Settings {
-    access!(bound, Aabb);
+    access!(boundary, Aabb);
     access!(res, [usize; 3]);
 
     /// Determine the total number of cells.
@@ -31,7 +29,7 @@ impl Display for Settings {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
-        display_field_ln!(fmt, "bound", &self.bound)?;
+        display_field_ln!(fmt, "boundary", &self.boundary)?;
         display_field_ln!(
             fmt,
             "resolution",

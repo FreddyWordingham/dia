@@ -1,6 +1,6 @@
 //! Light form implementation.
 
-use crate::{form, report, Build, Error, Redirect};
+use crate::{display_field, display_field_ln, form, report, Build, Error, Redirect};
 use attr::load;
 use std::{
     fmt::{Display, Formatter},
@@ -28,5 +28,15 @@ impl Build for Light {
         let power = self.power;
 
         Ok(Self::Inst::new(surf, spec, power))
+    }
+}
+
+impl Display for Light {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        display_field_ln!(fmt, "surf", &self.surf)?;
+        display_field_ln!(fmt, "spec", &self.spec)?;
+        display_field!(fmt, "power", self.power, "J/s")
     }
 }

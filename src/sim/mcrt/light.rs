@@ -1,6 +1,8 @@
 //! Light structure.
 
-use crate::{access, clone, mcrt::Photon, report, Emit, Mesh, Probability};
+use crate::{
+    access, clone, display_field, display_field_ln, mcrt::Photon, report, Emit, Mesh, Probability,
+};
 use rand::rngs::ThreadRng;
 use std::fmt::{Display, Formatter, Result};
 
@@ -46,20 +48,8 @@ impl Display for Light {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
-        writeln!(
-            fmt,
-            "{}",
-            report::obj("triangles", self.surf.tris().len()).expect("Could not format field.")
-        )?;
-        writeln!(
-            fmt,
-            "{}",
-            report::obj("Formula", &self.spec).expect("Could not format field.")
-        )?;
-        write!(
-            fmt,
-            "{}",
-            report::obj_units("power", self.power, "J/s").expect("Could not format field.")
-        )
+        display_field_ln!(fmt, "number of triangles", self.surf.tris().len())?;
+        display_field_ln!(fmt, "formula", &self.spec)?;
+        display_field!(fmt, "power", self.power, "J/s")
     }
 }

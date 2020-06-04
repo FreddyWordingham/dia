@@ -1,6 +1,6 @@
 //! Gradient form implementation.
 
-use crate::{report, Build, Error};
+use crate::{display_field, report, Build, Error};
 use attr::load;
 use palette::LinSrgba;
 use std::{
@@ -34,5 +34,13 @@ impl Build for Gradient {
         }
 
         Ok(Self::Inst::new(cols))
+    }
+}
+
+impl Display for Gradient {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        display_field!(fmt, "number of colours", self.0.len())
     }
 }

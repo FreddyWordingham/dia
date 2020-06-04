@@ -1,6 +1,8 @@
 //! Output data structure.
 
-use crate::{report, Aabb, Average, Error, Histogram, Save, X, Y, Z};
+use crate::{
+    display_field, display_field_ln, report, Aabb, Average, Error, Histogram, Save, X, Y, Z,
+};
 use ndarray::Array3;
 use std::{
     fmt::{Display, Formatter},
@@ -91,56 +93,33 @@ impl Display for Data {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
-        writeln!(
+        display_field_ln!(fmt, "total emitted photons", self.emitted_photons.sum())?;
+        display_field_ln!(
             fmt,
-            "{}",
-            report::obj("emitted photons sum", self.emitted_photons.sum())
-                .expect("Could not format field.")
+            "total distance travelled",
+            self.dist_travelled.sum(),
+            "m"
         )?;
-        writeln!(
+        display_field_ln!(fmt, "total scatters", self.scatters.sum())?;
+        display_field_ln!(
             fmt,
-            "{}",
-            report::obj_units("total distance travelled", self.dist_travelled.sum(), "m")
-                .expect("Could not format field.")
+            "average rotation",
+            self.rotations
+                .map(Average::ave)
+                .mean()
+                .unwrap()
+                .to_degrees(),
+            "deg"
         )?;
-        writeln!(
-            fmt,
-            "{}",
-            report::obj("total scatterings", self.scatters.sum()).expect("Could not format field.")
-        )?;
-        writeln!(
-            fmt,
-            "{}",
-            report::obj_units(
-                "Average rotation",
-                self.rotations.map(Average::ave).sum().to_degrees(),
-                "deg"
-            )
-            .expect("Could not format field.")
-        )?;
-        writeln!(
-            fmt,
-            "{}",
-            report::obj("total surface hits", self.hits.sum()).expect("Could not format field.")
-        )?;
-        write!(
-            fmt,
-            "{}",
-            report::obj_units("total absorptions", self.absorptions.sum(), "J")
-                .expect("Could not format field.")
-        )?;
-        write!(
-            fmt,
-            "{}",
-            report::obj_units("total energy", self.energy.sum(), "J")
-                .expect("Could not format field.")
-        )?;
-        write!(
-            fmt,
-            "{}",
-            report::obj_units("total shifts", self.shifts.sum(), "J")
-                .expect("Could not format field.")
-        )
+        display_field_ln!(fmt, "total hits", self.hits.sum())?;
+        display_field_ln!(fmt, "total energy", self.energy.sum(), "J")?;
+        display_field_ln!(fmt, "total absorptions", self.absorptions.sum(), "J")?;
+        display_field_ln!(fmt, "total shifts", self.shifts.sum())?;
+        display_field_ln!(fmt, "histogram 0 total", self.spec_0.counts().sum())?;
+        display_field_ln!(fmt, "histogram 1 total", self.spec_1.counts().sum())?;
+        display_field_ln!(fmt, "histogram 2 total", self.spec_2.counts().sum())?;
+        display_field_ln!(fmt, "histogram 3 total", self.spec_3.counts().sum())?;
+        display_field!(fmt, "histogram 4 total", self.spec_4.counts().sum())
     }
 }
 
