@@ -1,8 +1,6 @@
 //! Axis-aligned-bounding-box implementation.
 
-use crate::{
-    access, display_field, display_field_ln, report, Collide, Pos3, Ray, Side, Trace, Vec3,
-};
+use crate::{access, display_field, display_field_ln, Collide, Pos3, Ray, Side, Trace, Vec3};
 use attr::load;
 use std::{
     cmp::Ordering,

@@ -1,6 +1,6 @@
 //! Probability distribution implementation.
 
-use crate::{display_field, distribution, report, Formula};
+use crate::{display_field, distribution, Formula};
 use ndarray::Array1;
 use rand::{rngs::ThreadRng, Rng};
 use std::fmt::{Display, Formatter, Result};

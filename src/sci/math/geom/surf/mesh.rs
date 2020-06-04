@@ -1,8 +1,8 @@
 //! Smooth triangle-mesh implementation.
 
 use crate::{
-    access, clone, display_field, display_field_ln, report, Aabb, Collide, Dir3, Emit, Error, Load,
-    Pos3, Ray, Side, SmoothTriangle, Trace, Trans3, Transform, Vec3, ALPHA, X,
+    access, clone, display_field, display_field_ln, Aabb, Collide, Dir3, Emit, Error, Load, Pos3,
+    Ray, Side, SmoothTriangle, Trace, Trans3, Transform, Vec3, ALPHA, X,
 };
 use rand::{rngs::ThreadRng, Rng};
 use std::{

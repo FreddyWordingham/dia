@@ -1,6 +1,6 @@
 //! Properties structure.
 
-use crate::{access, display_field, display_field_ln, mcrt::Environment, report, Formula};
+use crate::{access, display_field, display_field_ln, mcrt::Environment, Formula};
 use std::fmt::{Display, Formatter, Result};
 
 /// Wavelength [m] to use when printing example values.

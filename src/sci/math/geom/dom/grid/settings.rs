@@ -1,6 +1,6 @@
 //! Regular grid settings implementation.
 
-use crate::{access, display_field, display_field_ln, report, Aabb, X, Y, Z};
+use crate::{access, display_field, display_field_ln, Aabb, X, Y, Z};
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 

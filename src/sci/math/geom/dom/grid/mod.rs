@@ -4,7 +4,7 @@ pub mod settings;
 
 pub use self::settings::*;
 
-use crate::{access, display_field, display_field_ln, report, Aabb, Pos3, Vec3, X, Y, Z};
+use crate::{access, display_field, display_field_ln, Aabb, Pos3, Vec3, X, Y, Z};
 use std::fmt::{Display, Formatter, Result};
 
 /// Regular grid structure.

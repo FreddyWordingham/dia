@@ -1,6 +1,6 @@
 //! Gradient form implementation.
 
-use crate::{display_field, report, Build, Error};
+use crate::{display_field, Build, Error};
 use attr::load;
 use palette::LinSrgba;
 use std::{

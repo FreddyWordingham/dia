@@ -1,8 +1,6 @@
 //! Output data structure.
 
-use crate::{
-    display_field, display_field_ln, report, Aabb, Average, Error, Histogram, Save, X, Y, Z,
-};
+use crate::{display_field, display_field_ln, Aabb, Average, Error, Histogram, Save, X, Y, Z};
 use ndarray::Array3;
 use std::{
     fmt::{Display, Formatter},

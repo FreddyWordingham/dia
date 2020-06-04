@@ -1,6 +1,6 @@
 //! Attributes implementation.
 
-use crate::{display_field, report};
+use crate::display_field;
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 

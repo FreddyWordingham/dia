@@ -1,14 +1,17 @@
 //! Camera form implementation.
 
 use crate::{
-    AspectRatio, Build, Error, Pos3,
+    display_field, display_field_ln, AspectRatio, Build, Error, Pos3,
     {
         render,
         render::{Focus, Lens, Sensor},
     },
 };
 use attr::load;
-use std::path::Path;
+use std::{
+    fmt::{Display, Formatter},
+    path::Path,
+};
 
 /// Loadable camera structure.
 #[load]
@@ -45,5 +48,28 @@ impl Build for Camera {
         let sensor = Sensor::new(&self.aspect_ratio, self.res, self.ss);
 
         Ok(Self::Inst::new(focus, lens, sensor))
+    }
+}
+
+impl Display for Camera {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
+        display_field_ln!(fmt, "position", &self.pos)?;
+        display_field_ln!(fmt, "target", &self.tar, "m")?;
+        display_field_ln!(fmt, "field of view", self.fov.to_degrees(), "deg")?;
+        display_field_ln!(fmt, "aspect ratio", &self.aspect_ratio)?;
+        display_field_ln!(fmt, "horizontal resolution", self.res)?;
+        if let Some((dof_samples, dof_angle)) = self.dof {
+            display_field_ln!(fmt, "depth of field samples", dof_samples)?;
+            display_field_ln!(fmt, "depth of field angle", dof_angle.to_degrees(), "deg")?;
+        } else {
+            display_field_ln!(fmt, "depth of field", "[OFF]")?;
+        }
+        if let Some(ss_power) = self.ss {
+            display_field!(fmt, "super sampling power", ss_power)
+        } else {
+            display_field!(fmt, "super sampling", "[OFF]")
+        }
     }
 }

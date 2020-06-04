@@ -1,6 +1,6 @@
 //! Adaptive tree settings implementation.
 
-use crate::{clone, display_field, display_field_ln, report};
+use crate::{clone, display_field, display_field_ln};
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 

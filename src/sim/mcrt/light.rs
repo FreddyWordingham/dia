@@ -1,7 +1,7 @@
 //! Light structure.
 
 use crate::{
-    access, clone, display_field, display_field_ln, mcrt::Photon, report, Emit, Mesh, Probability,
+    access, clone, display_field, display_field_ln, mcrt::Photon, Emit, Mesh, Probability,
 };
 use rand::rngs::ThreadRng;
 use std::fmt::{Display, Formatter, Result};

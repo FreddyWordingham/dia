@@ -1,6 +1,6 @@
 //! Light form implementation.
 
-use crate::{display_field, display_field_ln, form, report, Build, Error, Redirect};
+use crate::{display_field, display_field_ln, form, Build, Error, Redirect};
 use attr::load;
 use std::{
     fmt::{Display, Formatter},
