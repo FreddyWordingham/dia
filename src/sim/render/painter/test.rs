@@ -13,9 +13,10 @@ pub fn test(
     _thread_id: usize,
     _rng: &mut ThreadRng,
     _input: &Input,
-    _data: &mut Output,
+    data: &mut Output,
     _weight: f64,
-    _pixel: [usize; 2],
+    pixel: [usize; 2],
     _ray: Ray,
 ) {
+    data.image[pixel] += palette::LinSrgba::default();
 }

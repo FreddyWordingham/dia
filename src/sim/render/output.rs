@@ -6,7 +6,7 @@ use std::{ops::AddAssign, path::Path};
 /// Render simulation output structure.
 pub struct Output {
     /// Base image.
-    image: Image,
+    pub image: Image,
 }
 
 impl Output {
@@ -36,6 +36,8 @@ impl AddAssign<&Self> for Output {
 impl Save for Output {
     #[inline]
     fn save(&self, out_dir: &Path) -> Result<(), Error> {
-        self.image.save(out_dir)
+        let path = out_dir.join("image.png");
+        println!("Saving: {}", path.display());
+        self.image.save(&path)
     }
 }
