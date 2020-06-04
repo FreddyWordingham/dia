@@ -1,10 +1,14 @@
 //! Camera form implementation.
 
 use crate::{
-    render::{Camera as CameraInst, Focus, Lens, Sensor},
-    AspectRatio, Pos3,
+    AspectRatio, Build, Error, Pos3,
+    {
+        render,
+        render::{Focus, Lens, Sensor},
+    },
 };
 use attr::load;
+use std::path::Path;
 
 /// Loadable camera structure.
 #[load]
@@ -25,11 +29,11 @@ pub struct Camera {
     ss: Option<i32>,
 }
 
-impl Camera {
-    /// Build a camera.
+impl Build for Camera {
+    type Inst = render::Camera;
+
     #[inline]
-    #[must_use]
-    pub fn build(&self) -> CameraInst {
+    fn build(self, _in_dir: &Path) -> Result<Self::Inst, Error> {
         let dof = if let Some((samples, angle)) = self.dof {
             Some((samples, angle.to_radians()))
         } else {
@@ -40,6 +44,6 @@ impl Camera {
         let lens = Lens::new(self.fov.to_radians());
         let sensor = Sensor::new(&self.aspect_ratio, self.res, self.ss);
 
-        CameraInst::new(focus, lens, sensor)
+        Ok(Self::Inst::new(focus, lens, sensor))
     }
 }

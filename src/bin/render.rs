@@ -19,6 +19,8 @@ struct Parameters {
     cols: Set<form::Gradient>,
     /// Attributes map.
     attrs: Set<Redirect<render::Attributes>>,
+    /// Camera setup.
+    cam: form::Camera,
 }
 
 /// Main function.
