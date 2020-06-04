@@ -15,7 +15,7 @@ pub fn test(
     _input: &Input,
     _data: &mut Output,
     _weight: f64,
-    _pixel: (usize, usize),
+    _pixel: [usize; 2],
     _ray: Ray,
 ) {
 }

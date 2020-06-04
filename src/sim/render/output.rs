@@ -1,28 +1,41 @@
 //! Input module.
 
-use crate::{Error, Save};
+use crate::{Error, Image, Save, X, Y, Z};
 use std::{ops::AddAssign, path::Path};
 
 /// Render simulation output structure.
-pub struct Output {}
+pub struct Output {
+    /// Base image.
+    image: Image,
+}
 
 impl Output {
     /// Construct a new instance.
     #[inline]
     #[must_use]
-    pub const fn new() -> Self {
-        Self {}
+    pub fn new(grid_res: [usize; 3], img_res: [usize; 2]) -> Self {
+        debug_assert!(grid_res[X] > 0);
+        debug_assert!(grid_res[Y] > 0);
+        debug_assert!(grid_res[Z] > 0);
+        debug_assert!(img_res[X] > 0);
+        debug_assert!(img_res[Y] > 0);
+
+        Self {
+            image: Image::default(img_res),
+        }
     }
 }
 
 impl AddAssign<&Self> for Output {
     #[inline]
-    fn add_assign(&mut self, _rhs: &Self) {}
+    fn add_assign(&mut self, rhs: &Self) {
+        self.image += &rhs.image;
+    }
 }
 
 impl Save for Output {
     #[inline]
-    fn save(&self, _out_dir: &Path) -> Result<(), Error> {
-        Ok(())
+    fn save(&self, out_dir: &Path) -> Result<(), Error> {
+        self.image.save(out_dir)
     }
 }

@@ -51,9 +51,15 @@ fn single_thread(
 
     let super_samples = input.cam.sensor().super_samples();
     let dof_samples = input.cam.focus().dof().unwrap_or((1, 0.0)).0;
-    let weight = 1.0 / (super_samples * dof_samples) as f64;
+    let weight = 1.0 / f64::from(super_samples * dof_samples);
 
-    let mut data = Output::new();
+    let mut data = Output::new(
+        *input.grid.res(),
+        [
+            input.cam.sensor().res().0 as usize,
+            input.cam.sensor().res().1 as usize,
+        ],
+    );
 
     while let Some((start, end)) = {
         let mut pb = pb.lock()?;
@@ -71,10 +77,10 @@ fn single_thread(
                     paint(
                         thread_id,
                         &mut rng,
-                        &input,
+                        input,
                         &mut data,
                         weight,
-                        (pixel.0 as usize, pixel.1 as usize),
+                        [pixel.0 as usize, pixel.1 as usize],
                         ray,
                     );
                 }
