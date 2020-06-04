@@ -15,13 +15,11 @@ pub fn test(
     _rng: &mut ThreadRng,
     input: &Input,
     data: &mut Output,
-    _weight: f64,
+    weight: f64,
     pixel: [usize; 2],
     mut ray: Ray,
 ) {
     let bump_dist = input.sett.bump_dist();
-
-    let mut col = LinSrgba::default();
 
     // Move rays into the grid.
     if !input.grid.boundary().contains(ray.pos()) {
@@ -41,6 +39,12 @@ pub fn test(
         // Handle event.
         match Event::new(voxel_dist, surf_hit) {
             Event::Voxel(dist) => ray.travel(dist + bump_dist),
+            Event::Surface(hit) => {
+                ray.travel(hit.dist() + bump_dist);
+                data.image[pixel] += input.cols.map()["greens"].get(0.0) * weight as f32;
+                data.hits[index] += weight;
+                break;
+            }
         }
     }
 }
