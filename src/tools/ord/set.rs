@@ -45,7 +45,7 @@ impl<T> Set<T> {
     /// Access the stored map.
     #[inline]
     #[must_use]
-    pub fn map(&self) -> &Map<T> {
+    pub const fn map(&self) -> &Map<T> {
         &self.0
     }
 
@@ -63,6 +63,7 @@ where
 {
     #[inline]
     fn load(path: &Path) -> Result<Self, Error> {
+        println!("loading: {}", path.display());
         from_json(path)
     }
 }
