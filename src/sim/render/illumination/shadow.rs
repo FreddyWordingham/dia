@@ -32,10 +32,15 @@ pub fn visibility(input: &Input, mut ray: Ray, bump_dist: f64) -> f64 {
         ray.travel(hit.dist());
 
         match hit.group() {
-            _ => {
+            "tree" => {
                 // Opaque.
                 vis = 0.0;
                 break;
+            }
+            _ => {
+                // Transparent.
+                vis *= 0.75;
+                ray.travel(bump_dist);
             }
         }
     }

@@ -41,8 +41,8 @@
         tar: [0, 0, 4.5],
         fov: 90,
         aspect_ratio: "Square",
-        res: 128,
+        res: 1024,
         dof: null,
-        ss: null
+        ss: 2
     }
 }
