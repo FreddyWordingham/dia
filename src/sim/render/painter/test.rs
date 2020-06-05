@@ -2,7 +2,7 @@
 
 use crate::{
     render::{Event, Input, Output},
-    Ray, Trace,
+    Ray, Trace, Vec3,
 };
 use rand::rngs::ThreadRng;
 
@@ -56,7 +56,7 @@ pub fn test(
                 }
             }
         } else {
-            data.image[pixel] += sky_col(&ray) * weight as f32;
+            data.image[pixel] += sky_col(&input.cols.map()["sky"], &ray) * weight as f32;
             break;
         }
     }
@@ -65,6 +65,6 @@ pub fn test(
 /// Determine the sky colour.
 #[inline]
 #[must_use]
-fn sky_col(ray: &Ray) -> palette::LinSrgba {
-    palette::Srgba::new(0.0, 0.0, (1.0 - ray.dir().z).powi(4) as f32, 1.0).into_linear()
+fn sky_col(grad: &palette::Gradient<palette::LinSrgba>, ray: &Ray) -> palette::LinSrgba {
+    grad.get((ray.dir().dot(&Vec3::z_axis())).abs() as f32)
 }
