@@ -4,7 +4,6 @@ use crate::{
     render::{Event, Input, Output},
     Ray, Trace,
 };
-use palette::LinSrgba;
 use rand::rngs::ThreadRng;
 
 /// Test painter function.
@@ -41,7 +40,16 @@ pub fn test(
             Event::Voxel(dist) => ray.travel(dist + bump_dist),
             Event::Surface(hit) => {
                 ray.travel(hit.dist() + bump_dist);
-                data.image[pixel] += input.cols.map()["greens"].get(0.0) * weight as f32;
+                let grad = match hit.group() {
+                    "ground" => "greens",
+                    "tree" => "reds",
+                    "leaves" => "blues",
+                    _ => {
+                        panic!("Unknown hit group {}", hit.group());
+                    }
+                };
+                data.image[pixel] += input.cols.map()[grad].get(0.0) * weight as f32;
+
                 data.hits[index] += weight;
                 break;
             }

@@ -6,13 +6,14 @@
     },
     grid: {
         boundary: {
-            mins: [-100, -100, -100],
-            maxs: [ 100,  100,  100]
+            mins: [-10, -10, -10],
+            maxs: [ 10,  10,  10]
         },
-        res: [64,64,64]
+        res: [256,256,256]
+        // res: [4,4,4]
     },
     sett: {
-        bump_dist: 1e-3,
+        bump_dist: 1e-6,
         block_size: 1e2
     },
     surfs: {
@@ -38,7 +39,7 @@
         tar: [0, 0, 4.5],
         fov: 90,
         aspect_ratio: "Square",
-        res: 512,
+        res: 1024,
         dof: null,
         ss: null
     }

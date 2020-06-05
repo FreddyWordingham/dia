@@ -1,6 +1,6 @@
 //! Adaptive tree cell scheme.
 
-use crate::{Aabb, Group, SmoothTriangle};
+use crate::{Aabb, Grp, SmoothTriangle};
 
 /// Tree cell enumeration.
 ///
@@ -29,7 +29,7 @@ pub enum Cell<'a> {
         /// Boundary.
         boundary: Aabb,
         /// Intersecting triangles.
-        tris: Vec<(&'a Group, &'a SmoothTriangle)>,
+        tris: Vec<(&'a Grp, &'a SmoothTriangle)>,
     },
     /// Terminal empty cell.
     Empty {

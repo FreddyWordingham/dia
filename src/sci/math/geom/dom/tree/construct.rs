@@ -2,7 +2,7 @@
 
 use crate::{
     tree::{Cell, Settings},
-    Aabb, Bar, Collide, Group, Mesh, Pos3, Set, SmoothTriangle,
+    Aabb, Bar, Collide, Grp, Mesh, Pos3, Set, SmoothTriangle,
 };
 
 impl<'a> Cell<'a> {
@@ -18,12 +18,12 @@ impl<'a> Cell<'a> {
         for (group, mesh) in surfs.map() {
             tris.reserve(mesh.tris().len());
             for tri in mesh.tris() {
-                tris.push((group, tri));
+                tris.push((group.as_str(), tri));
             }
         }
 
         let mut pb = Bar::new("Growing tree", 8_u64.pow(sett.max_depth() as u32));
-        let children = Self::init_children(sett, &boundary, 1, &tris, &mut pb);
+        let children = Self::init_children(sett, &boundary, 1, tris.as_slice(), &mut pb);
         pb.finish_with_message("Tree grown.");
 
         Self::Root { boundary, children }
@@ -73,7 +73,7 @@ impl<'a> Cell<'a> {
         sett: &Settings,
         parent_boundary: &Aabb,
         depth: i32,
-        potential_tris: &[(&'a Group, &'a SmoothTriangle)],
+        potential_tris: &[(&'a Grp, &'a SmoothTriangle)],
         mut pb: &mut Bar,
     ) -> [Box<Self>; 8] {
         debug_assert!(depth <= sett.max_depth());
@@ -115,7 +115,7 @@ impl<'a> Cell<'a> {
         sett: &Settings,
         boundary: Aabb,
         depth: i32,
-        potential_tris: &[(&'a Group, &'a SmoothTriangle)],
+        potential_tris: &[(&'a Grp, &'a SmoothTriangle)],
         mut pb: &mut Bar,
     ) -> Self {
         debug_assert!(depth <= sett.max_depth());

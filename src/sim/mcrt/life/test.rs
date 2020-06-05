@@ -48,7 +48,7 @@ pub fn test(input: &Input, data: &mut Data, rng: &mut ThreadRng) {
                 scatter_phot(data, index, &mut phot, &env, rng);
             }
             Event::Surface(hit) => {
-                match hit.group().as_str() {
+                match hit.group() {
                     "spectrometer_0" => {
                         move_phot(data, index, &env, &mut phot, hit.dist() + bump_dist);
                         data.spec_0.collect_weight(phot.wavelength(), phot.weight());
@@ -161,7 +161,7 @@ fn scatter_phot(
 #[inline]
 pub fn select_property<'a>(props: &'a Set<Properties>, hit: &Hit) -> &'a Properties {
     let group = hit.group();
-    match group.as_str() {
+    match group {
         "skin" => {
             if hit.side().is_inside() {
                 &props.map()["air"]
