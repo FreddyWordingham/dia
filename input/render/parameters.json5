@@ -14,7 +14,8 @@
     },
     sett: {
         bump_dist: 1e-6,
-        block_size: 1e2
+        block_size: 1e2,
+        sun_pos: [-15, 5, 20]
     },
     surfs: {
             leaves: [['objs/leaves.obj'], null],
@@ -40,8 +41,8 @@
         tar: [0, 0, 4.5],
         fov: 90,
         aspect_ratio: "Square",
-        res: 1024,
+        res: 128,
         dof: null,
-        ss: 4
+        ss: null
     }
 }

@@ -3,6 +3,7 @@
 pub mod attributes;
 pub mod camera;
 pub mod event;
+pub mod illumination;
 pub mod input;
 pub mod output;
 pub mod painter;

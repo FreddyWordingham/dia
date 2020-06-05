@@ -1,7 +1,7 @@
 //! Test painter function.
 
 use crate::{
-    render::{Event, Input, Output},
+    render::{illumination, Event, Input, Output},
     Ray, Trace, Vec3,
 };
 use rand::rngs::ThreadRng;
@@ -49,7 +49,18 @@ pub fn test(
                             panic!("Unknown hit group {}", hit.group());
                         }
                     };
-                    data.image[pixel] += input.cols.map()[grad].get(0.0) * weight as f32;
+
+                    let light = illumination::light(
+                        input.sett.sun_pos(),
+                        input.cam.focus().orient().pos(),
+                        &ray,
+                        &hit,
+                    );
+
+                    let light_col = input.cols.map()[grad].get(light as f32);
+                    let shadow_grad =
+                        palette::Gradient::new(vec![palette::LinSrgba::default(), light_col]);
+                    data.image[pixel] += shadow_grad.get(1.0) * weight as f32;
 
                     data.hits[index] += weight;
                     break;
