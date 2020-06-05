@@ -27,32 +27,44 @@ pub fn test(
         }
     }
 
-    // Loop while inside the grid.
-    while let Some((index, voxel)) = input.grid.gen_index_voxel(ray.pos()) {
-        // Determine possible event distances.
-        let voxel_dist = voxel
-            .dist(&ray)
-            .expect("Could not determine voxel distance.");
-        let surf_hit = input.tree.observe(ray.clone(), bump_dist, voxel_dist);
+    loop {
+        // Check if inside the grid.
+        if let Some((index, voxel)) = input.grid.gen_index_voxel(ray.pos()) {
+            // Determine possible event distances.
+            let voxel_dist = voxel
+                .dist(&ray)
+                .expect("Could not determine voxel distance.");
+            let surf_hit = input.tree.observe(ray.clone(), bump_dist, voxel_dist);
 
-        // Handle event.
-        match Event::new(voxel_dist, surf_hit) {
-            Event::Voxel(dist) => ray.travel(dist + bump_dist),
-            Event::Surface(hit) => {
-                ray.travel(hit.dist() + bump_dist);
-                let grad = match hit.group() {
-                    "ground" => "greens",
-                    "tree" => "reds",
-                    "leaves" => "blues",
-                    _ => {
-                        panic!("Unknown hit group {}", hit.group());
-                    }
-                };
-                data.image[pixel] += input.cols.map()[grad].get(0.0) * weight as f32;
+            // Handle event.
+            match Event::new(voxel_dist, surf_hit) {
+                Event::Voxel(dist) => ray.travel(dist + bump_dist),
+                Event::Surface(hit) => {
+                    ray.travel(hit.dist() + bump_dist);
+                    let grad = match hit.group() {
+                        "ground" => "greens",
+                        "tree" => "reds",
+                        "leaves" => "blues",
+                        _ => {
+                            panic!("Unknown hit group {}", hit.group());
+                        }
+                    };
+                    data.image[pixel] += input.cols.map()[grad].get(0.0) * weight as f32;
 
-                data.hits[index] += weight;
-                break;
+                    data.hits[index] += weight;
+                    break;
+                }
             }
+        } else {
+            data.image[pixel] += sky_col(&ray) * weight as f32;
+            break;
         }
     }
+}
+
+/// Determine the sky colour.
+#[inline]
+#[must_use]
+fn sky_col(ray: &Ray) -> palette::LinSrgba {
+    palette::Srgba::new(0.0, 0.0, (1.0 - ray.dir().z).powi(4) as f32, 1.0).into_linear()
 }

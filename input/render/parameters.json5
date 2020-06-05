@@ -6,11 +6,11 @@
     },
     grid: {
         boundary: {
-            mins: [-10, -10, -10],
-            maxs: [ 10,  10,  10]
+            mins: [-100, -100, -100],
+            maxs: [ 100,  100,  100]
         },
-        res: [256,256,256]
-        // res: [4,4,4]
+        // res: [256,256,256]
+        res: [4,4,4]
     },
     sett: {
         bump_dist: 1e-6,
@@ -41,6 +41,6 @@
         aspect_ratio: "Square",
         res: 1024,
         dof: null,
-        ss: null
+        ss: 4
     }
 }
