@@ -1,7 +1,6 @@
 //! Sensor implementation.
 
-use crate::{clone, AspectRatio};
-use crate::{display_field, display_field_ln};
+use crate::{clone, display_field, display_field_ln, AspectRatio};
 use std::fmt::{Display, Formatter, Result};
 
 /// Sensor structure.

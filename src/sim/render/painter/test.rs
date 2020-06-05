@@ -60,7 +60,9 @@ pub fn test(
                     let light_col = input.cols.map()[grad].get(light as f32);
                     let shadow_grad =
                         palette::Gradient::new(vec![palette::LinSrgba::default(), light_col]);
-                    data.image[pixel] += shadow_grad.get(1.0) * weight as f32;
+                    data.image[pixel] += shadow_grad
+                        .get(illumination::shadow(input, &ray, &hit, bump_dist) as f32)
+                        * weight as f32;
 
                     data.hits[index] += weight;
                     break;

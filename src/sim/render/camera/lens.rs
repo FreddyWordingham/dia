@@ -1,7 +1,6 @@
 //! Lens implementation.
 
-use crate::clone;
-use crate::display_field;
+use crate::{clone, display_field};
 use std::fmt::{Display, Formatter, Result};
 
 /// Lens structure.

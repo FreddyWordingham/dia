@@ -3,8 +3,10 @@
 use crate::{Build, Error};
 use attr::load;
 use ndarray::Array1;
-use std::fmt::{Display, Formatter};
-use std::path::Path;
+use std::{
+    fmt::{Display, Formatter},
+    path::Path,
+};
 
 /// Mathematical formulae accepting a single scalar argument.
 #[load]

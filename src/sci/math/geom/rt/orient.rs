@@ -1,7 +1,6 @@
 //! Orientation implementation.
 
-use crate::display_field_ln;
-use crate::{access, Dir3, Pos3, Ray, Vec3};
+use crate::{access, display_field_ln, Dir3, Pos3, Ray, Vec3};
 use std::fmt::{Display, Formatter, Result};
 
 /// Orientation structure.

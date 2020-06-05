@@ -1,7 +1,6 @@
 //! Focus implementation.
 
-use crate::{access, clone, golden, Dir3, Orient, Pos3, Ray};
-use crate::{display_field, display_field_ln};
+use crate::{access, clone, display_field, display_field_ln, golden, Dir3, Orient, Pos3, Ray};
 use std::fmt::{Display, Formatter, Result};
 
 /// Focus structure.

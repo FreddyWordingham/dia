@@ -1,11 +1,9 @@
 //! Camera form implementation.
 
 use crate::{
-    display_field, display_field_ln, AspectRatio, Build, Error, Pos3,
-    {
-        render,
-        render::{Focus, Lens, Sensor},
-    },
+    display_field, display_field_ln, render,
+    render::{Focus, Lens, Sensor},
+    AspectRatio, Build, Error, Pos3,
 };
 use attr::load;
 use std::{
