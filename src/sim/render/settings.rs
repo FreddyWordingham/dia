@@ -13,12 +13,15 @@ pub struct Settings {
     bump_dist: f64,
     /// Sun position [m].
     sun_pos: Pos3,
+    /// Optional number of ambient occlusion samples.
+    ambient_occlusion: Option<i32>,
 }
 
 impl Settings {
     clone!(block_size, u64);
     clone!(bump_dist, f64);
     access!(sun_pos, Pos3);
+    clone!(ambient_occlusion, Option<i32>);
 }
 
 impl Display for Settings {
@@ -27,6 +30,11 @@ impl Display for Settings {
     fn fmt(&self, fmt: &mut Formatter) -> Result {
         display_field_ln!(fmt, "block size", self.block_size)?;
         display_field_ln!(fmt, "bump distance", self.bump_dist, "m")?;
-        display_field!(fmt, "sun position", self.sun_pos, "m")
+        display_field_ln!(fmt, "sun position", self.sun_pos, "m")?;
+        if let Some(samples) = self.ambient_occlusion {
+            display_field!(fmt, "ambient occlusion samples", samples)
+        } else {
+            display_field!(fmt, "ambient occlusion", "OFF")
+        }
     }
 }

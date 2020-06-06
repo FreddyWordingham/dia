@@ -1,7 +1,7 @@
 {
     tree: {
         tar_tris: 5,
-        max_depth: 5,
+        max_depth: 8,
         padding: 0.1
     },
     grid: {
@@ -15,7 +15,8 @@
     sett: {
         bump_dist: 1e-6,
         block_size: 1e3,
-        sun_pos: [-15, 5, 20]
+        sun_pos: [-15, 5, 20],
+        ambient_occlusion: 31
     },
     surfs: {
             leaves: [['objs/leaves.obj'], null],
