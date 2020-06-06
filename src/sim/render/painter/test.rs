@@ -56,13 +56,13 @@ pub fn test(
                         &ray,
                         &hit,
                     );
+                    let shadow = illumination::shadow(input, &ray, &hit, bump_dist, &mut rng);
 
-                    let light_col = input.cols.map()[grad].get(light as f32);
-                    let shadow_grad =
-                        palette::Gradient::new(vec![palette::LinSrgba::default(), light_col]);
-                    data.image[pixel] += shadow_grad
-                        .get(illumination::shadow(input, &ray, &hit, bump_dist, &mut rng) as f32)
-                        * weight as f32;
+                    let base_col =
+                        input.cols.map()[grad].get(hit.side().norm().dot(&Vec3::z_axis()) as f32);
+                    let grad = palette::Gradient::new(vec![palette::LinSrgba::default(), base_col]);
+
+                    data.image[pixel] += grad.get((light * shadow) as f32) * weight as f32;
 
                     data.hits[index] += weight;
                     break;

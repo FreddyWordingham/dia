@@ -24,7 +24,7 @@
     },
     cols: {
             reds: ['#f92c2cff', '#c52222ff', '#d5175bff', '#f44d0fff'],
-            blues: ['#2c2cf9ff', '#2222c5ff', '#175bd5ff', '#4d0ff4ff'],
+            blues: ['#2c2cf9ff', '#f40fc1ff', '#2222c5ff', '#175bd5ff', '#4d0ff4ff'],
             greens: ['#2cf92cff', '#22c522ff', '#5bd517ff', '#0ff44dff'],
             sky: ['#ffffffff', '#175bd5ff', '#2222c5ff']
     },
