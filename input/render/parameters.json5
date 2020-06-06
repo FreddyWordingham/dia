@@ -16,7 +16,9 @@
         bump_dist: 1e-6,
         block_size: 1e3,
         sun_pos: [-15, 5, 20],
-        ambient_occlusion: 31
+        sun_rad: 0.01,
+        // ambient_occlusion: 31,
+        soft_shadows: 17,
     },
     surfs: {
             leaves: [['objs/leaves.obj'], null],
@@ -44,6 +46,6 @@
         aspect_ratio: "Square",
         res: 1024,
         // dof: [7, 5.0],
-        // ss: 2
+        ss: 4
     }
 }
