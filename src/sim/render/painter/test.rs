@@ -11,7 +11,7 @@ use rand::rngs::ThreadRng;
 #[inline]
 pub fn test(
     _thread_id: usize,
-    _rng: &mut ThreadRng,
+    mut rng: &mut ThreadRng,
     input: &Input,
     data: &mut Output,
     weight: f64,
@@ -61,7 +61,7 @@ pub fn test(
                     let shadow_grad =
                         palette::Gradient::new(vec![palette::LinSrgba::default(), light_col]);
                     data.image[pixel] += shadow_grad
-                        .get(illumination::shadow(input, &ray, &hit, bump_dist) as f32)
+                        .get(illumination::shadow(input, &ray, &hit, bump_dist, &mut rng) as f32)
                         * weight as f32;
 
                     data.hits[index] += weight;
