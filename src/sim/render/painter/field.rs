@@ -64,8 +64,8 @@ pub fn field(
                     );
                     let shadow = illumination::shadow(input, &ray, &hit, bump_dist, &mut rng);
 
-                    let base_col = input.cols.map()["greyscale"]
-                        .get(hit.side().norm().dot(&Vec3::z_axis()) as f32);
+                    let base_col = input.cols.map()[hit.group()]
+                        .get(hit.side().norm().dot(&Vec3::z_axis()).abs() as f32);
                     let grad = palette::Gradient::new(vec![palette::LinSrgba::default(), base_col]);
 
                     data.image[pixel] += grad.get((light * shadow) as f32) * weight as f32;

@@ -1,6 +1,6 @@
 //! Shadowing functions.
 
-use crate::{golden, render::Input, Dir3, Hit, Ray};
+use crate::{golden, render::Input, Crossing, Dir3, Hit, Ray};
 use rand::{rngs::ThreadRng, Rng};
 use std::f64::consts::PI;
 
@@ -70,6 +70,15 @@ pub fn visibility(input: &Input, mut ray: Ray, bump_dist: f64) -> f64 {
         }
 
         match hit.group() {
+            "mirror" => {
+                ray.travel(hit.dist());
+                *ray.dir_mut() = Crossing::init_ref_dir(
+                    ray.dir(),
+                    hit.side().norm(),
+                    -ray.dir().dot(hit.side().norm()),
+                );
+                ray.travel(bump_dist);
+            }
             "leaves" => {
                 // Transparent.
                 vis *= 0.75;

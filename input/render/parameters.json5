@@ -10,21 +10,21 @@
             maxs: [ 35,  35,  35]
         },
         // res: [256,256,256]
-        res: [4,4,4]
+        res: [1,1,1]
     },
     sett: {
         bump_dist: 1e-6,
         block_size: 1e3,
-        sun_pos: [-17.4341,15.5449,16.5961],
+        sun_pos: [14.9301,-6.20811,16.5961],
         sun_rad: 0.01,
         // ambient_occlusion: 31,
-        soft_shadows: 31,
+        // soft_shadows: 31,
     },
     surfs: {
-            bluebells: [['objs/bluebells_low.obj'], null],
+            // bluebells: [['objs/bluebells_low.obj'], null],
             dog: [['objs/dog.obj'], null],
             fence: [['objs/fence.obj'], null],
-            grass: [['objs/grass.obj'], null],
+            // grass: [['objs/grass.obj'], null],
             hedge: [['objs/hedge.obj'], null],
             hill: [['objs/hill.obj', 'objs/vista.obj'], null],
             kt: [['objs/kt.obj'], null],
@@ -36,17 +36,16 @@
     cols: {
             sky: ['#ffffffff', '#175bd5ff', '#2222c5ff'],
             greyscale: ['#a4a4a4ff', '#ffffffff'],
-
             bluebells:      ['#724ceeff', '#7770ffff', '#8e6fe4ff'],
             dog:            ['#ecbe6bff', '#f0e78aff', '#f8f868ff'],
             fence:          ['#f58332ff', '#ce4040ff'],
             grass:          ['#008000ff', '#32cd32ff', '#556b2fff'],
-            hedge:          ['#cb8ce5ff', '#b48ce5ff', '#e85bc9ff'],
+            hedge:          ['#556b2fff', '#1f841fff', '#56a556ff'],
             hill:           ['#0ebb0eff', '#008080ff'],
             kt:             ['#ffca00ff', '#ffd700ff', '#ffff00ff'],
             leaves:         ['#ffe200ff', '#ff4700ff', '#ff000dff', '#ff009dff', '#b400ffff', '#3700ffff', '#0095ffff'],
             mirror:         ['#d6edefff', '#c3e8e4ff'],
-            path:           ['#a9a9a9ff', '#5f9ea0ff', '#008b8bff'],
+            path:           ['#a9a9a9ff', '#a0715fff', '#a97956ff'],
             tree:           ['#dcc090ff', '#d58c8cff', '#c6a070ff', '#8f724dff', '#80451bff'],
     },
     attrs: {
@@ -59,10 +58,11 @@
     },
     cam: {
         pos: [-10.6636,26.629,2.24872],
-        tar: [12.8827,-23.3324,5.09594],
-        fov: 60,
-        aspect_ratio: "Widescreen",
-        res: 3440,
+        tar: [12.8827,-23.3324,8.09594],
+        fov: 30,
+        aspect_ratio: "IPhoneXS",
+        // res: 3440,
+        res: 1125,
         // dof: [7, 5.0],
         ss: 4
     }
