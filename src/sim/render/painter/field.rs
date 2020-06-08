@@ -89,12 +89,12 @@ pub fn field(
                                 &ray,
                                 &hit,
                             );
-                            // let shadow = 1.0
-                            //     - (1.0
-                            //         - illumination::shadow(input, &ray, &hit, bump_dist, &mut rng))
-                            //     .powi(2);
-                            let shadow =
-                                illumination::shadow(input, &ray, &hit, bump_dist, &mut rng);
+                            let shadow = 1.0
+                                - (1.0
+                                    - illumination::shadow(input, &ray, &hit, bump_dist, &mut rng))
+                                .powi(2);
+                            // let shadow =
+                            //     illumination::shadow(input, &ray, &hit, bump_dist, &mut rng);
 
                             let base_col = input.cols.map()[hit.group()]
                                 .get(hit.side().norm().dot(&sun_dir).abs() as f32);
