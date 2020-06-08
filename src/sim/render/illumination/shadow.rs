@@ -51,7 +51,7 @@ pub fn shadow(input: &Input, ray: &Ray, hit: &Hit, bump_dist: f64, rng: &mut Thr
         visibility(input, light_ray, bump_dist)
     };
 
-    ambient * solar
+    ambient * solar.mul_add(0.5, 0.5)
 }
 
 /// Calculate the visibility of a given ray.
@@ -70,10 +70,10 @@ pub fn visibility(input: &Input, mut ray: Ray, bump_dist: f64) -> f64 {
         }
 
         match hit.group() {
-            "ground" => {
-                // Opaque.
-                vis = 0.0;
-                break;
+            "leaves" => {
+                // Transparent.
+                vis *= 0.75;
+                ray.travel(hit.dist() + bump_dist);
             }
             "tree" => {
                 // Almost opaque.
@@ -81,9 +81,9 @@ pub fn visibility(input: &Input, mut ray: Ray, bump_dist: f64) -> f64 {
                 ray.travel(hit.dist() + bump_dist);
             }
             _ => {
-                // Transparent.
-                vis *= 0.75;
-                ray.travel(hit.dist() + bump_dist);
+                // Opaque.
+                vis = 0.0;
+                break;
             }
         }
     }

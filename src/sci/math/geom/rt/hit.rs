@@ -29,7 +29,7 @@ impl<'a> Hit<'a> {
     /// Access the group str.
     #[inline]
     #[must_use]
-    pub fn group(&self) -> &str {
-        &self.group
+    pub const fn group(&self) -> &str {
+        self.group
     }
 }

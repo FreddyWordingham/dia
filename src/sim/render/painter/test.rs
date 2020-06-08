@@ -42,11 +42,9 @@ pub fn test(
                 Event::Surface(hit) => {
                     ray.travel(hit.dist() + bump_dist);
                     let grad = match hit.group() {
-                        "ground" => "greens",
-                        "tree" => "reds",
-                        "leaves" => "blues",
                         _ => {
-                            panic!("Unknown hit group {}", hit.group());
+                            // panic!("Unknown hit group {}", hit.group());
+                            "greyscale"
                         }
                     };
 

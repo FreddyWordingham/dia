@@ -65,6 +65,7 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 }
 
 /// Build instances.
+#[allow(clippy::type_complexity)]
 fn build(
     in_dir: &Path,
     params: Parameters,
@@ -143,7 +144,7 @@ fn grow<'a>(
 fn render(input: &render::Input) -> render::Output {
     banner::section("Rendering");
     banner::sub_section("Main Camera");
-    render::run::simulate(&input, render::painter::test).expect("Simulation failed.")
+    render::run::simulate(&input, render::painter::field).expect("Simulation failed.")
 }
 
 /// Save the output data.

@@ -6,8 +6,8 @@
     },
     grid: {
         boundary: {
-            mins: [-100, -100, -100],
-            maxs: [ 100,  100,  100]
+            mins: [-25, -25, -25],
+            maxs: [ 25,  25,  25]
         },
         // res: [256,256,256]
         res: [4,4,4]
@@ -15,21 +15,29 @@
     sett: {
         bump_dist: 1e-6,
         block_size: 1e3,
-        sun_pos: [-15, 5, 20],
+        sun_pos: [-17.4341,15.5449,16.5961],
         sun_rad: 0.01,
         // ambient_occlusion: 31,
-        soft_shadows: 17,
+        // soft_shadows: 31,
     },
     surfs: {
+            bluebells: [['objs/bluebells_low.obj'], null],
+            dog: [['objs/dog.obj'], null],
+            fence: [['objs/fence.obj'], null],
+            // grass: [['objs/grass.obj'], null],
+            hedge: [['objs/hedge.obj'], null],
+            hill: [['objs/hill.obj'], null],
+            kt: [['objs/kt.obj'], null],
             leaves: [['objs/leaves.obj'], null],
+            mirror: [['objs/mirror_left.obj', 'objs/mirror_right.obj'], null],
+            path: [['objs/path.obj'], null],
+            stump: [['objs/stump.obj'], null],
             tree: [['objs/tree.obj'], null],
-            ground: [['objs/ground.obj'], null],
+            vista: [['objs/vista.obj'], null]
     },
     cols: {
-            reds: ['#f92c2cff', '#c52222ff', '#d5175bff', '#f44d0fff'],
-            blues: ['#2c2cf9ff', '#f40fc1ff', '#2222c5ff', '#175bd5ff', '#4d0ff4ff'],
-            greens: ['#2cf92cff', '#22c522ff', '#5bd517ff', '#0ff44dff'],
-            sky: ['#ffffffff', '#175bd5ff', '#2222c5ff']
+            sky: ['#ffffffff', '#175bd5ff', '#2222c5ff'],
+            greyscale: ['#a4a4a4ff', '#ffffffff'],
     },
     attrs: {
             mirror: {
@@ -40,12 +48,12 @@
             }
     },
     cam: {
-        pos: [-5, 12, 7],
-        tar: [0, 0, 4.5],
-        fov: 90,
-        aspect_ratio: "Square",
+        pos: [-10.6636,26.629,2.24872],
+        tar: [12.8827,-23.3324,5.09594],
+        fov: 60,
+        aspect_ratio: "Widescreen",
         res: 1024,
         // dof: [7, 5.0],
-        ss: 4
+        // ss: 4
     }
 }
