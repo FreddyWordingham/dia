@@ -15,8 +15,8 @@
     sett: {
         bump_dist: 1e-6,
         block_size: 1e3,
-        // sun_pos: [-17,16,17],
-        sun_pos: [-12.3636,28.629,14.94872],
+        sun_pos: [-17,16,17],
+        // sun_pos: [-12.3636,28.629,14.94872],
         sun_rad: 0.01,
         // ambient_occlusion: 16,
         // soft_shadows: 7,
@@ -39,7 +39,7 @@
             // mirror: [['objs/mirror_left.obj', 'objs/mirror_right.obj'], null],
             path: [['objs/path.obj', 'objs/under_path.obj'], null],
             tree: [['objs/tree.obj', 'objs/stump.obj'], null],
-            // solar: [['objs/solar.obj'], null],
+            solar: [['objs/solar.obj'], null],
     },
     cols: {
             sky:            ['#ffffffff', '#175bd5ff', '#2222c5ff'],
@@ -82,7 +82,7 @@
         // res: 2250,
         // res: 1125,
         res: 375,
-        dof: [7, 0.3],
+        // dof: [7, 0.3],
         // ss: 3
     }
 }

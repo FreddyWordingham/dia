@@ -57,6 +57,7 @@ pub fn field(
                             continue;
                         }
                         "solar" => {
+                            ray.travel(hit.dist());
                             let light = illumination::light(
                                 input.sett.sun_pos(),
                                 input.cam.focus().orient().pos(),
@@ -81,6 +82,7 @@ pub fn field(
                             break;
                         }
                         _ => {
+                            ray.travel(hit.dist());
                             let light = illumination::light(
                                 input.sett.sun_pos(),
                                 input.cam.focus().orient().pos(),
