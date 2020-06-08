@@ -6,8 +6,8 @@
     },
     grid: {
         boundary: {
-            mins: [-25, -25, -25],
-            maxs: [ 25,  25,  25]
+            mins: [-35, -35, -35],
+            maxs: [ 35,  35,  35]
         },
         // res: [256,256,256]
         res: [4,4,4]
@@ -21,7 +21,7 @@
         // soft_shadows: 31,
     },
     surfs: {
-            bluebells: [['objs/bluebells_low.obj'], null],
+            // bluebells: [['objs/bluebells_low.obj'], null],
             dog: [['objs/dog.obj'], null],
             fence: [['objs/fence.obj'], null],
             // grass: [['objs/grass.obj'], null],

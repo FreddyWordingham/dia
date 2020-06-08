@@ -1,7 +1,7 @@
 //! Test painter function.
 
 use crate::{
-    render::{illumination, Event, Input, Output},
+    render::{Event, Input, Output},
     Ray, Trace, Vec3,
 };
 use rand::rngs::ThreadRng;
@@ -11,7 +11,7 @@ use rand::rngs::ThreadRng;
 #[inline]
 pub fn test(
     _thread_id: usize,
-    mut rng: &mut ThreadRng,
+    _rng: &mut ThreadRng,
     input: &Input,
     data: &mut Output,
     weight: f64,
@@ -41,26 +41,11 @@ pub fn test(
                 Event::Voxel(dist) => ray.travel(dist + bump_dist),
                 Event::Surface(hit) => {
                     ray.travel(hit.dist() + bump_dist);
-                    let grad = match hit.group() {
-                        _ => {
-                            // panic!("Unknown hit group {}", hit.group());
-                            "greyscale"
-                        }
-                    };
-
-                    let light = illumination::light(
-                        input.sett.sun_pos(),
-                        input.cam.focus().orient().pos(),
-                        &ray,
-                        &hit,
-                    );
-                    let shadow = illumination::shadow(input, &ray, &hit, bump_dist, &mut rng);
-
-                    let base_col =
-                        input.cols.map()[grad].get(hit.side().norm().dot(&Vec3::z_axis()) as f32);
+                    let base_col = input.cols.map()["greyscale"]
+                        .get(hit.side().norm().dot(&Vec3::z_axis()) as f32);
                     let grad = palette::Gradient::new(vec![palette::LinSrgba::default(), base_col]);
 
-                    data.image[pixel] += grad.get((light * shadow) as f32) * weight as f32;
+                    data.image[pixel] += grad.get(1.0) * weight as f32;
 
                     data.hits[index] += weight;
                     break;
