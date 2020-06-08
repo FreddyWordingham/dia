@@ -22,8 +22,8 @@
         soft_shadows: 16,
     },
     surfs: {
-            // bluebells: [['objs/bluebells_low.obj'], null],
-            // grass: [['objs/grass.obj'], null],
+            bluebells: [['objs/bluebells_low.obj'], null],
+            grass: [['objs/grass.obj'], null],
             bone: [['objs/bone.obj'], null],
             butterfly: [['objs/butterfly.obj'], null],
             dog: [['objs/dog.obj'], null],
@@ -79,9 +79,9 @@
         fov: 29,
         aspect_ratio: "IPhoneXS",
         // res: 3440,
-        // res: 1125,
-        res: 375,
+        res: 1125,
+        // res: 375,
         // dof: [7, 5.0],
-        // ss: 4
+        ss: 4
     }
 }
