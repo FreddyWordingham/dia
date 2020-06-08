@@ -2,7 +2,7 @@
 
 use crate::{
     render::{illumination, Event, Input, Output},
-    Crossing, Ray, Trace, Vec3,
+    Crossing, Dir3, Ray, Trace, Vec3,
 };
 use rand::rngs::ThreadRng;
 
@@ -18,6 +18,11 @@ pub fn field(
     pixel: [usize; 2],
     mut ray: Ray,
 ) {
+    let sun_dir = Dir3::new_normalize(-Vec3::new(
+        input.sett.sun_pos().x,
+        input.sett.sun_pos().y,
+        input.sett.sun_pos().z,
+    ));
     let bump_dist = input.sett.bump_dist();
 
     // Move rays into the grid.
@@ -65,7 +70,7 @@ pub fn field(
                     let shadow = illumination::shadow(input, &ray, &hit, bump_dist, &mut rng);
 
                     let base_col = input.cols.map()[hit.group()]
-                        .get(hit.side().norm().dot(&Vec3::z_axis()).abs() as f32);
+                        .get(hit.side().norm().dot(&sun_dir).abs() as f32);
                     let grad = palette::Gradient::new(vec![palette::LinSrgba::default(), base_col]);
 
                     data.image[pixel] += grad.get((light * shadow) as f32) * weight as f32;

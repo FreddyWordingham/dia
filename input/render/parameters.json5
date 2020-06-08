@@ -17,14 +17,14 @@
         block_size: 1e3,
         sun_pos: [14.9301,-6.20811,16.5961],
         sun_rad: 0.01,
-        ambient_occlusion: 31,
-        soft_shadows: 31,
+        // ambient_occlusion: 31,
+        // soft_shadows: 31,
     },
     surfs: {
-            bluebells: [['objs/bluebells_low.obj'], null],
+            // bluebells: [['objs/bluebells_low.obj'], null],
             dog: [['objs/dog.obj'], null],
             fence: [['objs/fence.obj'], null],
-            grass: [['objs/grass.obj'], null],
+            // grass: [['objs/grass.obj'], null],
             hedge: [['objs/hedge.obj'], null],
             hill: [['objs/hill.obj', 'objs/vista.obj'], null],
             kt: [['objs/kt.obj'], null],
@@ -37,7 +37,7 @@
             sky: ['#ffffffff', '#175bd5ff', '#2222c5ff'],
             greyscale: ['#a4a4a4ff', '#ffffffff'],
             bluebells:      ['#724ceeff', '#7770ffff', '#8e6fe4ff'],
-            dog:            ['#ecbe6bff', '#f0e78aff', '#f8f868ff'],
+            dog:            ['#e89b26ff', '#ecbe6bff', '#d9aa3fff', '#f2d74cff', '#f0e78aff', '#e4c838ff', '#f8f868ff'],
             fence:          ['#f58332ff', '#ce4040ff'],
             grass:          ['#008000ff', '#32cd32ff', '#556b2fff'],
             hedge:          ['#556b2fff', '#1f841fff', '#56a556ff'],
@@ -64,6 +64,6 @@
         // res: 3440,
         res: 1125,
         // dof: [7, 5.0],
-        ss: 4
+        // ss: 4
     }
 }
