@@ -18,26 +18,36 @@
         sun_pos: [-17.4341,15.5449,16.5961],
         sun_rad: 0.01,
         // ambient_occlusion: 31,
-        // soft_shadows: 31,
+        soft_shadows: 31,
     },
     surfs: {
-            // bluebells: [['objs/bluebells_low.obj'], null],
+            bluebells: [['objs/bluebells_low.obj'], null],
             dog: [['objs/dog.obj'], null],
             fence: [['objs/fence.obj'], null],
-            // grass: [['objs/grass.obj'], null],
+            grass: [['objs/grass.obj'], null],
             hedge: [['objs/hedge.obj'], null],
-            hill: [['objs/hill.obj'], null],
+            hill: [['objs/hill.obj', 'objs/vista.obj'], null],
             kt: [['objs/kt.obj'], null],
             leaves: [['objs/leaves.obj'], null],
             mirror: [['objs/mirror_left.obj', 'objs/mirror_right.obj'], null],
-            path: [['objs/path.obj'], null],
-            stump: [['objs/stump.obj'], null],
-            tree: [['objs/tree.obj'], null],
-            vista: [['objs/vista.obj'], null]
+            path: [['objs/path.obj', 'objs/under_path.obj'], null],
+            tree: [['objs/tree.obj', 'objs/stump.obj'], null],
     },
     cols: {
             sky: ['#ffffffff', '#175bd5ff', '#2222c5ff'],
             greyscale: ['#a4a4a4ff', '#ffffffff'],
+
+            bluebells:      ['#724ceeff', '#7770ffff', '#8e6fe4ff'],
+            dog:            ['#ecbe6bff', '#f0e78aff', '#f8f868ff'],
+            fence:          ['#f58332ff', '#ce4040ff'],
+            grass:          ['#008000ff', '#32cd32ff', '#556b2fff'],
+            hedge:          ['#cb8ce5ff', '#b48ce5ff', '#e85bc9ff'],
+            hill:           ['#0ebb0eff', '#008080ff'],
+            kt:             ['#ffca00ff', '#ffd700ff', '#ffff00ff'],
+            leaves:         ['#ffe200ff', '#ff4700ff', '#ff000dff', '#ff009dff', '#b400ffff', '#3700ffff', '#0095ffff'],
+            mirror:         ['#d6edefff', '#c3e8e4ff'],
+            path:           ['#a9a9a9ff', '#5f9ea0ff', '#008b8bff'],
+            tree:           ['#dcc090ff', '#d58c8cff', '#c6a070ff', '#8f724dff', '#80451bff'],
     },
     attrs: {
             mirror: {
@@ -52,8 +62,8 @@
         tar: [12.8827,-23.3324,5.09594],
         fov: 60,
         aspect_ratio: "Widescreen",
-        res: 1024,
+        res: 3440,
         // dof: [7, 5.0],
-        // ss: 4
+        ss: 4
     }
 }
