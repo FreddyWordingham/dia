@@ -51,7 +51,7 @@ pub fn shadow(input: &Input, ray: &Ray, hit: &Hit, bump_dist: f64, rng: &mut Thr
         visibility(input, light_ray, bump_dist)
     };
 
-    (ambient * 0.4) + (solar * 0.6)
+    (ambient * 0.6) + (solar * 0.4)
 }
 
 /// Calculate the visibility of a given ray.
