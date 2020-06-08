@@ -15,14 +15,15 @@
     sett: {
         bump_dist: 1e-6,
         block_size: 1e3,
-        sun_pos: [-17,16,17],
+        // sun_pos: [-17,16,17],
+        sun_pos: [-12.3636,28.629,14.94872],
         sun_rad: 0.01,
-        ambient_occlusion: 16,
-        soft_shadows: 7,
+        // ambient_occlusion: 16,
+        // soft_shadows: 7,
     },
     surfs: {
-            bluebells: [['objs/bluebells_low.obj'], null],
-            grass: [['objs/grass.obj'], null],
+            // bluebells: [['objs/bluebells_low.obj'], null],
+            // grass: [['objs/grass.obj'], null],
             bone: [['objs/bone.obj'], null],
             butterfly: [['objs/butterfly.obj'], null],
             dog: [['objs/dog.obj'], null],
@@ -38,7 +39,7 @@
             // mirror: [['objs/mirror_left.obj', 'objs/mirror_right.obj'], null],
             path: [['objs/path.obj', 'objs/under_path.obj'], null],
             tree: [['objs/tree.obj', 'objs/stump.obj'], null],
-            solar: [['objs/solar.obj'], null],
+            // solar: [['objs/solar.obj'], null],
     },
     cols: {
             sky:            ['#ffffffff', '#175bd5ff', '#2222c5ff'],
@@ -72,16 +73,16 @@
             }
     },
     cam: {
-        pos: [-11.3636,26.629,2.94872],
+        pos: [-10.3636,26.629,2.94872],
         // tar: [12.8827,-23.3324,14.09594],
-        tar: [-8.13774,18.2751,2.69857],
+        tar: [-8.13774,18.2751,2.4418],
         fov: 45,
         aspect_ratio: "IPhoneXS",
         // res: 3440,
-        res: 2250,
+        // res: 2250,
         // res: 1125,
-        // res: 375,
+        res: 375,
         dof: [7, 0.3],
-        ss: 3
+        // ss: 3
     }
 }
