@@ -56,27 +56,49 @@ pub fn field(
                             ray.travel(bump_dist);
                             continue;
                         }
+                        "solar" => {
+                            let light = illumination::light(
+                                input.sett.sun_pos(),
+                                input.cam.focus().orient().pos(),
+                                &ray,
+                                &hit,
+                            );
+
+                            let base_col = input.cols.map()[hit.group()]
+                                .get(hit.side().norm().dot(&sun_dir).abs() as f32);
+                            let grad = palette::Gradient::new(vec![
+                                palette::LinSrgba::default(),
+                                base_col,
+                            ]);
+
+                            data.image[pixel] += grad.get(light as f32) * weight as f32;
+
+                            data.hits[index] += weight;
+                            break;
+                        }
                         _ => {
-                            // panic!("Unknown hit group {}", hit.group());
+                            let light = illumination::light(
+                                input.sett.sun_pos(),
+                                input.cam.focus().orient().pos(),
+                                &ray,
+                                &hit,
+                            );
+                            let shadow =
+                                illumination::shadow(input, &ray, &hit, bump_dist, &mut rng);
+
+                            let base_col = input.cols.map()[hit.group()]
+                                .get(hit.side().norm().dot(&sun_dir).abs() as f32);
+                            let grad = palette::Gradient::new(vec![
+                                palette::LinSrgba::default(),
+                                base_col,
+                            ]);
+
+                            data.image[pixel] += grad.get((light * shadow) as f32) * weight as f32;
+
+                            data.hits[index] += weight;
+                            break;
                         }
                     };
-
-                    let light = illumination::light(
-                        input.sett.sun_pos(),
-                        input.cam.focus().orient().pos(),
-                        &ray,
-                        &hit,
-                    );
-                    let shadow = illumination::shadow(input, &ray, &hit, bump_dist, &mut rng);
-
-                    let base_col = input.cols.map()[hit.group()]
-                        .get(hit.side().norm().dot(&sun_dir).abs() as f32);
-                    let grad = palette::Gradient::new(vec![palette::LinSrgba::default(), base_col]);
-
-                    data.image[pixel] += grad.get((light * shadow) as f32) * weight as f32;
-
-                    data.hits[index] += weight;
-                    break;
                 }
             }
         } else {
