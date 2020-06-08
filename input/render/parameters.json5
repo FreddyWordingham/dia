@@ -39,7 +39,7 @@
             // mirror: [['objs/mirror_left.obj', 'objs/mirror_right.obj'], null],
             path: [['objs/path.obj', 'objs/under_path.obj'], null],
             tree: [['objs/tree.obj', 'objs/stump.obj'], null],
-            // solar: [['objs/solar.obj'], null],
+            solar: [['objs/solar.obj'], null],
     },
     cols: {
             sky:            ['#ffffffff', '#175bd5ff', '#2222c5ff'],
@@ -54,7 +54,7 @@
             hedge:          ['#556b2fff', '#1f841fff', '#56a556ff'],
             hill:           ['#0ebb0eff', '#008080ff'],
             kt_blouse:      ['#51dab6ff', '#67e2b9ff', '#3be3abff'],
-            kt_hair:        ['#ffca00ff', '#ffd700ff', '#ffff00ff'],
+            kt_hair:        ['#d9aa3fff', '#ffca00ff', '#ffd700ff', '#ffff00ff'],
             kt_shoes:       ['#f84c45ff', '#f3586bff', '#d84681ff'],
             kt_skin:        ['#fbc3adff', '#f9d2c2ff', '#f6e4cdff'],
             kt_skirt:       ['#36e3deff', '#39c7e7ff', '#17b4d8ff'],

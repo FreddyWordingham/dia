@@ -63,6 +63,10 @@ pub fn field(
                                 &ray,
                                 &hit,
                             );
+                            let shadow = 1.0
+                                - (1.0
+                                    - illumination::shadow(input, &ray, &hit, bump_dist, &mut rng))
+                                .powi(16);
 
                             let base_col = input.cols.map()[hit.group()]
                                 .get(hit.side().norm().dot(&sun_dir).abs() as f32);
@@ -71,7 +75,7 @@ pub fn field(
                                 base_col,
                             ]);
 
-                            data.image[pixel] += grad.get(light as f32) * weight as f32;
+                            data.image[pixel] += grad.get((light * shadow) as f32) * weight as f32;
 
                             data.hits[index] += weight;
                             break;
