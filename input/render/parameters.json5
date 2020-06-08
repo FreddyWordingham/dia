@@ -18,8 +18,7 @@
         sun_pos: [-17,16,17],
         sun_rad: 0.01,
         ambient_occlusion: 16,
-        // ambient_occlusion: 7,
-        soft_shadows: 16,
+        soft_shadows: 7,
     },
     surfs: {
             bluebells: [['objs/bluebells_low.obj'], null],
@@ -74,14 +73,15 @@
     },
     cam: {
         pos: [-11.3636,26.629,2.94872],
-        tar: [12.8827,-23.3324,14.09594],
-        // tar: [-8.13774,18.2751,2.69857],
-        fov: 29,
+        // tar: [12.8827,-23.3324,14.09594],
+        tar: [-8.13774,18.2751,2.69857],
+        fov: 45,
         aspect_ratio: "IPhoneXS",
         // res: 3440,
-        res: 1125,
+        res: 2250,
+        // res: 1125,
         // res: 375,
-        // dof: [7, 5.0],
-        ss: 4
+        dof: [7, 0.3],
+        ss: 3
     }
 }
