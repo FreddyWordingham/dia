@@ -8,13 +8,14 @@ use rand::rngs::ThreadRng;
 
 /// Test painter function.
 #[allow(clippy::option_expect_used)]
+#[allow(clippy::too_many_lines)]
 #[inline]
 pub fn field(
     _thread_id: usize,
     mut rng: &mut ThreadRng,
     input: &Input,
     data: &mut Output,
-    weight: f64,
+    mut weight: f64,
     pixel: [usize; 2],
     mut ray: Ray,
 ) {
@@ -44,7 +45,7 @@ pub fn field(
             // Handle event.
             match Event::new(voxel_dist, surf_hit) {
                 Event::Voxel(dist) => ray.travel(dist + bump_dist),
-                Event::Surface(hit) => {
+                Event::Surface(mut hit) => {
                     match hit.group() {
                         "mirror" => {
                             ray.travel(hit.dist());
@@ -64,15 +65,17 @@ pub fn field(
                                 &ray,
                                 &hit,
                             );
-                            let shadow = 1.0
-                                - (1.0
-                                    - illumination::shadow(input, &ray, &hit, bump_dist, &mut rng))
-                                .powi(6);
-                            // let shadow =
-                            //     illumination::shadow(input, &ray, &hit, bump_dist, &mut rng);
+                            hit.flip_side();
+                            let shadow =
+                                ((illumination::shadow(input, &ray, &hit, bump_dist, &mut rng)
+                                    + 0.05)
+                                    * 4.0)
+                                    .min(1.0);
 
                             let base_col = input.cols.map()[hit.group()]
-                                .get(hit.side().norm().dot(&sun_dir).abs() as f32);
+                                // .get(((hit.side().norm().dot(&Vec3::x_axis()) + 1.0) * 0.5) as f32);
+                                // .get(((hit.side().norm().dot(&Vec3::x_axis()) + 1.0) * 0.5) as f32);
+                                .get(((hit.side().norm().dot(&sun_dir) + 1.0) * 0.5) as f32);
                             // .get(hit.side().norm().dot(&Vec3::z_axis()).abs() as f32);
                             let grad = palette::Gradient::new(vec![
                                 palette::LinSrgba::default(),
@@ -80,9 +83,10 @@ pub fn field(
                             ]);
 
                             data.image[pixel] += grad.get((light * shadow) as f32) * weight as f32;
-
                             data.hits[index] += weight;
-                            break;
+
+                            weight *= 0.25;
+                            ray.travel(bump_dist);
                         }
                         "solar" => {
                             ray.travel(hit.dist());
@@ -98,7 +102,7 @@ pub fn field(
                                 .powi(4);
 
                             let base_col = input.cols.map()[hit.group()]
-                                .get(hit.side().norm().dot(&sun_dir).abs() as f32);
+                                .get(((hit.side().norm().dot(&sun_dir) + 1.0) * 0.5) as f32);
                             let grad = palette::Gradient::new(vec![
                                 palette::LinSrgba::default(),
                                 base_col,
@@ -125,7 +129,8 @@ pub fn field(
                             //     illumination::shadow(input, &ray, &hit, bump_dist, &mut rng);
 
                             let base_col = input.cols.map()[hit.group()]
-                                .get(hit.side().norm().dot(&sun_dir).abs() as f32);
+                                // .get(hit.side().norm().dot(&sun_dir).abs() as f32);
+                                .get(((hit.side().norm().dot(&sun_dir) + 1.0) * 0.5) as f32);
                             // .get(hit.side().norm().dot(&Vec3::z_axis()).abs() as f32);
                             let grad = palette::Gradient::new(vec![
                                 palette::LinSrgba::default(),

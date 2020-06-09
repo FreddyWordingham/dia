@@ -38,6 +38,16 @@ impl Side {
         }
     }
 
+    /// Reverse the side.
+    #[inline]
+    #[must_use]
+    pub fn flip(self) -> Self {
+        match self {
+            Self::Inside { norm } => Self::Outside { norm },
+            Self::Outside { norm } => Self::Inside { norm },
+        }
+    }
+
     /// Check if the side is an inside.
     #[inline]
     #[must_use]

@@ -26,6 +26,13 @@ impl<'a> Hit<'a> {
         Self { group, dist, side }
     }
 
+    /// Flip the contained side.
+    #[inline]
+    pub fn flip_side(&mut self) {
+        let s = self.side.clone().flip();
+        self.side = s;
+    }
+
     /// Access the group str.
     #[inline]
     #[must_use]

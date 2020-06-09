@@ -18,8 +18,8 @@
         sun_pos: [-17,16,17],
         // sun_pos: [-12.3636,28.629,14.94872],
         sun_rad: 0.01,
-        ambient_occlusion: 16,
-        soft_shadows: 7,
+        // ambient_occlusion: 16,
+        // soft_shadows: 7,
     },
     surfs: {
             // bluebells: [['objs/bluebells_low.obj'], null],
@@ -39,7 +39,7 @@
             // mirror: [['objs/mirror_left.obj', 'objs/mirror_right.obj'], null],
             path: [['objs/path.obj', 'objs/under_path.obj'], null],
             tree: [['objs/tree.obj', 'objs/stump.obj'], null],
-            solar: [['objs/solar.obj'], null],
+            // solar: [['objs/solar.obj'], null],
     },
     cols: {
             sky:            ['#ffffffff', '#175bd5ff', '#2222c5ff'],
@@ -56,7 +56,7 @@
             kt_blouse:      ['#51dab6ff', '#67e2b9ff', '#3be3abff'],
             kt_hair:        ['#d9aa3fff', '#ffca00ff', '#ffd700ff', '#ffff00ff'],
             kt_shoes:       ['#f84c45ff', '#f3586bff', '#d84681ff'],
-            kt_skin:        ['#fbc3adff', '#f9d2c2ff', '#f6e4cdff'],
+            kt_skin:        ['#f0b1c6ff', '#fbadadff', '#fdc5c5ff'],
             kt_skirt:       ['#36e3deff', '#39c7e7ff', '#17b4d8ff'],
             leaves:         ['#ffe200ff', '#ff4700ff', '#ff000dff', '#ff009dff', '#b400ffff', '#3700ffff', '#0095ffff'],
             mirror:         ['#d6edefff', '#c3e8e4ff'],
