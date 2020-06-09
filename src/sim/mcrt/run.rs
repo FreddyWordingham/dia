@@ -1,7 +1,7 @@
 //! Simulation run functions.
 
 use crate::{
-    mcrt::{life::Life, Data, Input},
+    mcrt::{life::Life, Input, Output},
     Error, ParBar,
 };
 use rand::thread_rng;
@@ -12,7 +12,7 @@ use std::sync::{Arc, Mutex};
 /// # Errors
 /// if the progress bar can not be locked.
 #[inline]
-pub fn simulate(input: &Input, func: Life) -> Result<Data, Error> {
+pub fn simulate(input: &Input, func: Life) -> Result<Output, Error> {
     let pb = ParBar::new("Randomising", input.sett.num_phot());
     let pb = Arc::new(Mutex::new(pb));
 
@@ -41,8 +41,8 @@ fn single_thread(
     pb: &Arc<Mutex<ParBar>>,
     input: &Input,
     func: Life,
-) -> Result<Data, Error> {
-    let mut data = Data::new(input.grid.boundary().clone(), *input.grid.res());
+) -> Result<Output, Error> {
+    let mut data = Output::new(input.grid.boundary().clone(), *input.grid.res());
 
     let mut rng = thread_rng();
 

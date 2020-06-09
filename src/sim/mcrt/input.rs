@@ -11,14 +11,14 @@ use crate::{
 pub struct Input<'a> {
     /// Simulation settings.
     pub sett: &'a Settings,
-    /// Properties.
-    pub props: &'a Set<Properties>,
     /// Emission source.
     pub light: &'a Light,
-    /// Regular grid.
-    pub grid: &'a Grid,
+    /// Properties.
+    pub props: &'a Set<Properties>,
     /// Surface tree.
     pub tree: &'a Cell<'a>,
+    /// Regular grid.
+    pub grid: &'a Grid,
 }
 
 impl<'a> Input<'a> {
@@ -27,17 +27,17 @@ impl<'a> Input<'a> {
     #[must_use]
     pub const fn new(
         sett: &'a Settings,
-        props: &'a Set<Properties>,
         light: &'a Light,
-        grid: &'a Grid,
+        props: &'a Set<Properties>,
         tree: &'a Cell,
+        grid: &'a Grid,
     ) -> Self {
         Self {
             sett,
-            props,
             light,
-            grid,
+            props,
             tree,
+            grid,
         }
     }
 }

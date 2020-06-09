@@ -1,10 +1,10 @@
 //! Photon lifetime function module.
 
-use crate::mcrt::{Data, Input};
+use crate::mcrt::{Input, Output};
 use rand::rngs::ThreadRng;
 
 /// Photon lifetime function type.
-pub type Life = fn(&Input, &mut Data, &mut ThreadRng);
+pub type Life = fn(&Input, &mut Output, &mut ThreadRng);
 
 pub mod test;
 
