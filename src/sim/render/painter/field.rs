@@ -55,6 +55,9 @@ pub fn field(
                                 -ray.dir().dot(hit.side().norm()),
                             );
                             ray.travel(bump_dist);
+                            data.image[pixel] +=
+                                palette::LinSrgba::default() * (weight * 0.95) as f32;
+                            weight *= 0.05;
                             continue;
                         }
                         "leaves" => {
