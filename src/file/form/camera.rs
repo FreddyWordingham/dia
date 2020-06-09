@@ -3,7 +3,7 @@
 use crate::{
     display_field, display_field_ln, render,
     render::{Focus, Lens, Sensor},
-    AspectRatio, Build, Error, Pos3,
+    AspectRatio, Build, Error, Pos3, X, Y,
 };
 use attr::load;
 use std::{
@@ -18,6 +18,8 @@ pub struct Camera {
     pos: Pos3,
     /// Target point.
     tar: Pos3,
+    /// Swivel to apply after targeting [deg].
+    swivel: [f64; 2],
     /// Horizontal field of view [deg].
     fov: f64,
     /// Aspect ratio.
@@ -42,7 +44,10 @@ impl Build for Camera {
         };
 
         let focus = Focus::new(self.pos, self.tar, dof);
-        let lens = Lens::new(self.fov.to_radians());
+        let lens = Lens::new(
+            [self.swivel[X].to_radians(), self.swivel[Y].to_radians()],
+            self.fov.to_radians(),
+        );
         let sensor = Sensor::new(&self.aspect_ratio, self.res, self.ss);
 
         Ok(Self::Inst::new(focus, lens, sensor))

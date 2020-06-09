@@ -39,7 +39,7 @@
             // mirror: [['objs/mirror_left.obj', 'objs/mirror_right.obj'], null],
             path: [['objs/path.obj', 'objs/under_path.obj'], null],
             tree: [['objs/tree.obj', 'objs/stump.obj'], null],
-            // solar: [['objs/solar.obj'], null],
+            solar: [['objs/solar.obj'], null],
     },
     cols: {
             sky:            ['#ffffffff', '#175bd5ff', '#2222c5ff'],
@@ -76,7 +76,8 @@
         pos: [-10.3636,26.629,2.94872],
         // tar: [12.8827,-23.3324,14.09594],
         tar: [-8.13774,18.2751,2.4418],
-        fov: 45,
+        swivel: [-8, 20],
+        fov: 38,
         aspect_ratio: "IPhoneXS",
         // res: 3440,
         // res: 2250,

@@ -6,7 +6,7 @@ pub mod sensor;
 
 pub use self::{focus::*, lens::*, sensor::*};
 
-use crate::{access, display_field, display_field_ln, Ray, Rot3};
+use crate::{access, display_field, display_field_ln, Ray, Rot3, X, Y};
 use std::fmt::{Display, Formatter, Result};
 
 /// Camera structure.
@@ -62,6 +62,9 @@ impl Camera {
             theta += (sub_delta * (0.5 + sx)) - (delta * 0.5);
             phi += (sub_delta * (0.5 + sy)) - (delta * 0.5);
         }
+
+        theta += self.lens().swivel()[X];
+        phi += self.lens().swivel()[Y];
 
         *ray.dir_mut() = Rot3::from_axis_angle(&self.focus.orient().down(), theta)
             * Rot3::from_axis_angle(self.focus.orient().right(), phi)
