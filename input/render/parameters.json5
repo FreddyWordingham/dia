@@ -6,8 +6,8 @@
     },
     grid: {
         boundary: {
-            mins: [-35, -35, -35],
-            maxs: [ 35,  35,  35]
+            mins: [-64, -64, -64],
+            maxs: [ 64,  64,  64]
         },
         // res: [256,256,256]
         res: [1,1,1]
@@ -39,10 +39,11 @@
             // mirror: [['objs/mirror_left.obj', 'objs/mirror_right.obj'], null],
             path: [['objs/path.obj', 'objs/under_path.obj'], null],
             tree: [['objs/tree.obj', 'objs/stump.obj'], null],
-            solar: [['objs/solar.obj'], null],
+            solar: [['objs/solar.obj'], {trans:[0,0,35]}],
     },
     cols: {
-            sky:            ['#ffffffff', '#175bd5ff', '#2222c5ff'],
+            // sky:            ['#ffd700ff', '#ffff00ff', '#175bd5ff', '#2222c5ff'],
+            sky:            [ '#0542A8ff', '#1552C6ff', '#3072EBff', '#71A8EEff', '#BA6D09ff', '#BC2909ff', '#58151Aff'],
             greyscale:      ['#a4a4a4ff', '#ffffffff'],
 
             bluebells:      ['#724ceeff', '#7770ffff', '#8e6fe4ff'],
@@ -81,8 +82,8 @@
         aspect_ratio: "IPhoneXS",
         // res: 3440,
         // res: 2250,
-        // res: 1125,
-        res: 375,
+        res: 1125,
+        // res: 375,
         // dof: [7, 0.3],
         // ss: 3
     }

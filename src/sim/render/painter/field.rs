@@ -82,7 +82,8 @@ pub fn field(
                                 base_col,
                             ]);
 
-                            data.image[pixel] += grad.get((light * shadow) as f32) * weight as f32;
+                            data.image[pixel] +=
+                                grad.get((light * shadow) as f32) * (weight * 0.75) as f32;
                             data.hits[index] += weight;
 
                             weight *= 0.25;
