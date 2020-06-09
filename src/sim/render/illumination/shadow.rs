@@ -81,7 +81,7 @@ pub fn visibility(input: &Input, mut ray: Ray, bump_dist: f64) -> f64 {
             }
             "leaves" => {
                 // Transparent.
-                vis *= 0.5;
+                vis *= 0.75;
                 ray.travel(hit.dist() + bump_dist);
             }
             "tree" => {

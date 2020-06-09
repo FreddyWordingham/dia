@@ -22,8 +22,8 @@
         soft_shadows: 7,
     },
     surfs: {
-            bluebells: [['objs/bluebells_low.obj'], null],
-            grass: [['objs/grass.obj'], null],
+            // bluebells: [['objs/bluebells_low.obj'], null],
+            // grass: [['objs/grass.obj'], null],
             bone: [['objs/bone.obj'], null],
             butterfly: [['objs/butterfly.obj'], null],
             dog: [['objs/dog.obj'], null],
@@ -82,7 +82,7 @@
         // res: 2250,
         // res: 1125,
         res: 375,
-        dof: [7, 0.3],
+        // dof: [7, 0.3],
         // ss: 3
     }
 }

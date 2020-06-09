@@ -56,6 +56,34 @@ pub fn field(
                             ray.travel(bump_dist);
                             continue;
                         }
+                        "leaves" => {
+                            ray.travel(hit.dist());
+                            let light = illumination::light(
+                                input.sett.sun_pos(),
+                                input.cam.focus().orient().pos(),
+                                &ray,
+                                &hit,
+                            );
+                            let shadow = 1.0
+                                - (1.0
+                                    - illumination::shadow(input, &ray, &hit, bump_dist, &mut rng))
+                                .powi(6);
+                            // let shadow =
+                            //     illumination::shadow(input, &ray, &hit, bump_dist, &mut rng);
+
+                            let base_col = input.cols.map()[hit.group()]
+                                .get(hit.side().norm().dot(&sun_dir).abs() as f32);
+                            // .get(hit.side().norm().dot(&Vec3::z_axis()).abs() as f32);
+                            let grad = palette::Gradient::new(vec![
+                                palette::LinSrgba::default(),
+                                base_col,
+                            ]);
+
+                            data.image[pixel] += grad.get((light * shadow) as f32) * weight as f32;
+
+                            data.hits[index] += weight;
+                            break;
+                        }
                         "solar" => {
                             ray.travel(hit.dist());
                             let light = illumination::light(
