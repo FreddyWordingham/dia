@@ -1,10 +1,12 @@
 //! Test photon lifetime function.
 
 use crate::{
+    distribution,
     mcrt::{Environment, Event, Input, Output, Photon, Properties},
     Trace,
 };
 use rand::{rngs::ThreadRng, Rng};
+use std::f64::consts::PI;
 
 /// Test photon lifetime function.
 #[allow(clippy::option_expect_used)]
@@ -60,7 +62,9 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
         // Handle event.
         match Event::new(voxel_dist, scat_dist, surf_hit, bump_dist) {
             Event::Voxel(dist) => travel(data, index, &env, &mut phot, dist + bump_dist),
-            Event::Scattering(dist) => travel(data, index, &env, &mut phot, dist + bump_dist),
+            Event::Scattering(dist) => {
+                scatter(data, rng, index, &env, &mut phot, dist);
+            }
             Event::Surface(hit) => travel(data, index, &env, &mut phot, hit.dist() + bump_dist),
         }
     }
@@ -90,4 +94,24 @@ fn travel(data: &mut Output, index: [usize; 3], _env: &Environment, phot: &mut P
 
     phot.ray_mut().travel(dist);
     data.dist_travelled[index] += dist;
+}
+
+/// Perform a photon scattering event.
+#[inline]
+fn scatter(
+    data: &mut Output,
+    rng: &mut ThreadRng,
+    index: [usize; 3],
+    env: &Environment,
+    phot: &mut Photon,
+    dist: f64,
+) {
+    debug_assert!(dist > 0.0);
+
+    travel(data, index, env, phot, dist);
+
+    *phot.weight_mut() *= env.albedo();
+    let phi = distribution::henyey_greenstein(rng, env.asym());
+    let theta = rng.gen_range(0.0, PI * 2.0);
+    phot.ray_mut().rotate(phi, theta);
 }
