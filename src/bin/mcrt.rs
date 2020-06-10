@@ -18,7 +18,7 @@ struct Parameters {
     /// Surfaces map.
     surfs: Set<form::Mesh>,
     /// Materials map.
-    props: Set<Redirect<form::Material>>,
+    mats: Set<Redirect<form::Material>>,
 }
 
 /// Main function.
@@ -26,9 +26,9 @@ pub fn main() {
     banner::title("MCRT");
     let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let (tree_sett, grid_sett, mcrt_sett, light, surfs, props) = build(&in_dir, params);
+    let (tree_sett, grid_sett, mcrt_sett, light, surfs, mats) = build(&in_dir, params);
     let (tree, grid) = grow(tree_sett, grid_sett, &surfs);
-    let input = mcrt::Input::new(&mcrt_sett, &light, &props, &tree, &grid);
+    let input = mcrt::Input::new(&mcrt_sett, &light, &mats, &tree, &grid);
     let data = render(&input);
     save(&out_dir, data);
     banner::section("Finished");
@@ -99,15 +99,15 @@ fn build(
     report!("Surfaces", &surfs);
 
     banner::sub_section("Properties");
-    let props = params
-        .props
+    let mats = params
+        .mats
         .build(in_dir)
-        .expect("Unable to build properties.")
+        .expect("Unable to build materties.")
         .build(in_dir)
-        .expect("Unable to build properties.");
-    report!("Properties", &props);
+        .expect("Unable to build materties.");
+    report!("Properties", &mats);
 
-    (tree_sett, grid_sett, mcrt_sett, light, surfs, props)
+    (tree_sett, grid_sett, mcrt_sett, light, surfs, mats)
 }
 
 /// Grow domains.

@@ -3,7 +3,7 @@
 use crate::{
     distribution,
     mcrt::{Environment, Event, Input, Material, Output, Photon},
-    Trace,
+    Crossing, Hit, Set, Trace,
 };
 use rand::{rngs::ThreadRng, Rng};
 use std::f64::consts::PI;
@@ -20,7 +20,7 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
 
     // Photon variable initialisation.
     let (mut phot, mat) = emit_phot(input, rng);
-    let env = mat.env(phot.wavelength());
+    let mut env = mat.env(phot.wavelength());
 
     // Check photon can be placed within the grid domain.
     if let Some(index) = input.grid.gen_index(phot.ray().pos()) {
@@ -61,11 +61,46 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
 
         // Handle event.
         match Event::new(voxel_dist, scat_dist, surf_hit, bump_dist) {
+            // Voxel boundary hit.
             Event::Voxel(dist) => travel(data, index, &env, &mut phot, dist + bump_dist),
+            // Interaction event.
             Event::Scattering(dist) => {
                 scatter(data, rng, index, &env, &mut phot, dist);
             }
-            Event::Surface(hit) => travel(data, index, &env, &mut phot, hit.dist() + bump_dist),
+            // Interface collision.
+            Event::Surface(hit) => {
+                // Move to the collision point.
+                travel(data, index, &env, &mut phot, hit.dist());
+
+                // Special collision events.
+                // match hit.group() {
+                //     "spectrometer" => {}
+                //     _ => {}
+                // }
+
+                // Get the near, and far side refractive indices.
+                let curr_ref = env.ref_index();
+                let next_env = select_property(&hit, input.mats).env(phot.wavelength());
+                let next_ref = next_env.ref_index();
+
+                // Calculate the crossing normal vectors.
+                let crossing =
+                    Crossing::new(phot.ray().dir(), hit.side().norm(), curr_ref, next_ref);
+
+                // Determine if a reflection or transmission occurs.
+                let r = rng.gen::<f64>();
+                if r <= crossing.ref_prob() {
+                    // Reflect.
+                    *phot.ray_mut().dir_mut() = *crossing.ref_dir();
+                } else {
+                    // Refract.
+                    *phot.ray_mut().dir_mut() = crossing.trans_dir().expect("Invalid refraction.");
+                    env = next_env;
+                }
+
+                // Move slightly away from the surface.
+                travel(data, index, &env, &mut phot, input.sett.bump_dist());
+            }
         }
     }
 }
@@ -129,4 +164,37 @@ fn scatter(
     let phi = distribution::henyey_greenstein(rng, env.asym());
     let theta = rng.gen_range(0.0, PI * 2.0);
     phot.ray_mut().rotate(phi, theta);
+}
+
+/// Determine the next material from the hit event information.
+#[must_use]
+#[inline]
+pub fn select_property<'a>(hit: &Hit, mats: &'a Set<Material>) -> &'a Material {
+    match hit.group() {
+        "skin" => {
+            if hit.side().is_inside() {
+                &mats.map()["air"]
+            } else {
+                &mats.map()["flesh"]
+            }
+        }
+        "tumour_body" => {
+            if hit.side().is_inside() {
+                &mats.map()["flesh"]
+            } else {
+                &mats.map()["tumour"]
+            }
+        }
+        "tumour_cap" => {
+            if hit.side().is_inside() {
+                &mats.map()["air"]
+            } else {
+                &mats.map()["tumour"]
+            }
+        }
+        _ => panic!(format!(
+            "Do not know how to handle collision with group {}",
+            hit.group()
+        )),
+    }
 }
