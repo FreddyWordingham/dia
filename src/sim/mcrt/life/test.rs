@@ -21,6 +21,7 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
     // Photon variable initialisation.
     let (mut phot, mat) = emit_phot(input, rng);
     let mut env = mat.env(phot.wavelength());
+    data.paths.push(Vec::new());
 
     // Check photon can be placed within the grid domain.
     if let Some(index) = input.grid.gen_index(phot.ray().pos()) {
@@ -32,6 +33,9 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
     // Loop photon life until it leaves the grid.
     let mut loops = 0;
     while let Some((index, voxel)) = input.grid.gen_index_voxel(phot.ray().pos()) {
+        // Record photon position.
+        data.paths.last_mut().unwrap().push(*phot.ray().pos());
+
         // Check if loop limit has been reached.
         if loops >= loop_limit {
             println!("Warning! Terminating photon: loop limit reached.");
@@ -103,6 +107,8 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
             }
         }
     }
+
+    data.paths.last_mut().unwrap().push(*phot.ray().pos());
 }
 
 /// Generate a new photon.
