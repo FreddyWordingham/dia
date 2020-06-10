@@ -26,7 +26,7 @@ pub fn simulate(input: &Input, func: Life) -> Result<Output, Error> {
 
     let mut base = data.pop().ok_or("Missing data result.")??;
     for dat in data {
-        base += &dat?;
+        base += dat?;
     }
 
     Ok(base)

@@ -1,6 +1,6 @@
 //! Output data structure.
 
-use crate::{access, display_field, display_field_ln, Aabb, Error, Save, X, Y, Z};
+use crate::{access, display_field, display_field_ln, Aabb, Error, Pos3, Save, X, Y, Z};
 use ndarray::Array3;
 use std::{
     fmt::{Display, Formatter},
@@ -16,6 +16,8 @@ pub struct Output {
     pub emitted_photons: Array3<f64>,
     /// Dist travelled by photons [m].
     pub dist_travelled: Array3<f64>,
+    /// Tracked paths.
+    pub paths: Vec<Vec<Pos3>>,
 }
 
 impl Output {
@@ -33,15 +35,17 @@ impl Output {
             boundary,
             emitted_photons: Array3::zeros(res),
             dist_travelled: Array3::zeros(res),
+            paths: Vec::new(),
         }
     }
 }
 
-impl AddAssign<&Self> for Output {
+impl AddAssign<Self> for Output {
     #[inline]
-    fn add_assign(&mut self, rhs: &Self) {
+    fn add_assign(&mut self, mut rhs: Self) {
         self.emitted_photons += &rhs.emitted_photons;
         self.dist_travelled += &rhs.dist_travelled;
+        self.paths.append(&mut rhs.paths);
     }
 }
 
@@ -50,12 +54,13 @@ impl Display for Output {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
         display_field_ln!(fmt, "total emitted photons", self.emitted_photons.sum())?;
-        display_field!(
+        display_field_ln!(
             fmt,
             "total distance travelled",
             self.dist_travelled.sum(),
             "m"
-        )
+        )?;
+        display_field!(fmt, "number of recorded paths", self.paths.len())
     }
 }
 

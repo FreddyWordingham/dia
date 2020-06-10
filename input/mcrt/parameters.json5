@@ -9,12 +9,12 @@
             mins: [-5e-3, -5e-3, -9e-3],
             maxs: [ 5e-3,  5e-3,  1e-3]
         },
-        // res: [64,64,64]
-        res: [5,5,5]
+        res: [64,64,64]
+        // res: [5,5,5]
     },
     sett: {
         bump_dist:          1e-6,
-        num_phot:           1e4,
+        num_phot:           1e2,
         block_size:         1e1,
         loop_limit:         1e6,
         roulette_weight:    0.01,
