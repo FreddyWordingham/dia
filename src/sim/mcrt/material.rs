@@ -1,4 +1,4 @@
-//! Properties structure.
+//! Material structure.
 
 use crate::{access, display_field, display_field_ln, mcrt::Environment, Formula};
 use std::fmt::{Display, Formatter, Result};
@@ -7,7 +7,7 @@ use std::fmt::{Display, Formatter, Result};
 pub const DISPLAY_WAVELENGTH: f64 = 635e-9;
 
 /// Physical attributes structure.
-pub struct Properties {
+pub struct Material {
     /// Refractive index.
     ref_index: Formula,
     /// Scattering coefficient [1/m].
@@ -20,7 +20,7 @@ pub struct Properties {
     asym_fact: Formula,
 }
 
-impl Properties {
+impl Material {
     access!(ref_index, Formula);
     access!(scat_coeff, Formula);
     access!(abs_coeff, Option<Formula>);
@@ -72,7 +72,7 @@ impl Properties {
     }
 }
 
-impl Display for Properties {
+impl Display for Material {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {

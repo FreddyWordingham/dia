@@ -17,8 +17,8 @@ struct Parameters {
     light: form::Light,
     /// Surfaces map.
     surfs: Set<form::Mesh>,
-    /// Properties map.
-    props: Set<Redirect<form::Properties>>,
+    /// Materials map.
+    props: Set<Redirect<form::Material>>,
 }
 
 /// Main function.
@@ -72,7 +72,7 @@ fn build(
     mcrt::Settings,
     mcrt::Light,
     Set<Mesh>,
-    Set<mcrt::Properties>,
+    Set<mcrt::Material>,
 ) {
     banner::section("Building");
     banner::sub_section("Adaptive Tree Settings");

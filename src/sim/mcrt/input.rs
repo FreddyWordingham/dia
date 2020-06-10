@@ -2,7 +2,7 @@
 
 use crate::{
     grid::Grid,
-    mcrt::{Light, Properties, Settings},
+    mcrt::{Light, Material, Settings},
     tree::Cell,
     Set,
 };
@@ -13,8 +13,8 @@ pub struct Input<'a> {
     pub sett: &'a Settings,
     /// Emission source.
     pub light: &'a Light,
-    /// Properties.
-    pub props: &'a Set<Properties>,
+    /// Materials.
+    pub mats: &'a Set<Material>,
     /// Surface tree.
     pub tree: &'a Cell<'a>,
     /// Regular grid.
@@ -28,14 +28,14 @@ impl<'a> Input<'a> {
     pub const fn new(
         sett: &'a Settings,
         light: &'a Light,
-        props: &'a Set<Properties>,
+        mats: &'a Set<Material>,
         tree: &'a Cell,
         grid: &'a Grid,
     ) -> Self {
         Self {
             sett,
             light,
-            props,
+            mats,
             tree,
             grid,
         }

@@ -2,7 +2,7 @@
 
 use crate::{
     distribution,
-    mcrt::{Environment, Event, Input, Output, Photon, Properties},
+    mcrt::{Environment, Event, Input, Material, Output, Photon},
     Trace,
 };
 use rand::{rngs::ThreadRng, Rng};
@@ -73,7 +73,8 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
 /// Generate a new photon.
 #[inline]
 #[must_use]
-fn emit_phot<'a>(input: &'a Input, rng: &mut ThreadRng) -> (Photon, &'a Properties) {
+fn emit_phot<'a>(input: &'a Input, rng: &mut ThreadRng) -> (Photon, &'a Material) {
+    // Generate photons from the light source until they're in the optical range of interest.
     let mut phot;
     loop {
         phot = input.light.emit(input.sett.num_phot(), rng);
@@ -82,9 +83,10 @@ fn emit_phot<'a>(input: &'a Input, rng: &mut ThreadRng) -> (Photon, &'a Properti
         }
     }
 
-    let prop = &input.props.map()[input.sett.init_mat()];
+    // Select the required material.
+    let mat = &input.mats.map()[input.sett.init_mat()];
 
-    (phot, prop)
+    (phot, mat)
 }
 
 /// Move the photon forward and record the flight.
@@ -108,9 +110,22 @@ fn scatter(
 ) {
     debug_assert!(dist > 0.0);
 
+    // Move to the interaction point.
     travel(data, index, env, phot, dist);
 
+    // Part of the weight is absorbed.
     *phot.weight_mut() *= env.albedo();
+
+    // The remaining weight may be shifted in a Raman/fluorescence event.
+    let r = rng.gen::<f64>();
+    if r <= env.shift_prob() {
+        // Shift occurs.
+        // Fluorescence event removes photons from optical range of interest.
+        *phot.weight_mut() = 0.0;
+        return;
+    }
+
+    // The remaining weight is scattered.
     let phi = distribution::henyey_greenstein(rng, env.asym());
     let theta = rng.gen_range(0.0, PI * 2.0);
     phot.ray_mut().rotate(phi, theta);

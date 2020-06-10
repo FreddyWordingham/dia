@@ -1,4 +1,4 @@
-//! Properties form implementation.
+//! Material form implementation.
 
 use crate::{display_field, display_field_ln, form, Build, Error};
 use attr::load;
@@ -9,7 +9,7 @@ use std::{
 
 /// Physical attributes structure.
 #[load]
-pub struct Properties {
+pub struct Material {
     /// Refractive index.
     ref_index: form::Formula,
     /// Scattering coefficient [1/m].
@@ -22,8 +22,8 @@ pub struct Properties {
     asym_fact: form::Formula,
 }
 
-impl Build for Properties {
-    type Inst = crate::mcrt::Properties;
+impl Build for Material {
+    type Inst = crate::mcrt::Material;
 
     #[inline]
     fn build(self, in_dir: &Path) -> Result<Self::Inst, Error> {
@@ -51,7 +51,7 @@ impl Build for Properties {
     }
 }
 
-impl Display for Properties {
+impl Display for Material {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
