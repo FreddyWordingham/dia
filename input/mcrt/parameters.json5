@@ -6,16 +6,15 @@
     },
     grid: {
         boundary: {
-            mins: [-5e-3, -5e-3, -9e-3],
-            maxs: [ 5e-3,  5e-3,  1e-3]
+            mins: [-10e-3, -10e-3, -18e-3],
+            maxs: [ 10e-3,  10e-3,  2e-3]
         },
-        res: [64,64,64]
-        // res: [5,5,5]
+        res: [65,65,65]
     },
     sett: {
         bump_dist:          1e-6,
-        num_phot:           1e6,
-        block_size:         1e3,
+        num_phot:           1e4,
+        block_size:         1e1,
         loop_limit:         1e6,
         roulette_weight:    0.01,
         roulette_barrels:   8,
@@ -30,9 +29,11 @@
         power: 1
     },
     surfs: {
-        skin:           [['objs/skin.obj'],         {scale: 1.0e-3}],
-        tumour_cap:     [['objs/tumour_cap.obj'],   {scale: 1.0e-3}],
-        tumour_body:    [['objs/tumour_2000.obj'],  {scale: 1.0e-3}],
+        skin:           [['objs/square.obj'],   {scale: 1.0e-3}],
+        tumour_body:    [['objs/sphere.obj'],   {scale: 1.0e-3, trans: [0,0,-2000e-6]}],
+        // skin:           [['objs/skin.obj'],         {scale: 1.0e-3}],
+        // tumour_cap:     [['objs/tumour_cap.obj'],   {scale: 1.0e-3}],
+        // tumour_body:    [['objs/tumour_2000.obj'],  {scale: 1.0e-3}],
     },
     mats: {
         air: {
@@ -43,7 +44,7 @@
             }
         },
         flesh: {
-            There: 'mats/dermis.json5'
+            There: 'mats/flesh.json5'
         },
         tumour: {
             There: 'mats/tumour.json5'
