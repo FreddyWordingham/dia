@@ -159,9 +159,9 @@
     <span class="macro">write</span><span class="macro">!</span>(<span class="ident">s</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">obj</span>)<span class="question-mark">?</span>;
     <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">contains</span>(<span class="string">&#39;\n&#39;</span>) {
         <span class="prelude-val">Ok</span>(<span class="macro">format</span><span class="macro">!</span>(
-            <span class="string">&quot;{:&gt;name_len$} :  _\n{}&quot;</span>,
+            <span class="string">&quot;{:&gt;name_len$}   .\n  {}&quot;</span>,
             <span class="ident">name</span>,
-            <span class="ident">s</span>,
+            <span class="ident">s</span>.<span class="ident">replace</span>(<span class="string">&#39;\n&#39;</span>, <span class="string">&quot;\n  &quot;</span>),
             <span class="ident">name_len</span> <span class="op">=</span> <span class="ident">NAME_LENGTH</span>
         ))
     } <span class="kw">else</span> {
@@ -183,9 +183,9 @@
     <span class="macro">write</span><span class="macro">!</span>(<span class="ident">s</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">obj</span>)<span class="question-mark">?</span>;
     <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">contains</span>(<span class="string">&#39;\n&#39;</span>) {
         <span class="prelude-val">Ok</span>(<span class="macro">format</span><span class="macro">!</span>(
-            <span class="string">&quot;{:&gt;name_len$} :  _\n{} [{}]&quot;</span>,
+            <span class="string">&quot;{:&gt;name_len$}  .\n  {} [{}]&quot;</span>,
             <span class="ident">name</span>,
-            <span class="ident">s</span>,
+            <span class="ident">s</span>.<span class="ident">replace</span>(<span class="string">&#39;\n&#39;</span>, <span class="string">&quot;\n  &quot;</span>),
             <span class="ident">units</span>,
             <span class="ident">name_len</span> <span class="op">=</span> <span class="ident">NAME_LENGTH</span>
         ))
@@ -211,14 +211,14 @@
         );
     };
 
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">desc</span>: <span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">expression</span>: <span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">desc</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">expression</span>: <span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
         <span class="macro">println</span><span class="macro">!</span>(
             <span class="string">&quot;{}&quot;</span>,
             <span class="ident">dia</span>::<span class="ident">report</span>::<span class="ident">obj</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">desc</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">expression</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not write object.&quot;</span>)
         );
     };
 
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">desc</span>: <span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">expression</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">units</span>: <span class="ident">tt</span>) <span class="op">=</span><span class="op">&gt;</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">desc</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">expression</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">units</span>: <span class="ident">tt</span>) <span class="op">=</span><span class="op">&gt;</span> {
         <span class="macro">println</span><span class="macro">!</span>(
             <span class="string">&quot;{}&quot;</span>,
             <span class="ident">dia</span>::<span class="ident">report</span>::<span class="ident">obj_units</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">desc</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">expression</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">units</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not write object.&quot;</span>)
@@ -271,14 +271,14 @@
         );
     };
 
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">desc</span>: <span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">expression</span>: <span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">desc</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">expression</span>: <span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
         <span class="macro">println</span><span class="macro">!</span>(
             <span class="string">&quot;{}&quot;</span>,
             <span class="ident">dia</span>::<span class="ident">report</span>::<span class="ident">list</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">desc</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">expression</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not write object.&quot;</span>)
         );
     };
 
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">desc</span>: <span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">expression</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">units</span>: <span class="ident">tt</span>) <span class="op">=</span><span class="op">&gt;</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">desc</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">expression</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">units</span>: <span class="ident">tt</span>) <span class="op">=</span><span class="op">&gt;</span> {
         <span class="macro">println</span><span class="macro">!</span>(
             <span class="string">&quot;{}&quot;</span>,
             <span class="ident">dia</span>::<span class="ident">report</span>::<span class="ident">list_units</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">desc</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">expression</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">units</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not write object.&quot;</span>)

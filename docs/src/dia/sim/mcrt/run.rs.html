@@ -63,7 +63,7 @@
 <span class="doccomment">//! Simulation run functions.</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">mcrt</span>::{<span class="ident">life</span>::<span class="ident">Life</span>, <span class="ident">Data</span>, <span class="ident">Input</span>},
+    <span class="ident">mcrt</span>::{<span class="ident">life</span>::<span class="ident">Life</span>, <span class="ident">Input</span>, <span class="ident">Output</span>},
     <span class="ident">Error</span>, <span class="ident">ParBar</span>,
 };
 <span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">thread_rng</span>;
@@ -74,12 +74,12 @@
 <span class="doccomment">/// # Errors</span>
 <span class="doccomment">/// if the progress bar can not be locked.</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">simulate</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Input</span>, <span class="ident">func</span>: <span class="ident">Life</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Data</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">simulate</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Input</span>, <span class="ident">func</span>: <span class="ident">Life</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">pb</span> <span class="op">=</span> <span class="ident">ParBar</span>::<span class="ident">new</span>(<span class="string">&quot;Randomising&quot;</span>, <span class="ident">input</span>.<span class="ident">sett</span>.<span class="ident">num_phot</span>());
     <span class="kw">let</span> <span class="ident">pb</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">Mutex</span>::<span class="ident">new</span>(<span class="ident">pb</span>));
 
-    <span class="kw">let</span> <span class="ident">threads</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="ident">num_cpus</span>::<span class="ident">get</span>()).<span class="ident">collect</span>(); <span class="comment">// Multi-thread.</span>
-                                                              <span class="comment">// let threads = vec![0]; // Single thread.</span>
+    <span class="comment">// let threads: Vec&lt;usize&gt; = (0..num_cpus::get()).collect(); // Multi-thread.</span>
+    <span class="kw">let</span> <span class="ident">threads</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0</span>]; <span class="comment">// Single thread.</span>
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">threads</span>
         .<span class="ident">par_iter</span>()
         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">id</span><span class="op">|</span> <span class="ident">single_thread</span>(<span class="kw-2">*</span><span class="ident">id</span>, <span class="kw-2">&amp;</span><span class="ident">Arc</span>::<span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="ident">pb</span>), <span class="ident">input</span>, <span class="ident">func</span>))
@@ -88,7 +88,7 @@
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">pop</span>().<span class="ident">ok_or</span>(<span class="string">&quot;Missing data result.&quot;</span>)<span class="question-mark">?</span><span class="question-mark">?</span>;
     <span class="kw">for</span> <span class="ident">dat</span> <span class="kw">in</span> <span class="ident">data</span> {
-        <span class="ident">base</span> <span class="op">+</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">dat</span><span class="question-mark">?</span>;
+        <span class="ident">base</span> <span class="op">+</span><span class="op">=</span> <span class="ident">dat</span><span class="question-mark">?</span>;
     }
 
     <span class="prelude-val">Ok</span>(<span class="ident">base</span>)
@@ -103,8 +103,8 @@
     <span class="ident">pb</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ParBar</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Input</span>,
     <span class="ident">func</span>: <span class="ident">Life</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Data</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">Data</span>::<span class="ident">new</span>(<span class="ident">input</span>.<span class="ident">grid</span>.<span class="ident">bound</span>().<span class="ident">clone</span>(), <span class="kw-2">*</span><span class="ident">input</span>.<span class="ident">grid</span>.<span class="ident">res</span>());
+) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">Output</span>::<span class="ident">new</span>(<span class="ident">input</span>.<span class="ident">grid</span>.<span class="ident">boundary</span>().<span class="ident">clone</span>(), <span class="kw-2">*</span><span class="ident">input</span>.<span class="ident">grid</span>.<span class="ident">res</span>());
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">thread_rng</span>();
 

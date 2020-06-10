@@ -78,14 +78,32 @@
 <span id="78">78</span>
 <span id="79">79</span>
 <span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Range implementation.</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">clone</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">f64</span>::{<span class="ident">INFINITY</span>, <span class="ident">NEG_INFINITY</span>};
+<span class="kw">use</span> <span class="ident">attr</span>::<span class="ident">load</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">f64</span>::{<span class="ident">INFINITY</span>, <span class="ident">NEG_INFINITY</span>},
+    <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span>},
+};
 
 <span class="doccomment">/// One-dimensional inclusive Range.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">load</span>]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Range</span> {
     <span class="doccomment">/// Minimum bound.</span>
     <span class="ident">min</span>: <span class="ident">f64</span>,
@@ -157,6 +175,14 @@
         <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">max</span>.<span class="ident">min</span>(<span class="ident">other</span>.<span class="ident">max</span>);
 
         <span class="prelude-val">Some</span>(<span class="self">Self</span>::<span class="ident">new</span>(<span class="ident">min</span>, <span class="ident">max</span>))
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Range</span> {
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">result_expect_used</span>)]</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span> {
+        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;{} -&gt; {}&quot;</span>, <span class="self">self</span>.<span class="ident">min</span>, <span class="self">self</span>.<span class="ident">max</span>)
     }
 }
 </pre></div>

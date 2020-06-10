@@ -51,10 +51,11 @@
 <span id="51">51</span>
 <span id="52">52</span>
 <span id="53">53</span>
+<span id="54">54</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Mesh form implementation.</span>
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">form</span>::<span class="ident">Trans3</span>, <span class="ident">report</span>, <span class="ident">Build</span>, <span class="ident">Error</span>, <span class="ident">Load</span>, <span class="ident">Transform</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">display_field</span>, <span class="ident">display_field_ln</span>, <span class="ident">form</span>::<span class="ident">Trans3</span>, <span class="ident">Build</span>, <span class="ident">Error</span>, <span class="ident">Load</span>, <span class="ident">Transform</span>};
 <span class="kw">use</span> <span class="ident">attr</span>::<span class="ident">load</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>},
@@ -98,11 +99,12 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">result_expect_used</span>)]</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="macro">write</span><span class="macro">!</span>(
-            <span class="ident">fmt</span>,
-            <span class="string">&quot;{}&quot;</span>,
-            <span class="ident">report</span>::<span class="ident">list</span>(<span class="string">&quot;base objs&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
-        )
+        <span class="macro">display_field_ln</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;number of objects&quot;</span>, <span class="self">self</span>.<span class="number">0</span>.<span class="ident">len</span>())<span class="question-mark">?</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">trans</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">1</span> {
+            <span class="macro">display_field</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;transform&quot;</span>, <span class="ident">trans</span>)
+        } <span class="kw">else</span> {
+            <span class="macro">display_field</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;transform&quot;</span>, <span class="string">&quot;none&quot;</span>)
+        }
     }
 }
 </pre></div>

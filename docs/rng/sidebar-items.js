@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["build","Build instances."],["init","Initialise the command line arguments and directories."],["input","Load the input files."],["main","Main function."],["save","Save the output data."],["simulate","Run the simulation."],["single_thread","Simulate on a single thread."]],"struct":[["Input","Runtime parameters."],["Parameters","Input parameters."]]});

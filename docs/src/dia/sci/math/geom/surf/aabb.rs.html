@@ -210,18 +210,10 @@
 <span id="210">210</span>
 <span id="211">211</span>
 <span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
-<span id="217">217</span>
-<span id="218">218</span>
-<span id="219">219</span>
-<span id="220">220</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Axis-aligned-bounding-box implementation.</span>
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">access</span>, <span class="ident">report</span>, <span class="ident">Collide</span>, <span class="ident">Pos3</span>, <span class="ident">Ray</span>, <span class="ident">Side</span>, <span class="ident">Trace</span>, <span class="ident">Vec3</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">access</span>, <span class="ident">display_field</span>, <span class="ident">display_field_ln</span>, <span class="ident">Collide</span>, <span class="ident">Pos3</span>, <span class="ident">Ray</span>, <span class="ident">Side</span>, <span class="ident">Trace</span>, <span class="ident">Vec3</span>};
 <span class="kw">use</span> <span class="ident">attr</span>::<span class="ident">load</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">cmp</span>::<span class="ident">Ordering</span>,
@@ -427,16 +419,8 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">result_expect_used</span>)]</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span> {
-        <span class="macro">writeln</span><span class="macro">!</span>(
-            <span class="ident">fmt</span>,
-            <span class="string">&quot;{}&quot;</span>,
-            <span class="ident">report</span>::<span class="ident">obj_units</span>(<span class="string">&quot;mins&quot;</span>, <span class="self">self</span>.<span class="ident">mins</span>, <span class="string">&quot;m&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
-        )<span class="question-mark">?</span>;
-        <span class="macro">write</span><span class="macro">!</span>(
-            <span class="ident">fmt</span>,
-            <span class="string">&quot;{}&quot;</span>,
-            <span class="ident">report</span>::<span class="ident">obj_units</span>(<span class="string">&quot;maxs&quot;</span>, <span class="self">self</span>.<span class="ident">maxs</span>, <span class="string">&quot;m&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
-        )
+        <span class="macro">display_field_ln</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;mins&quot;</span>, <span class="self">self</span>.<span class="ident">mins</span>, <span class="string">&quot;m&quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">display_field</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;maxs&quot;</span>, <span class="self">self</span>.<span class="ident">maxs</span>, <span class="string">&quot;m&quot;</span>)
     }
 }
 </pre></div>

@@ -63,14 +63,26 @@
 <span id="63">63</span>
 <span id="64">64</span>
 <span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Formula form implementation.</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Build</span>, <span class="ident">Error</span>};
 <span class="kw">use</span> <span class="ident">attr</span>::<span class="ident">load</span>;
 <span class="kw">use</span> <span class="ident">ndarray</span>::<span class="ident">Array1</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>},
+    <span class="ident">path</span>::<span class="ident">Path</span>,
+};
 
 <span class="doccomment">/// Mathematical formulae accepting a single scalar argument.</span>
 <span class="attribute">#[<span class="ident">load</span>]</span>
@@ -125,8 +137,16 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">result_expect_used</span>)]</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="comment">// TODO!</span>
-        <span class="prelude-val">Ok</span>(())
+        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span> {
+            <span class="self">Self</span>::<span class="ident">Constant</span> { .. } <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;Constant&quot;</span>,
+            <span class="self">Self</span>::<span class="ident">Line</span> { .. } <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;Line&quot;</span>,
+            <span class="self">Self</span>::<span class="ident">Bifurcation</span> { .. } <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;Bifurcation&quot;</span>,
+            <span class="self">Self</span>::<span class="ident">ConstantSpline</span> { .. } <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;Constant Spline&quot;</span>,
+            <span class="self">Self</span>::<span class="ident">LinearSpline</span> { .. } <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;Linear Spline&quot;</span>,
+            <span class="self">Self</span>::<span class="ident">LinearSplineAuto</span> { .. } <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;Linear Spline [auto]&quot;</span>,
+            <span class="self">Self</span>::<span class="ident">QuadraticSpline</span> { .. } <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;Quadratic Spline&quot;</span>,
+        };
+        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">kind</span>)
     }
 }
 </pre></div>

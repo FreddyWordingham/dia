@@ -64,7 +64,7 @@
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Adaptive tree cell scheme.</span>
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Aabb</span>, <span class="ident">Group</span>, <span class="ident">SmoothTriangle</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Aabb</span>, <span class="ident">Grp</span>, <span class="ident">SmoothTriangle</span>};
 
 <span class="doccomment">/// Tree cell enumeration.</span>
 <span class="doccomment">///</span>
@@ -93,7 +93,7 @@
         <span class="doccomment">/// Boundary.</span>
         <span class="ident">boundary</span>: <span class="ident">Aabb</span>,
         <span class="doccomment">/// Intersecting triangles.</span>
-        <span class="ident">tris</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Group</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SmoothTriangle</span>)<span class="op">&gt;</span>,
+        <span class="ident">tris</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Grp</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SmoothTriangle</span>)<span class="op">&gt;</span>,
     },
     <span class="doccomment">/// Terminal empty cell.</span>
     <span class="ident">Empty</span> {

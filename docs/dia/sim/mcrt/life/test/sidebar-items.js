@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["select_property","Determine the next property from the hit event information."],["test","Test photon lifetime function."]]});
+initSidebarItems({"fn":[["select_property","Determine the next material from the hit event information."],["test","Test photon lifetime function."]]});

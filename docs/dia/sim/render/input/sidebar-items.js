@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Input","Render simulation input structure."]]});

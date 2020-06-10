@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Data","Output data structure."]]});

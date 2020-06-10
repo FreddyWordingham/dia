@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["shadow","Calculate the shadowing factor."],["visibility","Calculate the visibility of a given ray."]]});

@@ -150,7 +150,7 @@
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">tree</span>::{<span class="ident">Cell</span>, <span class="ident">Settings</span>},
-    <span class="ident">Aabb</span>, <span class="ident">Bar</span>, <span class="ident">Collide</span>, <span class="ident">Group</span>, <span class="ident">Mesh</span>, <span class="ident">Pos3</span>, <span class="ident">Set</span>, <span class="ident">SmoothTriangle</span>,
+    <span class="ident">Aabb</span>, <span class="ident">Bar</span>, <span class="ident">Collide</span>, <span class="ident">Grp</span>, <span class="ident">Mesh</span>, <span class="ident">Pos3</span>, <span class="ident">Set</span>, <span class="ident">SmoothTriangle</span>,
 };
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Cell</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
@@ -166,12 +166,12 @@
         <span class="kw">for</span> (<span class="ident">group</span>, <span class="ident">mesh</span>) <span class="kw">in</span> <span class="ident">surfs</span>.<span class="ident">map</span>() {
             <span class="ident">tris</span>.<span class="ident">reserve</span>(<span class="ident">mesh</span>.<span class="ident">tris</span>().<span class="ident">len</span>());
             <span class="kw">for</span> <span class="ident">tri</span> <span class="kw">in</span> <span class="ident">mesh</span>.<span class="ident">tris</span>() {
-                <span class="ident">tris</span>.<span class="ident">push</span>((<span class="ident">group</span>, <span class="ident">tri</span>));
+                <span class="ident">tris</span>.<span class="ident">push</span>((<span class="ident">group</span>.<span class="ident">as_str</span>(), <span class="ident">tri</span>));
             }
         }
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pb</span> <span class="op">=</span> <span class="ident">Bar</span>::<span class="ident">new</span>(<span class="string">&quot;Growing tree&quot;</span>, <span class="number">8_u64</span>.<span class="ident">pow</span>(<span class="ident">sett</span>.<span class="ident">max_depth</span>() <span class="kw">as</span> <span class="ident">u32</span>));
-        <span class="kw">let</span> <span class="ident">children</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">init_children</span>(<span class="ident">sett</span>, <span class="kw-2">&amp;</span><span class="ident">boundary</span>, <span class="number">1</span>, <span class="kw-2">&amp;</span><span class="ident">tris</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">pb</span>);
+        <span class="kw">let</span> <span class="ident">children</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">init_children</span>(<span class="ident">sett</span>, <span class="kw-2">&amp;</span><span class="ident">boundary</span>, <span class="number">1</span>, <span class="ident">tris</span>.<span class="ident">as_slice</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">pb</span>);
         <span class="ident">pb</span>.<span class="ident">finish_with_message</span>(<span class="string">&quot;Tree grown.&quot;</span>);
 
         <span class="self">Self</span>::<span class="ident">Root</span> { <span class="ident">boundary</span>, <span class="ident">children</span> }
@@ -221,7 +221,7 @@
         <span class="ident">sett</span>: <span class="kw-2">&amp;</span><span class="ident">Settings</span>,
         <span class="ident">parent_boundary</span>: <span class="kw-2">&amp;</span><span class="ident">Aabb</span>,
         <span class="ident">depth</span>: <span class="ident">i32</span>,
-        <span class="ident">potential_tris</span>: <span class="kw-2">&amp;</span>[(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Group</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SmoothTriangle</span>)],
+        <span class="ident">potential_tris</span>: <span class="kw-2">&amp;</span>[(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Grp</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SmoothTriangle</span>)],
         <span class="kw-2">mut</span> <span class="ident">pb</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Bar</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>; <span class="number">8</span>] {
         <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">depth</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">sett</span>.<span class="ident">max_depth</span>());
@@ -263,7 +263,7 @@
         <span class="ident">sett</span>: <span class="kw-2">&amp;</span><span class="ident">Settings</span>,
         <span class="ident">boundary</span>: <span class="ident">Aabb</span>,
         <span class="ident">depth</span>: <span class="ident">i32</span>,
-        <span class="ident">potential_tris</span>: <span class="kw-2">&amp;</span>[(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Group</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SmoothTriangle</span>)],
+        <span class="ident">potential_tris</span>: <span class="kw-2">&amp;</span>[(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Grp</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SmoothTriangle</span>)],
         <span class="kw-2">mut</span> <span class="ident">pb</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Bar</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">depth</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">sett</span>.<span class="ident">max_depth</span>());

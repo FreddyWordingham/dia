@@ -259,23 +259,12 @@
 <span id="259">259</span>
 <span id="260">260</span>
 <span id="261">261</span>
-<span id="262">262</span>
-<span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Smooth triangle-mesh implementation.</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">access</span>, <span class="ident">clone</span>, <span class="ident">report</span>, <span class="ident">Aabb</span>, <span class="ident">Collide</span>, <span class="ident">Dir3</span>, <span class="ident">Emit</span>, <span class="ident">Error</span>, <span class="ident">Load</span>, <span class="ident">Pos3</span>, <span class="ident">Ray</span>, <span class="ident">Side</span>, <span class="ident">SmoothTriangle</span>,
-    <span class="ident">Trace</span>, <span class="ident">Trans3</span>, <span class="ident">Transform</span>, <span class="ident">Vec3</span>, <span class="ident">ALPHA</span>, <span class="ident">X</span>,
+    <span class="ident">access</span>, <span class="ident">clone</span>, <span class="ident">display_field</span>, <span class="ident">display_field_ln</span>, <span class="ident">Aabb</span>, <span class="ident">Collide</span>, <span class="ident">Dir3</span>, <span class="ident">Emit</span>, <span class="ident">Error</span>, <span class="ident">Load</span>, <span class="ident">Pos3</span>,
+    <span class="ident">Ray</span>, <span class="ident">Side</span>, <span class="ident">SmoothTriangle</span>, <span class="ident">Trace</span>, <span class="ident">Trans3</span>, <span class="ident">Transform</span>, <span class="ident">Vec3</span>, <span class="ident">ALPHA</span>, <span class="ident">X</span>,
 };
 <span class="kw">use</span> <span class="ident">rand</span>::{<span class="ident">rngs</span>::<span class="ident">ThreadRng</span>, <span class="ident">Rng</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -440,6 +429,7 @@
 <span class="kw">impl</span> <span class="ident">Load</span> <span class="kw">for</span> <span class="ident">Mesh</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">load</span>(<span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;loading: {}&quot;</span>, <span class="ident">path</span>.<span class="ident">display</span>());
         <span class="kw">let</span> <span class="ident">vertex_lines</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">BufReader</span>::<span class="ident">new</span>(<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>)
             .<span class="ident">lines</span>()
             .<span class="ident">map</span>(<span class="prelude-ty">Result</span>::<span class="ident">unwrap</span>)
@@ -526,21 +516,9 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">result_expect_used</span>)]</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="macro">writeln</span><span class="macro">!</span>(
-            <span class="ident">fmt</span>,
-            <span class="string">&quot;{}&quot;</span>,
-            <span class="ident">report</span>::<span class="ident">obj</span>(<span class="string">&quot;triangles&quot;</span>, <span class="self">self</span>.<span class="ident">tris</span>.<span class="ident">len</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
-        )<span class="question-mark">?</span>;
-        <span class="macro">writeln</span><span class="macro">!</span>(
-            <span class="ident">fmt</span>,
-            <span class="string">&quot;{}&quot;</span>,
-            <span class="ident">report</span>::<span class="ident">obj_units</span>(<span class="string">&quot;area&quot;</span>, <span class="self">self</span>.<span class="ident">area</span>, <span class="string">&quot;m^2&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
-        )<span class="question-mark">?</span>;
-        <span class="macro">write</span><span class="macro">!</span>(
-            <span class="ident">fmt</span>,
-            <span class="string">&quot;{}&quot;</span>,
-            <span class="ident">report</span>::<span class="ident">obj</span>(<span class="string">&quot;boundary&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">boundary</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
-        )
+        <span class="macro">display_field_ln</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;number of triangles&quot;</span>, <span class="self">self</span>.<span class="ident">tris</span>.<span class="ident">len</span>())<span class="question-mark">?</span>;
+        <span class="macro">display_field_ln</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;area&quot;</span>, <span class="self">self</span>.<span class="ident">area</span>, <span class="string">&quot;m^2&quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">display_field</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;boundary&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">boundary</span>)
     }
 }
 </pre></div>

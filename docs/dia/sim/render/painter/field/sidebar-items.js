@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["field","Test painter function."]]});

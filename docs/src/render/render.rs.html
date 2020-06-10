@@ -153,20 +153,12 @@
 <span id="153">153</span>
 <span id="154">154</span>
 <span id="155">155</span>
-<span id="156">156</span>
-<span id="157">157</span>
-<span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="doccomment">//! Render binary.</span>
+<span class="doccomment">//! Rendering binary.</span>
 
 <span class="kw">use</span> <span class="ident">attr</span>::<span class="ident">input</span>;
 <span class="kw">use</span> <span class="ident">dia</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">palette</span>::{<span class="ident">Gradient</span>, <span class="ident">LinSrgba</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>};
 
 <span class="doccomment">/// Input parameters.</span>
@@ -174,32 +166,37 @@
 <span class="kw">struct</span> <span class="ident">Parameters</span> {
     <span class="doccomment">/// Adaptive mesh settings.</span>
     <span class="ident">tree</span>: <span class="ident">tree</span>::<span class="ident">Settings</span>,
+    <span class="doccomment">/// Regular grid settings.</span>
+    <span class="ident">grid</span>: <span class="ident">grid</span>::<span class="ident">Settings</span>,
     <span class="doccomment">/// Render runtime settings.</span>
-    <span class="ident">render</span>: <span class="ident">render</span>::<span class="ident">Settings</span>,
+    <span class="ident">sett</span>: <span class="ident">render</span>::<span class="ident">Settings</span>,
     <span class="doccomment">/// Surfaces map.</span>
     <span class="ident">surfs</span>: <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">form</span>::<span class="ident">Mesh</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Colour map.</span>
     <span class="ident">cols</span>: <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">form</span>::<span class="ident">Gradient</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Attributes map.</span>
-    <span class="ident">attrs</span>: <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">Redirect</span><span class="op">&lt;</span><span class="ident">render</span>::<span class="ident">Attribute</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">attrs</span>: <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">Redirect</span><span class="op">&lt;</span><span class="ident">render</span>::<span class="ident">Attributes</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Camera setup.</span>
+    <span class="ident">cam</span>: <span class="ident">form</span>::<span class="ident">Camera</span>,
 }
 
 <span class="doccomment">/// Main function.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">main</span>() {
-    <span class="ident">banner</span>::<span class="ident">title</span>(<span class="string">&quot;RENDER&quot;</span>);
-    <span class="kw">let</span> (<span class="ident">params_path</span>, <span class="ident">in_dir</span>, <span class="ident">_out_dir</span>) <span class="op">=</span> <span class="ident">init</span>();
-    <span class="kw">let</span> <span class="ident">_params</span> <span class="op">=</span> <span class="ident">input</span>(<span class="kw-2">&amp;</span><span class="ident">in_dir</span>, <span class="kw-2">&amp;</span><span class="ident">params_path</span>);
-    <span class="comment">// let (light, surfs, _props, tree_sett, grid_sett, mcrt_sett) = build(&amp;in_dir, params);</span>
-    <span class="comment">// let (tree, grid) = grow(tree_sett, grid_sett, &amp;surfs);</span>
-    <span class="comment">// let data = simulate(&amp;mcrt_sett, &amp;light, &amp;grid, &amp;tree);</span>
-    <span class="comment">// save(&amp;out_dir, data);</span>
+    <span class="ident">banner</span>::<span class="ident">title</span>(<span class="string">&quot;Render&quot;</span>);
+    <span class="kw">let</span> (<span class="ident">params_path</span>, <span class="ident">in_dir</span>, <span class="ident">out_dir</span>) <span class="op">=</span> <span class="ident">init</span>();
+    <span class="kw">let</span> <span class="ident">params</span> <span class="op">=</span> <span class="ident">input</span>(<span class="kw-2">&amp;</span><span class="ident">in_dir</span>, <span class="kw-2">&amp;</span><span class="ident">params_path</span>);
+    <span class="kw">let</span> (<span class="ident">tree_sett</span>, <span class="ident">grid_sett</span>, <span class="ident">render_sett</span>, <span class="ident">surfs</span>, <span class="ident">cols</span>, <span class="ident">attrs</span>, <span class="ident">cam</span>) <span class="op">=</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="ident">in_dir</span>, <span class="ident">params</span>);
+    <span class="kw">let</span> (<span class="ident">tree</span>, <span class="ident">grid</span>) <span class="op">=</span> <span class="ident">grow</span>(<span class="ident">tree_sett</span>, <span class="ident">grid_sett</span>, <span class="kw-2">&amp;</span><span class="ident">surfs</span>);
+    <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="ident">render</span>::<span class="ident">Input</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">render_sett</span>, <span class="kw-2">&amp;</span><span class="ident">surfs</span>, <span class="kw-2">&amp;</span><span class="ident">cols</span>, <span class="kw-2">&amp;</span><span class="ident">attrs</span>, <span class="kw-2">&amp;</span><span class="ident">cam</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>, <span class="kw-2">&amp;</span><span class="ident">grid</span>);
+    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">render</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>);
+    <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">out_dir</span>, <span class="ident">data</span>);
     <span class="ident">banner</span>::<span class="ident">section</span>(<span class="string">&quot;Finished&quot;</span>);
 }
 
 <span class="doccomment">/// Initialise the command line arguments and directories.</span>
 <span class="kw">fn</span> <span class="ident">init</span>() <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">PathBuf</span>, <span class="ident">PathBuf</span>, <span class="ident">PathBuf</span>) {
     <span class="ident">banner</span>::<span class="ident">section</span>(<span class="string">&quot;Initialisation&quot;</span>);
-    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Command line args&quot;</span>);
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Command line arguments&quot;</span>);
     <span class="macro">args</span><span class="macro">!</span>(<span class="ident">bin_path</span>: <span class="ident">PathBuf</span>;
         <span class="ident">params_path</span>: <span class="ident">PathBuf</span>
     );
@@ -219,113 +216,98 @@
     <span class="ident">banner</span>::<span class="ident">section</span>(<span class="string">&quot;Input&quot;</span>);
     <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Parameters&quot;</span>);
     <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">in_dir</span>.<span class="ident">join</span>(<span class="ident">params_path</span>);
-    <span class="kw">let</span> <span class="ident">params</span> <span class="op">=</span> <span class="ident">Parameters</span>::<span class="ident">load</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not load parameters file&quot;</span>);
 
-    <span class="ident">banner</span>::<span class="ident">sub_sub_section</span>(<span class="string">&quot;Adaptive Tree Settings&quot;</span>);
-    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;tree&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">tree</span>);
-
-    <span class="ident">banner</span>::<span class="ident">sub_sub_section</span>(<span class="string">&quot;Render Settings&quot;</span>);
-    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;settings&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">render</span>);
-
-    <span class="ident">banner</span>::<span class="ident">sub_sub_section</span>(<span class="string">&quot;Surfaces&quot;</span>);
-    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;surfaces&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">surfs</span>);
-
-    <span class="ident">banner</span>::<span class="ident">sub_sub_section</span>(<span class="string">&quot;Colours&quot;</span>);
-    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;colours&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">cols</span>);
-
-    <span class="ident">banner</span>::<span class="ident">sub_sub_section</span>(<span class="string">&quot;Attributes&quot;</span>);
-    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;attributes&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">attrs</span>);
-
-    <span class="ident">params</span>
+    <span class="ident">Parameters</span>::<span class="ident">load</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not load parameters file&quot;</span>)
 }
 
-<span class="comment">// /// Build instances.</span>
-<span class="comment">// fn build(</span>
-<span class="comment">//     in_dir: &amp;Path,</span>
-<span class="comment">//     params: Parameters,</span>
-<span class="comment">// ) -&gt; (</span>
-<span class="comment">//     mcrt::Light,</span>
-<span class="comment">//     Set&lt;Mesh&gt;,</span>
-<span class="comment">//     Set&lt;mcrt::Properties&gt;,</span>
-<span class="comment">//     tree::Settings,</span>
-<span class="comment">//     grid::Settings,</span>
-<span class="comment">//     mcrt::Settings,</span>
-<span class="comment">// ) {</span>
-<span class="comment">//     banner::section(&quot;Building&quot;);</span>
+<span class="doccomment">/// Build instances.</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">type_complexity</span>)]</span>
+<span class="kw">fn</span> <span class="ident">build</span>(
+    <span class="ident">in_dir</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>,
+    <span class="ident">params</span>: <span class="ident">Parameters</span>,
+) <span class="op">-</span><span class="op">&gt;</span> (
+    <span class="ident">tree</span>::<span class="ident">Settings</span>,
+    <span class="ident">grid</span>::<span class="ident">Settings</span>,
+    <span class="ident">render</span>::<span class="ident">Settings</span>,
+    <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">Mesh</span><span class="op">&gt;</span>,
+    <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">Gradient</span><span class="op">&lt;</span><span class="ident">LinSrgba</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">render</span>::<span class="ident">Attributes</span><span class="op">&gt;</span>,
+    <span class="ident">render</span>::<span class="ident">Camera</span>,
+) {
+    <span class="ident">banner</span>::<span class="ident">section</span>(<span class="string">&quot;Building&quot;</span>);
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Adaptive Tree Settings&quot;</span>);
+    <span class="kw">let</span> <span class="ident">tree_sett</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">tree</span>;
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;Tree settings&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">tree_sett</span>);
 
-<span class="comment">//     banner::sub_section(&quot;Light&quot;);</span>
-<span class="comment">//     let light = params.light.build(in_dir).expect(&quot;Unable to build light.&quot;);</span>
-<span class="comment">//     report!(&quot;light&quot;, &amp;light);</span>
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Grid Settings&quot;</span>);
+    <span class="kw">let</span> <span class="ident">grid_sett</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">grid</span>;
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;Grid settings&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">grid_sett</span>);
 
-<span class="comment">//     banner::sub_section(&quot;Surfaces&quot;);</span>
-<span class="comment">//     let surfs = params</span>
-<span class="comment">//         .surfs</span>
-<span class="comment">//         .build(in_dir)</span>
-<span class="comment">//         .expect(&quot;Unable to build surfaces.&quot;);</span>
-<span class="comment">//     report!(&quot;surfaces&quot;, &amp;surfs);</span>
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Render Settings&quot;</span>);
+    <span class="kw">let</span> <span class="ident">render_sett</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">sett</span>;
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;Render settings&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">render_sett</span>);
 
-<span class="comment">//     banner::sub_section(&quot;Properties&quot;);</span>
-<span class="comment">//     let props = params</span>
-<span class="comment">//         .props</span>
-<span class="comment">//         .build(in_dir)</span>
-<span class="comment">//         .expect(&quot;Unable to build properties.&quot;);</span>
-<span class="comment">//     report!(&quot;properties&quot;, &amp;props);</span>
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Surfaces&quot;</span>);
+    <span class="kw">let</span> <span class="ident">surfs</span> <span class="op">=</span> <span class="ident">params</span>
+        .<span class="ident">surfs</span>
+        .<span class="ident">build</span>(<span class="ident">in_dir</span>)
+        .<span class="ident">expect</span>(<span class="string">&quot;Unable to build surfaces.&quot;</span>);
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;Surfaces&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">surfs</span>);
 
-<span class="comment">//     banner::sub_section(&quot;Adaptive Tree Settings&quot;);</span>
-<span class="comment">//     let tree_sett = params.tree;</span>
-<span class="comment">//     report!(&quot;tree settings&quot;, &amp;tree_sett);</span>
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Colours&quot;</span>);
+    <span class="kw">let</span> <span class="ident">cols</span> <span class="op">=</span> <span class="ident">params</span>
+        .<span class="ident">cols</span>
+        .<span class="ident">build</span>(<span class="ident">in_dir</span>)
+        .<span class="ident">expect</span>(<span class="string">&quot;Unable to build gradients.&quot;</span>);
+    <span class="kw">for</span> (<span class="ident">group</span>, <span class="ident">grad</span>) <span class="kw">in</span> <span class="ident">cols</span>.<span class="ident">map</span>() {
+        <span class="macro">report</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;[{}]&quot;</span>, <span class="ident">group</span>), <span class="ident">gradient</span>::<span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="ident">grad</span>, <span class="number">32</span>));
+    }
 
-<span class="comment">//     banner::sub_section(&quot;Regular Grid Settings&quot;);</span>
-<span class="comment">//     let grid_sett = params.grid;</span>
-<span class="comment">//     report!(&quot;grid settings&quot;, &amp;grid_sett);</span>
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Attributes&quot;</span>);
+    <span class="kw">let</span> <span class="ident">attrs</span> <span class="op">=</span> <span class="ident">params</span>
+        .<span class="ident">attrs</span>
+        .<span class="ident">build</span>(<span class="ident">in_dir</span>)
+        .<span class="ident">expect</span>(<span class="string">&quot;Unable to build attributes.&quot;</span>);
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;Attributes&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">attrs</span>);
 
-<span class="comment">//     banner::sub_section(&quot;MCRT Settings&quot;);</span>
-<span class="comment">//     let mcrt_sett = params.mcrt;</span>
-<span class="comment">//     report!(&quot;mcrt settings&quot;, &amp;mcrt_sett);</span>
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Camera&quot;</span>);
+    <span class="kw">let</span> <span class="ident">cam</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">cam</span>.<span class="ident">build</span>(<span class="ident">in_dir</span>).<span class="ident">expect</span>(<span class="string">&quot;Unable to build camera.&quot;</span>);
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;Camera&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">cam</span>);
 
-<span class="comment">//     (light, surfs, props, tree_sett, grid_sett, mcrt_sett)</span>
-<span class="comment">// }</span>
+    (<span class="ident">tree_sett</span>, <span class="ident">grid_sett</span>, <span class="ident">render_sett</span>, <span class="ident">surfs</span>, <span class="ident">cols</span>, <span class="ident">attrs</span>, <span class="ident">cam</span>)
+}
 
-<span class="comment">// /// Grow domain tree.</span>
-<span class="comment">// fn grow&lt;&#39;a&gt;(</span>
-<span class="comment">//     tree_sett: tree::Settings,</span>
-<span class="comment">//     grid_sett: grid::Settings,</span>
-<span class="comment">//     surfs: &amp;&#39;a Set&lt;Mesh&gt;,</span>
-<span class="comment">// ) -&gt; (tree::Cell&lt;&#39;a&gt;, grid::Grid) {</span>
-<span class="comment">//     banner::section(&quot;Growing&quot;);</span>
+<span class="doccomment">/// Grow domains.</span>
+<span class="kw">fn</span> <span class="ident">grow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
+    <span class="ident">tree_sett</span>: <span class="ident">tree</span>::<span class="ident">Settings</span>,
+    <span class="ident">grid_sett</span>: <span class="ident">grid</span>::<span class="ident">Settings</span>,
+    <span class="ident">surfs</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">Mesh</span><span class="op">&gt;</span>,
+) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">tree</span>::<span class="ident">Cell</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">grid</span>::<span class="ident">Grid</span>) {
+    <span class="ident">banner</span>::<span class="ident">section</span>(<span class="string">&quot;Growing&quot;</span>);
 
-<span class="comment">//     banner::sub_section(&quot;Adaptive Tree&quot;);</span>
-<span class="comment">//     let tree = tree::Cell::new_root(&amp;tree_sett, &amp;surfs);</span>
-<span class="comment">//     report!(&quot;Adaptive tree&quot;, &amp;tree);</span>
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Adaptive Tree&quot;</span>);
+    <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">tree</span>::<span class="ident">Cell</span>::<span class="ident">new_root</span>(<span class="kw-2">&amp;</span><span class="ident">tree_sett</span>, <span class="kw-2">&amp;</span><span class="ident">surfs</span>);
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;Adaptive tree&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>);
 
-<span class="comment">//     banner::sub_section(&quot;Regular Grid&quot;);</span>
-<span class="comment">//     let grid = grid::Grid::new(&amp;grid_sett).expect(&quot;Could not build regular grid.&quot;);</span>
-<span class="comment">//     report!(&quot;Regular grid&quot;, &amp;grid);</span>
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Regular Grid&quot;</span>);
+    <span class="kw">let</span> <span class="ident">grid</span> <span class="op">=</span> <span class="ident">grid</span>::<span class="ident">Grid</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">grid_sett</span>);
+    <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;Regular grid&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">grid</span>);
 
-<span class="comment">//     (tree, grid)</span>
-<span class="comment">// }</span>
+    (<span class="ident">tree</span>, <span class="ident">grid</span>)
+}
 
-<span class="comment">// /// Run the simulation.</span>
-<span class="comment">// fn simulate(</span>
-<span class="comment">//     sett: &amp;mcrt::Settings,</span>
-<span class="comment">//     light: &amp;mcrt::Light,</span>
-<span class="comment">//     grid: &amp;grid::Grid,</span>
-<span class="comment">//     tree: &amp;tree::Cell,</span>
-<span class="comment">// ) -&gt; mcrt::Data {</span>
-<span class="comment">//     banner::section(&quot;Simulating&quot;);</span>
+<span class="doccomment">/// Run the renderer.</span>
+<span class="kw">fn</span> <span class="ident">render</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">render</span>::<span class="ident">Input</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">render</span>::<span class="ident">Output</span> {
+    <span class="ident">banner</span>::<span class="ident">section</span>(<span class="string">&quot;Rendering&quot;</span>);
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Main Camera&quot;</span>);
+    <span class="ident">render</span>::<span class="ident">run</span>::<span class="ident">simulate</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>, <span class="ident">render</span>::<span class="ident">painter</span>::<span class="ident">field</span>).<span class="ident">expect</span>(<span class="string">&quot;Simulation failed.&quot;</span>)
+}
 
-<span class="comment">//     banner::sub_section(&quot;Main Light&quot;);</span>
-<span class="comment">//     let input = mcrt::Input::new(&amp;sett, &amp;light, &amp;grid, &amp;tree);</span>
-<span class="comment">//     mcrt::run::simulate(&amp;input, mcrt::life::test).expect(&quot;Simulation failed.&quot;)</span>
-<span class="comment">// }</span>
-
-<span class="comment">// /// Save the output data.</span>
-<span class="comment">// fn save(out_dir: &amp;Path, data: mcrt::Data) {</span>
-<span class="comment">//     banner::section(&quot;Saving&quot;);</span>
-<span class="comment">//     banner::sub_section(&quot;Main Dump&quot;);</span>
-<span class="comment">//     report!(&quot;output data&quot;, &amp;data);</span>
-<span class="comment">//     data.save(&amp;out_dir.join(&quot;output.json5&quot;))</span>
-<span class="comment">//         .expect(&quot;Could not save output data.&quot;);</span>
-<span class="comment">// }</span>
+<span class="doccomment">/// Save the output data.</span>
+<span class="kw">fn</span> <span class="ident">save</span>(<span class="ident">out_dir</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">data</span>: <span class="ident">render</span>::<span class="ident">Output</span>) {
+    <span class="ident">banner</span>::<span class="ident">section</span>(<span class="string">&quot;Saving&quot;</span>);
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Main Dump&quot;</span>);
+    <span class="ident">data</span>.<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">out_dir</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not save output data.&quot;</span>);
+}
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "render";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

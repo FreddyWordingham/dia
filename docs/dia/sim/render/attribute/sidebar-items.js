@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Attribute","Rendering attributes structure."]]});

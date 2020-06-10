@@ -40,22 +40,10 @@
 <span id="40">40</span>
 <span id="41">41</span>
 <span id="42">42</span>
-<span id="43">43</span>
-<span id="44">44</span>
-<span id="45">45</span>
-<span id="46">46</span>
-<span id="47">47</span>
-<span id="48">48</span>
-<span id="49">49</span>
-<span id="50">50</span>
-<span id="51">51</span>
-<span id="52">52</span>
-<span id="53">53</span>
-<span id="54">54</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Light form implementation.</span>
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">form</span>, <span class="ident">report</span>, <span class="ident">Build</span>, <span class="ident">Error</span>, <span class="ident">Redirect</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">display_field</span>, <span class="ident">display_field_ln</span>, <span class="ident">form</span>, <span class="ident">Build</span>, <span class="ident">Error</span>, <span class="ident">Redirect</span>};
 <span class="kw">use</span> <span class="ident">attr</span>::<span class="ident">load</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>},
@@ -90,21 +78,9 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">result_expect_used</span>)]</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="macro">writeln</span><span class="macro">!</span>(
-            <span class="ident">fmt</span>,
-            <span class="string">&quot;{}&quot;</span>,
-            <span class="ident">report</span>::<span class="ident">obj</span>(<span class="string">&quot;surface&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">surf</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
-        )<span class="question-mark">?</span>;
-        <span class="macro">writeln</span><span class="macro">!</span>(
-            <span class="ident">fmt</span>,
-            <span class="string">&quot;{}&quot;</span>,
-            <span class="ident">report</span>::<span class="ident">obj</span>(<span class="string">&quot;spectrum&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">spec</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
-        )<span class="question-mark">?</span>;
-        <span class="macro">write</span><span class="macro">!</span>(
-            <span class="ident">fmt</span>,
-            <span class="string">&quot;{}&quot;</span>,
-            <span class="ident">report</span>::<span class="ident">obj_units</span>(<span class="string">&quot;power&quot;</span>, <span class="self">self</span>.<span class="ident">power</span>, <span class="string">&quot;J/s&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
-        )
+        <span class="macro">display_field_ln</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;surf&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">surf</span>)<span class="question-mark">?</span>;
+        <span class="macro">display_field_ln</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;spec&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">spec</span>)<span class="question-mark">?</span>;
+        <span class="macro">display_field</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;power&quot;</span>, <span class="self">self</span>.<span class="ident">power</span>, <span class="string">&quot;J/s&quot;</span>)
     }
 }
 </pre></div>

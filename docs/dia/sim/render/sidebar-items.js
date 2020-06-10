@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["attribute","Attribute structure."],["settings","Settings implementation."]]});
+initSidebarItems({"mod":[["attributes","Attributes implementation."],["camera","Camera module."],["event","Event enumeration."],["illumination","Illumination module."],["input","Input module."],["output","Input module."],["painter","Pixel painter function module."],["run","Rendering simulation functions."],["settings","Settings implementation."]]});

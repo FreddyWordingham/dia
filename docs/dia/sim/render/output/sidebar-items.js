@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Output","Render simulation output structure."]]});

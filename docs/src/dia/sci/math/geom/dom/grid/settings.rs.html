@@ -38,38 +38,24 @@
 <span id="38">38</span>
 <span id="39">39</span>
 <span id="40">40</span>
-<span id="41">41</span>
-<span id="42">42</span>
-<span id="43">43</span>
-<span id="44">44</span>
-<span id="45">45</span>
-<span id="46">46</span>
-<span id="47">47</span>
-<span id="48">48</span>
-<span id="49">49</span>
-<span id="50">50</span>
-<span id="51">51</span>
-<span id="52">52</span>
-<span id="53">53</span>
-<span id="54">54</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Regular grid settings implementation.</span>
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">access</span>, <span class="ident">report</span>, <span class="ident">Aabb</span>, <span class="ident">X</span>, <span class="ident">Y</span>, <span class="ident">Z</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">access</span>, <span class="ident">display_field</span>, <span class="ident">display_field_ln</span>, <span class="ident">Aabb</span>, <span class="ident">X</span>, <span class="ident">Y</span>, <span class="ident">Z</span>};
 <span class="kw">use</span> <span class="ident">attr</span>::<span class="ident">load</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span>};
 
 <span class="doccomment">/// Loadable triangle mesh conglomerate structure.</span>
 <span class="attribute">#[<span class="ident">load</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Settings</span> {
     <span class="doccomment">/// Boundary.</span>
-    <span class="ident">bound</span>: <span class="ident">Aabb</span>,
+    <span class="ident">boundary</span>: <span class="ident">Aabb</span>,
     <span class="doccomment">/// Resolution.</span>
     <span class="ident">res</span>: [<span class="ident">usize</span>; <span class="number">3</span>],
 }
 
 <span class="kw">impl</span> <span class="ident">Settings</span> {
-    <span class="macro">access</span><span class="macro">!</span>(<span class="ident">bound</span>, <span class="ident">Aabb</span>);
+    <span class="macro">access</span><span class="macro">!</span>(<span class="ident">boundary</span>, <span class="ident">Aabb</span>);
     <span class="macro">access</span><span class="macro">!</span>(<span class="ident">res</span>, [<span class="ident">usize</span>; <span class="number">3</span>]);
 
     <span class="doccomment">/// Determine the total number of cells.</span>
@@ -83,28 +69,14 @@
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Settings</span> {
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">result_expect_used</span>)]</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="macro">writeln</span><span class="macro">!</span>(
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span> {
+        <span class="macro">display_field_ln</span><span class="macro">!</span>(
             <span class="ident">fmt</span>,
-            <span class="string">&quot;{}&quot;</span>,
-            <span class="ident">report</span>::<span class="ident">obj</span>(<span class="string">&quot;boundary&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">bound</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
+            <span class="string">&quot;resolution&quot;</span>,
+            <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}x{}x{}&quot;</span>, <span class="self">self</span>.<span class="ident">res</span>[<span class="ident">X</span>], <span class="self">self</span>.<span class="ident">res</span>[<span class="ident">Y</span>], <span class="self">self</span>.<span class="ident">res</span>[<span class="ident">Z</span>])
         )<span class="question-mark">?</span>;
-
-        <span class="macro">writeln</span><span class="macro">!</span>(
-            <span class="ident">fmt</span>,
-            <span class="string">&quot;{}&quot;</span>,
-            <span class="ident">report</span>::<span class="ident">obj</span>(
-                <span class="string">&quot;resolution&quot;</span>,
-                <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}x{}x{}&quot;</span>, <span class="self">self</span>.<span class="ident">res</span>[<span class="ident">X</span>], <span class="self">self</span>.<span class="ident">res</span>[<span class="ident">Y</span>], <span class="self">self</span>.<span class="ident">res</span>[<span class="ident">Z</span>])
-            )
-            .<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
-        )<span class="question-mark">?</span>;
-
-        <span class="macro">write</span><span class="macro">!</span>(
-            <span class="ident">fmt</span>,
-            <span class="string">&quot;{}&quot;</span>,
-            <span class="ident">report</span>::<span class="ident">obj</span>(<span class="string">&quot;total cells&quot;</span>, <span class="self">self</span>.<span class="ident">total_cells</span>()).<span class="ident">expect</span>(<span class="string">&quot;Could not format field.&quot;</span>)
-        )
+        <span class="macro">display_field_ln</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;total cells&quot;</span>, <span class="self">self</span>.<span class="ident">total_cells</span>())<span class="question-mark">?</span>;
+        <span class="macro">display_field</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;boundary&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">boundary</span>)
     }
 }
 </pre></div>

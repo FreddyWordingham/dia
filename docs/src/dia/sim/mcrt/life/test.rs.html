@@ -151,12 +151,76 @@
 <span id="151">151</span>
 <span id="152">152</span>
 <span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Test photon lifetime function.</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">distribution</span>,
-    <span class="ident">mcrt</span>::{<span class="ident">Data</span>, <span class="ident">Environment</span>, <span class="ident">Event</span>, <span class="ident">Input</span>, <span class="ident">Photon</span>, <span class="ident">Properties</span>},
+    <span class="ident">mcrt</span>::{<span class="ident">Environment</span>, <span class="ident">Event</span>, <span class="ident">Input</span>, <span class="ident">Material</span>, <span class="ident">Output</span>, <span class="ident">Photon</span>},
     <span class="ident">Crossing</span>, <span class="ident">Hit</span>, <span class="ident">Set</span>, <span class="ident">Trace</span>,
 };
 <span class="kw">use</span> <span class="ident">physical_constants</span>::<span class="ident">SPEED_OF_LIGHT_IN_VACUUM</span>;
@@ -166,13 +230,17 @@
 <span class="doccomment">/// Test photon lifetime function.</span>
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">option_expect_used</span>)]</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Input</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Data</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ThreadRng</span>) {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Input</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Output</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ThreadRng</span>) {
     <span class="comment">// Useful constants.</span>
     <span class="kw">let</span> <span class="ident">bump_dist</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">sett</span>.<span class="ident">bump_dist</span>();
+    <span class="kw">let</span> <span class="ident">loop_limit</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">sett</span>.<span class="ident">loop_limit</span>();
+    <span class="kw">let</span> <span class="ident">roulette_weight</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">sett</span>.<span class="ident">roulette_weight</span>();
+    <span class="kw">let</span> <span class="ident">roulette_survive_prob</span> <span class="op">=</span> <span class="number">1.0</span> <span class="op">/</span> <span class="ident">input</span>.<span class="ident">sett</span>.<span class="ident">roulette_barrels</span>() <span class="kw">as</span> <span class="ident">f64</span>;
 
     <span class="comment">// Photon variable initialisation.</span>
     <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">mat</span>) <span class="op">=</span> <span class="ident">emit_phot</span>(<span class="ident">input</span>, <span class="ident">rng</span>);
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">env</span> <span class="op">=</span> <span class="ident">mat</span>.<span class="ident">env</span>(<span class="ident">phot</span>.<span class="ident">wavelength</span>());
+    <span class="comment">// data.paths.push(Vec::new());</span>
 
     <span class="comment">// Check photon can be placed within the grid domain.</span>
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">index</span>) <span class="op">=</span> <span class="ident">input</span>.<span class="ident">grid</span>.<span class="ident">gen_index</span>(<span class="ident">phot</span>.<span class="ident">ray</span>().<span class="ident">pos</span>()) {
@@ -182,7 +250,27 @@
     }
 
     <span class="comment">// Loop photon life until it leaves the grid.</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">loops</span> <span class="op">=</span> <span class="number">0</span>;
     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">index</span>, <span class="ident">voxel</span>)) <span class="op">=</span> <span class="ident">input</span>.<span class="ident">grid</span>.<span class="ident">gen_index_voxel</span>(<span class="ident">phot</span>.<span class="ident">ray</span>().<span class="ident">pos</span>()) {
+        <span class="comment">// Record photon position.</span>
+        <span class="comment">// data.paths.last_mut().unwrap().push(*phot.ray().pos());</span>
+
+        <span class="comment">// Check if loop limit has been reached.</span>
+        <span class="kw">if</span> <span class="ident">loops</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">loop_limit</span> {
+            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Warning! Terminating photon: loop limit reached.&quot;</span>);
+            <span class="kw">break</span>;
+        }
+        <span class="ident">loops</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+
+        <span class="comment">// Roulette.</span>
+        <span class="kw">if</span> <span class="ident">phot</span>.<span class="ident">weight</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">roulette_weight</span> {
+            <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>();
+            <span class="kw">if</span> <span class="ident">r</span> <span class="op">&gt;</span> <span class="ident">roulette_survive_prob</span> {
+                <span class="kw">break</span>;
+            }
+            <span class="kw-2">*</span><span class="ident">phot</span>.<span class="ident">weight_mut</span>() <span class="kw-2">*</span><span class="op">=</span> <span class="ident">input</span>.<span class="ident">sett</span>.<span class="ident">roulette_barrels</span>() <span class="kw">as</span> <span class="ident">f64</span>;
+        }
+
         <span class="comment">// Determine possible event distances.</span>
         <span class="kw">let</span> <span class="ident">voxel_dist</span> <span class="op">=</span> <span class="ident">voxel</span>
             .<span class="ident">dist</span>(<span class="ident">phot</span>.<span class="ident">ray</span>())
@@ -196,112 +284,152 @@
 
         <span class="comment">// Handle event.</span>
         <span class="kw">match</span> <span class="ident">Event</span>::<span class="ident">new</span>(<span class="ident">voxel_dist</span>, <span class="ident">scat_dist</span>, <span class="ident">surf_hit</span>, <span class="ident">bump_dist</span>) {
-            <span class="ident">Event</span>::<span class="ident">Voxel</span>(<span class="ident">dist</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">move_phot</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="ident">env</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">dist</span> <span class="op">+</span> <span class="ident">bump_dist</span>),
+            <span class="comment">// Voxel boundary hit.</span>
+            <span class="ident">Event</span>::<span class="ident">Voxel</span>(<span class="ident">dist</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">travel</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="ident">env</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">dist</span> <span class="op">+</span> <span class="ident">bump_dist</span>),
+            <span class="comment">// Interaction event.</span>
             <span class="ident">Event</span>::<span class="ident">Scattering</span>(<span class="ident">dist</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">move_phot</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="ident">env</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">dist</span>);
-                <span class="ident">scatter_phot</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="kw-2">&amp;</span><span class="ident">env</span>, <span class="ident">rng</span>);
+                <span class="ident">scatter</span>(<span class="ident">data</span>, <span class="ident">rng</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="ident">env</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">dist</span>);
             }
+            <span class="comment">// Interface collision.</span>
             <span class="ident">Event</span>::<span class="ident">Surface</span>(<span class="ident">hit</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="comment">// Move to the collision point.</span>
+                <span class="ident">travel</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="ident">env</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">hit</span>.<span class="ident">dist</span>());
+
+                <span class="comment">// Special collision events.</span>
+                <span class="kw">match</span> <span class="ident">hit</span>.<span class="ident">group</span>() {
+                    <span class="string">&quot;spectrometer&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">travel</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="ident">env</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">bump_dist</span>);
+                        <span class="ident">data</span>.<span class="ident">spec</span>.<span class="ident">collect_weight</span>(<span class="ident">phot</span>.<span class="ident">wavelength</span>(), <span class="ident">phot</span>.<span class="ident">weight</span>());
+                        <span class="kw">continue</span>;
+                    }
+                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {}
+                }
+
+                <span class="comment">// Get the near, and far side refractive indices.</span>
                 <span class="kw">let</span> <span class="ident">curr_ref</span> <span class="op">=</span> <span class="ident">env</span>.<span class="ident">ref_index</span>();
-                <span class="kw">let</span> <span class="ident">next_env</span> <span class="op">=</span> <span class="ident">select_property</span>(<span class="ident">input</span>.<span class="ident">props</span>, <span class="kw-2">&amp;</span><span class="ident">hit</span>).<span class="ident">env</span>(<span class="ident">phot</span>.<span class="ident">wavelength</span>());
+                <span class="kw">let</span> <span class="ident">next_env</span> <span class="op">=</span> <span class="ident">select_property</span>(<span class="kw-2">&amp;</span><span class="ident">hit</span>, <span class="ident">input</span>.<span class="ident">mats</span>).<span class="ident">env</span>(<span class="ident">phot</span>.<span class="ident">wavelength</span>());
                 <span class="kw">let</span> <span class="ident">next_ref</span> <span class="op">=</span> <span class="ident">next_env</span>.<span class="ident">ref_index</span>();
 
+                <span class="comment">// Calculate the crossing normal vectors.</span>
                 <span class="kw">let</span> <span class="ident">crossing</span> <span class="op">=</span>
                     <span class="ident">Crossing</span>::<span class="ident">new</span>(<span class="ident">phot</span>.<span class="ident">ray</span>().<span class="ident">dir</span>(), <span class="ident">hit</span>.<span class="ident">side</span>().<span class="ident">norm</span>(), <span class="ident">curr_ref</span>, <span class="ident">next_ref</span>);
 
-                <span class="kw">if</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0.0</span>, <span class="number">1.0</span>) <span class="op">&lt;</span><span class="op">=</span> <span class="ident">crossing</span>.<span class="ident">ref_prob</span>() {
+                <span class="comment">// Determine if a reflection or transmission occurs.</span>
+                <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>();
+                <span class="kw">if</span> <span class="ident">r</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">crossing</span>.<span class="ident">ref_prob</span>() {
                     <span class="comment">// Reflect.</span>
-                    <span class="ident">move_phot</span>(
-                        <span class="ident">data</span>,
-                        <span class="ident">index</span>,
-                        <span class="kw-2">&amp;</span><span class="ident">env</span>,
-                        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>,
-                        (<span class="ident">hit</span>.<span class="ident">dist</span>() <span class="op">-</span> <span class="ident">bump_dist</span>).<span class="ident">max</span>(<span class="number">0.0</span>),
-                    );
                     <span class="kw-2">*</span><span class="ident">phot</span>.<span class="ident">ray_mut</span>().<span class="ident">dir_mut</span>() <span class="op">=</span> <span class="kw-2">*</span><span class="ident">crossing</span>.<span class="ident">ref_dir</span>();
                 } <span class="kw">else</span> {
-                    <span class="comment">// Refract</span>
-                    <span class="ident">move_phot</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="ident">env</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">hit</span>.<span class="ident">dist</span>() <span class="op">+</span> <span class="ident">bump_dist</span>);
+                    <span class="comment">// Refract.</span>
                     <span class="kw-2">*</span><span class="ident">phot</span>.<span class="ident">ray_mut</span>().<span class="ident">dir_mut</span>() <span class="op">=</span> <span class="ident">crossing</span>.<span class="ident">trans_dir</span>().<span class="ident">expect</span>(<span class="string">&quot;Invalid refraction.&quot;</span>);
                     <span class="ident">env</span> <span class="op">=</span> <span class="ident">next_env</span>;
                 }
 
-                <span class="ident">data</span>.<span class="ident">hits</span>[<span class="ident">index</span>] <span class="op">+</span><span class="op">=</span> <span class="ident">phot</span>.<span class="ident">weight</span>();
+                <span class="comment">// Move slightly away from the surface.</span>
+                <span class="ident">travel</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="kw-2">&amp;</span><span class="ident">env</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">phot</span>, <span class="ident">bump_dist</span>);
             }
         }
     }
+
+    <span class="comment">// data.paths.last_mut().unwrap().push(*phot.ray().pos());</span>
 }
 
 <span class="doccomment">/// Generate a new photon.</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">fn</span> <span class="ident">emit_phot</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Input</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ThreadRng</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Photon</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Properties</span>) {
-    <span class="kw">let</span> <span class="ident">phot</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">light</span>.<span class="ident">emit</span>(<span class="ident">input</span>.<span class="ident">sett</span>.<span class="ident">num_phot</span>(), <span class="ident">rng</span>);
-    <span class="kw">let</span> <span class="ident">prop</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">input</span>.<span class="ident">props</span>.<span class="ident">map</span>()[<span class="string">&quot;air&quot;</span>];
+<span class="kw">fn</span> <span class="ident">emit_phot</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Input</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ThreadRng</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Photon</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Material</span>) {
+    <span class="comment">// Generate photons from the light source until they&#39;re in the optical range of interest.</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">phot</span>;
+    <span class="kw">loop</span> {
+        <span class="ident">phot</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">light</span>.<span class="ident">emit</span>(<span class="ident">input</span>.<span class="ident">sett</span>.<span class="ident">num_phot</span>(), <span class="ident">rng</span>);
+        <span class="kw">if</span> <span class="ident">input</span>.<span class="ident">sett</span>.<span class="ident">range</span>().<span class="ident">contains</span>(<span class="ident">phot</span>.<span class="ident">wavelength</span>()) {
+            <span class="kw">break</span>;
+        }
+    }
 
-    (<span class="ident">phot</span>, <span class="ident">prop</span>)
+    <span class="comment">// Select the required material.</span>
+    <span class="kw">let</span> <span class="ident">mat</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">input</span>.<span class="ident">mats</span>.<span class="ident">map</span>()[<span class="ident">input</span>.<span class="ident">sett</span>.<span class="ident">init_mat</span>()];
+
+    (<span class="ident">phot</span>, <span class="ident">mat</span>)
 }
 
-<span class="doccomment">/// Move the photon and record relevant data.</span>
+<span class="doccomment">/// Move the photon forward and record the flight.</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">fn</span> <span class="ident">move_phot</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Data</span>, <span class="ident">index</span>: [<span class="ident">usize</span>; <span class="number">3</span>], <span class="ident">env</span>: <span class="kw-2">&amp;</span><span class="ident">Environment</span>, <span class="ident">phot</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Photon</span>, <span class="ident">dist</span>: <span class="ident">f64</span>) {
+<span class="kw">fn</span> <span class="ident">travel</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Output</span>, <span class="ident">index</span>: [<span class="ident">usize</span>; <span class="number">3</span>], <span class="ident">env</span>: <span class="kw-2">&amp;</span><span class="ident">Environment</span>, <span class="ident">phot</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Photon</span>, <span class="ident">dist</span>: <span class="ident">f64</span>) {
     <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">dist</span> <span class="op">&gt;</span> <span class="number">0.0</span>);
 
+    <span class="kw">let</span> <span class="ident">weight_power_dist</span> <span class="op">=</span> <span class="ident">phot</span>.<span class="ident">weight</span>() <span class="op">*</span> <span class="ident">phot</span>.<span class="ident">power</span>() <span class="op">*</span> <span class="ident">dist</span>;
+    <span class="ident">data</span>.<span class="ident">energy</span>[<span class="ident">index</span>] <span class="op">+</span><span class="op">=</span> <span class="ident">weight_power_dist</span> <span class="op">*</span> (<span class="ident">env</span>.<span class="ident">ref_index</span>() <span class="op">/</span> <span class="ident">SPEED_OF_LIGHT_IN_VACUUM</span>);
+    <span class="ident">data</span>.<span class="ident">absorptions</span>[<span class="ident">index</span>] <span class="op">+</span><span class="op">=</span> <span class="ident">weight_power_dist</span> <span class="op">*</span> <span class="ident">env</span>.<span class="ident">abs_coeff</span>();
+    <span class="ident">data</span>.<span class="ident">shifts</span>[<span class="ident">index</span>] <span class="op">+</span><span class="op">=</span> <span class="ident">weight_power_dist</span> <span class="op">*</span> <span class="ident">env</span>.<span class="ident">shift_coeff</span>();
+
     <span class="ident">data</span>.<span class="ident">dist_travelled</span>[<span class="ident">index</span>] <span class="op">+</span><span class="op">=</span> <span class="ident">dist</span>;
-    <span class="ident">data</span>.<span class="ident">energy</span>[<span class="ident">index</span>] <span class="op">+</span><span class="op">=</span>
-        <span class="ident">phot</span>.<span class="ident">weight</span>() <span class="op">*</span> <span class="ident">phot</span>.<span class="ident">power</span>() <span class="op">*</span> (<span class="ident">env</span>.<span class="ident">ref_index</span>() <span class="op">/</span> <span class="ident">SPEED_OF_LIGHT_IN_VACUUM</span>) <span class="op">*</span> <span class="ident">dist</span>;
-    <span class="ident">data</span>.<span class="ident">absorptions</span>[<span class="ident">index</span>] <span class="op">+</span><span class="op">=</span> <span class="ident">phot</span>.<span class="ident">weight</span>() <span class="op">*</span> <span class="ident">phot</span>.<span class="ident">power</span>() <span class="op">*</span> <span class="ident">dist</span> <span class="op">*</span> <span class="ident">env</span>.<span class="ident">abs_coeff</span>();
 
     <span class="ident">phot</span>.<span class="ident">ray_mut</span>().<span class="ident">travel</span>(<span class="ident">dist</span>);
 }
 
-<span class="doccomment">/// Scatter the photon and record relevant data.</span>
+<span class="doccomment">/// Perform a photon scattering event.</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">fn</span> <span class="ident">scatter_phot</span>(
-    <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Data</span>,
-    <span class="ident">index</span>: [<span class="ident">usize</span>; <span class="number">3</span>],
-    <span class="ident">phot</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Photon</span>,
-    <span class="ident">env</span>: <span class="kw-2">&amp;</span><span class="ident">Environment</span>,
+<span class="kw">fn</span> <span class="ident">scatter</span>(
+    <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Output</span>,
     <span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ThreadRng</span>,
+    <span class="ident">index</span>: [<span class="ident">usize</span>; <span class="number">3</span>],
+    <span class="ident">env</span>: <span class="kw-2">&amp;</span><span class="ident">Environment</span>,
+    <span class="ident">phot</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Photon</span>,
+    <span class="ident">dist</span>: <span class="ident">f64</span>,
 ) {
-    <span class="ident">data</span>.<span class="ident">scatters</span>[<span class="ident">index</span>] <span class="op">+</span><span class="op">=</span> <span class="ident">phot</span>.<span class="ident">weight</span>();
+    <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">dist</span> <span class="op">&gt;</span> <span class="number">0.0</span>);
 
+    <span class="comment">// Move to the interaction point.</span>
+    <span class="ident">travel</span>(<span class="ident">data</span>, <span class="ident">index</span>, <span class="ident">env</span>, <span class="ident">phot</span>, <span class="ident">dist</span>);
+
+    <span class="comment">// Part of the weight is absorbed.</span>
+    <span class="kw-2">*</span><span class="ident">phot</span>.<span class="ident">weight_mut</span>() <span class="kw-2">*</span><span class="op">=</span> <span class="ident">env</span>.<span class="ident">albedo</span>();
+
+    <span class="comment">// The remaining weight may be shifted in a Raman/fluorescence event.</span>
+    <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>();
+    <span class="kw">if</span> <span class="ident">r</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">env</span>.<span class="ident">shift_prob</span>() {
+        <span class="comment">// Shift occurs.</span>
+        <span class="comment">// Fluorescence event removes photons from optical range of interest.</span>
+        <span class="kw-2">*</span><span class="ident">phot</span>.<span class="ident">weight_mut</span>() <span class="op">=</span> <span class="number">0.0</span>;
+        <span class="kw">return</span>;
+    }
+
+    <span class="comment">// The remaining weight is scattered.</span>
     <span class="kw">let</span> <span class="ident">phi</span> <span class="op">=</span> <span class="ident">distribution</span>::<span class="ident">henyey_greenstein</span>(<span class="ident">rng</span>, <span class="ident">env</span>.<span class="ident">asym</span>());
-    <span class="ident">data</span>.<span class="ident">rotations</span>[<span class="ident">index</span>] <span class="op">+</span><span class="op">=</span> <span class="ident">phi</span>;
-
-    <span class="ident">phot</span>.<span class="ident">ray_mut</span>().<span class="ident">rotate</span>(<span class="ident">phi</span>, <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0.0</span>, <span class="number">2.0</span> <span class="op">*</span> <span class="ident">PI</span>));
+    <span class="kw">let</span> <span class="ident">theta</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0.0</span>, <span class="ident">PI</span> <span class="op">*</span> <span class="number">2.0</span>);
+    <span class="ident">phot</span>.<span class="ident">ray_mut</span>().<span class="ident">rotate</span>(<span class="ident">phi</span>, <span class="ident">theta</span>);
 }
 
-<span class="doccomment">/// Determine the next property from the hit event information.</span>
+<span class="doccomment">/// Determine the next material from the hit event information.</span>
 <span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">select_property</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">props</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">Properties</span><span class="op">&gt;</span>, <span class="ident">hit</span>: <span class="kw-2">&amp;</span><span class="ident">Hit</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Properties</span> {
-    <span class="kw">let</span> <span class="ident">group</span> <span class="op">=</span> <span class="ident">hit</span>.<span class="ident">group</span>();
-    <span class="kw">match</span> <span class="ident">group</span>.<span class="ident">as_str</span>() {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">select_property</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">hit</span>: <span class="kw-2">&amp;</span><span class="ident">Hit</span>, <span class="ident">mats</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">Material</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Material</span> {
+    <span class="kw">match</span> <span class="ident">hit</span>.<span class="ident">group</span>() {
         <span class="string">&quot;skin&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw">if</span> <span class="ident">hit</span>.<span class="ident">side</span>().<span class="ident">is_inside</span>() {
-                <span class="kw-2">&amp;</span><span class="ident">props</span>.<span class="ident">map</span>()[<span class="string">&quot;air&quot;</span>]
+                <span class="kw-2">&amp;</span><span class="ident">mats</span>.<span class="ident">map</span>()[<span class="string">&quot;air&quot;</span>]
             } <span class="kw">else</span> {
-                <span class="kw-2">&amp;</span><span class="ident">props</span>.<span class="ident">map</span>()[<span class="string">&quot;flesh&quot;</span>]
+                <span class="kw-2">&amp;</span><span class="ident">mats</span>.<span class="ident">map</span>()[<span class="string">&quot;flesh&quot;</span>]
             }
         }
-        <span class="string">&quot;tumour&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="string">&quot;tumour_body&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw">if</span> <span class="ident">hit</span>.<span class="ident">side</span>().<span class="ident">is_inside</span>() {
-                <span class="kw-2">&amp;</span><span class="ident">props</span>.<span class="ident">map</span>()[<span class="string">&quot;flesh&quot;</span>]
+                <span class="kw-2">&amp;</span><span class="ident">mats</span>.<span class="ident">map</span>()[<span class="string">&quot;flesh&quot;</span>]
             } <span class="kw">else</span> {
-                <span class="kw-2">&amp;</span><span class="ident">props</span>.<span class="ident">map</span>()[<span class="string">&quot;tumour&quot;</span>]
+                <span class="kw-2">&amp;</span><span class="ident">mats</span>.<span class="ident">map</span>()[<span class="string">&quot;tumour&quot;</span>]
             }
         }
         <span class="string">&quot;tumour_cap&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw">if</span> <span class="ident">hit</span>.<span class="ident">side</span>().<span class="ident">is_inside</span>() {
-                <span class="kw-2">&amp;</span><span class="ident">props</span>.<span class="ident">map</span>()[<span class="string">&quot;air&quot;</span>]
+                <span class="kw-2">&amp;</span><span class="ident">mats</span>.<span class="ident">map</span>()[<span class="string">&quot;air&quot;</span>]
             } <span class="kw">else</span> {
-                <span class="kw-2">&amp;</span><span class="ident">props</span>.<span class="ident">map</span>()[<span class="string">&quot;tumour&quot;</span>]
+                <span class="kw-2">&amp;</span><span class="ident">mats</span>.<span class="ident">map</span>()[<span class="string">&quot;tumour&quot;</span>]
             }
         }
         <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="macro">format</span><span class="macro">!</span>(
             <span class="string">&quot;Do not know how to handle collision with group {}&quot;</span>,
-            <span class="ident">group</span>
+            <span class="ident">hit</span>.<span class="ident">group</span>()
         )),
     }
 }
