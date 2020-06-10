@@ -23,18 +23,17 @@ impl<'a> Event<'a> {
         debug_assert!(bump_dist > 0.0);
 
         if let Some(hit) = surf_hit {
-            if voxel_dist <= scat_dist {
-                return if hit.dist() <= voxel_dist {
-                    Self::Surface(hit)
-                } else {
-                    Self::Voxel(voxel_dist)
-                };
+            if voxel_dist < hit.dist() {
+                if scat_dist < voxel_dist {
+                    return Self::Scattering(scat_dist);
+                }
+                return Self::Voxel(voxel_dist);
             }
-            return if hit.dist() <= scat_dist {
-                Self::Surface(hit)
-            } else {
-                Self::Scattering(scat_dist)
-            };
+
+            if scat_dist < hit.dist() {
+                return Self::Scattering(scat_dist);
+            }
+            return Self::Surface(hit);
         }
 
         if voxel_dist <= scat_dist {
