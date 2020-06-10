@@ -1,7 +1,7 @@
 //! Test photon lifetime function.
 
 use crate::{
-    mcrt::{Event, Input, Output, Photon, Properties},
+    mcrt::{Environment, Event, Input, Output, Photon, Properties},
     Trace,
 };
 use rand::{rngs::ThreadRng, Rng};
@@ -13,9 +13,11 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
     // Useful constants.
     let bump_dist = input.sett.bump_dist();
     let loop_limit = input.sett.loop_limit();
+    let roulette_weight = input.sett.roulette_weight();
+    let roulette_survive_prob = 1.0 / input.sett.roulette_barrels() as f64;
 
     // Photon variable initialisation.
-    let (phot, mat) = emit_phot(input, rng);
+    let (mut phot, mat) = emit_phot(input, rng);
     let env = mat.env(phot.wavelength());
 
     // Check photon can be placed within the grid domain.
@@ -27,13 +29,22 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
 
     // Loop photon life until it leaves the grid.
     let mut loops = 0;
-    while let Some((_index, voxel)) = input.grid.gen_index_voxel(phot.ray().pos()) {
+    while let Some((index, voxel)) = input.grid.gen_index_voxel(phot.ray().pos()) {
         // Check if loop limit has been reached.
         if loops >= loop_limit {
             println!("Warning! Terminating photon: loop limit reached.");
             break;
         }
         loops += 1;
+
+        // Roulette.
+        if phot.weight() <= roulette_weight {
+            let r = rng.gen::<f64>();
+            if r > roulette_survive_prob {
+                break;
+            }
+            *phot.weight_mut() *= input.sett.roulette_barrels() as f64;
+        }
 
         // Determine possible event distances.
         let voxel_dist = voxel
@@ -48,9 +59,9 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
 
         // Handle event.
         match Event::new(voxel_dist, scat_dist, surf_hit, bump_dist) {
-            Event::Voxel(_dist) => break,
-            Event::Scattering(_dist) => break,
-            Event::Surface(_hit) => break,
+            Event::Voxel(dist) => travel(data, index, &env, &mut phot, dist + bump_dist),
+            Event::Scattering(dist) => travel(data, index, &env, &mut phot, dist + bump_dist),
+            Event::Surface(hit) => travel(data, index, &env, &mut phot, hit.dist() + bump_dist),
         }
     }
 }
@@ -70,4 +81,13 @@ fn emit_phot<'a>(input: &'a Input, rng: &mut ThreadRng) -> (Photon, &'a Properti
     let prop = &input.props.map()[input.sett.init_mat()];
 
     (phot, prop)
+}
+
+/// Move the photon forward and record the flight.
+#[inline]
+fn travel(data: &mut Output, index: [usize; 3], _env: &Environment, phot: &mut Photon, dist: f64) {
+    debug_assert!(dist > 0.0);
+
+    phot.ray_mut().travel(dist);
+    data.dist_travelled[index] += dist;
 }

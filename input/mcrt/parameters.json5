@@ -12,12 +12,14 @@
         res: [64,64,64]
     },
     sett: {
-        bump_dist:  1e-6,
-        num_phot:   1e6,
-        block_size: 1e3,
-        loop_limit: 1e3,
-        init_mat:   'air',
-        range:      {min: 450e-9, max: 800e-9}
+        bump_dist:          1e-6,
+        num_phot:           1e6,
+        block_size:         1e3,
+        loop_limit:         1e3,
+        roulette_weight:    0.01,
+        roulette_barrels:   8,
+        init_mat:           'air',
+        range:              {min: 450e-9, max: 800e-9}
     },
     light: {
         surf: [['objs/led.obj'], {scale: 1.0e-3, trans: [0.0,0.0,-0.5e-3]}],
