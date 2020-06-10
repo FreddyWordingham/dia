@@ -1,8 +1,8 @@
 {
     tree: {
-        tar_tris: 5,
-        max_depth: 5,
-        padding: 0.1
+        tar_tris:   5,
+        max_depth:  5,
+        padding:    0.1
     },
     grid: {
         boundary: {
@@ -12,30 +12,31 @@
         res: [64,64,64]
     },
     sett: {
-        bump_dist: 1e-6,
-        num_phot: 1e6,
+        bump_dist:  1e-6,
+        num_phot:   1e6,
         block_size: 1e3,
-        init_mat: 'air',
-        range: {min: 450e-9, max: 800e-9}
+        loop_limit: 1e3,
+        init_mat:   'air',
+        range:      {min: 450e-9, max: 800e-9}
     },
     light: {
-        surf: [['objs/led.obj'], {scale:1.0e-3, trans:[0.0,0.0,-0.5e-3]}],
+        surf: [['objs/led.obj'], {scale: 1.0e-3, trans: [0.0,0.0,-0.5e-3]}],
         spec: {
             There: 'spec/aktilite.json5'
         },
         power: 1
     },
     surfs: {
-        skin: [['objs/skin.obj'], {scale:1.0e-3}],
-        tumour_cap: [['objs/tumour_cap.obj'], {scale:1.0e-3}],
-        tumour_body: [['objs/tumour_2000.obj'], {scale:1.0e-3}],
+        skin:           [['objs/skin.obj'],         {scale: 1.0e-3}],
+        tumour_cap:     [['objs/tumour_cap.obj'],   {scale: 1.0e-3}],
+        tumour_body:    [['objs/tumour_2000.obj'],  {scale: 1.0e-3}],
     },
     props: {
         air: {
             Here: {
-                ref_index: {Constant:  1.0},
+                ref_index:  {Constant: 1.0},
                 scat_coeff: {Constant: 1.0e-6},
-                asym_fact: {Constant:  0.1}
+                asym_fact:  {Constant: 0.1}
             }
         },
         flesh: {

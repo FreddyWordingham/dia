@@ -12,6 +12,7 @@ use rand::{rngs::ThreadRng, Rng};
 pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
     // Useful constants.
     let bump_dist = input.sett.bump_dist();
+    let loop_limit = input.sett.loop_limit();
 
     // Photon variable initialisation.
     let (phot, mat) = emit_phot(input, rng);
@@ -25,7 +26,15 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
     }
 
     // Loop photon life until it leaves the grid.
+    let mut loops = 0;
     while let Some((_index, voxel)) = input.grid.gen_index_voxel(phot.ray().pos()) {
+        // Check if loop limit has been reached.
+        if loops >= loop_limit {
+            println!("Warning! Terminating photon: loop limit reached.");
+            break;
+        }
+        loops += 1;
+
         // Determine possible event distances.
         let voxel_dist = voxel
             .dist(phot.ray())
