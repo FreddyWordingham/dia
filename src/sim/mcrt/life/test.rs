@@ -5,6 +5,7 @@ use crate::{
     mcrt::{Environment, Event, Input, Material, Output, Photon},
     Crossing, Hit, Set, Trace,
 };
+use physical_constants::SPEED_OF_LIGHT_IN_VACUUM;
 use rand::{rngs::ThreadRng, Rng};
 use std::f64::consts::PI;
 
@@ -21,7 +22,7 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
     // Photon variable initialisation.
     let (mut phot, mat) = emit_phot(input, rng);
     let mut env = mat.env(phot.wavelength());
-    data.paths.push(Vec::new());
+    // data.paths.push(Vec::new());
 
     // Check photon can be placed within the grid domain.
     if let Some(index) = input.grid.gen_index(phot.ray().pos()) {
@@ -34,7 +35,7 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
     let mut loops = 0;
     while let Some((index, voxel)) = input.grid.gen_index_voxel(phot.ray().pos()) {
         // Record photon position.
-        data.paths.last_mut().unwrap().push(*phot.ray().pos());
+        // data.paths.last_mut().unwrap().push(*phot.ray().pos());
 
         // Check if loop limit has been reached.
         if loops >= loop_limit {
@@ -77,10 +78,14 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
                 travel(data, index, &env, &mut phot, hit.dist());
 
                 // Special collision events.
-                // match hit.group() {
-                //     "spectrometer" => {}
-                //     _ => {}
-                // }
+                match hit.group() {
+                    "spectrometer" => {
+                        travel(data, index, &env, &mut phot, bump_dist);
+                        data.spec.collect_weight(phot.wavelength(), phot.weight());
+                        continue;
+                    }
+                    _ => {}
+                }
 
                 // Get the near, and far side refractive indices.
                 let curr_ref = env.ref_index();
@@ -103,12 +108,12 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
                 }
 
                 // Move slightly away from the surface.
-                travel(data, index, &env, &mut phot, input.sett.bump_dist());
+                travel(data, index, &env, &mut phot, bump_dist);
             }
         }
     }
 
-    data.paths.last_mut().unwrap().push(*phot.ray().pos());
+    // data.paths.last_mut().unwrap().push(*phot.ray().pos());
 }
 
 /// Generate a new photon.
@@ -132,11 +137,17 @@ fn emit_phot<'a>(input: &'a Input, rng: &mut ThreadRng) -> (Photon, &'a Material
 
 /// Move the photon forward and record the flight.
 #[inline]
-fn travel(data: &mut Output, index: [usize; 3], _env: &Environment, phot: &mut Photon, dist: f64) {
+fn travel(data: &mut Output, index: [usize; 3], env: &Environment, phot: &mut Photon, dist: f64) {
     debug_assert!(dist > 0.0);
 
-    phot.ray_mut().travel(dist);
+    let weight_power_dist = phot.weight() * phot.power() * dist;
+    data.energy[index] += weight_power_dist * (env.ref_index() / SPEED_OF_LIGHT_IN_VACUUM);
+    data.absorptions[index] += weight_power_dist * env.abs_coeff();
+    data.shifts[index] += weight_power_dist * env.shift_coeff();
+
     data.dist_travelled[index] += dist;
+
+    phot.ray_mut().travel(dist);
 }
 
 /// Perform a photon scattering event.
