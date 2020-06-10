@@ -50,12 +50,12 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
 #[inline]
 #[must_use]
 fn emit_phot<'a>(input: &'a Input, rng: &mut ThreadRng) -> (Photon, &'a Properties) {
-    let mut phot = input.light.emit(input.sett.num_phot(), rng);
-    while phot.wavelength() <= 450.0e-9 || phot.wavelength() >= 800.0e-9 {
-        phot = input.light.emit(input.sett.num_phot(), rng);
-    }
+    let phot = input.light.emit(input.sett.num_phot(), rng);
+    // while phot.wavelength() <= input.sett.wavelength_limits.min() || phot.wavelength() >= 800.0e-9 {
+    //     phot = input.light.emit(input.sett.num_phot(), rng);
+    // }
 
-    let prop = &input.props.map()["air"];
+    let prop = &input.props.map()[input.sett.init_mat()];
 
     (phot, prop)
 }

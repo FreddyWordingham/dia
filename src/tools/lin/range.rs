@@ -1,10 +1,15 @@
 //! Range implementation.
 
 use crate::clone;
-use std::f64::{INFINITY, NEG_INFINITY};
+use attr::load;
+use std::{
+    f64::{INFINITY, NEG_INFINITY},
+    fmt::{Display, Formatter, Result},
+};
 
 /// One-dimensional inclusive Range.
-#[derive(Debug, Clone, PartialEq)]
+#[load]
+#[derive(Clone, PartialEq)]
 pub struct Range {
     /// Minimum bound.
     min: f64,
@@ -76,5 +81,13 @@ impl Range {
         let max = self.max.min(other.max);
 
         Some(Self::new(min, max))
+    }
+}
+
+impl Display for Range {
+    #[allow(clippy::result_expect_used)]
+    #[inline]
+    fn fmt(&self, fmt: &mut Formatter) -> Result {
+        write!(fmt, "{} -> {}", self.min, self.max)
     }
 }

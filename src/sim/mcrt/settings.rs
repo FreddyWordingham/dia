@@ -1,6 +1,6 @@
 //! Settings implementation.
 
-use crate::{access, clone, display_field, display_field_ln, Group};
+use crate::{access, clone, display_field, display_field_ln, Group, Range};
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
@@ -15,6 +15,8 @@ pub struct Settings {
     bump_dist: f64,
     /// Initial material.
     init_mat: Group,
+    /// Wavelength limits.
+    range: Range,
 }
 
 impl Settings {
@@ -22,6 +24,7 @@ impl Settings {
     clone!(num_phot, u64);
     clone!(bump_dist, f64);
     access!(init_mat, Group);
+    access!(range, Range);
 }
 
 impl Display for Settings {
@@ -31,6 +34,7 @@ impl Display for Settings {
         display_field_ln!(fmt, "block size", self.block_size)?;
         display_field_ln!(fmt, "number of photons", self.num_phot)?;
         display_field_ln!(fmt, "bump distance", self.bump_dist, "m")?;
-        display_field!(fmt, "initial material", &self.init_mat)
+        display_field_ln!(fmt, "initial material", &self.init_mat)?;
+        display_field!(fmt, "wavelength range", &self.range, "m")
     }
 }
