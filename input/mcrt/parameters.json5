@@ -4,17 +4,17 @@
         max_depth: 5,
         padding: 0.1
     },
-    mcrt: {
-        bump_dist: 1e-6,
-        num_phot: 1e6,
-        block_size: 1e3,
-    },
     grid: {
-        bound: {
+        boundary: {
             mins: [-5e-3, -5e-3, -9e-3],
             maxs: [ 5e-3,  5e-3,  1e-3]
         },
         res: [64,64,64]
+    },
+    sett: {
+        bump_dist: 1e-6,
+        num_phot: 1e6,
+        block_size: 1e3,
     },
     light: {
         surf: [['objs/led.obj'], {scale:1.0e-3, trans:[0.0,0.0,-0.5e-3]}],
@@ -24,26 +24,23 @@
         power: 1
     },
     surfs: {
-        map: {
-            skin: [['objs/skin.obj'], {scale:1.0e-3}],
-            tumour: [['objs/tumour.obj'], {scale:1.0e-3}],
-        }
+        skin: [['objs/skin.obj'], {scale:1.0e-3}],
+        tumour_cap: [['objs/tumour_cap.obj'], {scale:1.0e-3}],
+        tumour_body: [['objs/tumour_2000.obj'], {scale:1.0e-3}],
     },
     props: {
-        map: {
-            air: {
-                Here: {
-                    ref_index: {Constant:  1.0},
-                    scat_coeff: {Constant: 1.0e-6},
-                    asym_fact: {Constant:  0.1}
-                }
-            },
-            flesh: {
-                There: 'props/dermis.json5'
-            },
-            tumour: {
-                There: 'props/tumour.json5'
+        air: {
+            Here: {
+                ref_index: {Constant:  1.0},
+                scat_coeff: {Constant: 1.0e-6},
+                asym_fact: {Constant:  0.1}
             }
+        },
+        flesh: {
+            There: 'props/dermis.json5'
+        },
+        tumour: {
+            There: 'props/tumour.json5'
         }
     }
 }
