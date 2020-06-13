@@ -23,7 +23,8 @@ impl<'a> Scan<'a> {
     /// Construct a new surface instance.
     #[inline]
     #[must_use]
-    pub const fn new_surface(hit: Hit<'a>) -> Self {
+    pub fn new_surface(hit: Hit<'a>) -> Self {
+        // Freddy: Const function does not compile on Charlie's machine.
         Self::Surface(hit)
     }
 }
