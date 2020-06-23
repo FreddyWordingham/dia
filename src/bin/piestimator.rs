@@ -1,9 +1,8 @@
-use dia::report;
 use rand::Rng;
 use std::f64::consts::PI;
 
 /// Number of samples to take.
-const SAMPLES: u64 = 1_000_000;
+const SAMPLES: u64 = 1_000_000_000;
 
 /// Estimate the value of PI.
 fn main() {
@@ -31,8 +30,8 @@ fn main() {
     let accuracy = pi_estimate / PI;
 
     // Print values.
-    println!("pi estimate", pi_estimate);
+    println!("pi estimate: {}", pi_estimate);
     // report::obj("pi estimate", pi_estimate).unwrap();
     // report::obj_units("delta", (accuracy - 1.0) * 100.0, "%").unwrap();
-    println!("delta", (accuracy - 1.0) * 100.0, "%");
+    println!("delta: {}%", (accuracy - 1.0) * 100.0);
 }
