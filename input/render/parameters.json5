@@ -20,10 +20,15 @@
         // soft_shadows: 7,
     },
     surfs: {
-            bone: [['objs/bone.obj'], null],
+            planet_clouds   : [['objs/kessler/planet/clouds_outer.obj', 'objs/kessler/planet/clouds_mid.obj', 'objs/kessler/planet/clouds_inner.obj'], null],
+            planet_land     : [['objs/kessler/planet/land.obj'], null],
+            planet_sea      : [['objs/kessler/planet/sea.obj'], null],
     },
     cols: {
-
+            sky             : ['#ffe200ff', '#ff4700ff', '#ff000dff', '#ff009dff', '#b400ffff', '#3700ffff', '#0095ffff'],
+            planet_land     : ['#008000ff', '#32cd32ff', '#556b2fff', '#1f841fff', '#56a556ff', '#0ebb0eff', '#008080ff', '#51dab6ff', '#67e2b9ff', '#3be3abff'],
+            planet_sea      : ['#0542A8ff', '#1552C6ff', '#8e6fe4ff', '#724ceeff', '#7770ffff', '#3072EBff', '#71A8EEff'],
+            planet_clouds   : ['#ff000dff', '#ff4700ff', '#175bd5ff', '#2222c5ff', '#ffffffff']
     },
     attrs: {
             mirror: {
@@ -38,7 +43,7 @@
         tar: [-8.13774,18.2751,2.4418],
         swivel: [0, 0],
         fov: 45,
-        aspect_ratio: "IPhoneXS",
+        aspect_ratio: "Square",
         res: 1125,
         // dof: [7, 0.3],
         // ss: 3

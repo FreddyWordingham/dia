@@ -144,7 +144,7 @@ fn grow<'a>(
 fn render(input: &render::Input) -> render::Output {
     banner::section("Rendering");
     banner::sub_section("Main Camera");
-    render::run::simulate(&input, render::painter::field).expect("Simulation failed.")
+    render::run::simulate(&input, render::painter::kessler).expect("Simulation failed.")
 }
 
 /// Save the output data.
