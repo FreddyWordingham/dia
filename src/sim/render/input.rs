@@ -5,8 +5,9 @@ use crate::{
     grid::Grid,
     render::{Attributes, Camera, Settings},
     tree::Cell,
-    Mesh, Set,
+    Dir2, Mesh, Set,
 };
+use ndarray::Array2;
 use palette::{Gradient, LinSrgba};
 use std::fmt::{Display, Formatter, Result};
 
@@ -26,6 +27,8 @@ pub struct Input<'a> {
     pub tree: &'a Cell<'a>,
     /// Surface tree.
     pub grid: &'a Grid,
+    /// Perlin noise map.
+    pub perl: &'a Array2<Dir2>,
 }
 
 impl<'a> Input<'a> {
@@ -40,6 +43,7 @@ impl<'a> Input<'a> {
         cam: &'a Camera,
         tree: &'a Cell<'a>,
         grid: &'a Grid,
+        perl: &'a Array2<Dir2>,
     ) -> Self {
         Self {
             sett,
@@ -49,6 +53,7 @@ impl<'a> Input<'a> {
             cam,
             tree,
             grid,
+            perl,
         }
     }
 }

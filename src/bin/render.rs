@@ -2,8 +2,13 @@
 
 use attr::input;
 use dia::*;
+use ndarray::Array2;
 use palette::{Gradient, LinSrgba};
-use std::path::{Path, PathBuf};
+use rand::{thread_rng, Rng};
+use std::{
+    f64::consts::PI,
+    path::{Path, PathBuf},
+};
 
 /// Input parameters.
 #[input]
@@ -29,9 +34,18 @@ pub fn main() {
     banner::title("Render");
     let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let (tree_sett, grid_sett, render_sett, surfs, cols, attrs, cam) = build(&in_dir, params);
+    let (tree_sett, grid_sett, render_sett, surfs, cols, attrs, cam, perl) = build(&in_dir, params);
     let (tree, grid) = grow(tree_sett, grid_sett, &surfs);
-    let input = render::Input::new(&render_sett, &surfs, &cols, &attrs, &cam, &tree, &grid);
+    let input = render::Input::new(
+        &render_sett,
+        &surfs,
+        &cols,
+        &attrs,
+        &cam,
+        &tree,
+        &grid,
+        &perl,
+    );
     let data = render(&input);
     save(&out_dir, data);
     banner::section("Finished");
@@ -77,6 +91,7 @@ fn build(
     Set<Gradient<LinSrgba>>,
     Set<render::Attributes>,
     render::Camera,
+    Array2<Dir2>,
 ) {
     banner::section("Building");
     banner::sub_section("Adaptive Tree Settings");
@@ -118,7 +133,30 @@ fn build(
     let cam = params.cam.build(in_dir).expect("Unable to build camera.");
     report!("Camera", &cam);
 
-    (tree_sett, grid_sett, render_sett, surfs, cols, attrs, cam)
+    banner::sub_section("Camera");
+    let mut dirs = Vec::with_capacity(render_sett.perl_segs()[X] * render_sett.perl_segs()[Y]);
+    let mut rng = thread_rng();
+    for _ in 0..render_sett.perl_segs()[X] {
+        for _ in 0..render_sett.perl_segs()[Y] {
+            let theta = rng.gen_range(0.0, 2.0 * PI);
+            let x = theta.cos();
+            let y = theta.sin();
+            dirs.push(Dir2::new_normalize(Vec2::new(x, y)));
+        }
+    }
+    let perl = Array2::from_shape_vec(render_sett.perl_segs(), dirs)
+        .expect("Could not create Perlin noise map.");
+
+    (
+        tree_sett,
+        grid_sett,
+        render_sett,
+        surfs,
+        cols,
+        attrs,
+        cam,
+        perl,
+    )
 }
 
 /// Grow domains.

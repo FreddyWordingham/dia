@@ -1,6 +1,6 @@
 //! Settings implementation.
 
-use crate::{access, clone, display_field, display_field_ln, Pos3};
+use crate::{access, clone, display_field, display_field_ln, Pos3, X, Y};
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
@@ -19,6 +19,8 @@ pub struct Settings {
     ambient_occlusion: Option<i32>,
     /// Optional number of soft shadow samples.
     soft_shadows: Option<i32>,
+    /// Perlin noise map segments.
+    perl_segs: [usize; 2],
 }
 
 impl Settings {
@@ -28,6 +30,7 @@ impl Settings {
     access!(sun_pos, Pos3);
     clone!(ambient_occlusion, Option<i32>);
     clone!(soft_shadows, Option<i32>);
+    clone!(perl_segs, [usize; 2]);
 }
 
 impl Display for Settings {
@@ -44,9 +47,14 @@ impl Display for Settings {
             display_field_ln!(fmt, "ambient occlusion", "OFF")?;
         }
         if let Some(samples) = self.soft_shadows {
-            display_field!(fmt, "soft shadow samples", samples)
+            display_field_ln!(fmt, "soft shadow samples", samples)?;
         } else {
-            display_field!(fmt, "soft shadows", "OFF")
+            display_field_ln!(fmt, "soft shadows", "OFF")?;
         }
+        display_field!(
+            fmt,
+            "perlin segments",
+            format!("[{}, {}]", self.perl_segs[X], self.perl_segs[Y])
+        )
     }
 }
