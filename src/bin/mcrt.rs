@@ -30,6 +30,7 @@ pub fn main() {
     let (tree, grid) = grow(tree_sett, grid_sett, &surfs);
     let input = mcrt::Input::new(&mcrt_sett, &light, &mats, &tree, &grid);
     let data = render(&input);
+    report!("output data", &data);
     save(&out_dir, data);
     banner::section("Finished");
 }

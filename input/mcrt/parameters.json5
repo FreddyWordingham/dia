@@ -9,11 +9,11 @@
             mins: [-10e-3, -10e-3, -18e-3],
             maxs: [ 10e-3,  10e-3,  2e-3]
         },
-        res: [165,165,165]
+        res: [65,65,65]
     },
     sett: {
         bump_dist:          1e-6,
-        num_phot:           1e6,
+        num_phot:           1e5,
         block_size:         1e3,
         loop_limit:         1e6,
         roulette_weight:    0.01,
