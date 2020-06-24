@@ -28,7 +28,7 @@ pub fn main() {
     let params = input(&in_dir, &params_path);
     let (tree_sett, grid_sett, mcrt_sett, light, surfs, mats) = build(&in_dir, params);
     let (tree, grid) = grow(tree_sett, grid_sett, &surfs);
-    let input = mcrt::Input::new(&mcrt_sett, &light, &mats, &tree, &grid);
+    let input = mcrt::Input::new(&mcrt_sett, &light, &mats, &tree, &grid, 0);
     let data = render(&input);
     report!("output data", &data);
     save(&out_dir, data);

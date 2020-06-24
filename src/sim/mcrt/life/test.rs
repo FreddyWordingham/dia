@@ -130,7 +130,11 @@ fn emit_phot<'a>(input: &'a Input, rng: &mut ThreadRng) -> (Photon, &'a Material
     }
 
     // Select the required material.
-    let mat = &input.mats.map()[input.sett.init_mat()];
+    let mat = if input.kind == 4 {
+        &input.mats.map()["flesh"]
+    } else {
+        &input.mats.map()[input.sett.init_mat()]
+    };
 
     (phot, mat)
 }

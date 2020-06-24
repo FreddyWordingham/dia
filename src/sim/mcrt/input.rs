@@ -19,6 +19,8 @@ pub struct Input<'a> {
     pub tree: &'a Cell<'a>,
     /// Regular grid.
     pub grid: &'a Grid,
+    /// Simulation kind flag. // TODO remove.
+    pub kind: i32,
 }
 
 impl<'a> Input<'a> {
@@ -31,6 +33,7 @@ impl<'a> Input<'a> {
         mats: &'a Set<Material>,
         tree: &'a Cell,
         grid: &'a Grid,
+        kind: i32,
     ) -> Self {
         Self {
             sett,
@@ -38,6 +41,7 @@ impl<'a> Input<'a> {
             mats,
             tree,
             grid,
+            kind,
         }
     }
 }

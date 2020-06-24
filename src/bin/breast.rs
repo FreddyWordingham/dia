@@ -31,7 +31,7 @@ pub fn main() {
     let ps = params.points.clone();
     let (tree_sett, grid_sett, mcrt_sett, light, surfs, mats) = build(&in_dir, params);
     let (tree, grid) = grow(tree_sett, grid_sett, &surfs);
-    let input = mcrt::Input::new(&mcrt_sett, &light, &mats, &tree, &grid);
+    let input = mcrt::Input::new(&mcrt_sett, &light, &mats, &tree, &grid, 0);
     let data = render(&input);
     report!("illumination data", &data);
 
@@ -46,7 +46,7 @@ pub fn main() {
     let points = mcrt::Light::new_points(points, (*light.spec()).clone(), light.power());
     report!("Points", &points);
 
-    let input = mcrt::Input::new(&mcrt_sett, &points, &mats, &tree, &grid);
+    let input = mcrt::Input::new(&mcrt_sett, &points, &mats, &tree, &grid, 4);
     let data = render(&input);
     report!("output data", &data);
     save(&out_dir, data);
