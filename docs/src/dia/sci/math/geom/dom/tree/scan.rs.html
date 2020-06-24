@@ -27,6 +27,7 @@
 <span id="27">27</span>
 <span id="28">28</span>
 <span id="29">29</span>
+<span id="30">30</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Scan result enumeration.</span>
 
@@ -53,7 +54,8 @@
     <span class="doccomment">/// Construct a new surface instance.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new_surface</span>(<span class="ident">hit</span>: <span class="ident">Hit</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_surface</span>(<span class="ident">hit</span>: <span class="ident">Hit</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="comment">// Freddy: Const function does not compile on Charlie&#39;s machine.</span>
         <span class="self">Self</span>::<span class="ident">Surface</span>(<span class="ident">hit</span>)
     }
 }

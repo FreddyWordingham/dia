@@ -41,6 +41,10 @@
 <span id="41">41</span>
 <span id="42">42</span>
 <span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Output data structure.</span>
 
@@ -63,6 +67,8 @@
     <span class="kw">pub</span> <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Cell</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Regular grid.</span>
     <span class="kw">pub</span> <span class="ident">grid</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Grid</span>,
+    <span class="doccomment">/// Simulation kind flag. // TODO remove.</span>
+    <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">i32</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Input</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
@@ -75,6 +81,7 @@
         <span class="ident">mats</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">Material</span><span class="op">&gt;</span>,
         <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Cell</span>,
         <span class="ident">grid</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Grid</span>,
+        <span class="ident">kind</span>: <span class="ident">i32</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">sett</span>,
@@ -82,6 +89,7 @@
             <span class="ident">mats</span>,
             <span class="ident">tree</span>,
             <span class="ident">grid</span>,
+            <span class="ident">kind</span>,
         }
     }
 }

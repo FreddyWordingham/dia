@@ -190,7 +190,7 @@
 <span class="kw">use</span> <span class="ident">ndarray</span>::<span class="ident">Array1</span>;
 
 <span class="doccomment">/// Mathematical formulae accepting a single scalar argument.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Formula</span> {
     <span class="doccomment">/// Constant value. = c</span>
     <span class="ident">Constant</span> {

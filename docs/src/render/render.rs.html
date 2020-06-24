@@ -153,13 +153,56 @@
 <span id="153">153</span>
 <span id="154">154</span>
 <span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Rendering binary.</span>
 
 <span class="kw">use</span> <span class="ident">attr</span>::<span class="ident">input</span>;
 <span class="kw">use</span> <span class="ident">dia</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">ndarray</span>::<span class="ident">Array2</span>;
 <span class="kw">use</span> <span class="ident">palette</span>::{<span class="ident">Gradient</span>, <span class="ident">LinSrgba</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>};
+<span class="kw">use</span> <span class="ident">rand</span>::{<span class="ident">thread_rng</span>, <span class="ident">Rng</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">f64</span>::<span class="ident">consts</span>::<span class="ident">PI</span>,
+    <span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>},
+};
 
 <span class="doccomment">/// Input parameters.</span>
 <span class="attribute">#[<span class="ident">input</span>]</span>
@@ -185,9 +228,18 @@
     <span class="ident">banner</span>::<span class="ident">title</span>(<span class="string">&quot;Render&quot;</span>);
     <span class="kw">let</span> (<span class="ident">params_path</span>, <span class="ident">in_dir</span>, <span class="ident">out_dir</span>) <span class="op">=</span> <span class="ident">init</span>();
     <span class="kw">let</span> <span class="ident">params</span> <span class="op">=</span> <span class="ident">input</span>(<span class="kw-2">&amp;</span><span class="ident">in_dir</span>, <span class="kw-2">&amp;</span><span class="ident">params_path</span>);
-    <span class="kw">let</span> (<span class="ident">tree_sett</span>, <span class="ident">grid_sett</span>, <span class="ident">render_sett</span>, <span class="ident">surfs</span>, <span class="ident">cols</span>, <span class="ident">attrs</span>, <span class="ident">cam</span>) <span class="op">=</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="ident">in_dir</span>, <span class="ident">params</span>);
+    <span class="kw">let</span> (<span class="ident">tree_sett</span>, <span class="ident">grid_sett</span>, <span class="ident">render_sett</span>, <span class="ident">surfs</span>, <span class="ident">cols</span>, <span class="ident">attrs</span>, <span class="ident">cam</span>, <span class="ident">perl</span>) <span class="op">=</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="ident">in_dir</span>, <span class="ident">params</span>);
     <span class="kw">let</span> (<span class="ident">tree</span>, <span class="ident">grid</span>) <span class="op">=</span> <span class="ident">grow</span>(<span class="ident">tree_sett</span>, <span class="ident">grid_sett</span>, <span class="kw-2">&amp;</span><span class="ident">surfs</span>);
-    <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="ident">render</span>::<span class="ident">Input</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">render_sett</span>, <span class="kw-2">&amp;</span><span class="ident">surfs</span>, <span class="kw-2">&amp;</span><span class="ident">cols</span>, <span class="kw-2">&amp;</span><span class="ident">attrs</span>, <span class="kw-2">&amp;</span><span class="ident">cam</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>, <span class="kw-2">&amp;</span><span class="ident">grid</span>);
+    <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="ident">render</span>::<span class="ident">Input</span>::<span class="ident">new</span>(
+        <span class="kw-2">&amp;</span><span class="ident">render_sett</span>,
+        <span class="kw-2">&amp;</span><span class="ident">surfs</span>,
+        <span class="kw-2">&amp;</span><span class="ident">cols</span>,
+        <span class="kw-2">&amp;</span><span class="ident">attrs</span>,
+        <span class="kw-2">&amp;</span><span class="ident">cam</span>,
+        <span class="kw-2">&amp;</span><span class="ident">tree</span>,
+        <span class="kw-2">&amp;</span><span class="ident">grid</span>,
+        <span class="kw-2">&amp;</span><span class="ident">perl</span>,
+    );
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">render</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>);
     <span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">out_dir</span>, <span class="ident">data</span>);
     <span class="ident">banner</span>::<span class="ident">section</span>(<span class="string">&quot;Finished&quot;</span>);
@@ -233,6 +285,7 @@
     <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">Gradient</span><span class="op">&lt;</span><span class="ident">LinSrgba</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">Set</span><span class="op">&lt;</span><span class="ident">render</span>::<span class="ident">Attributes</span><span class="op">&gt;</span>,
     <span class="ident">render</span>::<span class="ident">Camera</span>,
+    <span class="ident">Array2</span><span class="op">&lt;</span><span class="ident">Dir2</span><span class="op">&gt;</span>,
 ) {
     <span class="ident">banner</span>::<span class="ident">section</span>(<span class="string">&quot;Building&quot;</span>);
     <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Adaptive Tree Settings&quot;</span>);
@@ -274,7 +327,30 @@
     <span class="kw">let</span> <span class="ident">cam</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">cam</span>.<span class="ident">build</span>(<span class="ident">in_dir</span>).<span class="ident">expect</span>(<span class="string">&quot;Unable to build camera.&quot;</span>);
     <span class="macro">report</span><span class="macro">!</span>(<span class="string">&quot;Camera&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">cam</span>);
 
-    (<span class="ident">tree_sett</span>, <span class="ident">grid_sett</span>, <span class="ident">render_sett</span>, <span class="ident">surfs</span>, <span class="ident">cols</span>, <span class="ident">attrs</span>, <span class="ident">cam</span>)
+    <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Camera&quot;</span>);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dirs</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">render_sett</span>.<span class="ident">perl_segs</span>()[<span class="ident">X</span>] <span class="op">*</span> <span class="ident">render_sett</span>.<span class="ident">perl_segs</span>()[<span class="ident">Y</span>]);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">thread_rng</span>();
+    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">render_sett</span>.<span class="ident">perl_segs</span>()[<span class="ident">X</span>] {
+        <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">render_sett</span>.<span class="ident">perl_segs</span>()[<span class="ident">Y</span>] {
+            <span class="kw">let</span> <span class="ident">theta</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">gen_range</span>(<span class="number">0.0</span>, <span class="number">2.0</span> <span class="op">*</span> <span class="ident">PI</span>);
+            <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">theta</span>.<span class="ident">cos</span>();
+            <span class="kw">let</span> <span class="ident">y</span> <span class="op">=</span> <span class="ident">theta</span>.<span class="ident">sin</span>();
+            <span class="ident">dirs</span>.<span class="ident">push</span>(<span class="ident">Dir2</span>::<span class="ident">new_normalize</span>(<span class="ident">Vec2</span>::<span class="ident">new</span>(<span class="ident">x</span>, <span class="ident">y</span>)));
+        }
+    }
+    <span class="kw">let</span> <span class="ident">perl</span> <span class="op">=</span> <span class="ident">Array2</span>::<span class="ident">from_shape_vec</span>(<span class="ident">render_sett</span>.<span class="ident">perl_segs</span>(), <span class="ident">dirs</span>)
+        .<span class="ident">expect</span>(<span class="string">&quot;Could not create Perlin noise map.&quot;</span>);
+
+    (
+        <span class="ident">tree_sett</span>,
+        <span class="ident">grid_sett</span>,
+        <span class="ident">render_sett</span>,
+        <span class="ident">surfs</span>,
+        <span class="ident">cols</span>,
+        <span class="ident">attrs</span>,
+        <span class="ident">cam</span>,
+        <span class="ident">perl</span>,
+    )
 }
 
 <span class="doccomment">/// Grow domains.</span>
@@ -300,7 +376,7 @@
 <span class="kw">fn</span> <span class="ident">render</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">render</span>::<span class="ident">Input</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">render</span>::<span class="ident">Output</span> {
     <span class="ident">banner</span>::<span class="ident">section</span>(<span class="string">&quot;Rendering&quot;</span>);
     <span class="ident">banner</span>::<span class="ident">sub_section</span>(<span class="string">&quot;Main Camera&quot;</span>);
-    <span class="ident">render</span>::<span class="ident">run</span>::<span class="ident">simulate</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>, <span class="ident">render</span>::<span class="ident">painter</span>::<span class="ident">field</span>).<span class="ident">expect</span>(<span class="string">&quot;Simulation failed.&quot;</span>)
+    <span class="ident">render</span>::<span class="ident">run</span>::<span class="ident">simulate</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>, <span class="ident">render</span>::<span class="ident">painter</span>::<span class="ident">kessler</span>).<span class="ident">expect</span>(<span class="string">&quot;Simulation failed.&quot;</span>)
 }
 
 <span class="doccomment">/// Save the output data.</span>

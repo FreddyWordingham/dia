@@ -16,18 +16,24 @@
 <span id="16">16</span>
 <span id="17">17</span>
 <span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Aliases.</span>
 
-<span class="kw">use</span> <span class="ident">nalgebra</span>::{<span class="ident">Point3</span>, <span class="ident">Rotation3</span>, <span class="ident">Similarity3</span>, <span class="ident">Unit</span>, <span class="ident">Vector3</span>};
+<span class="kw">use</span> <span class="ident">nalgebra</span>::{<span class="ident">Point2</span>, <span class="ident">Point3</span>, <span class="ident">Rotation3</span>, <span class="ident">Similarity3</span>, <span class="ident">Unit</span>, <span class="ident">Vector2</span>, <span class="ident">Vector3</span>};
 
 <span class="doccomment">/// Three-dimensional vector alias.</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Vec2</span> <span class="op">=</span> <span class="ident">Vector2</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>;
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Vec3</span> <span class="op">=</span> <span class="ident">Vector3</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>;
 
 <span class="doccomment">/// Normalised three-dimensional vector alias.</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Dir2</span> <span class="op">=</span> <span class="ident">Unit</span><span class="op">&lt;</span><span class="ident">Vector2</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Dir3</span> <span class="op">=</span> <span class="ident">Unit</span><span class="op">&lt;</span><span class="ident">Vector3</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 
 <span class="doccomment">/// Three-dimensional position alias.</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Pos2</span> <span class="op">=</span> <span class="ident">Point2</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>;
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Pos3</span> <span class="op">=</span> <span class="ident">Point3</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>;
 
 <span class="doccomment">/// Three-dimensional rotation alias.</span>

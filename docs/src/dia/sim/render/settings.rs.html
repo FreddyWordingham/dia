@@ -50,10 +50,18 @@
 <span id="50">50</span>
 <span id="51">51</span>
 <span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Settings implementation.</span>
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">access</span>, <span class="ident">clone</span>, <span class="ident">display_field</span>, <span class="ident">display_field_ln</span>, <span class="ident">Pos3</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">access</span>, <span class="ident">clone</span>, <span class="ident">display_field</span>, <span class="ident">display_field_ln</span>, <span class="ident">Pos3</span>, <span class="ident">X</span>, <span class="ident">Y</span>};
 <span class="kw">use</span> <span class="ident">attr</span>::<span class="ident">load</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span>};
 
@@ -72,6 +80,8 @@
     <span class="ident">ambient_occlusion</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Optional number of soft shadow samples.</span>
     <span class="ident">soft_shadows</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Perlin noise map segments.</span>
+    <span class="ident">perl_segs</span>: [<span class="ident">usize</span>; <span class="number">2</span>],
 }
 
 <span class="kw">impl</span> <span class="ident">Settings</span> {
@@ -81,6 +91,7 @@
     <span class="macro">access</span><span class="macro">!</span>(<span class="ident">sun_pos</span>, <span class="ident">Pos3</span>);
     <span class="macro">clone</span><span class="macro">!</span>(<span class="ident">ambient_occlusion</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>);
     <span class="macro">clone</span><span class="macro">!</span>(<span class="ident">soft_shadows</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>);
+    <span class="macro">clone</span><span class="macro">!</span>(<span class="ident">perl_segs</span>, [<span class="ident">usize</span>; <span class="number">2</span>]);
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Settings</span> {
@@ -97,10 +108,15 @@
             <span class="macro">display_field_ln</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;ambient occlusion&quot;</span>, <span class="string">&quot;OFF&quot;</span>)<span class="question-mark">?</span>;
         }
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">samples</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">soft_shadows</span> {
-            <span class="macro">display_field</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;soft shadow samples&quot;</span>, <span class="ident">samples</span>)
+            <span class="macro">display_field_ln</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;soft shadow samples&quot;</span>, <span class="ident">samples</span>)<span class="question-mark">?</span>;
         } <span class="kw">else</span> {
-            <span class="macro">display_field</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;soft shadows&quot;</span>, <span class="string">&quot;OFF&quot;</span>)
+            <span class="macro">display_field_ln</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;soft shadows&quot;</span>, <span class="string">&quot;OFF&quot;</span>)<span class="question-mark">?</span>;
         }
+        <span class="macro">display_field</span><span class="macro">!</span>(
+            <span class="ident">fmt</span>,
+            <span class="string">&quot;perlin segments&quot;</span>,
+            <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;[{}, {}]&quot;</span>, <span class="self">self</span>.<span class="ident">perl_segs</span>[<span class="ident">X</span>], <span class="self">self</span>.<span class="ident">perl_segs</span>[<span class="ident">Y</span>])
+        )
     }
 }
 </pre></div>

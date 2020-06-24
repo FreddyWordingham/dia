@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Light","Photon emission structure."]]});
+initSidebarItems({"enum":[["Light","Photon emission enumeration."]]});

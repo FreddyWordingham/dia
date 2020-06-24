@@ -147,7 +147,6 @@ impl Light {
         debug_assert!(total_phot > 0);
 
         let ray = self.gen_ray(rng);
-        println!("Ray pos: {}\t{}\t{}", ray.pos().x, ray.pos().y, ray.pos().z);
 
         let wavelength = self.spec().gen(rng);
         let power = self.power() / total_phot as f64;
