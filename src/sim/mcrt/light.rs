@@ -37,6 +37,19 @@ impl Light {
         Self::Surface { surf, spec, power }
     }
 
+    /// Construct a new points instance.
+    #[inline]
+    #[must_use]
+    pub fn new_points(points: Array1<(Pos3, f64)>, spec: Probability, power: f64) -> Self {
+        debug_assert!(!points.is_empty());
+
+        Self::Points {
+            points,
+            spec,
+            power,
+        }
+    }
+
     /// Reference the light's surface mesh.
     #[inline]
     #[must_use]
