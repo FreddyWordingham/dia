@@ -40,11 +40,22 @@ impl Light {
     /// Construct a new points instance.
     #[inline]
     #[must_use]
-    pub fn new_points(points: Array1<(Pos3, f64)>, spec: Probability, power: f64) -> Self {
+    pub fn new_points(mut points: Vec<(Pos3, f64)>, spec: Probability, power: f64) -> Self {
         debug_assert!(!points.is_empty());
 
+        let mut total_weight = 0.0;
+        for (_p, w) in &points {
+            total_weight += w;
+        }
+
+        let mut cum = 0.0;
+        for (_p, w) in &mut points {
+            cum += *w / total_weight;
+            *w = cum;
+        }
+
         Self::Points {
-            points,
+            points: Array1::from(points),
             spec,
             power,
         }

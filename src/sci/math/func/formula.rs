@@ -4,7 +4,7 @@ use crate::order;
 use ndarray::Array1;
 
 /// Mathematical formulae accepting a single scalar argument.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Formula {
     /// Constant value. = c
     Constant {

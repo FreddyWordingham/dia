@@ -1,0 +1,60 @@
+{
+    tree: {
+        tar_tris:   5,
+        max_depth:  5,
+        padding:    0.1
+    },
+    grid: {
+        boundary: {
+            mins: [-10e-3, -10e-3, -15e-3],
+            maxs: [ 10e-3,  10e-3,  5e-3]
+        },
+        res: [65,65,65]
+    },
+    sett: {
+        bump_dist:          1e-6,
+        num_phot:           1e5,
+        block_size:         1e3,
+        loop_limit:         1e6,
+        roulette_weight:    0.01,
+        roulette_barrels:   8,
+        init_mat:           'air',
+        range:              {min: 450e-9, max: 800e-9}
+    },
+    light: {
+        surf: [['objs/led.obj'], {scale: 1.0e-3, trans: [0.0,0.0,2.5e-3]}],
+        spec: {
+            There: 'spec/aktilite.json5'
+        },
+        power: 1
+    },
+    surfs: {
+        skin:           [['objs/square.obj'],   {scale: 1.0e-3}],
+        tumour_body:    [['objs/sphere.obj'],   {scale: 1.0e-3, trans: [0,0,-2000e-6]}],
+        // skin:           [['objs/skin.obj'],         {scale: 1.0e-3}],
+        // tumour_cap:     [['objs/tumour_cap.obj'],   {scale: 1.0e-3}],
+        // tumour_body:    [['objs/tumour_2000.obj'],  {scale: 1.0e-3}],
+    },
+    mats: {
+        air: {
+            Here: {
+                ref_index:  {Constant: 1.0},
+                scat_coeff: {Constant: 1.0e-6},
+                asym_fact:  {Constant: 0.1}
+            }
+        },
+        flesh: {
+            There: 'mats/flesh.json5'
+        },
+        tumour: {
+            There: 'mats/tumour.json5'
+        }
+    },
+    points: [
+        [500.0e-6, 0.0, -2500.0e-6],
+        [500.0e-6, 0.0, -2750.0e-6],
+        [100.0e-6, 0.0, -2750.0e-6],
+        [-500.0e-6, 0.0, -2500.0e-6],
+        [-500.0e-6, 0.0, -2750.0e-6]
+    ]
+}

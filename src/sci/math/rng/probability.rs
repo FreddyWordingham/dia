@@ -6,6 +6,7 @@ use rand::{rngs::ThreadRng, Rng};
 use std::fmt::{Display, Formatter, Result};
 
 /// Probability distribution formulae.
+#[derive(Clone)]
 pub enum Probability {
     /// Point.
     Point {
