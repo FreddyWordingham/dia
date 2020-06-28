@@ -103,9 +103,9 @@ fn build(
     let mats = params
         .mats
         .build(in_dir)
-        .expect("Unable to build materties.")
+        .expect("Unable to build materials.")
         .build(in_dir)
-        .expect("Unable to build materties.");
+        .expect("Unable to build materials.");
     report!("Properties", &mats);
 
     (tree_sett, grid_sett, mcrt_sett, light, surfs, mats)
