@@ -31,6 +31,10 @@ pub enum Probability {
         m: f64,
         /// Offset.
         c: f64,
+        /// Offset constant delta.
+        delta: f64,
+        /// Scaling value lambda.
+        lambda: f64,
     },
     /// Gaussian distribution.
     Gaussian {
@@ -73,9 +77,19 @@ impl Probability {
     /// Construct a new linear instance.
     #[inline]
     #[must_use]
-    pub fn new_linear(m: f64, c: f64) -> Self {
+    pub fn new_linear(min: f64, max: f64, m: f64, c: f64) -> Self {
         debug_assert!(m != 0.0);
-        Self::Linear { m, c }
+
+        let a = (m / 2.0).mul_add(min.powi(2), c * min);
+        let b = (m / 2.0).mul_add(max.powi(2), c * max);
+        let n = b - a;
+
+        Self::Linear {
+            m,
+            c,
+            delta: (2.0 * m).mul_add(a, c.powi(2)),
+            lambda: 2.0 * m * n,
+        }
     }
 
     /// Construct a new gaussian instance.
@@ -118,7 +132,12 @@ impl Probability {
             Self::Point { c } => *c,
             Self::Points { cs } => cs[rng.gen_range(0, cs.len())],
             Self::Uniform { min, max } => rng.gen_range(*min, *max),
-            Self::Linear { .. } => 1.2345,
+            Self::Linear {
+                m,
+                c,
+                delta,
+                lambda,
+            } => ((delta + rng.gen_range(0.0, lambda)).sqrt() + c) / m,
             Self::Gaussian { mu, sigma } => distribution::gaussian(rng, *mu, *sigma),
             Self::ConstantSpline { cdf } => cdf.y(rng.gen()),
         }
