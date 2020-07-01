@@ -7,10 +7,8 @@ use std::path::{Path, PathBuf};
 /// Input parameters.
 #[input]
 struct Parameters {
-    /// Linear gradient.
-    m: f64,
-    /// Linear offset.
-    c: f64,
+    /// Probability function.
+    prob: form::Probability,
 }
 
 /// Main function.
@@ -18,7 +16,7 @@ pub fn main() {
     banner::title("Sample");
     let (params_path, in_dir, _out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let _gen = build(params);
+    let _gen = build(&in_dir, params);
     banner::section("Finished");
 }
 
@@ -50,14 +48,14 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 }
 
 /// Build instances.
-fn build(params: Parameters) {
+fn build(in_dir: &Path, params: Parameters) -> Probability {
     banner::section("Building");
     banner::sub_section("Linear Generator");
+    let prob = params
+        .prob
+        .build(in_dir)
+        .expect("Unable to build probability function.");
+    report!("Probability function", &prob);
 
-    let _m = params.m;
-    let _c = params.c;
-    let gen = ();
-    // report!("Generator", &gen);
-
-    gen
+    prob
 }
