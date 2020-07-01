@@ -19,7 +19,8 @@
         roulette_weight:    0.01,
         roulette_barrels:   8,
         init_mat:           'air',
-        range:              {min: 450e-9, max: 800e-9}
+        range:              {min: 450e-9, max: 800e-9},
+        period_xy:          false
     },
     light: {
         surf: [['objs/led.obj'], {scale: 1.0e-3, trans: [0.0,0.0,2.5e-3]}],

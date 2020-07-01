@@ -37,6 +37,15 @@ impl PerlinMap {
             grads: Array2::from_shape_vec(res, grads).expect("Could not create gradient array."),
         }
     }
+
+    // /// Sample a point in the map.
+    // #[inline]
+    // #[must_use]
+    // pub fn sample(&self, x: f64, y: f64) -> f64 {
+    //     let [nx, ny] = self.grads.shape();
+
+    //     // let nx = x /
+    // }
 }
 
 impl Display for PerlinMap {
