@@ -25,6 +25,13 @@ pub enum Probability {
         /// Maximum value.
         max: f64,
     },
+    /// Linear function.
+    Linear {
+        /// Gradient.
+        m: f64,
+        /// Offset.
+        c: f64,
+    },
     /// Gaussian distribution.
     Gaussian {
         /// Average value.
@@ -61,6 +68,14 @@ impl Probability {
     pub fn new_uniform(min: f64, max: f64) -> Self {
         debug_assert!(min < max);
         Self::Uniform { min, max }
+    }
+
+    /// Construct a new linear instance.
+    #[inline]
+    #[must_use]
+    pub fn new_linear(m: f64, c: f64) -> Self {
+        debug_assert!(m != 0.0);
+        Self::Linear { m, c }
     }
 
     /// Construct a new gaussian instance.
@@ -103,6 +118,7 @@ impl Probability {
             Self::Point { c } => *c,
             Self::Points { cs } => cs[rng.gen_range(0, cs.len())],
             Self::Uniform { min, max } => rng.gen_range(*min, *max),
+            Self::Linear { .. } => 1.2345,
             Self::Gaussian { mu, sigma } => distribution::gaussian(rng, *mu, *sigma),
             Self::ConstantSpline { cdf } => cdf.y(rng.gen()),
         }
@@ -117,6 +133,7 @@ impl Display for Probability {
             Self::Point { .. } => "Point",
             Self::Points { .. } => "Points",
             Self::Uniform { .. } => "Uniform",
+            Self::Linear { .. } => "Linear",
             Self::Gaussian { .. } => "Gaussian",
             Self::ConstantSpline { .. } => "Constant Spline",
         };
