@@ -115,5 +115,8 @@ fn sky_col(
     grad: &palette::Gradient<palette::LinSrgba>,
     ray: &Ray,
 ) -> palette::LinSrgba {
-    grad.get(map.sample(0.5, 0.5) as f32)
+    let u = ray.dir().dot(&Vec3::x_axis()).abs();
+    let v = ray.dir().dot(&Vec3::z_axis()).abs();
+
+    grad.get(map.sample(u, v) as f32)
 }
