@@ -77,9 +77,9 @@
         swivel: [2, 2],
         fov: 25,
         aspect_ratio: "IPhoneXS",
-        // res: 1125,
-        res:450,
-        // dof: [7, 0.3],
-        // ss: 3
+        res: 1125,
+        // res:450,
+        dof: [7, 0.3],
+        // ss: 4
     }
 }
