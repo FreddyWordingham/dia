@@ -3,7 +3,7 @@
 /// Smooth-step function.
 #[inline]
 #[must_use]
-pub fn smooth_step(a: f64, b: f64, x: f64) -> f64 {
+pub fn lerp(a: f64, b: f64, x: f64) -> f64 {
     debug_assert!(x >= 0.0);
     debug_assert!(x <= 1.0);
 

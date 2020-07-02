@@ -27,10 +27,8 @@ pub enum Probability {
     },
     /// Linear function.
     Linear {
-        /// Gradient.
-        m: f64,
-        /// Offset.
-        c: f64,
+        /// Constant t.
+        t: f64,
         /// Offset constant delta.
         delta: f64,
         /// Scaling value lambda.
@@ -84,12 +82,11 @@ impl Probability {
         let b = (m / 2.0).mul_add(max.powi(2), c * max);
         let n = b - a;
 
-        Self::Linear {
-            m,
-            c,
-            delta: (2.0 * m).mul_add(a, c.powi(2)),
-            lambda: 2.0 * m * n,
-        }
+        let t = -c / m;
+        let delta = (c.powi(2) / m.powi(2)) + (2.0 * a / m);
+        let lambda = 2.0 * n / m;
+
+        Self::Linear { t, delta, lambda }
     }
 
     /// Construct a new gaussian instance.
@@ -132,12 +129,7 @@ impl Probability {
             Self::Point { c } => *c,
             Self::Points { cs } => cs[rng.gen_range(0, cs.len())],
             Self::Uniform { min, max } => rng.gen_range(*min, *max),
-            Self::Linear {
-                m,
-                c,
-                delta,
-                lambda,
-            } => ((delta + rng.gen_range(0.0, lambda)).sqrt() + c) / m,
+            Self::Linear { t, delta, lambda } => t + (delta + rng.gen_range(0.0, lambda)).sqrt(),
             Self::Gaussian { mu, sigma } => distribution::gaussian(rng, *mu, *sigma),
             Self::ConstantSpline { cdf } => cdf.y(rng.gen()),
         }

@@ -2,7 +2,7 @@
 
 pub mod binner;
 pub mod index;
-pub mod inter;
 pub mod range;
+pub mod smooth;
 
-pub use self::{binner::*, inter::*, range::*};
+pub use self::{binner::*, range::*, smooth::*};

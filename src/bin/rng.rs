@@ -140,6 +140,8 @@ fn single_thread(_thread_id: usize, pb: &Arc<Mutex<ParBar>>, input: &Input) -> H
     } {
         for _ in start..end {
             let x = input.dist.gen(&mut rng);
+
+            // report!(x);
             data.try_collect(x);
         }
     }
