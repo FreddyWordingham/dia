@@ -2,7 +2,7 @@
 
 use crate::{
     render::{illumination, Event, Input, Output},
-    Dir3, Ray, Trace, Vec3,
+    Dir3, PerlinMap, Ray, Trace, Vec3,
 };
 use rand::rngs::ThreadRng;
 
@@ -100,7 +100,8 @@ pub fn kessler(
                 }
             }
         } else {
-            data.image[pixel] += sky_col(&input.cols.map()["sky"], &ray) * weight as f32;
+            data.image[pixel] +=
+                sky_col(&input.perl, &input.cols.map()["sky"], &ray) * weight as f32;
             break;
         }
     }
@@ -109,6 +110,10 @@ pub fn kessler(
 /// Determine the sky colour.
 #[inline]
 #[must_use]
-fn sky_col(grad: &palette::Gradient<palette::LinSrgba>, ray: &Ray) -> palette::LinSrgba {
-    grad.get((ray.dir().dot(&Vec3::z_axis())).abs() as f32)
+fn sky_col(
+    map: &PerlinMap,
+    grad: &palette::Gradient<palette::LinSrgba>,
+    ray: &Ray,
+) -> palette::LinSrgba {
+    grad.get(map.sample(0.5, 0.5) as f32)
 }

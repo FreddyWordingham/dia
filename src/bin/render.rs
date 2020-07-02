@@ -2,13 +2,9 @@
 
 use attr::input;
 use dia::*;
-use ndarray::Array2;
 use palette::{Gradient, LinSrgba};
-use rand::{thread_rng, Rng};
-use std::{
-    f64::consts::PI,
-    path::{Path, PathBuf},
-};
+use rand::thread_rng;
+use std::path::{Path, PathBuf};
 
 /// Input parameters.
 #[input]
@@ -91,7 +87,7 @@ fn build(
     Set<Gradient<LinSrgba>>,
     Set<render::Attributes>,
     render::Camera,
-    Array2<Dir2>,
+    PerlinMap,
 ) {
     banner::section("Building");
     banner::sub_section("Adaptive Tree Settings");
@@ -133,19 +129,9 @@ fn build(
     let cam = params.cam.build(in_dir).expect("Unable to build camera.");
     report!("Camera", &cam);
 
-    banner::sub_section("Camera");
-    let mut dirs = Vec::with_capacity(render_sett.perl_segs()[X] * render_sett.perl_segs()[Y]);
-    let mut rng = thread_rng();
-    for _ in 0..render_sett.perl_segs()[X] {
-        for _ in 0..render_sett.perl_segs()[Y] {
-            let theta = rng.gen_range(0.0, 2.0 * PI);
-            let x = theta.cos();
-            let y = theta.sin();
-            dirs.push(Dir2::new_normalize(Vec2::new(x, y)));
-        }
-    }
-    let perl = Array2::from_shape_vec(render_sett.perl_segs(), dirs)
-        .expect("Could not create Perlin noise map.");
+    banner::sub_section("Noise Map");
+    let perl = PerlinMap::new(render_sett.perl_segs(), &mut thread_rng());
+    report!("Perlin map", &perl);
 
     (
         tree_sett,

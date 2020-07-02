@@ -5,9 +5,8 @@ use crate::{
     grid::Grid,
     render::{Attributes, Camera, Settings},
     tree::Cell,
-    Dir2, Mesh, Set,
+    Mesh, PerlinMap, Set,
 };
-use ndarray::Array2;
 use palette::{Gradient, LinSrgba};
 use std::fmt::{Display, Formatter, Result};
 
@@ -28,11 +27,12 @@ pub struct Input<'a> {
     /// Surface tree.
     pub grid: &'a Grid,
     /// Perlin noise map.
-    pub perl: &'a Array2<Dir2>,
+    pub perl: &'a PerlinMap,
 }
 
 impl<'a> Input<'a> {
     /// Construct a new instance.
+    #[allow(clippy::too_many_arguments)]
     #[inline]
     #[must_use]
     pub const fn new(
@@ -43,7 +43,7 @@ impl<'a> Input<'a> {
         cam: &'a Camera,
         tree: &'a Cell<'a>,
         grid: &'a Grid,
-        perl: &'a Array2<Dir2>,
+        perl: &'a PerlinMap,
     ) -> Self {
         Self {
             sett,
