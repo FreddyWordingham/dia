@@ -22,7 +22,7 @@ impl SmoothTriangle {
     #[inline]
     #[must_use]
     pub fn new(tri: Triangle, norms: [Dir3; 3]) -> Self {
-        debug_assert!(norms.iter().all(|&n| n.dot(tri.plane_norm()) > 0.0));
+        // debug_assert!(norms.iter().all(|&n| n.dot(tri.plane_norm()) > 0.0));
 
         Self { tri, norms }
     }

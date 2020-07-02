@@ -2,7 +2,7 @@
 
 use crate::{
     render::{illumination, Event, Input, Output},
-    Dir3, PerlinMap, Ray, Trace, Vec3,
+    Crossing, Dir3, PerlinMap, Ray, Trace, Vec3,
 };
 use rand::rngs::ThreadRng;
 
@@ -48,6 +48,40 @@ pub fn kessler(
                 Event::Voxel(dist) => ray.travel(dist + bump_dist),
                 Event::Surface(hit) => {
                     match hit.group() {
+                        "blaze" => {
+                            ray.travel(hit.dist());
+
+                            let w = (ray.pos().x.powi(2) + (ray.pos().y - 0.9).powi(2)).sqrt()
+                                / ((ray.pos().z - 3.0).sqrt() / 0.75);
+
+                            if w <= 1.0 {
+                                let light = illumination::light(
+                                    input.sett.sun_pos(),
+                                    input.cam.focus().orient().pos(),
+                                    &ray,
+                                    &hit,
+                                );
+                                let shadow =
+                                    illumination::shadow(input, &ray, &hit, bump_dist, &mut rng);
+
+                                let base_col = input.cols.map()[hit.group()]
+                                    .get(hit.side().norm().dot(&sun_dir).abs() as f32);
+                                let grad = palette::Gradient::new(vec![
+                                    palette::LinSrgba::default(),
+                                    base_col,
+                                ]);
+
+                                data.image[pixel] += grad.get((light * shadow) as f32)
+                                    * weight as f32
+                                    * (1.0 - w) as f32;
+
+                                data.hits[index] += weight;
+
+                                weight *= 0.9;
+                            }
+
+                            ray.travel(bump_dist);
+                        }
                         "planet_clouds" => {
                             ray.travel(hit.dist());
                             let light = illumination::light(
@@ -73,7 +107,7 @@ pub fn kessler(
                             weight *= 0.75;
                             ray.travel(bump_dist);
                         }
-                        _ => {
+                        "starfield" | "solar" => {
                             ray.travel(hit.dist());
                             let light = illumination::light(
                                 input.sett.sun_pos(),
@@ -81,6 +115,40 @@ pub fn kessler(
                                 &ray,
                                 &hit,
                             );
+                            let shadow =
+                                illumination::shadow(input, &ray, &hit, bump_dist, &mut rng).sqrt();
+
+                            let base_col = input.cols.map()[hit.group()]
+                                .get(hit.side().norm().dot(&sun_dir).abs() as f32);
+                            let grad = palette::Gradient::new(vec![
+                                palette::LinSrgba::default(),
+                                base_col,
+                            ]);
+
+                            data.image[pixel] += grad.get((light * shadow) as f32) * weight as f32;
+
+                            data.hits[index] += weight;
+                            break;
+                        }
+                        "visor" => {
+                            ray.travel(hit.dist());
+                            data.image[pixel] += palette::LinSrgba::default();
+                            *ray.dir_mut() = Crossing::init_ref_dir(
+                                ray.dir(),
+                                hit.side().norm(),
+                                -ray.dir().dot(hit.side().norm()),
+                            );
+                            ray.travel(bump_dist);
+                        }
+                        _ => {
+                            ray.travel(hit.dist());
+                            let light = (illumination::light(
+                                input.sett.sun_pos(),
+                                input.cam.focus().orient().pos(),
+                                &ray,
+                                &hit,
+                            ) + 0.5)
+                                .min(1.0);
                             let shadow =
                                 illumination::shadow(input, &ray, &hit, bump_dist, &mut rng);
 
@@ -115,8 +183,10 @@ fn sky_col(
     grad: &palette::Gradient<palette::LinSrgba>,
     ray: &Ray,
 ) -> palette::LinSrgba {
-    let u = ray.dir().dot(&Vec3::x_axis()).abs();
-    let v = ray.dir().dot(&Vec3::z_axis()).abs();
+    let u = ray.dir().x.abs();
+    let v = ray.dir().y.abs();
 
-    grad.get(map.sample(u, v) as f32)
+    let col = grad.get(map.sample(u, v) as f32);
+
+    palette::Gradient::new(vec![palette::LinSrgba::default(), col]).get(0.25)
 }

@@ -50,26 +50,35 @@ impl PerlinMap {
         let nx = self.grads.len_of(Axis(X));
         let ny = self.grads.len_of(Axis(Y));
 
-        let ix = (x * (nx - 1) as f64).floor() as usize;
-        let iy = (y * (ny - 1) as f64).floor() as usize;
+        let px = x * (nx - 1) as f64;
+        let py = y * (ny - 1) as f64;
 
-        let u = (x * nx as f64) - ix as f64;
-        let v = (y * ny as f64) - iy as f64;
+        let ix = px.floor() as usize;
+        let iy = py.floor() as usize;
 
-        let dist_a = Vec2::new(u, v - 1.0);
-        let dist_b = Vec2::new(u - 1.0, v - 1.0);
-        let dist_c = Vec2::new(u - 1.0, v);
-        let dist_d = Vec2::new(u, v);
+        let u = px - ix as f64;
+        let v = py - iy as f64;
 
-        let a = dist_a.dot(&self.grads[[ix, iy + 1]]);
-        let b = dist_b.dot(&self.grads[[ix + 1, iy + 1]]);
-        let c = dist_c.dot(&self.grads[[ix + 1, iy]]);
-        let d = dist_d.dot(&self.grads[[ix, iy]]);
+        // println!("{}\t{}\t{}\t{}\t{}", nx, x, px, ix, u);
 
-        let x0 = lerp(a, b, u);
-        let x1 = lerp(d, c, u);
+        let a = Vec2::new(u, v - 1.0).dot(&self.grads[[ix, iy + 1]]);
+        let b = Vec2::new(u - 1.0, v - 1.0).dot(&self.grads[[ix + 1, iy + 1]]);
+        let c = Vec2::new(u, v).dot(&self.grads[[ix, iy]]);
+        let d = Vec2::new(u - 1.0, v).dot(&self.grads[[ix + 1, iy]]);
 
-        lerp(x0, x1, v)
+        // let x0 = lerp(a, b, 1.0 - u);
+        // let x1 = lerp(c, d, 1.0 - u);
+        //
+        // lerp(x0, x1, v)
+
+        let u = lerp(0.0, 1.0, u);
+        let v = lerp(0.0, 1.0, v);
+
+        let x0 = a.mul_add(1.0 - u, b * u);
+        let x1 = c.mul_add(1.0 - u, d * u);
+        let y = x0.mul_add(v, x1 * (1.0 - v));
+        // println!("{}", y);
+        (y + 1.0) * 0.5
     }
 }
 

@@ -18,18 +18,50 @@
         sun_rad: 0.01,
         // ambient_occlusion: 16,
         // soft_shadows: 7,
-        perl_segs: [32, 32]
+        perl_segs: [64, 64]
     },
     surfs: {
+            starfield       : [['objs/kessler/starfield/inner.obj', 'objs/kessler/starfield/outer.obj'], null],
             planet_clouds   : [['objs/kessler/planet/clouds_outer.obj', 'objs/kessler/planet/clouds_mid.obj', 'objs/kessler/planet/clouds_inner.obj'], null],
             planet_land     : [['objs/kessler/planet/land.obj'], null],
             planet_sea      : [['objs/kessler/planet/sea.obj'], null],
+            blaze           : [['objs/kessler/blaze/blaze_0.obj', 'objs/kessler/blaze/blaze_1.obj', 'objs/kessler/blaze/blaze_2.obj', 'objs/kessler/blaze/blaze_3.obj', 'objs/kessler/blaze/blaze_4.obj', 'objs/kessler/blaze/blaze_5.obj', 'objs/kessler/blaze/blaze_6.obj', 'objs/kessler/blaze/blaze_7.obj'],
+             {trans:[0,0,4]}],
+            solar           : [['objs/kessler/solar/solar_01.obj', 'objs/kessler/solar/solar_02.obj', 'objs/kessler/solar/solar_03.obj', 'objs/kessler/solar/solar_04.obj', 'objs/kessler/solar/solar_05.obj'], null],
+            spaceman        : [[
+                'objs/kessler/spaceman/boots.obj',
+                'objs/kessler/spaceman/gloves.obj',
+                'objs/kessler/spaceman/helmet.obj',
+                'objs/kessler/spaceman/pads.obj',
+                'objs/kessler/spaceman/suit.obj',
+                ], {trans:[0,0,4]}],
+            ends        : [[
+                'objs/kessler/spaceman/boots.obj',
+                'objs/kessler/spaceman/gloves.obj',
+                ], {trans:[0,0,4]}],
+            decals        : [[
+                'objs/kessler/spaceman/buttons.obj',
+                'objs/kessler/spaceman/frame.obj',
+                'objs/kessler/spaceman/rig.obj',
+                'objs/kessler/spaceman/tank.obj',
+                'objs/kessler/spaceman/tubes.obj'
+                ], {trans:[0,0,4]}],
+            visor        : [[
+                'objs/kessler/spaceman/glass.obj',
+                ], {trans:[0,0,4]}],
     },
     cols: {
-            sky             : ['#ffe200ff', '#ff4700ff', '#ff000dff', '#ff009dff', '#b400ffff', '#3700ffff', '#0095ffff'],
+            blaze           : ['#ffe200ff', '#ff4700ff', '#ff000dff', '#ff009dff', '#b400ffff', '#3700ffff', '#0095ffff'],
+            // sky             : ['#ffe200ff', '#ff4700ff', '#ff000dff', '#ff009dff', '#b400ffff', '#3700ffff', '#0095ffff'],
+            sky             : ['#670091ff', '#2600b2ff', '#004779ff', '#32cd32ff'],
             planet_land     : ['#008000ff', '#32cd32ff', '#556b2fff', '#1f841fff', '#56a556ff', '#0ebb0eff', '#008080ff', '#51dab6ff', '#67e2b9ff', '#3be3abff'],
             planet_sea      : ['#0542A8ff', '#1552C6ff', '#8e6fe4ff', '#724ceeff', '#7770ffff', '#3072EBff', '#71A8EEff'],
-            planet_clouds   : ['#ff000dff', '#ff4700ff', '#175bd5ff', '#2222c5ff', '#ffffffff']
+            planet_clouds   : ['#ff000dff', '#ff4700ff', '#175bd5ff', '#2222c5ff', '#ffffffff'],
+            solar           : ['#ffe200ff', '#ff4700ff', '#ff000dff'],
+            starfield       : ['#fff4a1ff', '#ffffffff'],
+            spaceman        : ['#676767ff', '#ffffffff'],
+            decals          : ['#000000ff', '#0e0064ff'],
+            ends          : ['#2f2f2fff'],
     },
     attrs: {
             mirror: {
@@ -40,12 +72,13 @@
             }
     },
     cam: {
-        pos: [-10.3636,26.629,2.94872],
-        tar: [-8.13774,18.2751,2.4418],
-        swivel: [0, 0],
-        fov: 45,
-        aspect_ratio: "Square",
-        res: 1125,
+        pos: [-4,7,18],
+        tar: [0,1.67287,0],
+        swivel: [2, 2],
+        fov: 25,
+        aspect_ratio: "IPhoneXS",
+        // res: 1125,
+        res:450,
         // dof: [7, 0.3],
         // ss: 3
     }
