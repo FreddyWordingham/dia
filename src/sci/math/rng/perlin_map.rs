@@ -68,7 +68,7 @@ impl PerlinMap {
         let x1 = lerp(c, d, u);
         let y = lerp(x0, x1, v);
 
-        (y + 1.0) * 0.5
+        y
     }
 }
 

@@ -1,8 +1,8 @@
 //! Naboo painter function.
 
 use crate::{
-    render::{Camera, Event, Input, Output},
-    PerlinMap, Ray, Trace,
+    render::{illumination, Camera, Event, Input, Output},
+    Crossing, Dir3, Hit, PerlinMap, Ray, Trace,
 };
 use rand::rngs::ThreadRng;
 
@@ -12,14 +12,18 @@ use rand::rngs::ThreadRng;
 #[allow(clippy::too_many_lines)]
 #[inline]
 pub fn naboo(
-    _thread_id: usize,
-    _rng: &mut ThreadRng,
+    thread_id: usize,
+    mut rng: &mut ThreadRng,
     input: &Input,
     data: &mut Output,
-    weight: f64,
+    mut weight: f64,
     pixel: [usize; 2],
     mut ray: Ray,
 ) {
+    if weight < 0.01 {
+        return;
+    }
+
     let bump_dist = input.sett.bump_dist();
 
     // Move rays into the grid.
@@ -43,8 +47,64 @@ pub fn naboo(
                 Event::Voxel(dist) => ray.travel(dist + bump_dist),
                 Event::Surface(hit) => {
                     match hit.group() {
+                        "water" => {
+                            ray.travel(hit.dist());
+
+                            colour(input, &ray, &hit, data, weight * 0.1, pixel, &mut rng);
+                            weight *= 0.9;
+
+                            let crossing = Crossing::new(ray.dir(), hit.side().norm(), 1.0, 1.75);
+
+                            let trans_prob = crossing.trans_prob();
+                            if let Some(trans_dir) = crossing.trans_dir() {
+                                let mut trans_ray = ray.clone();
+                                *trans_ray.dir_mut() = *trans_dir;
+                                trans_ray.travel(bump_dist);
+                                naboo(
+                                    thread_id,
+                                    rng,
+                                    input,
+                                    data,
+                                    weight * trans_prob,
+                                    pixel,
+                                    trans_ray,
+                                );
+                            }
+
+                            let ref_prob = crossing.ref_prob();
+                            weight *= ref_prob;
+                            *ray.dir_mut() = *crossing.ref_dir();
+                            ray.travel(bump_dist);
+                        }
+                        "clouds" => {
+                            ray.travel(hit.dist());
+
+                            colour(input, &ray, &hit, data, weight * 0.1, pixel, &mut rng);
+                            weight *= 0.9;
+
+                            let crossing = Crossing::new(ray.dir(), hit.side().norm(), 1.0, 1.1);
+
+                            if let Some(trans_dir) = crossing.trans_dir() {
+                                *ray.dir_mut() = *trans_dir;
+                                ray.travel(bump_dist);
+                            } else {
+                                break;
+                            }
+                        }
+                        "mirror" => {
+                            ray.travel(hit.dist());
+                            data.image[pixel] += palette::LinSrgba::default();
+                            *ray.dir_mut() = Crossing::init_ref_dir(
+                                ray.dir(),
+                                hit.side().norm(),
+                                -ray.dir().dot(hit.side().norm()),
+                            );
+                            ray.travel(bump_dist);
+                        }
                         _ => {
-                            ray.travel(hit.dist() + bump_dist);
+                            ray.travel(hit.dist());
+                            colour(&input, &ray, &hit, data, weight, pixel, &mut rng);
+                            break;
                         }
                     };
                 }
@@ -55,6 +115,34 @@ pub fn naboo(
             break;
         }
     }
+}
+
+/// Perform a colouring.
+#[inline]
+fn colour(
+    input: &Input,
+    ray: &Ray,
+    hit: &Hit,
+    data: &mut Output,
+    weight: f64,
+    pixel: [usize; 2],
+    rng: &mut ThreadRng,
+) {
+    let light = (illumination::light(
+        input.sett.sun_pos(),
+        input.cam.focus().orient().pos(),
+        ray,
+        hit,
+    ) + 0.5)
+        .min(1.0);
+    let shadow = illumination::shadow(input, ray, hit, input.sett.bump_dist(), rng);
+
+    let sun_dir = Dir3::new_normalize(ray.pos() - input.sett.sun_pos());
+
+    let base_col = input.cols.map()[hit.group()].get(hit.side().norm().dot(&sun_dir).abs() as f32);
+    let grad = palette::Gradient::new(vec![palette::LinSrgba::default(), base_col]);
+
+    data.image[pixel] += grad.get((light * shadow) as f32) * weight as f32;
 }
 
 /// Determine the sky colour.
@@ -69,7 +157,7 @@ fn sky_col(
     let u = (ray.dir().dot(cam.focus().orient().up()) + 1.0) * 0.5;
     let v = (ray.dir().dot(cam.focus().orient().right()) + 1.0) * 0.5;
 
-    let x = map.sample(u, v);
+    let x = (map.sample(u, v) + 1.0) * 0.5;
 
     let col = grad.get(x as f32);
 
