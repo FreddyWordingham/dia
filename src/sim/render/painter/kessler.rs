@@ -169,7 +169,7 @@ pub fn kessler(
             }
         } else {
             data.image[pixel] +=
-                sky_col(&input.perl, &input.cols.map()["sky"], &ray) * weight as f32;
+                sky_col(input.perl, &input.cols.map()["sky"], &ray) * weight as f32;
             break;
         }
     }

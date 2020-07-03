@@ -1,7 +1,7 @@
 //! Naboo painter function.
 
 use crate::{
-    render::{Event, Input, Output},
+    render::{Camera, Event, Input, Output},
     PerlinMap, Ray, Trace,
 };
 use rand::rngs::ThreadRng;
@@ -51,7 +51,7 @@ pub fn naboo(
             }
         } else {
             data.image[pixel] +=
-                sky_col(input.perl, &input.cols.map()["sky"], &ray) * weight as f32;
+                sky_col(input.cam, input.perl, &input.cols.map()["sky"], &ray) * weight as f32;
             break;
         }
     }
@@ -61,14 +61,18 @@ pub fn naboo(
 #[inline]
 #[must_use]
 fn sky_col(
+    cam: &Camera,
     map: &PerlinMap,
     grad: &palette::Gradient<palette::LinSrgba>,
     ray: &Ray,
 ) -> palette::LinSrgba {
-    let u = ray.dir().x.abs();
-    let v = ray.dir().y.abs();
+    let u = (ray.dir().dot(cam.focus().orient().up()) + 1.0) * 0.4999;
+    let v = (ray.dir().dot(cam.focus().orient().right()) + 1.0) * 0.4999;
 
-    let col = grad.get(map.sample(u, v) as f32);
+    let x = map.sample(u, v);
 
+    let col = grad.get(x as f32);
+
+    // palette::Gradient::new(vec![palette::LinSrgba::default(), col]).get(1.0 - x.powi(2) as f32)
     palette::Gradient::new(vec![palette::LinSrgba::default(), col]).get(1.0)
 }

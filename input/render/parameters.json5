@@ -18,15 +18,25 @@
         sun_rad: 1.0,
         // ambient_occlusion: 16,
         // soft_shadows: 7,
-        perl_segs: [32, 32]
+        perl_segs: [16, 16]
     },
     surfs: {
-            royal   : [['objs/fighter/royal.obj'], null],
+            // royal   : [['objs/fighter/royal.obj'], null],
+            cliff   : [['objs/landscape/cliff.obj'], null],
     },
     cols: {
-            sky : ['#ffe200ff', '#ff4700ff', '#ff000dff', '#ff009dff', '#b400ffff', '#3700ffff', '#0095ffff'],
+            // sky : ['#0095ffff', '#d2eeffff', '#ffffffff'],
+            sky : ['#ffffffff', '#d2eeffff', '#0095ffff'],
+            // sky : ['#ffe200ff', '#ff4700ff', '#ff000dff', '#ff009dff', '#b400ffff', '#3700ffff', '#0095ffff'],
     },
     attrs: {
+        mirror: {
+            Here: {
+                Mirror: {
+                    reflectivity: 0.5
+                }
+            }
+        },
     },
     cam: {
         pos: [40, -45, 31],
@@ -34,6 +44,7 @@
         swivel: [0, 0],
         fov: 90,
         aspect_ratio: "Square",
+        // res: 125,
         res: 1125,
         // dof: [17, 0.1],
         // ss: 4
