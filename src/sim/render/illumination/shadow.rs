@@ -86,29 +86,14 @@ pub fn visibility(depth: u32, input: &Input, mut ray: Ray, bump_dist: f64) -> f6
             }
             "water" => {
                 // Transparent.
-                vis *= 0.75;
+                vis *= 0.95;
 
                 let crossing = Crossing::new(ray.dir(), hit.side().norm(), 1.75, 1.0);
 
-                let trans_vis = if let Some(trans_dir) = crossing.trans_dir() {
-                    let mut trans_ray = ray.clone();
-                    *trans_ray.dir_mut() = *trans_dir;
-                    trans_ray.travel(bump_dist);
-                    visibility(depth + 1, input, trans_ray, bump_dist)
-                } else {
-                    0.0
+                if let Some(trans_dir) = crossing.trans_dir() {
+                    *ray.dir_mut() = *trans_dir;
                 };
-
-                // *ray.dir_mut() = *crossing.ref_dir();
-                // ray.travel(bump_dist);
-                // let ref_vis = visibility(depth + 1, input, ray, bump_dist);
-
-                let trans_prob = crossing.trans_prob();
-                // let ref_prob = crossing.ref_prob();
-
-                // return vis * trans_prob.mul_add(trans_vis, ref_prob * ref_vis);
-
-                return vis * trans_prob * trans_vis;
+                ray.travel(bump_dist);
             }
             "clouds" => {
                 // Almost transparent.

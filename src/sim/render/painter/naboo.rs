@@ -47,17 +47,18 @@ pub fn naboo(
             match Event::new(voxel_dist, surf_hit) {
                 Event::Voxel(dist) => ray.travel(dist + bump_dist),
                 Event::Surface(hit) => {
-                    if hit.dist() > 1.0 {
-                        fog += illumination::visibility(
-                            0,
-                            input,
-                            Ray::new(
-                                *ray.pos(),
-                                Dir3::new_normalize(ray.pos() - input.sett.sun_pos()),
-                            ),
-                            bump_dist,
-                        );
-                        ray.travel(1.0);
+                    if hit.dist() > 2.0 {
+                        fog += 2.0
+                            * illumination::visibility(
+                                0,
+                                input,
+                                Ray::new(
+                                    *ray.pos(),
+                                    Dir3::new_normalize(ray.pos() - input.sett.sun_pos()),
+                                ),
+                                bump_dist,
+                            );
+                        ray.travel(2.0);
                     } else {
                         match hit.group() {
                             "water" => {
@@ -134,7 +135,7 @@ pub fn naboo(
         }
 
         // println!("fog: {}", fog);
-        data.image[pixel] += input.cols.map()["sky"].get(0.0) * (fog * 0.00_01) as f32;
+        data.image[pixel] += input.cols.map()["sky"].get(0.0) * (fog * 0.00_1) as f32;
     }
 }
 
