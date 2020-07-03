@@ -1,4 +1,4 @@
-//! Field painter function.
+//! Kessler painter function.
 
 use crate::{
     render::{illumination, Event, Input, Output},
