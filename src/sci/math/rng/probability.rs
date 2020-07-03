@@ -129,7 +129,9 @@ impl Probability {
             Self::Point { c } => *c,
             Self::Points { cs } => cs[rng.gen_range(0, cs.len())],
             Self::Uniform { min, max } => rng.gen_range(*min, *max),
-            Self::Linear { t, delta, lambda } => t + (delta + rng.gen_range(0.0, lambda)).sqrt(),
+            Self::Linear { t, delta, lambda } => {
+                t + (delta - (lambda * rng.gen_range(0.0, 1.0))).sqrt()
+            }
             Self::Gaussian { mu, sigma } => distribution::gaussian(rng, *mu, *sigma),
             Self::ConstantSpline { cdf } => cdf.y(rng.gen()),
         }
