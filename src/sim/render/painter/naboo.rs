@@ -66,8 +66,8 @@ fn sky_col(
     grad: &palette::Gradient<palette::LinSrgba>,
     ray: &Ray,
 ) -> palette::LinSrgba {
-    let u = (ray.dir().dot(cam.focus().orient().up()) + 1.0) * 0.4999;
-    let v = (ray.dir().dot(cam.focus().orient().right()) + 1.0) * 0.4999;
+    let u = (ray.dir().dot(cam.focus().orient().up()) + 1.0) * 0.5;
+    let v = (ray.dir().dot(cam.focus().orient().right()) + 1.0) * 0.5;
 
     let x = map.sample(u, v);
 
