@@ -4,7 +4,7 @@ use crate::{
     render::{Input, Output, Painter},
     Error,
 };
-use minifb::{Window, WindowOptions};
+use minifb::{Scale, ScaleMode, Window, WindowOptions};
 use palette::Pixel;
 use rand::{thread_rng, Rng};
 use std::f64::consts::PI;
@@ -45,10 +45,15 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
     let height = input.cam.sensor().res().1 as usize;
 
     let mut window = Window::new(
-        "Test - ESC to exit",
+        "DIA - Rendering",
         width,
         height,
-        WindowOptions::default(),
+        WindowOptions {
+            resize: true,
+            scale: Scale::X4,
+            scale_mode: ScaleMode::Center,
+            ..WindowOptions::default()
+        },
     )
     .unwrap_or_else(|e| {
         panic!("{}", e);
@@ -66,7 +71,9 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
 
     let mut data = Output::new(*input.grid.res(), [width, height]);
 
+    let mut block = 0;
     for n in 0..num_pixels {
+        block += 1;
         let pixel = (n % hr_res, n / hr_res);
 
         for sub_sample in 0..super_samples {
@@ -88,7 +95,12 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
                         .into_raw();
                 buffer[(num_pixels - (n + 1)) as usize] = from_u8_rgb(col[0], col[1], col[2]);
 
-                window.update_with_buffer(&buffer, width, height).unwrap();
+                if block > input.sett.block_size() {
+                    block = 0;
+                    window
+                        .update_with_buffer(&buffer, width, height)
+                        .expect("Failed to updated window buffer.");
+                }
             }
         }
     }
