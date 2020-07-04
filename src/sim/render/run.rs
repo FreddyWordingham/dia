@@ -50,7 +50,8 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
         height,
         WindowOptions {
             resize: true,
-            scale: Scale::X4,
+            // scale: Scale::X4,
+            scale: Scale::X1,
             scale_mode: ScaleMode::Center,
             ..WindowOptions::default()
         },

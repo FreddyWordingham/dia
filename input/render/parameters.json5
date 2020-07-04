@@ -17,8 +17,8 @@
         // sun_pos: [15, 67, 68],
         sun_pos: [22, 66, 58],
         sun_rad: 1.0,
-        // ambient_occlusion: 64,
-        // soft_shadows: 17,
+        ambient_occlusion: 64,
+        soft_shadows: 17,
         perl_segs: [16, 16]
     },
     surfs: {
@@ -88,7 +88,8 @@
         swivel: [10.0, 0],
         fov: 80,
         aspect_ratio: "Square",
-        res: 125,
+        // res: 125,
+        res: 720,
         // fov: 110,
         // aspect_ratio: "Standard",
         // res: 1920,
