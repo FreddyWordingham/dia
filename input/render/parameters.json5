@@ -89,11 +89,7 @@
         swivel: [10.0, 0],
         fov: 80,
         aspect_ratio: "Square",
-        // res: 125,
         res: 360,
-        // fov: 110,
-        // aspect_ratio: "Standard",
-        // res: 1920,
         // dof: [17, 0.1],
         // ss: 3
     }
