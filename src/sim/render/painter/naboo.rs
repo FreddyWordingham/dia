@@ -135,7 +135,7 @@ pub fn naboo(
         }
 
         // println!("fog: {}", fog);
-        data.image[pixel] += input.cols.map()["sky"].get(0.0) * (weight * fog * 0.00_001) as f32;
+        data.image[pixel] += input.cols.map()["sky"].get(0.0) * (weight * fog * 0.00_000_5) as f32;
     }
 }
 

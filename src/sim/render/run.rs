@@ -2,14 +2,36 @@
 
 use crate::{
     render::{Input, Output, Painter},
-    Error, ParBar,
+    Error,
 };
+use minifb::{Window, WindowOptions};
+use palette::Pixel;
 use rand::{thread_rng, Rng};
-use rayon::prelude::*;
-use std::{
-    f64::consts::PI,
-    sync::{Arc, Mutex},
-};
+use std::f64::consts::PI;
+
+// /// Render an image.
+// /// # Errors
+// /// if an invalid thread image was created.
+// #[inline]
+// pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
+//     let num_pixels = input.cam.sensor().num_pixels();
+//     let pb = ParBar::new("Rendering", num_pixels as u64);
+//     let pb = Arc::new(Mutex::new(pb));
+
+//     let threads: Vec<usize> = (0..num_cpus::get()).collect();
+//     let mut data: Vec<_> = threads
+//         .par_iter()
+//         .map(|id| single_thread(*id, &Arc::clone(&pb), input, paint))
+//         .collect();
+//     pb.lock()?.finish_with_message("Render complete");
+
+//     let mut output = data.pop().ok_or("Missing output result.")??;
+//     for d in data {
+//         output += &d?;
+//     }
+
+//     Ok(output)
+// }
 
 /// Render an image.
 /// # Errors
@@ -17,34 +39,23 @@ use std::{
 #[inline]
 pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
     let num_pixels = input.cam.sensor().num_pixels();
-    let pb = ParBar::new("Rendering", num_pixels as u64);
-    let pb = Arc::new(Mutex::new(pb));
 
-    let threads: Vec<usize> = (0..num_cpus::get()).collect();
-    let mut data: Vec<_> = threads
-        .par_iter()
-        .map(|id| single_thread(*id, &Arc::clone(&pb), input, paint))
-        .collect();
-    pb.lock()?.finish_with_message("Render complete");
+    let mut buffer: Vec<u32> = vec![0; num_pixels as usize];
+    let width = input.cam.sensor().res().0 as usize;
+    let height = input.cam.sensor().res().1 as usize;
 
-    let mut output = data.pop().ok_or("Missing output result.")??;
-    for d in data {
-        output += &d?;
-    }
+    let mut window = Window::new(
+        "Test - ESC to exit",
+        width,
+        height,
+        WindowOptions::default(),
+    )
+    .unwrap_or_else(|e| {
+        panic!("{}", e);
+    });
+    window.limit_update_rate(Some(std::time::Duration::from_micros(16600)));
+    window.update_with_buffer(&buffer, width, height).unwrap();
 
-    Ok(output)
-}
-
-/// Render on a single thread.
-/// # Errors
-/// if image creation fails.
-#[inline]
-fn single_thread(
-    thread_id: usize,
-    pb: &Arc<Mutex<ParBar>>,
-    input: &Input,
-    paint: Painter,
-) -> Result<Output, Error> {
     let mut rng = thread_rng();
 
     let hr_res = input.cam.sensor().res().0;
@@ -53,40 +64,97 @@ fn single_thread(
     let dof_samples = input.cam.focus().dof().unwrap_or((1, 0.0)).0;
     let weight = 1.0 / f64::from(super_samples * dof_samples);
 
-    let mut data = Output::new(
-        *input.grid.res(),
-        [
-            input.cam.sensor().res().0 as usize,
-            input.cam.sensor().res().1 as usize,
-        ],
-    );
+    let mut data = Output::new(*input.grid.res(), [width, height]);
 
-    while let Some((start, end)) = {
-        let mut pb = pb.lock()?;
-        let b = pb.block(input.sett.block_size());
-        std::mem::drop(pb);
-        b
-    } {
-        for n in start..end {
-            let pixel = (n % hr_res, n / hr_res);
+    for n in 0..num_pixels {
+        let pixel = (n % hr_res, n / hr_res);
 
-            for sub_sample in 0..super_samples {
-                let offset = rng.gen_range(0.0, 2.0 * PI);
-                for depth_sample in 0..dof_samples {
-                    let ray = input.cam.gen_ray(pixel, offset, sub_sample, depth_sample);
-                    paint(
-                        thread_id,
-                        &mut rng,
-                        input,
-                        &mut data,
-                        weight,
-                        [pixel.0 as usize, pixel.1 as usize],
-                        ray,
-                    );
-                }
+        for sub_sample in 0..super_samples {
+            let offset = rng.gen_range(0.0, 2.0 * PI);
+            for depth_sample in 0..dof_samples {
+                let ray = input.cam.gen_ray(pixel, offset, sub_sample, depth_sample);
+                paint(
+                    0,
+                    &mut rng,
+                    input,
+                    &mut data,
+                    weight,
+                    [pixel.0 as usize, pixel.1 as usize],
+                    ray,
+                );
+                let col: [u8; 4] =
+                    palette::Srgba::from_linear(data.image[[pixel.0 as usize, pixel.1 as usize]])
+                        .into_format()
+                        .into_raw();
+                buffer[n as usize] = from_u8_rgb(col[0], col[1], col[2]);
+
+                window.update_with_buffer(&buffer, width, height).unwrap();
             }
         }
     }
 
     Ok(data)
 }
+
+fn from_u8_rgb(r: u8, g: u8, b: u8) -> u32 {
+    let (r, g, b) = (r as u32, g as u32, b as u32);
+    (r << 16) | (g << 8) | b
+}
+
+// /// Render on a single thread.
+// /// # Errors
+// /// if image creation fails.
+// #[inline]
+// fn single_thread(
+//     window: &Arc<Mutex<Window>>,
+//     buffer: &Arc<Mutex<Vec<u32>>>,
+//     thread_id: usize,
+//     pb: &Arc<Mutex<ParBar>>,
+//     input: &Input,
+//     paint: Painter,
+// ) -> Result<Output, Error> {
+//     let mut rng = thread_rng();
+
+//     let hr_res = input.cam.sensor().res().0;
+
+//     let super_samples = input.cam.sensor().super_samples();
+//     let dof_samples = input.cam.focus().dof().unwrap_or((1, 0.0)).0;
+//     let weight = 1.0 / f64::from(super_samples * dof_samples);
+
+//     let mut data = Output::new(
+//         *input.grid.res(),
+//         [
+//             input.cam.sensor().res().0 as usize,
+//             input.cam.sensor().res().1 as usize,
+//         ],
+//     );
+
+//     while let Some((start, end)) = {
+//         let mut pb = pb.lock()?;
+//         let b = pb.block(input.sett.block_size());
+//         std::mem::drop(pb);
+//         b
+//     } {
+//         for n in start..end {
+//             let pixel = (n % hr_res, n / hr_res);
+
+//             for sub_sample in 0..super_samples {
+//                 let offset = rng.gen_range(0.0, 2.0 * PI);
+//                 for depth_sample in 0..dof_samples {
+//                     let ray = input.cam.gen_ray(pixel, offset, sub_sample, depth_sample);
+//                     paint(
+//                         thread_id,
+//                         &mut rng,
+//                         input,
+//                         &mut data,
+//                         weight,
+//                         [pixel.0 as usize, pixel.1 as usize],
+//                         ray,
+//                     );
+//                 }
+//             }
+//         }
+//     }
+
+//     Ok(data)
+// }
