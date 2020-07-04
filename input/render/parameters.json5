@@ -20,7 +20,7 @@
         ambient_occlusion: 64,
         soft_shadows: 17,
         perl_segs: [16, 16],
-        live: true
+        live: false
     },
     surfs: {
             mirror          : [['objs/fighter/royal.obj', 'objs/fighter/fighter_detail.obj'], null],

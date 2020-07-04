@@ -6,7 +6,7 @@ use crate::{
 };
 use minifb::{Scale, ScaleMode, Window, WindowOptions};
 use palette::Pixel;
-use rand::{rngs::ThreadRng, thread_rng, Rng};
+use rand::{thread_rng, Rng};
 use rayon::prelude::*;
 use std::{
     f64::consts::PI,
@@ -123,45 +123,47 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
     let width = input.cam.sensor().res().0 as usize;
     let height = input.cam.sensor().res().1 as usize;
 
-    let mut buffer: Vec<u32> = vec![0; num_pixels as usize];
+    let buffer: Vec<u32> = vec![0; num_pixels as usize];
     let buffer = Arc::new(Mutex::new(buffer));
-    let mut window = Window::new(
-        "DIA - Rendering",
-        width,
-        height,
-        WindowOptions {
-            resize: true,
-            // scale: Scale::X4,
-            scale: Scale::X2,
-            // scale: Scale::X1,
-            scale_mode: ScaleMode::Center,
-            ..WindowOptions::default()
-        },
-    )
-    .unwrap_or_else(|e| {
-        panic!("{}", e);
-    });
-    window
-        .update_with_buffer(&buffer.lock().unwrap(), width, height)
-        .unwrap();
+
+    let mut window = if input.sett.live() {
+        Some({
+            let mut win = Window::new(
+                "DIA - Rendering",
+                width,
+                height,
+                WindowOptions {
+                    resize: true,
+                    // scale: Scale::X4,
+                    scale: Scale::X2,
+                    // scale: Scale::X1,
+                    scale_mode: ScaleMode::Center,
+                    ..WindowOptions::default()
+                },
+            )
+            .unwrap_or_else(|e| {
+                panic!("{}", e);
+            });
+            win.update_with_buffer(&buffer.lock().unwrap(), width, height)
+                .unwrap();
+            win
+        })
+    } else {
+        None
+    };
 
     let pb = ParBar::new("Rendering", num_pixels as u64);
     let pb = Arc::new(Mutex::new(pb));
 
-    let hr_res = input.cam.sensor().res().0;
-    let super_samples = input.cam.sensor().super_samples();
-    let dof_samples = input.cam.focus().dof().unwrap_or((1, 0.0)).0;
-    let weight = 1.0 / f64::from(super_samples * dof_samples);
-
     // let mut rng = thread_rng();
-    let mut data = Output::new(*input.grid.res(), [width, height]);
-    let mut data = Arc::new(Mutex::new(data));
+    let data = Output::new(*input.grid.res(), [width, height]);
+    let data = Arc::new(Mutex::new(data));
 
     while !pb.lock().unwrap().is_done() {
         let threads: Vec<usize> = (0..num_cpus::get()).collect();
         let _out: Vec<()> = threads
             .par_iter()
-            .map(|id| {
+            .map(|_id| {
                 cover_pix(
                     &Arc::clone(&pb),
                     &input,
@@ -172,9 +174,13 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
             })
             .collect();
 
-        window
-            .update_with_buffer(&buffer.lock().unwrap(), width, height)
-            .unwrap();
+        if input.sett.live() {
+            window
+                .as_mut()
+                .unwrap()
+                .update_with_buffer(&buffer.lock().unwrap(), width, height)
+                .unwrap();
+        }
     }
 
     pb.lock()?.finish_with_message("Render complete");
@@ -192,7 +198,7 @@ fn cover_pix(
     pb: &Arc<Mutex<ParBar>>,
     input: &Input,
     // mut rng: &mut ThreadRng,
-    mut data: &Arc<Mutex<Output>>,
+    data: &Arc<Mutex<Output>>,
     buffer: &Arc<Mutex<Vec<u32>>>,
     paint: Painter,
 ) {
