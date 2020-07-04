@@ -64,6 +64,13 @@ impl ParBar {
         }
     }
 
+    /// Check if the progress bar is complete.
+    #[inline]
+    #[must_use]
+    pub fn is_done(&self) -> bool {
+        self.count >= self.total
+    }
+
     /// Finish with a message.
     #[inline]
     pub fn finish_with_message(&mut self, msg: &'static str) {

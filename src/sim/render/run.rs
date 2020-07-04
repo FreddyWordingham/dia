@@ -157,24 +157,14 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
     let mut data = Output::new(*input.grid.res(), [width, height]);
     let mut data = Arc::new(Mutex::new(data));
 
-    while let Some((start, end)) = {
-        let mut pb = pb.lock()?;
-        let b = pb.block(input.sett.block_size());
-        std::mem::drop(pb);
-        b
-    } {
-        // cover_pix(start, end, input, &mut rng, &mut data, &mut buffer, paint);
-
+    while !pb.lock().unwrap().is_done() {
         let threads: Vec<usize> = (0..num_cpus::get()).collect();
-        let blit = (end - start) / 8;
-        let mut data: Vec<_> = threads
+        let _out: Vec<()> = threads
             .par_iter()
             .map(|id| {
                 cover_pix(
-                    start + (*id as u64 * blit) as u64,
-                    start + ((*id as u64 + 1) * blit) as u64,
+                    &Arc::clone(&pb),
                     &input,
-                    // &mut rng,
                     &Arc::clone(&data),
                     &Arc::clone(&buffer),
                     paint,
@@ -189,7 +179,8 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
 
     pb.lock()?.finish_with_message("Render complete");
 
-    Ok(data)
+    // Ok(data)
+    Ok(Output::new(*input.grid.res(), [width, height]))
 }
 
 fn from_u8_rgb(r: u8, g: u8, b: u8) -> u32 {
@@ -198,8 +189,7 @@ fn from_u8_rgb(r: u8, g: u8, b: u8) -> u32 {
 }
 
 fn cover_pix(
-    start: u64,
-    end: u64,
+    pb: &Arc<Mutex<ParBar>>,
     input: &Input,
     // mut rng: &mut ThreadRng,
     mut data: &Arc<Mutex<Output>>,
@@ -207,36 +197,45 @@ fn cover_pix(
     paint: Painter,
 ) {
     let mut rng = thread_rng();
-    for n in start..end {
-        let pixel = (
-            n % input.cam.sensor().res().0,
-            n / input.cam.sensor().res().0,
-        );
 
-        for sub_sample in 0..input.cam.sensor().super_samples() {
-            let offset = rng.gen_range(0.0, 2.0 * PI);
-            for depth_sample in 0..input.cam.focus().dof().unwrap_or((1, 0.0)).0 {
-                let ray = input.cam.gen_ray(pixel, offset, sub_sample, depth_sample);
-                paint(
-                    0,
-                    &mut rng,
-                    input,
-                    data,
-                    1.0 / f64::from(
-                        input.cam.sensor().super_samples()
-                            * input.cam.focus().dof().unwrap_or((1, 0.0)).0,
-                    ),
-                    [pixel.0 as usize, pixel.1 as usize],
-                    ray,
-                );
+    if let Some((start, end)) = {
+        let mut pb = pb.lock().unwrap();
+        let b = pb.block(input.sett.block_size());
+        std::mem::drop(pb);
+        b
+    } {
+        for n in start..end {
+            let pixel = (
+                n % input.cam.sensor().res().0,
+                n / input.cam.sensor().res().0,
+            );
 
-                let col: [u8; 4] = palette::Srgba::from_linear(
-                    data.lock().unwrap().image[[pixel.0 as usize, pixel.1 as usize]],
-                )
-                .into_format()
-                .into_raw();
-                (buffer.lock().unwrap())[(input.cam.sensor().num_pixels() - (n + 1)) as usize] =
-                    from_u8_rgb(col[0], col[1], col[2]);
+            for sub_sample in 0..input.cam.sensor().super_samples() {
+                let offset = rng.gen_range(0.0, 2.0 * PI);
+                for depth_sample in 0..input.cam.focus().dof().unwrap_or((1, 0.0)).0 {
+                    let ray = input.cam.gen_ray(pixel, offset, sub_sample, depth_sample);
+                    paint(
+                        0,
+                        &mut rng,
+                        input,
+                        data,
+                        1.0 / f64::from(
+                            input.cam.sensor().super_samples()
+                                * input.cam.focus().dof().unwrap_or((1, 0.0)).0,
+                        ),
+                        [pixel.0 as usize, pixel.1 as usize],
+                        ray,
+                    );
+
+                    let col: [u8; 4] = palette::Srgba::from_linear(
+                        data.lock().unwrap().image[[pixel.0 as usize, pixel.1 as usize]],
+                    )
+                    .into_format()
+                    .into_raw();
+                    (buffer.lock().unwrap())
+                        [(input.cam.sensor().num_pixels() - (n + 1)) as usize] =
+                        from_u8_rgb(col[0], col[1], col[2]);
+                }
             }
         }
     }
