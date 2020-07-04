@@ -89,7 +89,7 @@
         fov: 80,
         aspect_ratio: "Square",
         // res: 125,
-        res: 720,
+        res: 360,
         // fov: 110,
         // aspect_ratio: "Standard",
         // res: 1920,
