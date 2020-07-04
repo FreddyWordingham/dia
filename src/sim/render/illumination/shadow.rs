@@ -76,6 +76,8 @@ pub fn visibility(depth: u32, input: &Input, mut ray: Ray, bump_dist: f64) -> f6
         match hit.group() {
             "mirror" => {
                 // Reflect
+                vis *= 0.95;
+
                 ray.travel(hit.dist());
                 *ray.dir_mut() = Crossing::init_ref_dir(
                     ray.dir(),
@@ -99,7 +101,18 @@ pub fn visibility(depth: u32, input: &Input, mut ray: Ray, bump_dist: f64) -> f6
             "clouds_0" | "clouds_1" | "clouds_2" => {
                 // Almost transparent.
                 vis *= 0.8;
-                ray.travel(hit.dist() + bump_dist);
+
+                ray.travel(hit.dist());
+                let crossing = Crossing::new(ray.dir(), hit.side().norm(), 1.1, 1.0);
+
+                if let Some(trans_dir) = crossing.trans_dir() {
+                    *ray.dir_mut() = *trans_dir;
+                };
+                ray.travel(bump_dist);
+            }
+            "solar" => {
+                // Illumination.
+                return vis;
             }
             _ => {
                 // Opaque.

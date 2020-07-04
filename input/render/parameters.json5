@@ -6,8 +6,8 @@
     },
     grid: {
         boundary: {
-            mins: [-140, -140, -140],
-            maxs: [ 140,  140,  140]
+            mins: [-100, -100, -20],
+            maxs: [ 100,  100,  200]
         },
         res: [1,1,1]
     },
@@ -15,7 +15,7 @@
         bump_dist: 1e-6,
         block_size: 1e3,
         // sun_pos: [15, 67, 68],
-        sun_pos: [72, 32, 64],
+        sun_pos: [22, 66, 58],
         sun_rad: 1.0,
         ambient_occlusion: 64,
         soft_shadows: 17,
@@ -34,15 +34,15 @@
             roofs           : [['objs/landscape/roofs.obj'], null],
             rocks           : [['objs/landscape/rocks.obj'], null],
             water           : [['objs/water/sea.obj', 'objs/water/waterfall.obj'], null],
-            solar           : [['objs/sky/solar.obj'], {trans:[0,0,30]}],
-            planet_0_land   : [['objs/sky/planet_0_land.obj'], {trans:[0,0,5]}],
-            planet_1_land   : [['objs/sky/planet_1_land.obj'], {trans:[0,0,10],scale:1.8}],
-            planet_2_land   : [['objs/sky/planet_2_land.obj'], null],
-            planet_0_sea    : [['objs/sky/planet_0_sea.obj'], {trans:[0,0,5]}],
-            planet_1_sea    : [['objs/sky/planet_1_sea.obj'], {trans:[0,0,10],scale:1.8}],
-            clouds_0        : [['objs/sky/planet_0_clouds_inner.obj', 'objs/sky/planet_0_clouds_mid.obj', 'objs/sky/planet_0_clouds_outer.obj'], {trans:[0,0,5]}],
-            clouds_1        : [['objs/sky/planet_1_clouds_inner.obj', 'objs/sky/planet_1_clouds_mid.obj', 'objs/sky/planet_1_clouds_outer.obj'], {trans:[0,0,10],scale:1.8}],
-            clouds_2        : [['objs/sky/planet_2_clouds_inner.obj', 'objs/sky/planet_2_clouds_mid.obj', 'objs/sky/planet_2_clouds_outer.obj'], null],
+            solar           : [['objs/sky/solar.obj'], null],
+            planet_0_land   : [['objs/sky/planet_0_land.obj'], {trans:[0,0,10]}],
+            planet_1_land   : [['objs/sky/planet_1_land.obj'], {trans:[0,0,30]}],
+            planet_2_land   : [['objs/sky/planet_2_land.obj'], {trans:[0,0,20]}],
+            planet_0_sea    : [['objs/sky/planet_0_sea.obj'], {trans:[0,0,10]}],
+            planet_1_sea    : [['objs/sky/planet_1_sea.obj'], {trans:[0,0,30]}],
+            clouds_0        : [['objs/sky/planet_0_clouds_inner.obj', 'objs/sky/planet_0_clouds_mid.obj', 'objs/sky/planet_0_clouds_outer.obj'], {trans:[0,0,10]}],
+            clouds_1        : [['objs/sky/planet_1_clouds_inner.obj', 'objs/sky/planet_1_clouds_mid.obj', 'objs/sky/planet_1_clouds_outer.obj'], {trans:[0,0,30]}],
+            clouds_2        : [['objs/sky/planet_2_clouds_inner.obj', 'objs/sky/planet_2_clouds_mid.obj', 'objs/sky/planet_2_clouds_outer.obj'], {trans:[0,0,20]}],
             // stars           : [['objs/sky/stars.obj'], null],
     },
     cols: {
@@ -86,12 +86,12 @@
         pos: [40, -45, 31],
         tar: [-0.75, -5.5, 28.5],
         swivel: [10.0, 0],
-        // fov: 80,
-        // aspect_ratio: "IPhoneXS",
-        // res: 1125,
-        fov: 110,
-        aspect_ratio: "Widescreen",
-        res: 3440,
+        fov: 80,
+        aspect_ratio: "IPhoneXS",
+        res: 125,
+        // fov: 110,
+        // aspect_ratio: "Standard",
+        // res: 1920,
         // dof: [17, 0.1],
         // ss: 3
     }
