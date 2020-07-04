@@ -246,7 +246,6 @@ dependencies = [
  "nalgebra",
  "ndarray 0.13.1",
  "ndarray-parallel",
- "netcdf",
  "num_cpus",
  "palette",
  "physical_constants",
@@ -543,23 +542,6 @@ dependencies = [
  "ndarray 0.12.1",
  "rayon",
 ]
-
-[[package]]
-name = "netcdf"
-version = "0.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b038de47eb7f650a0221a9ea793488599768874fbb8680df7dc0ad0f38cdde2a"
-dependencies = [
- "lazy_static",
- "ndarray 0.13.1",
- "netcdf-sys",
-]
-
-[[package]]
-name = "netcdf-sys"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0136debf038071235b2e9156be56bb4d5b9efaf6f474a6b51fd45fb07fd8664f"
 
 [[package]]
 name = "nix"

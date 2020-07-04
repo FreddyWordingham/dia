@@ -43,9 +43,9 @@ impl Save for Output {
     fn save(&self, out_dir: &Path) -> Result<(), Error> {
         let path = out_dir.join("image.png");
         println!("Saving: {}", path.display());
-        self.image.save(&path)?;
-        let path = out_dir.join("hits.nc");
-        println!("Saving: {}", path.display());
-        self.hits.save(&path)
+        self.image.save(&path)
+        // let path = out_dir.join("hits.nc");
+        // println!("Saving: {}", path.display());
+        // self.hits.save(&path)
     }
 }

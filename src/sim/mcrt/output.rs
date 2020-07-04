@@ -93,32 +93,34 @@ impl Display for Output {
 impl Save for Output {
     #[inline]
     fn save(&self, out_dir: &Path) -> Result<(), Error> {
-        let path = out_dir.join("emission_dens.nc");
-        println!("saving: {}", path.display());
-        let emission_dens = &self.emitted_photons / self.cell_vol;
-        emission_dens.save(&path)?;
+        // let path = out_dir.join("emission_dens.nc");
+        // println!("saving: {}", path.display());
+        // let emission_dens = &self.emitted_photons / self.cell_vol;
+        // emission_dens.save(&path)?;
 
-        let path = out_dir.join("energy_dens.nc");
-        println!("saving: {}", path.display());
-        let energy_dens = &self.energy / self.cell_vol;
-        energy_dens.save(&path)?;
+        // let path = out_dir.join("energy_dens.nc");
+        // println!("saving: {}", path.display());
+        // let energy_dens = &self.energy / self.cell_vol;
+        // energy_dens.save(&path)?;
 
-        let path = out_dir.join("absorption_dens.nc");
-        println!("saving: {}", path.display());
-        let absorption_dens = &self.absorptions / self.cell_vol;
-        absorption_dens.save(&path)?;
+        // let path = out_dir.join("absorption_dens.nc");
+        // println!("saving: {}", path.display());
+        // let absorption_dens = &self.absorptions / self.cell_vol;
+        // absorption_dens.save(&path)?;
 
-        let path = out_dir.join("shifted_dens.nc");
-        println!("saving: {}", path.display());
-        let shifted_dens = &self.shifts / self.cell_vol;
-        shifted_dens.save(&path)?;
+        // let path = out_dir.join("shifted_dens.nc");
+        // println!("saving: {}", path.display());
+        // let shifted_dens = &self.shifts / self.cell_vol;
+        // shifted_dens.save(&path)?;
 
-        let path = out_dir.join("dist_travelled.nc");
-        println!("saving: {}", path.display());
-        self.dist_travelled.save(&path)?;
+        // let path = out_dir.join("dist_travelled.nc");
+        // println!("saving: {}", path.display());
+        // self.dist_travelled.save(&path)?;
 
-        let path = out_dir.join("spectrometer.csv");
-        println!("saving: {}", path.display());
-        self.spec.save(&path)
+        // let path = out_dir.join("spectrometer.csv");
+        // println!("saving: {}", path.display());
+        // self.spec.save(&path)
+
+        Ok(())
     }
 }
