@@ -5,6 +5,7 @@ use crate::{
     Crossing, Dir3, Hit, PerlinMap, Ray, Trace,
 };
 use rand::rngs::ThreadRng;
+use std::sync::{Arc, Mutex};
 
 /// Naboo scene painter function.
 #[allow(clippy::match_single_binding)]
@@ -15,7 +16,7 @@ pub fn naboo(
     thread_id: usize,
     mut rng: &mut ThreadRng,
     input: &Input,
-    data: &mut Output,
+    mut data: &Arc<Mutex<Output>>,
     mut weight: f64,
     pixel: [usize; 2],
     mut ray: Ray,
@@ -109,7 +110,7 @@ pub fn naboo(
                         }
                         "mirror" => {
                             ray.travel(hit.dist());
-                            data.image[pixel] += palette::LinSrgba::default();
+                            data.lock().unwrap().image[pixel] += palette::LinSrgba::default();
                             *ray.dir_mut() = Crossing::init_ref_dir(
                                 ray.dir(),
                                 hit.side().norm(),
@@ -127,13 +128,14 @@ pub fn naboo(
                 }
             }
         } else {
-            data.image[pixel] +=
+            data.lock().unwrap().image[pixel] +=
                 sky_col(input.cam, input.perl, &input.cols.map()["sky"], &ray) * weight as f32;
             break;
         }
 
         // println!("fog: {}", fog);
-        data.image[pixel] += input.cols.map()["sky"].get(0.0) * (weight * fog * 0.00_000_5) as f32;
+        data.lock().unwrap().image[pixel] +=
+            input.cols.map()["sky"].get(0.0) * (weight * fog * 0.00_000_5) as f32;
     }
 }
 
@@ -143,7 +145,7 @@ fn colour(
     input: &Input,
     ray: &Ray,
     hit: &Hit,
-    data: &mut Output,
+    mut data: &Arc<Mutex<Output>>,
     weight: f64,
     pixel: [usize; 2],
     rng: &mut ThreadRng,
@@ -162,7 +164,7 @@ fn colour(
     let base_col = input.cols.map()[hit.group()].get(hit.side().norm().dot(&sun_dir).abs() as f32);
     let grad = palette::Gradient::new(vec![palette::LinSrgba::default(), base_col]);
 
-    data.image[pixel] += grad.get((light * shadow) as f32) * weight as f32;
+    data.lock().unwrap().image[pixel] += grad.get((light * shadow) as f32) * weight as f32;
 }
 
 /// Determine the sky colour.

@@ -6,7 +6,8 @@ use crate::{
 };
 use minifb::{Scale, ScaleMode, Window, WindowOptions};
 use palette::Pixel;
-use rand::{thread_rng, Rng};
+use rand::{rngs::ThreadRng, thread_rng, Rng};
+use rayon::prelude::*;
 use std::{
     f64::consts::PI,
     sync::{Arc, Mutex},
@@ -123,6 +124,7 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
     let height = input.cam.sensor().res().1 as usize;
 
     let mut buffer: Vec<u32> = vec![0; num_pixels as usize];
+    let buffer = Arc::new(Mutex::new(buffer));
     let mut window = Window::new(
         "DIA - Rendering",
         width,
@@ -139,7 +141,9 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
     .unwrap_or_else(|e| {
         panic!("{}", e);
     });
-    window.update_with_buffer(&buffer, width, height).unwrap();
+    window
+        .update_with_buffer(&buffer.lock().unwrap(), width, height)
+        .unwrap();
 
     let pb = ParBar::new("Rendering", num_pixels as u64);
     let pb = Arc::new(Mutex::new(pb));
@@ -149,8 +153,9 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
     let dof_samples = input.cam.focus().dof().unwrap_or((1, 0.0)).0;
     let weight = 1.0 / f64::from(super_samples * dof_samples);
 
-    let mut rng = thread_rng();
+    // let mut rng = thread_rng();
     let mut data = Output::new(*input.grid.res(), [width, height]);
+    let mut data = Arc::new(Mutex::new(data));
 
     while let Some((start, end)) = {
         let mut pb = pb.lock()?;
@@ -158,34 +163,31 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
         std::mem::drop(pb);
         b
     } {
-        for n in start..end {
-            let pixel = (n % hr_res, n / hr_res);
+        // cover_pix(start, end, input, &mut rng, &mut data, &mut buffer, paint);
 
-            for sub_sample in 0..super_samples {
-                let offset = rng.gen_range(0.0, 2.0 * PI);
-                for depth_sample in 0..dof_samples {
-                    let ray = input.cam.gen_ray(pixel, offset, sub_sample, depth_sample);
-                    paint(
-                        0,
-                        &mut rng,
-                        input,
-                        &mut data,
-                        weight,
-                        [pixel.0 as usize, pixel.1 as usize],
-                        ray,
-                    );
+        let threads: Vec<usize> = (0..num_cpus::get()).collect();
+        let blit = (end - start) / 8;
+        let mut data: Vec<_> = threads
+            .par_iter()
+            .map(|id| {
+                cover_pix(
+                    start + (*id as u64 * blit) as u64,
+                    start + ((*id as u64 + 1) * blit) as u64,
+                    &input,
+                    // &mut rng,
+                    &Arc::clone(&data),
+                    &Arc::clone(&buffer),
+                    paint,
+                )
+            })
+            .collect();
 
-                    let col: [u8; 4] = palette::Srgba::from_linear(
-                        data.image[[pixel.0 as usize, pixel.1 as usize]],
-                    )
-                    .into_format()
-                    .into_raw();
-                    buffer[(num_pixels - (n + 1)) as usize] = from_u8_rgb(col[0], col[1], col[2]);
-                }
-            }
-        }
-        window.update_with_buffer(&buffer, width, height).unwrap();
+        window
+            .update_with_buffer(&buffer.lock().unwrap(), width, height)
+            .unwrap();
     }
+
+    pb.lock()?.finish_with_message("Render complete");
 
     Ok(data)
 }
@@ -193,6 +195,51 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
 fn from_u8_rgb(r: u8, g: u8, b: u8) -> u32 {
     let (r, g, b) = (r as u32, g as u32, b as u32);
     (r << 16) | (g << 8) | b
+}
+
+fn cover_pix(
+    start: u64,
+    end: u64,
+    input: &Input,
+    // mut rng: &mut ThreadRng,
+    mut data: &Arc<Mutex<Output>>,
+    buffer: &Arc<Mutex<Vec<u32>>>,
+    paint: Painter,
+) {
+    let mut rng = thread_rng();
+    for n in start..end {
+        let pixel = (
+            n % input.cam.sensor().res().0,
+            n / input.cam.sensor().res().0,
+        );
+
+        for sub_sample in 0..input.cam.sensor().super_samples() {
+            let offset = rng.gen_range(0.0, 2.0 * PI);
+            for depth_sample in 0..input.cam.focus().dof().unwrap_or((1, 0.0)).0 {
+                let ray = input.cam.gen_ray(pixel, offset, sub_sample, depth_sample);
+                paint(
+                    0,
+                    &mut rng,
+                    input,
+                    data,
+                    1.0 / f64::from(
+                        input.cam.sensor().super_samples()
+                            * input.cam.focus().dof().unwrap_or((1, 0.0)).0,
+                    ),
+                    [pixel.0 as usize, pixel.1 as usize],
+                    ray,
+                );
+
+                let col: [u8; 4] = palette::Srgba::from_linear(
+                    data.lock().unwrap().image[[pixel.0 as usize, pixel.1 as usize]],
+                )
+                .into_format()
+                .into_raw();
+                (buffer.lock().unwrap())[(input.cam.sensor().num_pixels() - (n + 1)) as usize] =
+                    from_u8_rgb(col[0], col[1], col[2]);
+            }
+        }
+    }
 }
 
 // /// Render on a single thread.

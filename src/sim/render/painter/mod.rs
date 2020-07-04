@@ -5,9 +5,10 @@ use crate::{
     Ray,
 };
 use rand::rngs::ThreadRng;
+use std::sync::{Arc, Mutex};
 
 /// Pixel painter function type.
-pub type Painter = fn(usize, &mut ThreadRng, &Input, &mut Output, f64, [usize; 2], Ray);
+pub type Painter = fn(usize, &mut ThreadRng, &Input, &Arc<Mutex<Output>>, f64, [usize; 2], Ray);
 
 pub mod kessler;
 pub mod naboo;
