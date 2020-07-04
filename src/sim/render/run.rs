@@ -2,7 +2,7 @@
 
 use crate::{
     render::{Input, Output, Painter},
-    Error, ParBar,
+    ParBar,
 };
 use minifb::{Scale, ScaleMode, Window, WindowOptions};
 use palette::Pixel;
@@ -118,7 +118,7 @@ use std::{
 /// # Errors
 /// if an invalid thread image was created.
 #[inline]
-pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
+pub fn simulate(input: &Input, paint: Painter) -> Output {
     let num_pixels = input.cam.sensor().num_pixels();
     let width = input.cam.sensor().res().0 as usize;
     let height = input.cam.sensor().res().1 as usize;
@@ -183,10 +183,14 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
         }
     }
 
-    pb.lock()?.finish_with_message("Render complete");
+    pb.lock().unwrap().finish_with_message("Render complete");
 
-    // Ok(data)
-    Ok(Output::new(*input.grid.res(), [width, height]))
+    // Ok(Output::new(*input.grid.res(), [width, height]))
+    if let Ok(d) = Arc::try_unwrap(data) {
+        return d.into_inner().unwrap();
+    }
+
+    unreachable!("In theory...");
 }
 
 fn from_u8_rgb(r: u8, g: u8, b: u8) -> u32 {

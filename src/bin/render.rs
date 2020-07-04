@@ -168,7 +168,7 @@ fn grow<'a>(
 fn render(input: &render::Input) -> render::Output {
     banner::section("Rendering");
     banner::sub_section("Main Camera");
-    render::run::simulate(&input, render::naboo).expect("Simulation failed.")
+    render::run::simulate(&input, render::naboo)
 }
 
 /// Save the output data.
