@@ -92,7 +92,7 @@ impl Display for Output {
 
 impl Save for Output {
     #[inline]
-    fn save(&self, out_dir: &Path) -> Result<(), Error> {
+    fn save(&self, _out_dir: &Path) -> Result<(), Error> {
         // let path = out_dir.join("emission_dens.nc");
         // println!("saving: {}", path.display());
         // let emission_dens = &self.emitted_photons / self.cell_vol;

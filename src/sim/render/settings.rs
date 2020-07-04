@@ -21,6 +21,8 @@ pub struct Settings {
     soft_shadows: Option<i32>,
     /// Perlin noise map segments.
     perl_segs: [usize; 2],
+    /// Live rendering setting.
+    live: bool,
 }
 
 impl Settings {
@@ -31,6 +33,7 @@ impl Settings {
     clone!(ambient_occlusion, Option<i32>);
     clone!(soft_shadows, Option<i32>);
     clone!(perl_segs, [usize; 2]);
+    clone!(live, bool);
 }
 
 impl Display for Settings {
@@ -55,6 +58,7 @@ impl Display for Settings {
             fmt,
             "perlin segments",
             format!("[{}, {}]", self.perl_segs[X], self.perl_segs[Y])
-        )
+        )?;
+        display_field!(fmt, "live", self.live)
     }
 }

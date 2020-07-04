@@ -1,7 +1,7 @@
 //! Save trait.
 
-use crate::{Error, X, Y, Z};
-use ndarray::{Array2, Array3, ShapeBuilder};
+use crate::Error;
+use ndarray::{Array2, ShapeBuilder};
 use palette::{LinSrgba, Pixel, Srgba};
 use png::{BitDepth, ColorType, Encoder};
 use serde::Serialize;
