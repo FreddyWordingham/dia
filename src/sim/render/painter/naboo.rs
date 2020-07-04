@@ -47,85 +47,83 @@ pub fn naboo(
             match Event::new(voxel_dist, surf_hit) {
                 Event::Voxel(dist) => ray.travel(dist + bump_dist),
                 Event::Surface(hit) => {
-                    if hit.dist() > 2.0 {
-                        fog += 2.0
-                            * illumination::visibility(
-                                0,
-                                input,
-                                Ray::new(
-                                    *ray.pos(),
-                                    Dir3::new_normalize(ray.pos() - input.sett.sun_pos()),
-                                ),
-                                bump_dist,
-                            );
-                        ray.travel(2.0);
-                    } else {
-                        match hit.group() {
-                            "water" => {
-                                ray.travel(hit.dist());
+                    // if hit.dist() > 2.0 {
+                    //     fog += 2.0
+                    //         * illumination::visibility(
+                    //             0,
+                    //             input,
+                    //             Ray::new(
+                    //                 *ray.pos(),
+                    //                 Dir3::new_normalize(ray.pos() - input.sett.sun_pos()),
+                    //             ),
+                    //             bump_dist,
+                    //         );
+                    //     ray.travel(2.0);
+                    // } else {
+                    match hit.group() {
+                        "water" => {
+                            ray.travel(hit.dist());
 
-                                colour(input, &ray, &hit, data, weight * 0.1, pixel, &mut rng);
-                                weight *= 0.9;
+                            colour(input, &ray, &hit, data, weight * 0.1, pixel, &mut rng);
+                            weight *= 0.9;
 
-                                fog = 0.0;
+                            fog = 0.0;
 
-                                let crossing =
-                                    Crossing::new(ray.dir(), hit.side().norm(), 1.0, 1.75);
+                            let crossing = Crossing::new(ray.dir(), hit.side().norm(), 1.0, 1.75);
 
-                                let trans_prob = crossing.trans_prob();
-                                if let Some(trans_dir) = crossing.trans_dir() {
-                                    let mut trans_ray = ray.clone();
-                                    *trans_ray.dir_mut() = *trans_dir;
-                                    trans_ray.travel(bump_dist);
-                                    naboo(
-                                        thread_id,
-                                        rng,
-                                        input,
-                                        data,
-                                        weight * trans_prob,
-                                        pixel,
-                                        trans_ray,
-                                    );
-                                }
-
-                                let ref_prob = crossing.ref_prob();
-                                weight *= ref_prob;
-                                *ray.dir_mut() = *crossing.ref_dir();
-                                ray.travel(bump_dist);
-                            }
-                            "clouds_0" | "clouds_1" | "clouds_2" => {
-                                ray.travel(hit.dist());
-
-                                colour(input, &ray, &hit, data, weight * 0.2, pixel, &mut rng);
-                                weight *= 0.8;
-
-                                let crossing =
-                                    Crossing::new(ray.dir(), hit.side().norm(), 1.0, 1.1);
-
-                                if let Some(trans_dir) = crossing.trans_dir() {
-                                    *ray.dir_mut() = *trans_dir;
-                                    ray.travel(bump_dist);
-                                } else {
-                                    break;
-                                }
-                            }
-                            "mirror" => {
-                                ray.travel(hit.dist());
-                                data.image[pixel] += palette::LinSrgba::default();
-                                *ray.dir_mut() = Crossing::init_ref_dir(
-                                    ray.dir(),
-                                    hit.side().norm(),
-                                    -ray.dir().dot(hit.side().norm()),
+                            let trans_prob = crossing.trans_prob();
+                            if let Some(trans_dir) = crossing.trans_dir() {
+                                let mut trans_ray = ray.clone();
+                                *trans_ray.dir_mut() = *trans_dir;
+                                trans_ray.travel(bump_dist);
+                                naboo(
+                                    thread_id,
+                                    rng,
+                                    input,
+                                    data,
+                                    weight * trans_prob,
+                                    pixel,
+                                    trans_ray,
                                 );
-                                ray.travel(bump_dist);
                             }
-                            _ => {
-                                ray.travel(hit.dist());
-                                colour(input, &ray, &hit, data, weight, pixel, &mut rng);
+
+                            let ref_prob = crossing.ref_prob();
+                            weight *= ref_prob;
+                            *ray.dir_mut() = *crossing.ref_dir();
+                            ray.travel(bump_dist);
+                        }
+                        "clouds_0" | "clouds_1" | "clouds_2" => {
+                            ray.travel(hit.dist());
+
+                            colour(input, &ray, &hit, data, weight * 0.2, pixel, &mut rng);
+                            weight *= 0.8;
+
+                            let crossing = Crossing::new(ray.dir(), hit.side().norm(), 1.0, 1.1);
+
+                            if let Some(trans_dir) = crossing.trans_dir() {
+                                *ray.dir_mut() = *trans_dir;
+                                ray.travel(bump_dist);
+                            } else {
                                 break;
                             }
-                        };
-                    }
+                        }
+                        "mirror" => {
+                            ray.travel(hit.dist());
+                            data.image[pixel] += palette::LinSrgba::default();
+                            *ray.dir_mut() = Crossing::init_ref_dir(
+                                ray.dir(),
+                                hit.side().norm(),
+                                -ray.dir().dot(hit.side().norm()),
+                            );
+                            ray.travel(bump_dist);
+                        }
+                        _ => {
+                            ray.travel(hit.dist());
+                            colour(input, &ray, &hit, data, weight, pixel, &mut rng);
+                            break;
+                        }
+                    };
+                    // }
                 }
             }
         } else {
@@ -135,7 +133,7 @@ pub fn naboo(
         }
 
         // println!("fog: {}", fog);
-        data.image[pixel] += input.cols.map()["sky"].get(0.0) * (fog * 0.00_01) as f32;
+        data.image[pixel] += input.cols.map()["sky"].get(0.0) * (weight * fog * 0.00_01) as f32;
     }
 }
 
