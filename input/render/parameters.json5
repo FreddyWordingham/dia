@@ -6,8 +6,8 @@
     },
     grid: {
         boundary: {
-            mins: [-100, -100, -100],
-            maxs: [ 100,  100,  100]
+            mins: [-140, -140, -140],
+            maxs: [ 140,  140,  140]
         },
         res: [1,1,1]
     },
@@ -35,9 +35,14 @@
             // water           : [['objs/water/sea.obj'], null],
             water           : [['objs/water/sea.obj', 'objs/water/waterfall.obj'], null],
             solar           : [['objs/sky/solar.obj'], null],
-            planet_land     : [['objs/sky/planet_0_surf.obj', 'objs/sky/planet_1_surf.obj', 'objs/sky/planet_2_surf.obj'], null],
-            planet_sea      : [['objs/sky/planet_1_sea.obj', 'objs/sky/planet_2_sea.obj'], null],
-            clouds          : [['objs/sky/clouds.obj'], null],
+            planet_0_land   : [['objs/sky/planet_0_land.obj'], {trans:[0,0,5]}],
+            planet_1_land   : [['objs/sky/planet_1_land.obj'], {trans:[0,0,10],scale:1.8}],
+            planet_2_land   : [['objs/sky/planet_2_land.obj'], null],
+            planet_0_sea    : [['objs/sky/planet_0_sea.obj'], {trans:[0,0,5]}],
+            planet_1_sea    : [['objs/sky/planet_1_sea.obj'], {trans:[0,0,10],scale:1.8}],
+            clouds_0        : [['objs/sky/planet_0_clouds_inner.obj', 'objs/sky/planet_0_clouds_mid.obj', 'objs/sky/planet_0_clouds_outer.obj'], {trans:[0,0,5]}],
+            clouds_1        : [['objs/sky/planet_1_clouds_inner.obj', 'objs/sky/planet_1_clouds_mid.obj', 'objs/sky/planet_1_clouds_outer.obj'], {trans:[0,0,10],scale:1.8}],
+            clouds_2        : [['objs/sky/planet_2_clouds_inner.obj', 'objs/sky/planet_2_clouds_mid.obj', 'objs/sky/planet_2_clouds_outer.obj'], null],
             // stars           : [['objs/sky/stars.obj'], null],
     },
     cols: {
@@ -56,9 +61,14 @@
             roofs           : ['#008b8bff', '#3cb371ff', '#90ee90ff'],
             rocks           : ['#72482aff', '#ff703cff', '#aed8d4ff', '#856e5dff', '#c9c1bbff'],
             water           : ['#8282ffff', '#82a8ffff', '#82f1ffff'],
-            planet_land     : ['#008000ff', '#32cd32ff', '#556b2fff', '#1f841fff', '#56a556ff', '#0ebb0eff', '#008080ff', '#51dab6ff', '#67e2b9ff', '#3be3abff'],
-            planet_sea      : ['#0542A8ff', '#1552C6ff', '#8e6fe4ff', '#724ceeff', '#7770ffff', '#3072EBff', '#71A8EEff'],
-            clouds          : ['#97aed9ff', '#cdcdffff', '#ffffffff'],
+            planet_0_land   : ['#008000ff', '#32cd32ff', '#0ebb0eff', '#008080ff', '#51dab6ff', '#556b2fff', '#1f841fff', '#56a556ff', '#67e2b9ff', '#3be3abff'],
+            planet_1_land   : ['#a62ab5ff', '#f0794aff', '#e03c7eff', '#f17bffff'],
+            planet_2_land   : ['#e53b3bff', '#ff8d2aff' , '#e8423fff'],
+            planet_0_sea    : ['#0542A8ff', '#1552C6ff', '#8e6fe4ff', '#724ceeff', '#7770ffff', '#3072EBff', '#71A8EEff'],
+            planet_1_sea    : ['#724ceeff', '#8e6fe4ff', '#ec61fdff', '#29afefff', '#5be2d8ff'],
+            clouds_0        : ['#97d9c5ff', '#f0f0b2ff', '#ffffffff'],
+            clouds_1        : ['#97aed9ff', '#cdcdffff', '#ffffffff'],
+            clouds_2        : ['#d493e4ff', '#f1c7ffff', '#ffffffff'],
             solar           : ['#ffe200ff', '#ff4700ff', '#ff000dff'],
             // stars           : ['#ffe200ff', '#ff4700ff', '#ff000dff'],
             stars           : ['#fffec1ff', '#f4f2e2ff'],

@@ -88,6 +88,7 @@ pub fn visibility(depth: u32, input: &Input, mut ray: Ray, bump_dist: f64) -> f6
                 // Transparent.
                 vis *= 0.95;
 
+                ray.travel(hit.dist());
                 let crossing = Crossing::new(ray.dir(), hit.side().norm(), 1.75, 1.0);
 
                 if let Some(trans_dir) = crossing.trans_dir() {
@@ -95,9 +96,9 @@ pub fn visibility(depth: u32, input: &Input, mut ray: Ray, bump_dist: f64) -> f6
                 };
                 ray.travel(bump_dist);
             }
-            "clouds" => {
+            "clouds_0" | "clouds_1" | "clouds_2" => {
                 // Almost transparent.
-                vis *= 0.875;
+                vis *= 0.8;
                 ray.travel(hit.dist() + bump_dist);
             }
             _ => {

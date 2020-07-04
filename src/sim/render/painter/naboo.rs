@@ -93,11 +93,11 @@ pub fn naboo(
                                 *ray.dir_mut() = *crossing.ref_dir();
                                 ray.travel(bump_dist);
                             }
-                            "clouds" => {
+                            "clouds_0" | "clouds_1" | "clouds_2" => {
                                 ray.travel(hit.dist());
 
-                                colour(input, &ray, &hit, data, weight * 0.1, pixel, &mut rng);
-                                weight *= 0.9;
+                                colour(input, &ray, &hit, data, weight * 0.2, pixel, &mut rng);
+                                weight *= 0.8;
 
                                 let crossing =
                                     Crossing::new(ray.dir(), hit.side().norm(), 1.0, 1.1);
@@ -135,7 +135,7 @@ pub fn naboo(
         }
 
         // println!("fog: {}", fog);
-        data.image[pixel] += input.cols.map()["sky"].get(0.0) * (fog * 0.00_1) as f32;
+        data.image[pixel] += input.cols.map()["sky"].get(0.0) * (fog * 0.00_01) as f32;
     }
 }
 
