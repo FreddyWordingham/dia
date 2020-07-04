@@ -86,7 +86,7 @@ pub fn simulate(input: &Input, paint: Painter) -> Result<Output, Error> {
                     palette::Srgba::from_linear(data.image[[pixel.0 as usize, pixel.1 as usize]])
                         .into_format()
                         .into_raw();
-                buffer[n as usize] = from_u8_rgb(col[0], col[1], col[2]);
+                buffer[(num_pixels - (n + 1)) as usize] = from_u8_rgb(col[0], col[1], col[2]);
 
                 window.update_with_buffer(&buffer, width, height).unwrap();
             }
