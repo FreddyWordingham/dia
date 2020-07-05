@@ -4,5 +4,4 @@ pub mod distribution;
 pub mod perlin_map;
 pub mod probability;
 
-pub use self::perlin_map::*;
-pub use self::probability::*;
+pub use self::{perlin_map::*, probability::*};
