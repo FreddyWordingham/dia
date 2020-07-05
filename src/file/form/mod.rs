@@ -1,6 +1,5 @@
 //! Form module.
 
-pub mod camera;
 pub mod formula;
 pub mod gradient;
 pub mod light;
@@ -10,5 +9,5 @@ pub mod probability;
 pub mod trans3;
 
 pub use self::{
-    camera::*, formula::*, gradient::*, light::*, material::*, mesh::*, probability::*, trans3::*,
+    formula::*, gradient::*, light::*, material::*, mesh::*, probability::*, trans3::*,
 };
