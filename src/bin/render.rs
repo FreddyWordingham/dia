@@ -4,7 +4,10 @@ use attr::input;
 use dia::*;
 // use palette::{Gradient, LinSrgba};
 // use rand::thread_rng;
-use std::{env::current_dir, path::PathBuf};
+use std::{
+    env::current_dir,
+    path::{Path, PathBuf},
+};
 
 /// Input parameters.
 #[input]
@@ -28,7 +31,8 @@ struct Parameters {
 /// Main function.
 pub fn main() {
     banner::title("Render");
-    let (_params_path, _in_dir, _out_dir) = init();
+    let (params_path, in_dir, _out_dir) = init();
+    let _params = input(&in_dir, &params_path);
     banner::section("Finished");
 }
 
@@ -46,7 +50,7 @@ fn init() -> (PathBuf, PathBuf, PathBuf) {
     let cwd = current_dir().expect("Failed to determine current working directory.");
     let exec_name = exec::name().expect("Could not determine executable name.");
     let (in_dir, out_dir) = dir::io_dirs(
-        Some(cwd.join("input").join(exec_name.clone()§)),
+        Some(cwd.join("input").join(exec_name.clone())),
         Some(cwd.join("output").join(exec_name)),
     )
     .expect("Could not initialise directories");
@@ -54,4 +58,13 @@ fn init() -> (PathBuf, PathBuf, PathBuf) {
     report!("output directory", out_dir.display());
 
     (params_path, in_dir, out_dir)
+}
+
+/// Load the input files.
+fn input(in_dir: &Path, params_path: &Path) -> Parameters {
+    banner::section("Input");
+    banner::sub_section("Parameters");
+    let path = in_dir.join(params_path);
+
+    Parameters::load(&path).expect("Could not load parameters file")
 }
