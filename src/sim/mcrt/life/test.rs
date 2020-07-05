@@ -11,6 +11,7 @@ use std::f64::consts::PI;
 
 /// Test photon lifetime function.
 #[allow(clippy::option_expect_used)]
+#[allow(clippy::single_match)]
 #[inline]
 pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
     // Useful constants.

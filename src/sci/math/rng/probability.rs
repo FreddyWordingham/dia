@@ -75,16 +75,16 @@ impl Probability {
     /// Construct a new linear instance.
     #[inline]
     #[must_use]
-    pub fn new_linear(min: f64, max: f64, m: f64, c: f64) -> Self {
-        debug_assert!(m != 0.0);
+    pub fn new_linear(min: f64, max: f64, grad: f64, c: f64) -> Self {
+        debug_assert!(grad != 0.0);
 
-        let a = (m / 2.0).mul_add(min.powi(2), c * min);
-        let b = (m / 2.0).mul_add(max.powi(2), c * max);
-        let n = b - a;
+        let lower = (grad / 2.0).mul_add(min.powi(2), c * min);
+        let upper = (grad / 2.0).mul_add(max.powi(2), c * max);
+        let area = upper - lower;
 
-        let t = -c / m;
-        let delta = (c.powi(2) / m.powi(2)) + (2.0 * a / m);
-        let lambda = 2.0 * n / m;
+        let t = -c / grad;
+        let delta = (c.powi(2) / grad.powi(2)) + (2.0 * lower / grad);
+        let lambda = 2.0 * area / grad;
 
         Self::Linear { t, delta, lambda }
     }

@@ -39,6 +39,7 @@ impl PerlinMap {
     }
 
     /// Sample a point in the map.
+    #[allow(clippy::many_single_char_names)]
     #[inline]
     #[must_use]
     pub fn sample(&self, x: f64, y: f64) -> f64 {
@@ -66,9 +67,8 @@ impl PerlinMap {
 
         let x0 = lerp(a, b, u);
         let x1 = lerp(c, d, u);
-        let y = lerp(x0, x1, v);
 
-        y
+        lerp(x0, x1, v)
     }
 }
 

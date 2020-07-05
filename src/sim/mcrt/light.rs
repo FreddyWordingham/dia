@@ -66,11 +66,7 @@ impl Light {
     #[must_use]
     pub fn surf(&self) -> &Mesh {
         match self {
-            Self::Surface {
-                surf,
-                spec: _,
-                power: _,
-            } => surf,
+            Self::Surface { surf, .. } => surf,
             Self::Points { .. } => {
                 panic!("No surface.");
             }
@@ -82,16 +78,7 @@ impl Light {
     #[must_use]
     pub fn spec(&self) -> &Probability {
         match self {
-            Self::Surface {
-                surf: _,
-                spec,
-                power: _,
-            } => spec,
-            Self::Points {
-                points: _,
-                power: _,
-                spec,
-            } => spec,
+            Self::Surface { spec, .. } | Self::Points { spec, .. } => spec,
         }
     }
 
@@ -100,16 +87,7 @@ impl Light {
     #[must_use]
     pub fn power(&self) -> f64 {
         match self {
-            Self::Surface {
-                surf: _,
-                spec: _,
-                power,
-            } => *power,
-            Self::Points {
-                points: _,
-                power,
-                spec: _,
-            } => *power,
+            Self::Surface { power, .. } | Self::Points { power, .. } => *power,
         }
     }
 
