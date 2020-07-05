@@ -21,6 +21,7 @@ hex = "0.4.2"
 indicatif = "0.15.0"
 json5 = "0.2.8"
 lazy_static = "1.4.0"
+minifb = "0.16.0"
 nalgebra = { version = "0.21.1", features = ["serde-serialize"] }
 ndarray = { version = "0.13.1", features = ["rayon", "serde-1"] }
 ndarray-parallel = "0.9.1"
@@ -37,8 +38,6 @@ serde_json = "1.0.56"
 slice-of-array = "0.2.1"
 terminal_size = "0.1.13"
 
-minifb = "0.16.0"
-
 [profile.dev]
 # Development profile: "cargo build".
 opt-level = 0
@@ -54,12 +53,16 @@ overflow-checks = true
 [profile.release]
 # Release profile: "cargo build --release"
 opt-level = 3
+# debug = true
 debug = false
 rpath = false
-lto = false
+# lto = false
+lto = "fat"
 debug-assertions = false
-codegen-units = 16
-panic = 'unwind'
+# codegen-units = 16
+codegen-units = 1
+# panic = "unwind"
+panic = "abort"
 incremental = false
 overflow-checks = false
 
