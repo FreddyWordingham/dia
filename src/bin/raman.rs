@@ -1,4 +1,4 @@
-//! Breast binary.
+//! Raman binary.
 
 use attr::input;
 use dia::*;
@@ -25,7 +25,7 @@ struct Parameters {
 
 /// Main function.
 pub fn main() {
-    banner::title("BREAST");
+    banner::title("RAMAN");
     let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
     let ps = params.points.clone();
