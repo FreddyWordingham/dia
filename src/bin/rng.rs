@@ -57,9 +57,11 @@ pub fn main() {
 fn init() -> (PathBuf, PathBuf, PathBuf) {
     banner::section("Initialisation");
     banner::sub_section("Command line args");
-    args!(bin_path: PathBuf;
-        params_path: PathBuf
+    args!(
+        bin_path: PathBuf //  ; params_path: PathBuf
+                          //
     );
+    let params_path = Path::new("parameters.json5").to_path_buf();
     report!("binary path", bin_path.display());
     report!("parameters path", params_path.display());
 
@@ -116,7 +118,7 @@ fn simulate(input: &Input) -> Histogram {
         .collect();
     pb.lock()
         .expect("Unable to lock progress bar.")
-        .finish_with_message("Render complete");
+        .finish_with_message("Randomisation complete");
 
     let mut base = data.pop().ok_or("Missing data result.").unwrap();
     for dat in data {
@@ -141,7 +143,6 @@ fn single_thread(_thread_id: usize, pb: &Arc<Mutex<ParBar>>, input: &Input) -> H
         for _ in start..end {
             let x = input.dist.gen(&mut rng);
 
-            // report!(x);
             data.try_collect(x);
         }
     }

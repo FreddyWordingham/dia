@@ -9,10 +9,9 @@ use std::{env::args, path::Path};
 #[inline]
 pub fn name() -> Result<String, Error> {
     let args: Vec<String> = args().collect();
-    let name = &args[0];
 
-    Ok(Path::new(name)
-        .file_name()
+    Ok(Path::new(&args[0])
+        .file_stem()
         .ok_or("Missing filename.")?
         .to_str()
         .ok_or("Missing string.")?

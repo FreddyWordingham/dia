@@ -2,19 +2,10 @@
 
 use crate::util::exec;
 use std::{
-    env::{current_dir, set_current_dir, var},
+    env::{current_dir, set_current_dir},
     fs::create_dir_all,
-    path::{Path, PathBuf},
+    path::PathBuf,
 };
-
-/// Get the arc installation directory path from the environment variable.
-/// Environment variable must be set.
-/// # Errors
-/// if the environment variable `DIA_DIR` is not set.
-#[inline]
-pub fn root() -> Result<PathBuf, std::env::VarError> {
-    Ok(Path::new(&var("DIA_DIR")?).to_path_buf())
-}
 
 /// Initialise the current working directory.
 #[inline]
@@ -42,16 +33,18 @@ pub fn io_dirs(
 ) -> Result<(PathBuf, PathBuf), crate::Error> {
     let exec_name = exec::name()?;
 
+    let cwd = current_dir()?;
+
     let in_dir = if let Some(input) = input {
         input
     } else {
-        root()?.join("input").join(&exec_name)
+        cwd.join("input").join(&exec_name)
     };
 
     let out_dir = if let Some(output) = output {
         output
     } else {
-        root()?.join("output").join(exec_name)
+        cwd.join("output").join(exec_name)
     };
 
     let in_dir = input_dir(&in_dir)?;
