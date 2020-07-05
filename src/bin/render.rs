@@ -4,7 +4,7 @@ use attr::input;
 use dia::*;
 // use palette::{Gradient, LinSrgba};
 // use rand::thread_rng;
-use std::path::PathBuf;
+use std::{env::current_dir, path::PathBuf};
 
 /// Input parameters.
 #[input]
@@ -43,7 +43,13 @@ fn init() -> (PathBuf, PathBuf, PathBuf) {
     report!("parameters path", params_path.display());
 
     banner::sub_section("Directories");
-    let (in_dir, out_dir) = dir::io_dirs(None, None).expect("Could not initialise directories");
+    let cwd = current_dir().expect("Failed to determine current working directory.");
+    let exec_name = exec::name().expect("Could not determine executable name.");
+    let (in_dir, out_dir) = dir::io_dirs(
+        Some(cwd.join("input").join(exec_name.clone()§)),
+        Some(cwd.join("output").join(exec_name)),
+    )
+    .expect("Could not initialise directories");
     report!("input directory", in_dir.display());
     report!("output directory", out_dir.display());
 
