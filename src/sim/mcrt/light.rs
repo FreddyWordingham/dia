@@ -1,6 +1,9 @@
 //! Light structure.
 
-use crate::{display_field, display_field_ln, mcrt::Photon, Emit, Mesh, Pos3, Probability, Ray};
+use crate::{
+    display_field, display_field_ln, distribution::isotropic, mcrt::Photon, Emit, Mesh, Pos3,
+    Probability, Ray,
+};
 use ndarray::Array1;
 use rand::{rngs::ThreadRng, Rng};
 use std::fmt::{Display, Formatter, Result};
@@ -94,22 +97,14 @@ impl Light {
     /// Generate a ray.
     #[inline]
     #[must_use]
-    pub fn gen_ray(&self, rng: &mut ThreadRng) -> Ray {
+    pub fn gen_ray(&self, mut rng: &mut ThreadRng) -> Ray {
         match self {
-            Self::Surface {
-                surf,
-                spec: _,
-                power: _,
-            } => surf.cast(rng),
-            Self::Points {
-                points,
-                power: _,
-                spec: _,
-            } => {
+            Self::Surface { surf, .. } => surf.cast(rng),
+            Self::Points { points, .. } => {
                 let r = rng.gen::<f64>();
                 for (p, x) in points {
                     if r <= *x {
-                        let dir = crate::Vec3::x_axis(); // TODO: Make random.
+                        let dir = isotropic(&mut rng);
                         return Ray::new(*p, dir);
                     }
                 }

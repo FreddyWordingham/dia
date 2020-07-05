@@ -24,7 +24,8 @@ impl<'a> Scan<'a> {
     #[inline]
     #[must_use]
     pub fn new_surface(hit: Hit<'a>) -> Self {
-        // Freddy: Const function does not compile on Charlie's machine.
+        debug_assert!(hit.dist() > 0.0);
+
         Self::Surface(hit)
     }
 }

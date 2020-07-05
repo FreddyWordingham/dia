@@ -1,5 +1,6 @@
 //! Distribution functions.
 
+use crate::{Dir3, Vec3};
 use rand::{rngs::ThreadRng, Rng};
 use std::f64::consts::PI;
 
@@ -38,4 +39,20 @@ pub fn gaussian(rng: &mut ThreadRng, mu: f64, sigma: f64) -> f64 {
     debug_assert!(sigma > 0.0);
 
     normal(rng).mul_add(sigma, mu)
+}
+
+/// Create a random unit vector.
+#[inline]
+#[must_use]
+pub fn isotropic(rng: &mut ThreadRng) -> Dir3 {
+    let theta = rng.gen_range(0.0, 2.0 * PI);
+    let u = rng.gen_range(-1.0_f64, 1.0);
+
+    let v = (1.0 - u.powi(2)).sqrt();
+
+    let x = v * theta.cos();
+    let y = v * theta.sin();
+    let z = u;
+
+    Dir3::new_normalize(Vec3::new(x, y, z))
 }
