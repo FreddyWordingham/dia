@@ -67,7 +67,7 @@ impl ParBar {
     /// Check if the progress bar is complete.
     #[inline]
     #[must_use]
-    pub fn is_done(&self) -> bool {
+    pub const fn is_done(&self) -> bool {
         self.count >= self.total
     }
 

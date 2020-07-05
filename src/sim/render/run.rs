@@ -135,8 +135,8 @@ pub fn simulate(input: &Input, paint: Painter) -> Output {
                 WindowOptions {
                     resize: true,
                     // scale: Scale::X4,
-                    scale: Scale::X2,
-                    // scale: Scale::X1,
+                    // scale: Scale::X2,
+                    scale: Scale::X1,
                     scale_mode: ScaleMode::Center,
                     ..WindowOptions::default()
                 },
