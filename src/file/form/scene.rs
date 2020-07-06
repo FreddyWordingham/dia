@@ -1,8 +1,15 @@
 //! Scene form implementation.
 
-use crate::{display_field, display_field_ln, AspectRatio, Pos3, X, Y};
+use crate::{
+    display_field, display_field_ln, render,
+    render::{Focus, Lens, Sensor},
+    AspectRatio, Build, Error, Pos3, X, Y,
+};
 use attr::load;
-use std::fmt::{Display, Formatter};
+use std::{
+    fmt::{Display, Formatter},
+    path::Path,
+};
 
 /// Loadable camera structure.
 #[load]
@@ -33,27 +40,35 @@ pub struct Scene {
     dof: Option<(i32, f64)>,
 }
 
-// impl Build for Scene {
-//     type Inst = render::Scene;
+impl Build for Scene {
+    type Inst = render::Scene;
 
-//     #[inline]
-//     fn build(self, _in_dir: &Path) -> Result<Self::Inst, Error> {
-//         let dof = if let Some((samples, angle)) = self.dof {
-//             Some((samples, angle.to_radians()))
-//         } else {
-//             None
-//         };
+    #[inline]
+    fn build(self, _in_dir: &Path) -> Result<Self::Inst, Error> {
+        let dof = if let Some((samples, angle)) = self.dof {
+            Some((samples, angle.to_radians()))
+        } else {
+            None
+        };
 
-//         let focus = Focus::new(self.pos, self.tar, dof);
-//         let lens = Lens::new(
-//             [self.swivel[X].to_radians(), self.swivel[Y].to_radians()],
-//             self.fov.to_radians(),
-//         );
-//         let sensor = Sensor::new(&self.aspect_ratio, self.res, self.ss);
+        let focus = Focus::new(self.cam_pos, self.cam_tar, dof);
+        let lens = Lens::new(
+            [self.swivel[X].to_radians(), self.swivel[Y].to_radians()],
+            self.fov.to_radians(),
+        );
+        let sensor = Sensor::new(&self.aspect_ratio, self.res, self.ss);
 
-//         Ok(Self::Inst::new(focus, lens, sensor))
-//     }
-// }
+        Ok(Self::Inst::new(
+            render::Camera::new(focus, lens, sensor),
+            render::Lighting::new(
+                self.sun_pos,
+                self.sun_rad,
+                self.ambient_occlusion,
+                self.soft_shadows,
+            ),
+        ))
+    }
+}
 
 impl Display for Scene {
     #[allow(clippy::result_expect_used)]
@@ -64,13 +79,12 @@ impl Display for Scene {
         display_field_ln!(
             fmt,
             "swivel",
-            format!("[{}, {}]", self.swivel[X], self.swivel[Y]),
+            format!("{} : {}", self.swivel[X], self.swivel[Y]),
             "deg"
         )?;
 
         display_field_ln!(fmt, "sun position", &self.sun_pos, "m")?;
         display_field_ln!(fmt, "sun angular radius", self.sun_rad, "deg")?;
-
         if let Some(ambient_occlusion_samples) = self.ambient_occlusion {
             display_field_ln!(fmt, "ambient occlusion samples", ambient_occlusion_samples)?;
         } else {
