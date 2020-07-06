@@ -55,6 +55,14 @@ pub fn test(
                     let group = hit.group();
                     if let Some(attr) = input.attrs.map().get(group) {
                         match attr {
+                            Attributes::Transparent { abs } => {
+                                ray.travel(hit.dist());
+                                col += colour(&mut rng, input, scene, &ray, &hit)
+                                    * *abs as f32
+                                    * weight as f32;
+                                weight *= 1.0 - *abs;
+                                ray.travel(bump_dist);
+                            }
                             Attributes::Mirror { abs } => {
                                 ray.travel(hit.dist());
                                 col += colour(&mut rng, input, scene, &ray, &hit)
@@ -112,62 +120,11 @@ pub fn test(
                         col += colour(&mut rng, input, scene, &ray, &hit) * weight as f32;
                         break;
                     }
-
-                    // match hit.group() {
-
-                    //     "glass" | "water" => {
-                    //         ray.travel(hit.dist());
-                    //         col += colour(&mut rng, input, scene, &ray, &hit) * 0.25;
-
-                    //         let (n0, n1) = if hit.side().is_inside() {
-                    //             (1.3, 1.0)
-                    //         } else {
-                    //             (1.0, 1.3)
-                    //         };
-                    //         let crossing = Crossing::new(ray.dir(), hit.side().norm(), n0, n1);
-
-                    //         if let Some(trans_dir) = crossing.trans_dir() {
-                    //             ray.travel(bump_dist);
-                    //             *ray.dir_mut() = *trans_dir;
-                    //         } else {
-                    //             break;
-                    //         }
-                    //     }
-                    //     "clouds_0" | "clouds_1" | "clouds_2" => {
-                    //         ray.travel(hit.dist());
-                    //         col += colour(&mut rng, input, scene, &ray, &hit) * 0.25;
-
-                    //         let (n0, n1) = if hit.side().is_inside() {
-                    //             (1.1, 1.0)
-                    //         } else {
-                    //             (1.0, 1.1)
-                    //         };
-                    //         let crossing = Crossing::new(ray.dir(), hit.side().norm(), n0, n1);
-
-                    //         if let Some(trans_dir) = crossing.trans_dir() {
-                    //             ray.travel(bump_dist);
-                    //             *ray.dir_mut() = *trans_dir;
-                    //         } else {
-                    //             break;
-                    //         }
-                    //     }
-                    //     "mirror" => {
-                    //         ray.travel(hit.dist());
-                    //         col += colour(&mut rng, input, scene, &ray, &hit) * 0.25;
-                    //         *ray.dir_mut() = Crossing::init_ref_dir(
-                    //             ray.dir(),
-                    //             hit.side().norm(),
-                    //             -ray.dir().dot(hit.side().norm()),
-                    //         );
-                    //         ray.travel(bump_dist);
-                    //     }
-                    //     _ => {
-                    //         ray.travel(hit.dist());
-                    //         col += colour(&mut rng, input, scene, &ray, &hit);
-                    //         break;
-                    //     }
-                    // };
                 }
+            }
+
+            if weight < input.sett.min_weight() {
+                break;
             }
         }
     } else {

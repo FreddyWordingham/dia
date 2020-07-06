@@ -34,6 +34,9 @@
             bulk    : ['#0542A8ff', '#1552C6ff', '#8e6fe4ff', '#724ceeff', '#7770ffff', '#3072EBff', '#71A8EEff'],
     },
     attrs: {
+        bulk: {
+            Transparent: {abs: 0.2}
+        },
         gems: {
             Mirror: {abs: 0.3}
         },
