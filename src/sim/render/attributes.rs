@@ -8,13 +8,17 @@ use std::fmt::{Display, Formatter, Result};
 pub enum Attributes {
     /// Mirror.
     Mirror {
-        /// Probability of reflection from the surface.
-        reflectivity: f64,
+        /// Absorption fraction.
+        abs: f64,
     },
     /// Refractive.
     Refractive {
-        /// Refractive index.
-        index: f64,
+        /// Absorption fraction.
+        abs: f64,
+        /// Internal refractive index.
+        inside: f64,
+        /// Extental refractive index.
+        outside: f64,
     },
 }
 
@@ -23,8 +27,12 @@ impl Display for Attributes {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
         let kind = match self {
-            Self::Mirror { reflectivity } => format!("Mirror: {}", reflectivity),
-            Self::Refractive { index } => format!("Refractive: {}", index),
+            Self::Mirror { abs } => format!("Mirror: [{}]", abs),
+            Self::Refractive {
+                abs,
+                inside,
+                outside,
+            } => format!("Refractive: [{}]\t\t{}:|{}", abs, inside, outside),
         };
         write!(fmt, "{}", kind)
     }
