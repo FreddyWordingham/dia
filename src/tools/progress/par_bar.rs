@@ -52,13 +52,13 @@ impl ParBar {
             None
         } else {
             let remaining = self.total - self.count;
-            let alloc = if remaining < size { remaining } else { size };
+            let alloc = size.min(remaining);
 
             let start = self.count;
             let end = start + alloc;
 
             self.count += alloc;
-            self.pb.inc(alloc);
+            // self.pb.inc(alloc);
 
             Some((start, end))
         }

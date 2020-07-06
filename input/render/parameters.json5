@@ -13,8 +13,8 @@
     },
     sett: {
         bump_dist: 1e-6,
-        block_size: 1e2,
-        sub_block_size: 1e1,
+        block_size: 1e5,
+        sub_block_size: 1e4,
         max_depth: 3,
         live: true
     },

@@ -20,9 +20,8 @@ pub fn test(
     depth: i32,
 ) -> LinSrgba {
     let bump_dist = input.sett.bump_dist();
-
-    // let mut col = LinSrgba::default();
-    let mut col = palette::Srgba::new(0.0, 0.2, 1.0, 1.0).into_linear();
+    let mut col = LinSrgba::default();
+    // let mut col = palette::Srgba::new(0.0, 0.2, 1.0, 1.0).into_linear();
 
     if depth > input.sett.max_depth() {
         return col;
@@ -51,7 +50,7 @@ pub fn test(
                 }
                 Event::Surface(hit) => {
                     ray.travel(hit.dist() + bump_dist);
-                    col += palette::Srgba::new(0.0, 0.2, 1.0, 1.0).into_linear();
+                    col += palette::Srgba::new(1.0, 1.0, 1.0, 1.0).into_linear();
                     break;
                 }
             }

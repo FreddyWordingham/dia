@@ -46,23 +46,25 @@ pub fn simulate_live(input: &Input, scene: &Scene) -> Result<Output, Error> {
     let data = Arc::new(Mutex::new(data));
 
     let threads: Vec<usize> = (0..num_cpus::get()).collect();
-    if let Some((start, end)) = main_bar.block(input.sett.block_size()) {
+    while let Some((start, end)) = main_bar.block(input.sett.block_size()) {
         let pb = ParBar::new("Rendering Block", end - start);
         let pb = Arc::new(Mutex::new(pb));
 
-        let _out: Vec<()> = threads
-            .par_iter()
-            .map(|_id| {
-                render_pix(
-                    start,
-                    &Arc::clone(&pb),
-                    input,
-                    scene,
-                    &Arc::clone(&data),
-                    &Arc::clone(&buffer),
-                )
-            })
-            .collect();
+        while !pb.lock()?.is_done() {
+            let _out: Vec<()> = threads
+                .par_iter()
+                .map(|_id| {
+                    render_pix(
+                        start,
+                        &Arc::clone(&pb),
+                        input,
+                        scene,
+                        &Arc::clone(&data),
+                        &Arc::clone(&buffer),
+                    )
+                })
+                .collect();
+        }
 
         win.update_with_buffer(&buffer.lock()?, width, height)?;
     }
@@ -100,9 +102,9 @@ fn render_pix(
         std::mem::drop(pb);
         b
     } {
-        for mut n in start..end {
-            n += buffer_start;
-            let pixel = [(n % h_res) as usize, (n / h_res) as usize];
+        for q in start..end {
+            let p = q + buffer_start;
+            let pixel = [(p % h_res) as usize, (p / h_res) as usize];
             let mut col = palette::LinSrgba::default();
 
             for sub_sample in 0..super_samples {
@@ -116,7 +118,7 @@ fn render_pix(
             let raw_col: [u8; 4] = palette::Srgba::from_linear(col).into_format().into_raw();
 
             buffer.lock().expect("Could not lock window buffer.")
-                [(total_pixels - (n + 1)) as usize] =
+                [(total_pixels - (p + 1)) as usize] =
                 from_u8_rgb(raw_col[0], raw_col[1], raw_col[2]);
             data.lock().expect("Could not lock data.").image[pixel] = col;
         }
@@ -127,6 +129,5 @@ fn render_pix(
 #[inline]
 #[must_use]
 const fn from_u8_rgb(r: u8, g: u8, b: u8) -> u32 {
-    let (r, g, b) = (r as u32, g as u32, b as u32);
-    (r << 16) | (g << 8) | b
+    ((r as u32) << 16) | ((g as u32) << 8) | (b as u32)
 }
