@@ -139,7 +139,7 @@ fn render_pix_lin(pb: &Arc<Mutex<Bar>>, input: &Input, scene: &Scene, data: &Arc
     let dof_samples = scene.cam().focus().dof_samples();
     let h_res = scene.cam().sensor().res().0;
 
-    let weight = 1.0 / (super_samples * dof_samples) as f32;
+    let weight = 1.0 / (super_samples * dof_samples) as f64;
 
     if let Some((start, end)) = {
         let mut pb = pb.lock().expect("Could not lock progress bar.");
@@ -157,13 +157,12 @@ fn render_pix_lin(pb: &Arc<Mutex<Bar>>, input: &Input, scene: &Scene, data: &Arc
                 let offset = rng.gen_range(0.0, 2.0 * PI);
                 for depth_sample in 0..dof_samples {
                     let ray = scene.cam().gen_ray(pixel, offset, sub_sample, depth_sample);
-                    col += painter::test(&mut rng, input, scene, ray, 1.0) * weight;
+                    col += painter::test(&mut rng, input, scene, ray, 1.0) * weight as f32;
                 }
             }
 
             let time = std::time::Instant::now().duration_since(now).as_nanos();
-            // let t = (time as f64).log10() * 0.1;
-            let t = (((time as f64).log10() - 5.0).max(0.0) * 2.0).max(1.0) * 0.1;
+            let t = time_scaler(weight * time as f64);
             let time_col = input.cols.map()["time"].get(t as f32);
             data.lock().expect("Could not lock data.").time[pixel] = time_col;
             data.lock().expect("Could not lock data.").image[pixel] = col;
@@ -191,7 +190,7 @@ fn render_pix(
     let h_res = scene.cam().sensor().res().0;
     let total_pixels = scene.cam().sensor().num_pixels();
 
-    let weight = 1.0 / (super_samples * dof_samples) as f32;
+    let weight = 1.0 / (super_samples * dof_samples) as f64;
 
     if let Some((start, end)) = {
         let mut pb = pb.lock().expect("Could not lock progress bar.");
@@ -210,12 +209,12 @@ fn render_pix(
                 let offset = rng.gen_range(0.0, 2.0 * PI);
                 for depth_sample in 0..dof_samples {
                     let ray = scene.cam().gen_ray(pixel, offset, sub_sample, depth_sample);
-                    col += painter::test(&mut rng, input, scene, ray, 1.0) * weight;
+                    col += painter::test(&mut rng, input, scene, ray, 1.0) * weight as f32;
                 }
             }
 
             let time = std::time::Instant::now().duration_since(now).as_nanos();
-            let t = (time as f64).log10() * 0.1;
+            let t = time_scaler(weight * time as f64);
             let time_col = input.cols.map()["time"].get(t as f32);
             data.lock().expect("Could not lock data.").time[pixel] = time_col;
             let raw_time_col: [u8; 4] = time_col.into_format().into_raw();
@@ -239,4 +238,11 @@ fn render_pix(
 #[must_use]
 const fn from_u8_rgb(r: u8, g: u8, b: u8) -> u32 {
     ((r as u32) << 16) | ((g as u32) << 8) | (b as u32)
+}
+
+/// Scale a time in nano seconds to between zero and unity.
+#[inline]
+#[must_use]
+fn time_scaler(time: f64) -> f64 {
+    (time.log10() * 0.1).max(1.0)
 }
