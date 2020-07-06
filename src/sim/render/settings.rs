@@ -1,6 +1,6 @@
 //! Settings implementation.
 
-use crate::{clone, display_field, display_field_ln, X, Y};
+use crate::{clone, display_field, display_field_ln};
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
@@ -11,8 +11,6 @@ pub struct Settings {
     bump_dist: f64,
     /// Number of pixels to simulate in each thread block.
     block_size: u64,
-    /// Perlin noise map segments.
-    perlin: [usize; 2],
     /// Live rendering setting.
     live: bool,
 }
@@ -20,7 +18,6 @@ pub struct Settings {
 impl Settings {
     clone!(bump_dist, f64);
     clone!(block_size, u64);
-    clone!(perlin, [usize; 2]);
     clone!(live, bool);
 }
 
@@ -30,11 +27,6 @@ impl Display for Settings {
     fn fmt(&self, fmt: &mut Formatter) -> Result {
         display_field_ln!(fmt, "bump distance", self.bump_dist, "m")?;
         display_field_ln!(fmt, "block size", self.block_size)?;
-        display_field!(
-            fmt,
-            "perlin segments",
-            format!("[{}, {}]", self.perlin[X], self.perlin[Y])
-        )?;
         display_field!(fmt, "live", self.live)
     }
 }

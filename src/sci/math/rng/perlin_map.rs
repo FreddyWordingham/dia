@@ -9,6 +9,7 @@ use std::{
 };
 
 /// Perlin noise map structure.
+#[derive(Debug)]
 pub struct PerlinMap {
     /// Gradient vectors.
     grads: Array2<Dir2>,

@@ -14,7 +14,6 @@
     sett: {
         bump_dist: 1e-6,
         block_size: 1e2,
-        perlin: [16, 16],
         live: true
     },
     surfs: {
@@ -41,6 +40,7 @@
             cam_pos             : [40, -45, 31],
             cam_tar             : [-0.75, -5.5, 28.5],
             swivel              : [10.0, 0],
+            perlin              : [16, 16],
             sun_pos             : [22, 66, 58],
             sun_rad             : 1.0,
             ambient_occlusion   : 64,
@@ -55,6 +55,7 @@
             cam_pos             : [40, -45, 31],
             cam_tar             : [-0.75, -5.5, 28.5],
             swivel              : [10.0, 0],
+            perlin              : [16, 16],
             sun_pos             : [22, 66, 58],
             sun_rad             : 1.0,
             // ambient_occlusion   : 64,

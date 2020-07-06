@@ -3,9 +3,10 @@
 use crate::{
     display_field, display_field_ln, render,
     render::{Focus, Lens, Sensor},
-    AspectRatio, Build, Error, Pos3, X, Y,
+    AspectRatio, Build, Error, PerlinMap, Pos3, X, Y,
 };
 use attr::load;
+use rand::thread_rng;
 use std::{
     fmt::{Display, Formatter},
     path::Path,
@@ -20,6 +21,8 @@ pub struct Scene {
     cam_tar: Pos3,
     /// Swivel to apply after targeting [deg].
     swivel: [f64; 2],
+    /// Perlin noise map segments.
+    perlin: [usize; 2],
     /// Sun position when calculating direct shadows [m].
     sun_pos: Pos3,
     /// Sun angular radius when calculating soft shadows [deg].
@@ -60,6 +63,7 @@ impl Build for Scene {
 
         Ok(Self::Inst::new(
             render::Camera::new(focus, lens, sensor),
+            PerlinMap::new(self.perlin, &mut thread_rng()),
             render::Lighting::new(
                 self.sun_pos,
                 self.sun_rad,
@@ -81,6 +85,12 @@ impl Display for Scene {
             "swivel",
             format!("{} : {}", self.swivel[X], self.swivel[Y]),
             "deg"
+        )?;
+
+        display_field!(
+            fmt,
+            "perlin segments",
+            format!("[{}, {}]", self.perlin[X], self.perlin[Y])
         )?;
 
         display_field_ln!(fmt, "sun position", &self.sun_pos, "m")?;
