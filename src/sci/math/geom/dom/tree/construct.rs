@@ -131,12 +131,12 @@ impl<'a> Cell<'a> {
         }
 
         if tris.is_empty() {
-            pb.inc(8_u64.pow((sett.max_depth() - depth) as u32));
+            pb.block(8_u64.pow((sett.max_depth() - depth) as u32));
             return Self::Empty { boundary };
         }
 
         if (tris.len() <= sett.tar_tris()) || (depth >= sett.max_depth()) {
-            pb.inc(8_u64.pow((sett.max_depth() - depth) as u32));
+            pb.block(8_u64.pow((sett.max_depth() - depth) as u32));
             return Self::Leaf { boundary, tris };
         }
 

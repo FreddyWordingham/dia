@@ -2,7 +2,7 @@
 
 use crate::{
     render::{Event, Input, Scene},
-    Ray, Trace,
+    Crossing, Dir3, Hit, Ray, Trace,
 };
 use palette::LinSrgba;
 use rand::rngs::ThreadRng;
@@ -10,12 +10,13 @@ use rand::rngs::ThreadRng;
 /// Pixel painting test function.
 #[allow(clippy::never_loop)]
 #[allow(clippy::option_expect_used)]
+#[allow(clippy::single_match_else)]
 #[inline]
 #[must_use]
 pub fn test(
-    _rng: &mut ThreadRng,
+    mut rng: &mut ThreadRng,
     input: &Input,
-    _scene: &Scene,
+    scene: &Scene,
     mut ray: Ray,
     depth: i32,
 ) -> LinSrgba {
@@ -49,9 +50,22 @@ pub fn test(
                     break;
                 }
                 Event::Surface(hit) => {
-                    ray.travel(hit.dist() + bump_dist);
-                    col += palette::Srgba::new(1.0, 1.0, 1.0, 1.0).into_linear();
-                    break;
+                    match hit.group() {
+                        "mirror" => {
+                            ray.travel(hit.dist());
+                            *ray.dir_mut() = Crossing::init_ref_dir(
+                                ray.dir(),
+                                hit.side().norm(),
+                                -ray.dir().dot(hit.side().norm()),
+                            );
+                            ray.travel(bump_dist);
+                        }
+                        _ => {
+                            ray.travel(hit.dist());
+                            col += colour(&mut rng, input, scene, &ray, &hit);
+                            break;
+                        }
+                    };
                 }
             }
         }
@@ -60,4 +74,18 @@ pub fn test(
     }
 
     col
+}
+
+/// Perform a colouring.
+#[inline]
+fn colour(_rng: &mut ThreadRng, input: &Input, scene: &Scene, ray: &Ray, hit: &Hit) -> LinSrgba {
+    let light = 1.0;
+    let shadow = 1.0;
+
+    let sun_dir = Dir3::new_normalize(ray.pos() - scene.light().sun_pos());
+
+    let base_col = input.cols.map()[hit.group()].get(hit.side().norm().dot(&sun_dir).abs() as f32);
+    let grad = palette::Gradient::new(vec![palette::LinSrgba::default(), base_col]);
+
+    grad.get((light * shadow) as f32)
 }

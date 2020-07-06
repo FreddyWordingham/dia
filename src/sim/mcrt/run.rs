@@ -2,7 +2,7 @@
 
 use crate::{
     mcrt::{life::Life, Input, Output},
-    Error, ParBar,
+    Bar, Error,
 };
 use rand::thread_rng;
 use rayon::prelude::*;
@@ -13,7 +13,7 @@ use std::sync::{Arc, Mutex};
 /// if the progress bar can not be locked.
 #[inline]
 pub fn simulate(input: &Input, func: Life) -> Result<Output, Error> {
-    let pb = ParBar::new("Randomising", input.sett.num_phot());
+    let pb = Bar::new("Randomising", input.sett.num_phot());
     let pb = Arc::new(Mutex::new(pb));
 
     // let threads: Vec<usize> = (0..num_cpus::get()).collect(); // Multi-thread.
@@ -38,7 +38,7 @@ pub fn simulate(input: &Input, func: Life) -> Result<Output, Error> {
 #[inline]
 fn single_thread(
     _thread_id: usize,
-    pb: &Arc<Mutex<ParBar>>,
+    pb: &Arc<Mutex<Bar>>,
     input: &Input,
     func: Life,
 ) -> Result<Output, Error> {

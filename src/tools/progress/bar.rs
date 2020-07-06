@@ -4,6 +4,10 @@
 pub struct Bar {
     /// Graphics.
     pb: indicatif::ProgressBar,
+    /// Current value.
+    count: u64,
+    /// Total target value.
+    total: u64,
 }
 
 impl Bar {
@@ -14,29 +18,50 @@ impl Bar {
         debug_assert!(total > 0);
 
         let pb = indicatif::ProgressBar::new(total);
-        pb.set_message(msg);
 
         pb.set_style(
             indicatif::ProgressStyle::default_bar()
-            .template("{spinner:.cyan} [{elapsed_precise}] [{bar:40.green/red}] [{pos}/{len}] {percent}% ({eta}) {msg}")
+            .template("{spinner:.green} [{elapsed_precise}] [{bar:40.green/red}] [{pos}/{len}] {percent}% ({eta}) {msg}")
             .progress_chars("\\/")
         );
+        pb.set_message(msg);
 
-        Self { pb }
+        Self {
+            pb,
+            count: 0,
+            total,
+        }
     }
 
-    /// Tick the bar forward once.
+    /// Request a block of values to work on.
+    /// Return the requested block if available.
+    /// If there is not enough, return the remaining block.
+    /// If there are none at all, return None.
     #[inline]
-    pub fn tick(&mut self) {
-        self.pb.inc(1);
+    pub fn block(&mut self, size: u64) -> Option<(u64, u64)> {
+        debug_assert!(size > 0);
+
+        if self.count >= self.total {
+            None
+        } else {
+            let remaining = self.total - self.count;
+            let alloc = size.min(remaining);
+
+            let start = self.count;
+            let end = start + alloc;
+
+            self.count += alloc;
+            self.pb.inc(alloc);
+
+            Some((start, end))
+        }
     }
 
-    /// Increment the bar forward a given amount.
+    /// Check if the progress bar is complete.
     #[inline]
-    pub fn inc(&mut self, n: u64) {
-        debug_assert!(n > 0);
-
-        self.pb.inc(n);
+    #[must_use]
+    pub const fn is_done(&self) -> bool {
+        self.count >= self.total
     }
 
     /// Finish with a message.

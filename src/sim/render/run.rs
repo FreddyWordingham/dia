@@ -2,7 +2,7 @@
 
 use crate::{
     render::{painter, Input, Output, Scene},
-    Error, ParBar,
+    Bar, Error, SilentBar,
 };
 use minifb::{CursorStyle, Scale, ScaleMode, Window, WindowOptions};
 use palette::Pixel;
@@ -40,14 +40,14 @@ pub fn simulate_live(input: &Input, scene: &Scene) -> Result<Output, Error> {
     win.set_cursor_style(CursorStyle::Crosshair);
     win.update_with_buffer(&buffer.lock()?, width, height)?;
 
-    let mut main_bar = ParBar::new("Rendering", num_pixels as u64);
+    let mut main_bar = Bar::new("Rendering", num_pixels as u64);
 
     let data = Output::new([width, height]);
     let data = Arc::new(Mutex::new(data));
 
     let threads: Vec<usize> = (0..num_cpus::get()).collect();
     while let Some((start, end)) = main_bar.block(input.sett.block_size()) {
-        let pb = ParBar::new("Rendering Block", end - start);
+        let pb = SilentBar::new(end - start);
         let pb = Arc::new(Mutex::new(pb));
 
         while !pb.lock()?.is_done() {
@@ -82,7 +82,7 @@ pub fn simulate_live(input: &Input, scene: &Scene) -> Result<Output, Error> {
 #[inline]
 fn render_pix(
     buffer_start: u64,
-    pb: &Arc<Mutex<ParBar>>,
+    pb: &Arc<Mutex<SilentBar>>,
     input: &Input,
     scene: &Scene,
     data: &Arc<Mutex<Output>>,

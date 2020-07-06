@@ -13,8 +13,8 @@
     },
     sett: {
         bump_dist: 1e-6,
-        block_size: 1e5,
-        sub_block_size: 1e4,
+        block_size: 1e4,
+        sub_block_size: 1e2,
         max_depth: 3,
         live: true
     },
@@ -23,11 +23,15 @@
             shatter_vein    : [['objs/shatter_base_vein.obj'], null],
             shatter_bulk    : [['objs/shatter_base_bulk.obj'], null],
             shatter_core    : [['objs/shatter_base_core.obj'], null],
-            shatter_gems    : [['objs/shatter_base_gems.obj'], null],
+            mirror    : [['objs/shatter_base_gems.obj'], null],
     },
     cols: {
-            sky     : ['#ffffffff', '#d2eeffff', '#0095ffff'],
-            stand   : ['#fffec1ff', '#f4f2e2ff'],
+            sky             : ['#ffffffff', '#d2eeffff', '#0095ffff'],
+            stand           : ['#fffec1ff', '#f4f2e2ff'],
+            shatter_vein    : ['#5a20ffff', '#376effff', '#00ffecff'],
+            shatter_bulk    : ['#8c8996ff', '#8d7daeff', '#a14ba2ff'],
+            shatter_core    : ['#ff4141ff', '#ff5b2bff', '#f09100ff'],
+            shatter_gems    : ['#20efefff', '#00ff7fff', '#efef5cff'],
     },
     attrs: {
         shatter_gems: {
@@ -39,9 +43,9 @@
     },
     scenes: {
         first_view: {
-            cam_pos             : [3,-3,4],
-            cam_tar             : [0,0,1],
-            swivel              : [10.0, 0],
+            cam_pos             : [2.1,-2.2,1.2],
+            cam_tar             : [0,0,0.5],
+            swivel              : [0, 0],
             perlin              : [16, 16],
             sun_pos             : [22, 66, 58],
             sun_rad             : 1.0,
