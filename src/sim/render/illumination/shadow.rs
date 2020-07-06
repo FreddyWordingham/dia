@@ -2,7 +2,7 @@
 
 use crate::{
     golden,
-    render::{Input, Scene},
+    render::{Attributes, Input, Scene},
     Crossing, Dir3, Hit, Ray,
 };
 use rand::{rngs::ThreadRng, Rng};
@@ -36,7 +36,7 @@ pub fn shadow(
             let (phi, theta) = golden::hemisphere(n, samples);
             let mut ambient_ray = norm_ray.clone();
             ambient_ray.rotate(phi, theta + offset);
-            total += visibility(0, input, ambient_ray, bump_dist);
+            total += visibility(input, ambient_ray, bump_dist, 1.0);
         }
         (total / f64::from(samples)).powi(AMBIENT_OCCLUSION_POWER)
     } else {
@@ -55,11 +55,11 @@ pub fn shadow(
             let (r, theta) = golden::circle(n, samples);
             let mut soft_ray = light_ray.clone();
             soft_ray.rotate(r * scene.light().sun_rad(), theta + offset);
-            total += visibility(0, input, soft_ray, bump_dist);
+            total += visibility(input, soft_ray, bump_dist, 1.0);
         }
         total / f64::from(samples)
     } else {
-        visibility(0, input, light_ray, bump_dist)
+        visibility(input, light_ray, bump_dist, 1.0)
     };
 
     (ambient * 0.6) + (solar * 0.4)
@@ -68,67 +68,74 @@ pub fn shadow(
 /// Calculate the visibility of a given ray.
 #[inline]
 #[must_use]
-pub fn visibility(depth: u32, input: &Input, mut ray: Ray, bump_dist: f64) -> f64 {
+pub fn visibility(input: &Input, mut ray: Ray, bump_dist: f64, mut vis: f64) -> f64 {
+    debug_assert!(vis > 0.0);
+    debug_assert!(vis <= 1.0);
     debug_assert!(bump_dist > 0.0);
 
-    if depth > 4 {
-        return 0.0;
-    }
-
-    let mut vis = 1.0;
     while let Some(hit) = input
         .tree
         .observe(ray.clone(), bump_dist, MAX_VISIBILITY_DIST)
     {
-        if vis <= 0.01 {
+        if vis < input.sett.min_weight() {
             return 0.0;
         }
 
-        match hit.group() {
-            "mirror" => {
-                // Reflect
-                vis *= 0.95;
+        let group = hit.group();
+        if let Some(attr) = input.attrs.map().get(group) {
+            match attr {
+                Attributes::Transparent { abs } => {
+                    vis *= 1.0 - *abs;
+                    ray.travel(hit.dist() + bump_dist);
+                }
+                Attributes::Mirror { abs } => {
+                    ray.travel(hit.dist());
+                    vis *= 1.0 - *abs;
+                    *ray.dir_mut() = Crossing::init_ref_dir(
+                        ray.dir(),
+                        hit.side().norm(),
+                        -ray.dir().dot(hit.side().norm()),
+                    );
+                    ray.travel(bump_dist);
+                }
+                Attributes::Refractive {
+                    abs,
+                    inside,
+                    outside,
+                } => {
+                    ray.travel(hit.dist());
+                    vis *= 1.0 - abs;
 
-                ray.travel(hit.dist());
-                *ray.dir_mut() = Crossing::init_ref_dir(
-                    ray.dir(),
-                    hit.side().norm(),
-                    -ray.dir().dot(hit.side().norm()),
-                );
-                ray.travel(bump_dist);
-            }
-            "water" => {
-                // Transparent.
-                vis *= 0.95;
+                    let (n_prev, n_curr) = if hit.side().is_inside() {
+                        (*outside, *inside)
+                    } else {
+                        (*inside, *outside)
+                    };
+                    let crossing = Crossing::new(ray.dir(), hit.side().norm(), n_curr, n_prev);
 
-                ray.travel(hit.dist());
-                let crossing = Crossing::new(ray.dir(), hit.side().norm(), 1.75, 1.0);
+                    let trans_prob = crossing.trans_prob();
+                    let trans_vis = if let Some(trans_dir) = crossing.trans_dir() {
+                        let mut trans_ray = ray.clone();
+                        *trans_ray.dir_mut() = *trans_dir;
+                        trans_ray.travel(bump_dist);
 
-                if let Some(trans_dir) = crossing.trans_dir() {
-                    *ray.dir_mut() = *trans_dir;
-                };
-                ray.travel(bump_dist);
-            }
-            "clouds_0" | "clouds_1" | "clouds_2" => {
-                // Almost transparent.
-                vis *= 0.8;
+                        visibility(input, trans_ray, bump_dist, vis * trans_prob)
+                    } else {
+                        0.0
+                    };
 
-                ray.travel(hit.dist());
-                let crossing = Crossing::new(ray.dir(), hit.side().norm(), 1.1, 1.0);
+                    let ref_prob = crossing.ref_prob();
+                    let mut ref_ray = ray;
+                    *ref_ray.dir_mut() = *crossing.ref_dir();
+                    let ref_vis = visibility(input, ref_ray, bump_dist, vis * ref_prob);
 
-                if let Some(trans_dir) = crossing.trans_dir() {
-                    *ray.dir_mut() = *trans_dir;
-                };
-                ray.travel(bump_dist);
+                    vis = trans_vis + ref_vis;
+                    break;
+                }
             }
-            "solar" => {
-                // Illumination.
-                return vis;
-            }
-            _ => {
-                // Opaque.
-                return 0.0;
-            }
+        } else {
+            vis = 0.0;
+            break;
         }
     }
 
