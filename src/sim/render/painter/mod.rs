@@ -46,7 +46,8 @@ pub fn test(
             // Handle event.
             match Event::new(voxel_dist, surf_hit) {
                 Event::Voxel(dist) => {
-                    ray.travel(dist + bump_dist);
+                    ray.travel(dist);
+                    col += sky_col(scene, &ray, &input.cols.map()["sky"]);
                     break;
                 }
                 Event::Surface(hit) => {
@@ -89,7 +90,7 @@ pub fn test(
             }
         }
     } else {
-        // col += sky_col(input.cam, input.perl, &input.cols.map()["sky"], &ray) * weight as f32;
+        col += sky_col(scene, &ray, &input.cols.map()["sky"]);
     }
 
     col
@@ -119,15 +120,14 @@ fn colour(rng: &mut ThreadRng, input: &Input, scene: &Scene, ray: &Ray, hit: &Hi
 #[inline]
 #[must_use]
 fn sky_col(
-    cam: &Camera,
-    map: &PerlinMap,
-    grad: &palette::Gradient<palette::LinSrgba>,
+    scene: &Scene,
     ray: &Ray,
+    grad: &palette::Gradient<palette::LinSrgba>,
 ) -> palette::LinSrgba {
-    let u = (ray.dir().dot(cam.focus().orient().up()) + 1.0) * 0.5;
-    let v = (ray.dir().dot(cam.focus().orient().right()) + 1.0) * 0.5;
+    let u = (ray.dir().dot(scene.cam().focus().orient().up()) + 1.0) * 0.5;
+    let v = (ray.dir().dot(scene.cam().focus().orient().right()) + 1.0) * 0.5;
 
-    let x = (map.sample(u, v) + 1.0) * 0.5;
+    let x = (scene.perlin().sample(u, v) + 1.0) * 0.5;
 
     let col = grad.get(x as f32);
 
