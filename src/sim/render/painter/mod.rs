@@ -51,6 +51,24 @@ pub fn test(
                 }
                 Event::Surface(hit) => {
                     match hit.group() {
+                        "glass" => {
+                            ray.travel(hit.dist());
+                            col += colour(&mut rng, input, scene, &ray, &hit) * 0.25;
+
+                            let (n0, n1) = if hit.side().is_inside() {
+                                (1.1, 1.0)
+                            } else {
+                                (1.0, 1.1)
+                            };
+                            let crossing = Crossing::new(ray.dir(), hit.side().norm(), n0, n1);
+
+                            if let Some(trans_dir) = crossing.trans_dir() {
+                                ray.travel(bump_dist);
+                                *ray.dir_mut() = *trans_dir;
+                            } else {
+                                break;
+                            }
+                        }
                         "mirror" => {
                             ray.travel(hit.dist());
                             *ray.dir_mut() = Crossing::init_ref_dir(

@@ -20,15 +20,15 @@
     },
     surfs: {
             stand           : [['objs/stand.obj'], null],
-            shatter_vein    : [['objs/shatter_base_vein.obj'], null],
+            glass    : [['objs/shatter_base_vein.obj'], null],
             shatter_bulk    : [['objs/shatter_base_bulk.obj'], null],
             shatter_core    : [['objs/shatter_base_core.obj'], null],
-            mirror    : [['objs/shatter_base_gems.obj'], null],
+            shatter_gems    : [['objs/shatter_base_gems.obj'], null],
     },
     cols: {
             sky             : ['#ffffffff', '#d2eeffff', '#0095ffff'],
             stand           : ['#fffec1ff', '#f4f2e2ff'],
-            shatter_vein    : ['#5a20ffff', '#376effff', '#00ffecff'],
+            glass    : ['#5a20ffff', '#376effff', '#00ffecff'],
             shatter_bulk    : ['#8c8996ff', '#8d7daeff', '#a14ba2ff'],
             shatter_core    : ['#ff4141ff', '#ff5b2bff', '#f09100ff'],
             shatter_gems    : ['#20efefff', '#00ff7fff', '#efef5cff'],
@@ -54,7 +54,7 @@
             fov                 : 90,
             aspect_ratio        : "Square",
             res                 : 1125,
-            // ss                  : 3
+            ss                  : 4
             // dof                 : [17, 0.1],
         },
         // second_view: {
