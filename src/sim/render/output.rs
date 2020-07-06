@@ -7,6 +7,8 @@ use std::{ops::AddAssign, path::Path};
 pub struct Output {
     /// Base image.
     pub image: Image,
+    /// Time image.
+    pub time: Image,
 }
 
 impl Output {
@@ -19,6 +21,7 @@ impl Output {
 
         Self {
             image: Image::default(img_res),
+            time: Image::default(img_res),
         }
     }
 }
@@ -27,6 +30,7 @@ impl AddAssign<&Self> for Output {
     #[inline]
     fn add_assign(&mut self, rhs: &Self) {
         self.image += &rhs.image;
+        self.time += &rhs.time;
     }
 }
 
@@ -35,6 +39,9 @@ impl Save for Output {
     fn save(&self, out_dir: &Path) -> Result<(), Error> {
         let path = out_dir.join("image.png");
         println!("Saving: {}", path.display());
-        self.image.save(&path)
+        self.image.save(&path)?;
+        let path = out_dir.join("time.png");
+        println!("Saving: {}", path.display());
+        self.time.save(&path)
     }
 }

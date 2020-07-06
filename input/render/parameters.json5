@@ -13,8 +13,8 @@
     },
     sett: {
         bump_dist       : 1e-6,
-        block_size      : 4000,
-        sub_block_size  : 100,
+        block_size      : 100,
+        sub_block_size  : 4,
         min_weight      : 0.01,
         live            : true
     },
@@ -42,6 +42,7 @@
             clouds_2        : [['objs/sky/planet_2_clouds_inner.obj', 'objs/sky/planet_2_clouds_mid.obj', 'objs/sky/planet_2_clouds_outer.obj'], {trans:[0,0,20]}],
     },
     cols: {
+            time            : ['#32cd32ff', '#0ebb0eff', '#008080ff', '#724ceeff', '#ffe200ff', '#ff4700ff', '#ff000dff'],
             mirror          : ['#242424ff', '#6d6d6dff'],
             windows         : ['#000000ff', '#8c8c8cff', '#242424ff', '#6d6d6dff'],
             r0              : ['#ff8c00ff', '#ff4500ff'],
@@ -67,9 +68,9 @@
             stars           : ['#fffec1ff', '#f4f2e2ff'],
     },
     attrs: {
-        // rocks: {
-        //     Transparent: {abs: 0.2}
-        // },
+        rocks: {
+            Transparent: {abs: 0.2}
+        },
         mirror: {
             Mirror: {abs: 0.3}
         },
@@ -94,12 +95,12 @@
             perlin              : [16, 16],
             sun_pos             : [22,66,58],
             sun_rad             : 1.0,
-            ambient_occlusion   : 64,
-            soft_shadows        : 17,
+            // ambient_occlusion   : 64,
+            // soft_shadows        : 17,
             fov                 : 90,
             aspect_ratio        : "Square",
-            res                 : 1000,
-            ss                  : 2
+            res                 : 400,
+            // ss                  : 2
             // dof                 : [17, 0.1],
         }
     }

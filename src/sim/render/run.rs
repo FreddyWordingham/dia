@@ -24,9 +24,9 @@ pub fn simulate_live(input: &Input, scene: &Scene) -> Result<Output, Error> {
     let width = scene.cam().sensor().res().0 as usize;
     let height = scene.cam().sensor().res().1 as usize;
 
-    let buffer: Vec<u32> = vec![0; num_pixels as usize];
-    let buffer = Arc::new(Mutex::new(buffer));
-    let mut win = Window::new(
+    let img_buffer: Vec<u32> = vec![0; num_pixels as usize];
+    let img_buffer = Arc::new(Mutex::new(img_buffer));
+    let mut img_win = Window::new(
         "Rendering",
         width,
         height,
@@ -37,8 +37,24 @@ pub fn simulate_live(input: &Input, scene: &Scene) -> Result<Output, Error> {
             ..WindowOptions::default()
         },
     )?;
-    win.set_cursor_style(CursorStyle::Crosshair);
-    win.update_with_buffer(&buffer.lock()?, width, height)?;
+    img_win.set_cursor_style(CursorStyle::Crosshair);
+    img_win.update_with_buffer(&img_buffer.lock()?, width, height)?;
+
+    let time_buffer: Vec<u32> = vec![0; num_pixels as usize];
+    let time_buffer = Arc::new(Mutex::new(time_buffer));
+    let mut time_win = Window::new(
+        "Rendering",
+        width,
+        height,
+        WindowOptions {
+            resize: true,
+            scale: Scale::FitScreen,
+            scale_mode: ScaleMode::AspectRatioStretch,
+            ..WindowOptions::default()
+        },
+    )?;
+    time_win.set_cursor_style(CursorStyle::Crosshair);
+    time_win.update_with_buffer(&time_buffer.lock()?, width, height)?;
 
     let mut main_bar = Bar::new("Rendering", num_pixels as u64);
 
@@ -60,13 +76,15 @@ pub fn simulate_live(input: &Input, scene: &Scene) -> Result<Output, Error> {
                         input,
                         scene,
                         &Arc::clone(&data),
-                        &Arc::clone(&buffer),
+                        &Arc::clone(&img_buffer),
+                        &Arc::clone(&time_buffer),
                     )
                 })
                 .collect();
         }
 
-        win.update_with_buffer(&buffer.lock()?, width, height)?;
+        img_win.update_with_buffer(&img_buffer.lock()?, width, height)?;
+        time_win.update_with_buffer(&time_buffer.lock()?, width, height)?;
     }
     main_bar.finish_with_message("Render complete.");
 
@@ -175,7 +193,8 @@ fn render_pix(
     input: &Input,
     scene: &Scene,
     data: &Arc<Mutex<Output>>,
-    buffer: &Arc<Mutex<Vec<u32>>>,
+    img_buffer: &Arc<Mutex<Vec<u32>>>,
+    time_buffer: &Arc<Mutex<Vec<u32>>>,
 ) {
     let mut rng = thread_rng();
     let super_samples = scene.cam().sensor().super_samples();
@@ -192,6 +211,8 @@ fn render_pix(
         b
     } {
         for q in start..end {
+            let now = std::time::Instant::now();
+
             let p = q + buffer_start;
             let pixel = [(p % h_res) as usize, (p / h_res) as usize];
             let mut col = palette::LinSrgba::default();
@@ -204,9 +225,21 @@ fn render_pix(
                 }
             }
 
+            let time = std::time::Instant::now().duration_since(now).as_nanos();
+            let t = (time as f64).log10() / 10.0;
+            let raw_time_col: [u8; 4] = input.cols.map()["time"]
+                .get(t as f32)
+                .into_format()
+                .into_raw();
+            time_buffer
+                .lock()
+                .expect("Could not lock the time window buffer.")
+                [(total_pixels - (p + 1)) as usize] =
+                from_u8_rgb(raw_time_col[0], raw_time_col[1], raw_time_col[2]);
+
             let raw_col: [u8; 4] = palette::Srgba::from_linear(col).into_format().into_raw();
 
-            buffer.lock().expect("Could not lock window buffer.")
+            img_buffer.lock().expect("Could not lock window buffer.")
                 [(total_pixels - (p + 1)) as usize] =
                 from_u8_rgb(raw_col[0], raw_col[1], raw_col[2]);
             data.lock().expect("Could not lock data.").image[pixel] = col;
