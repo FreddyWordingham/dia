@@ -71,6 +71,7 @@ pub fn test(
                         }
                         "mirror" => {
                             ray.travel(hit.dist());
+                            col += colour(&mut rng, input, scene, &ray, &hit) * 0.25;
                             *ray.dir_mut() = Crossing::init_ref_dir(
                                 ray.dir(),
                                 hit.side().norm(),

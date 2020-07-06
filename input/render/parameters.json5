@@ -23,7 +23,7 @@
             glass    : [['objs/shatter_base_vein.obj'], null],
             shatter_bulk    : [['objs/shatter_base_bulk.obj'], null],
             shatter_core    : [['objs/shatter_base_core.obj'], null],
-            shatter_gems    : [['objs/shatter_base_gems.obj'], null],
+            mirror    : [['objs/shatter_base_gems.obj'], null],
     },
     cols: {
             sky             : ['#ffffffff', '#d2eeffff', '#0095ffff'],
@@ -31,7 +31,7 @@
             glass    : ['#5a20ffff', '#376effff', '#00ffecff'],
             shatter_bulk    : ['#8c8996ff', '#8d7daeff', '#a14ba2ff'],
             shatter_core    : ['#ff4141ff', '#ff5b2bff', '#f09100ff'],
-            shatter_gems    : ['#20efefff', '#00ff7fff', '#efef5cff'],
+            mirror    : ['#20efefff', '#00ff7fff', '#efef5cff'],
     },
     attrs: {
         shatter_gems: {
