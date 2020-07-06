@@ -6,14 +6,16 @@
     },
     grid: {
         boundary: {
-            mins: [-100, -100, -20],
-            maxs: [ 100,  100,  200]
+            mins: [-2, -2, -2],
+            maxs: [ 2,  2,  2]
         },
         res: [1,1,1]
     },
     sett: {
         bump_dist: 1e-6,
         block_size: 1e2,
+        sub_block_size: 1e1,
+        max_depth: 3,
         live: true
     },
     surfs: {
@@ -37,34 +39,34 @@
     },
     scenes: {
         first_view: {
-            cam_pos             : [40, -45, 31],
-            cam_tar             : [-0.75, -5.5, 28.5],
-            swivel              : [10.0, 0],
-            perlin              : [16, 16],
-            sun_pos             : [22, 66, 58],
-            sun_rad             : 1.0,
-            ambient_occlusion   : 64,
-            soft_shadows        : 17,
-            fov                 : 80,
-            aspect_ratio        : "IPhoneXS",
-            res                 : 1125,
-            // ss                  : 3
-            // dof                 : [17, 0.1],
-        },
-        second_view: {
-            cam_pos             : [40, -45, 31],
-            cam_tar             : [-0.75, -5.5, 28.5],
+            cam_pos             : [3,-3,4],
+            cam_tar             : [0,0,1],
             swivel              : [10.0, 0],
             perlin              : [16, 16],
             sun_pos             : [22, 66, 58],
             sun_rad             : 1.0,
             // ambient_occlusion   : 64,
             // soft_shadows        : 17,
-            fov                 : 120,
-            aspect_ratio        : "Widescreen",
-            res                 : 3440,
+            fov                 : 90,
+            aspect_ratio        : "Square",
+            res                 : 1125,
             // ss                  : 3
             // dof                 : [17, 0.1],
-        }
+        },
+        // second_view: {
+        //     cam_pos             : [40, -45, 31],
+        //     cam_tar             : [-0.75, -5.5, 28.5],
+        //     swivel              : [10.0, 0],
+        //     perlin              : [16, 16],
+        //     sun_pos             : [22, 66, 58],
+        //     sun_rad             : 1.0,
+        //     // ambient_occlusion   : 64,
+        //     // soft_shadows        : 17,
+        //     fov                 : 120,
+        //     aspect_ratio        : "Widescreen",
+        //     res                 : 3440,
+        //     // ss                  : 3
+        //     // dof                 : [17, 0.1],
+        // }
     }
 }

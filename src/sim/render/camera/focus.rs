@@ -40,6 +40,17 @@ impl Focus {
         }
     }
 
+    /// Calculate the number of depth-of-field samples.
+    #[inline]
+    #[must_use]
+    pub fn dof_samples(&self) -> i32 {
+        if let Some((dof_samples, _dof_ang)) = self.dof {
+            dof_samples
+        } else {
+            1
+        }
+    }
+
     /// Calculate the nth depth-of-field observation position.
     #[inline]
     #[must_use]

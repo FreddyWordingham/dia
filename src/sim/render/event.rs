@@ -16,7 +16,7 @@ impl<'a> Event<'a> {
     #[must_use]
     pub fn new(voxel_dist: f64, surf_hit: Option<Hit<'a>>) -> Self {
         debug_assert!(voxel_dist > 0.0);
-        debug_assert!(surf_hit.is_none() || surf_hit.unwrap().dist() > 0.0);
+        // debug_assert!(surf_hit.is_none() || surf_hit.unwrap().dist() > 0.0);
 
         if let Some(surf_hit) = surf_hit {
             if surf_hit.dist() <= voxel_dist {

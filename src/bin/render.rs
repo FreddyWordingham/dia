@@ -38,7 +38,7 @@ pub fn main() {
     let input = render::Input::new(&tree, &grid, &render_sett, &surfs, &cols, &attrs);
     for (name, scene) in scenes.map() {
         banner::section(&format!("Scene: {}", name));
-        let data = render::run::simulate(&input, &scene);
+        let data = render::run::simulate_live(&input, &scene).expect("Scene rendering failed.");
         data.save(&out_dir).expect("Failed to save output data.");
     }
     banner::section("Finished");
