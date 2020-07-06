@@ -41,6 +41,10 @@ pub struct Scene {
     ss: Option<i32>,
     /// Optional depth-of-field samples and maximum angular sample [deg].
     dof: Option<(i32, f64)>,
+    /// Lighting fractions.
+    lighting_fracs: [f64; 3],
+    /// Specular lighting power.
+    spec_pow: i32,
 }
 
 impl Build for Scene {
@@ -69,6 +73,8 @@ impl Build for Scene {
                 self.sun_rad,
                 self.ambient_occlusion,
                 self.soft_shadows,
+                self.lighting_fracs,
+                self.spec_pow,
             ),
         ))
     }

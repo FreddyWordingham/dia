@@ -139,7 +139,7 @@ fn render_pix_lin(pb: &Arc<Mutex<Bar>>, input: &Input, scene: &Scene, data: &Arc
     let dof_samples = scene.cam().focus().dof_samples();
     let h_res = scene.cam().sensor().res().0;
 
-    let weight = 1.0 / (super_samples * dof_samples) as f64;
+    let weight = 1.0 / f64::from(super_samples * dof_samples);
 
     if let Some((start, end)) = {
         let mut pb = pb.lock().expect("Could not lock progress bar.");
@@ -190,7 +190,7 @@ fn render_pix(
     let h_res = scene.cam().sensor().res().0;
     let total_pixels = scene.cam().sensor().num_pixels();
 
-    let weight = 1.0 / (super_samples * dof_samples) as f64;
+    let weight = 1.0 / f64::from(super_samples * dof_samples);
 
     if let Some((start, end)) = {
         let mut pb = pb.lock().expect("Could not lock progress bar.");
@@ -244,5 +244,5 @@ const fn from_u8_rgb(r: u8, g: u8, b: u8) -> u32 {
 #[inline]
 #[must_use]
 fn time_scaler(time: f64) -> f64 {
-    (time.log10() * 0.1).max(1.0)
+    (time.log10() * 0.1).min(1.0)
 }

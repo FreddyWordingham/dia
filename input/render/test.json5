@@ -60,6 +60,8 @@
             res                 : 1000,
             // ss                  : 2
             // dof                 : [17, 0.1],
+            lighting_fracs      : [0.3, 0.5, 0.2],
+            spec_pow            : 8
         }
     }
 }

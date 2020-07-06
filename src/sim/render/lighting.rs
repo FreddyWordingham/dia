@@ -14,6 +14,10 @@ pub struct Lighting {
     ambient_occlusion: Option<i32>,
     /// Optional number of soft shadow samples.
     soft_shadows: Option<i32>,
+    /// Ambient, diffuse and specular lighting fraction.
+    lighting_fracs: [f64; 3],
+    /// Specular lighting power.
+    specular_pow: i32,
 }
 
 impl Lighting {
@@ -21,6 +25,8 @@ impl Lighting {
     clone!(sun_rad, f64);
     clone!(ambient_occlusion, Option<i32>);
     clone!(soft_shadows, Option<i32>);
+    access!(lighting_fracs, [f64; 3]);
+    clone!(specular_pow, i32);
 
     /// Construct a new instance.
     #[inline]
@@ -30,13 +36,38 @@ impl Lighting {
         sun_rad: f64,
         ambient_occlusion: Option<i32>,
         soft_shadows: Option<i32>,
+        lighting_fracs: [f64; 3],
+        specular_pow: i32,
     ) -> Self {
         Self {
             sun_pos,
             sun_rad,
             ambient_occlusion,
             soft_shadows,
+            lighting_fracs,
+            specular_pow,
         }
+    }
+
+    /// Get the ambient lighting fraction.
+    #[inline]
+    #[must_use]
+    pub const fn ambient_light(&self) -> f64 {
+        self.lighting_fracs[0]
+    }
+
+    /// Get the diffuse lighting fraction.
+    #[inline]
+    #[must_use]
+    pub const fn diffuse_light(&self) -> f64 {
+        self.lighting_fracs[1]
+    }
+
+    /// Get the specular lighting fraction.
+    #[inline]
+    #[must_use]
+    pub const fn specular_light(&self) -> f64 {
+        self.lighting_fracs[2]
     }
 }
 
@@ -52,9 +83,20 @@ impl Display for Lighting {
             display_field_ln!(fmt, "ambient occlusion", "[OFF]")?;
         }
         if let Some(soft_shadows_samples) = self.soft_shadows {
-            display_field!(fmt, "soft shadow samples", soft_shadows_samples)
+            display_field_ln!(fmt, "soft shadow samples", soft_shadows_samples)?;
         } else {
-            display_field!(fmt, "soft shadows", "[OFF]")
+            display_field_ln!(fmt, "soft shadows", "[OFF]")?;
         }
+        display_field_ln!(
+            fmt,
+            "lighting fractions",
+            &format!(
+                "[{} : {} : {}]",
+                self.ambient_light(),
+                self.diffuse_light(),
+                self.specular_light()
+            )
+        )?;
+        display_field!(fmt, "specular power", self.specular_pow)
     }
 }

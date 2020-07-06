@@ -128,13 +128,7 @@ pub fn test(
 /// Perform a colouring.
 #[inline]
 fn colour(rng: &mut ThreadRng, input: &Input, scene: &Scene, ray: &Ray, hit: &Hit) -> LinSrgba {
-    let light = (illumination::light(
-        scene.light().sun_pos(),
-        scene.cam().focus().orient().pos(),
-        ray,
-        hit,
-    ) + 0.5)
-        .min(1.0);
+    let light = (illumination::light(scene, ray, hit) + 0.5).min(1.0);
     let shadow = illumination::shadow(input, scene, ray, hit, input.sett.bump_dist(), rng);
 
     let sun_dir = Dir3::new_normalize(ray.pos() - scene.light().sun_pos());
