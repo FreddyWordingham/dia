@@ -105,9 +105,6 @@ pub fn simulate_bts(input: &Input, scene: &Scene) -> Result<Output, Error> {
     let width = scene.cam().sensor().res().0 as usize;
     let height = scene.cam().sensor().res().1 as usize;
 
-    let buffer: Vec<u32> = vec![0; num_pixels as usize];
-    let buffer = Arc::new(Mutex::new(buffer));
-
     let main_bar = Bar::new("Rendering", num_pixels as u64);
     let main_bar = Arc::new(Mutex::new(main_bar));
 
@@ -118,15 +115,7 @@ pub fn simulate_bts(input: &Input, scene: &Scene) -> Result<Output, Error> {
     while !main_bar.lock()?.is_done() {
         let _out: Vec<()> = threads
             .par_iter()
-            .map(|_id| {
-                render_pix_lin(
-                    &Arc::clone(&main_bar),
-                    input,
-                    scene,
-                    &Arc::clone(&data),
-                    &Arc::clone(&buffer),
-                )
-            })
+            .map(|_id| render_pix_lin(&Arc::clone(&main_bar), input, scene, &Arc::clone(&data)))
             .collect();
     }
     main_bar.lock()?.finish_with_message("Render complete.");
@@ -141,18 +130,11 @@ pub fn simulate_bts(input: &Input, scene: &Scene) -> Result<Output, Error> {
 /// Render a range of pixels using a single thread.
 #[allow(clippy::result_expect_used)]
 #[inline]
-fn render_pix_lin(
-    pb: &Arc<Mutex<Bar>>,
-    input: &Input,
-    scene: &Scene,
-    data: &Arc<Mutex<Output>>,
-    buffer: &Arc<Mutex<Vec<u32>>>,
-) {
+fn render_pix_lin(pb: &Arc<Mutex<Bar>>, input: &Input, scene: &Scene, data: &Arc<Mutex<Output>>) {
     let mut rng = thread_rng();
     let super_samples = scene.cam().sensor().super_samples();
     let dof_samples = scene.cam().focus().dof_samples();
     let h_res = scene.cam().sensor().res().0;
-    let total_pixels = scene.cam().sensor().num_pixels();
 
     let weight = 1.0 / (super_samples * dof_samples) as f32;
 
@@ -163,6 +145,8 @@ fn render_pix_lin(
         b
     } {
         for p in start..end {
+            let now = std::time::Instant::now();
+
             let pixel = [(p % h_res) as usize, (p / h_res) as usize];
             let mut col = palette::LinSrgba::default();
 
@@ -174,11 +158,10 @@ fn render_pix_lin(
                 }
             }
 
-            let raw_col: [u8; 4] = palette::Srgba::from_linear(col).into_format().into_raw();
-
-            buffer.lock().expect("Could not lock window buffer.")
-                [(total_pixels - (p + 1)) as usize] =
-                from_u8_rgb(raw_col[0], raw_col[1], raw_col[2]);
+            let time = std::time::Instant::now().duration_since(now).as_nanos();
+            let t = (time as f64).log10() * 0.1;
+            let time_col = input.cols.map()["time"].get(t as f32);
+            data.lock().expect("Could not lock data.").time[pixel] = time_col;
             data.lock().expect("Could not lock data.").image[pixel] = col;
         }
     }
