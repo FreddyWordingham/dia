@@ -89,7 +89,7 @@
     },
     scenes: {
         first_view: {
-            cam_pos             : [40, -45, 31],
+            cam_pos             : [-3, -22, 37],
             cam_tar             : [-0.75, -5.5, 28.5],
             swivel              : [10.0, 0.0],
             perlin              : [16, 16],
@@ -97,10 +97,10 @@
             sun_rad             : 1.0,
             ambient_occlusion   : 16,
             // soft_shadows        : 17,
-            fov                 : 60,
-            aspect_ratio        : "IPhoneXS",
-            res                 : 1125,
-            ss                  : 2
+            fov                 : 90,
+            aspect_ratio        : "Square",
+            res                 : 1000,
+            // ss                  : 2
             // dof                 : [17, 0.1],
         }
     }

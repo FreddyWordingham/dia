@@ -80,8 +80,7 @@ pub fn simulate_live(input: &Input, scene: &Scene) -> Result<Output, Error> {
                         input,
                         scene,
                         &Arc::clone(&data),
-                        &Arc::clone(&img_buffer),
-                        &Arc::clone(&time_buffer),
+                        [&Arc::clone(&img_buffer), &Arc::clone(&time_buffer)],
                     )
                 })
                 .collect();
@@ -176,15 +175,16 @@ fn render_pix_lin(pb: &Arc<Mutex<Bar>>, input: &Input, scene: &Scene, data: &Arc
 #[allow(clippy::result_expect_used)]
 #[inline]
 fn render_pix(
-    order: &Vec<u64>,
+    order: &[u64],
     buffer_start: u64,
     pb: &Arc<Mutex<SilentBar>>,
     input: &Input,
     scene: &Scene,
     data: &Arc<Mutex<Output>>,
-    img_buffer: &Arc<Mutex<Vec<u32>>>,
-    time_buffer: &Arc<Mutex<Vec<u32>>>,
+    buffers: [&Arc<Mutex<Vec<u32>>>; 2],
 ) {
+    let [img_buffer, time_buffer] = buffers;
+
     let mut rng = thread_rng();
     let super_samples = scene.cam().sensor().super_samples();
     let dof_samples = scene.cam().focus().dof_samples();

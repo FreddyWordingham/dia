@@ -26,6 +26,7 @@
             vein    : [['objs/shatter_base_vein.obj'], null],
     },
     cols: {
+            time            : ['#b78d5cff', '#a62ab5ff', '#ff82f2ff', '#0095ffff', '#88f26aff', '#ffe200ff', '#ff4700ff', '#ff000dff'],
             core    : ['#a62ab5ff', '#f0794aff', '#e03c7eff', '#f17bffff'],
             sky     : ['#ffffffff', '#d2eeffff', '#0095ffff'],
             stand   : ['#b78d5cff', '#df9955ff', '#a66a3fff', '#dabb97ff', '#c46e1bff', '#a55555ff', '#ffd4a2ff'],
