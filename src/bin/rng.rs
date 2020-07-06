@@ -107,7 +107,7 @@ fn build(in_dir: &Path, params: Parameters) -> Input {
 fn simulate(input: &Input) -> Histogram {
     banner::section("Simulating");
 
-    let pb = ParBar::new("Randomising", input.samples);
+    let pb = Bar::new("Randomising", input.samples);
     let pb = Arc::new(Mutex::new(pb));
 
     let threads: Vec<usize> = (0..num_cpus::get()).collect(); // Multi-thread.
@@ -129,7 +129,7 @@ fn simulate(input: &Input) -> Histogram {
 }
 
 /// Simulate on a single thread.
-fn single_thread(_thread_id: usize, pb: &Arc<Mutex<ParBar>>, input: &Input) -> Histogram {
+fn single_thread(_thread_id: usize, pb: &Arc<Mutex<Bar>>, input: &Input) -> Histogram {
     let mut data = Histogram::new(input.min, input.max, input.bins);
 
     let mut rng = thread_rng();

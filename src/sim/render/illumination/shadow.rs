@@ -1,6 +1,10 @@
 //! Shadowing functions.
 
-use crate::{golden, render::Input, Crossing, Dir3, Hit, Ray};
+use crate::{
+    golden,
+    render::{Input, Scene},
+    Crossing, Dir3, Hit, Ray,
+};
 use rand::{rngs::ThreadRng, Rng};
 use std::f64::consts::PI;
 
@@ -13,10 +17,17 @@ const AMBIENT_OCCLUSION_POWER: i32 = 8;
 /// Calculate the shadowing factor.
 #[inline]
 #[must_use]
-pub fn shadow(input: &Input, ray: &Ray, hit: &Hit, bump_dist: f64, rng: &mut ThreadRng) -> f64 {
+pub fn shadow(
+    input: &Input,
+    scene: &Scene,
+    ray: &Ray,
+    hit: &Hit,
+    bump_dist: f64,
+    rng: &mut ThreadRng,
+) -> f64 {
     debug_assert!(bump_dist > 0.0);
 
-    let ambient = if let Some(samples) = input.sett.ambient_occlusion() {
+    let ambient = if let Some(samples) = scene.light().ambient_occlusion() {
         let offset = rng.gen_range(0.0, 2.0 * PI);
         let mut total = 0.0;
         let mut norm_ray = Ray::new(*ray.pos(), *hit.side().norm());
@@ -32,18 +43,18 @@ pub fn shadow(input: &Input, ray: &Ray, hit: &Hit, bump_dist: f64, rng: &mut Thr
         1.0
     };
 
-    let sun_dir = Dir3::new_normalize(input.sett.sun_pos() - ray.pos());
+    let sun_dir = Dir3::new_normalize(scene.light().sun_pos() - ray.pos());
     let mut light_ray = Ray::new(*ray.pos(), *hit.side().norm());
     light_ray.travel(bump_dist);
     *light_ray.dir_mut() = sun_dir;
 
-    let solar = if let Some(samples) = input.sett.soft_shadows() {
+    let solar = if let Some(samples) = scene.light().soft_shadows() {
         let offset = rng.gen_range(0.0, 2.0 * PI);
         let mut total = 0.0;
         for n in 0..samples {
             let (r, theta) = golden::circle(n, samples);
             let mut soft_ray = light_ray.clone();
-            soft_ray.rotate(r * input.sett.sun_rad(), theta + offset);
+            soft_ray.rotate(r * scene.light().sun_rad(), theta + offset);
             total += visibility(0, input, soft_ray, bump_dist);
         }
         total / f64::from(samples)

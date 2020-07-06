@@ -1,7 +1,7 @@
 //! Pixel painter functions.
 
 use crate::{
-    render::{Event, Input, Scene},
+    render::{illumination, Event, Input, Scene},
     Crossing, Dir3, Hit, Ray, Trace,
 };
 use palette::LinSrgba;
@@ -97,9 +97,15 @@ pub fn test(
 
 /// Perform a colouring.
 #[inline]
-fn colour(_rng: &mut ThreadRng, input: &Input, scene: &Scene, ray: &Ray, hit: &Hit) -> LinSrgba {
-    let light = 1.0;
-    let shadow = 1.0;
+fn colour(rng: &mut ThreadRng, input: &Input, scene: &Scene, ray: &Ray, hit: &Hit) -> LinSrgba {
+    let light = (illumination::light(
+        scene.light().sun_pos(),
+        scene.cam().focus().orient().pos(),
+        ray,
+        hit,
+    ) + 0.5)
+        .min(1.0);
+    let shadow = illumination::shadow(input, scene, ray, hit, input.sett.bump_dist(), rng);
 
     let sun_dir = Dir3::new_normalize(ray.pos() - scene.light().sun_pos());
 
@@ -107,4 +113,24 @@ fn colour(_rng: &mut ThreadRng, input: &Input, scene: &Scene, ray: &Ray, hit: &H
     let grad = palette::Gradient::new(vec![palette::LinSrgba::default(), base_col]);
 
     grad.get((light * shadow) as f32)
+}
+
+/// Determine the sky colour.
+#[inline]
+#[must_use]
+fn sky_col(
+    cam: &Camera,
+    map: &PerlinMap,
+    grad: &palette::Gradient<palette::LinSrgba>,
+    ray: &Ray,
+) -> palette::LinSrgba {
+    let u = (ray.dir().dot(cam.focus().orient().up()) + 1.0) * 0.5;
+    let v = (ray.dir().dot(cam.focus().orient().right()) + 1.0) * 0.5;
+
+    let x = (map.sample(u, v) + 1.0) * 0.5;
+
+    let col = grad.get(x as f32);
+
+    // palette::Gradient::new(vec![palette::LinSrgba::default(), col]).get(1.0 - x.powi(2) as f32)
+    palette::Gradient::new(vec![palette::LinSrgba::default(), col]).get(1.0)
 }
