@@ -6,7 +6,7 @@ use crate::{
 };
 use minifb::{CursorStyle, Scale, ScaleMode, Window, WindowOptions};
 use palette::Pixel;
-use rand::{thread_rng, Rng};
+use rand::{seq::SliceRandom, thread_rng, Rng};
 use rayon::prelude::*;
 use std::{
     f64::consts::PI,
@@ -23,6 +23,9 @@ pub fn simulate_live(input: &Input, scene: &Scene) -> Result<Output, Error> {
     let num_pixels = scene.cam().sensor().num_pixels();
     let width = scene.cam().sensor().res().0 as usize;
     let height = scene.cam().sensor().res().1 as usize;
+
+    let mut order: Vec<u64> = (0..num_pixels).collect();
+    order.shuffle(&mut thread_rng());
 
     let img_buffer: Vec<u32> = vec![0; num_pixels as usize];
     let img_buffer = Arc::new(Mutex::new(img_buffer));
@@ -71,6 +74,7 @@ pub fn simulate_live(input: &Input, scene: &Scene) -> Result<Output, Error> {
                 .par_iter()
                 .map(|_id| {
                     render_pix(
+                        &order,
                         start,
                         &Arc::clone(&pb),
                         input,
@@ -159,7 +163,8 @@ fn render_pix_lin(pb: &Arc<Mutex<Bar>>, input: &Input, scene: &Scene, data: &Arc
             }
 
             let time = std::time::Instant::now().duration_since(now).as_nanos();
-            let t = (time as f64).log10() * 0.1;
+            // let t = (time as f64).log10() * 0.1;
+            let t = (((time as f64).log10() - 5.0).max(0.0) * 2.0).max(1.0) * 0.1;
             let time_col = input.cols.map()["time"].get(t as f32);
             data.lock().expect("Could not lock data.").time[pixel] = time_col;
             data.lock().expect("Could not lock data.").image[pixel] = col;
@@ -171,6 +176,7 @@ fn render_pix_lin(pb: &Arc<Mutex<Bar>>, input: &Input, scene: &Scene, data: &Arc
 #[allow(clippy::result_expect_used)]
 #[inline]
 fn render_pix(
+    order: &Vec<u64>,
     buffer_start: u64,
     pb: &Arc<Mutex<SilentBar>>,
     input: &Input,
@@ -196,7 +202,7 @@ fn render_pix(
         for q in start..end {
             let now = std::time::Instant::now();
 
-            let p = q + buffer_start;
+            let p = order[(q + buffer_start) as usize];
             let pixel = [(p % h_res) as usize, (p / h_res) as usize];
             let mut col = palette::LinSrgba::default();
 

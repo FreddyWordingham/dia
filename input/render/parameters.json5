@@ -13,8 +13,8 @@
     },
     sett: {
         bump_dist       : 1e-6,
-        block_size      : 100,
-        sub_block_size  : 4,
+        block_size      : 1000,
+        sub_block_size  : 40,
         min_weight      : 0.01,
         live            : true
     },
@@ -42,7 +42,7 @@
             clouds_2        : [['objs/sky/planet_2_clouds_inner.obj', 'objs/sky/planet_2_clouds_mid.obj', 'objs/sky/planet_2_clouds_outer.obj'], {trans:[0,0,20]}],
     },
     cols: {
-            time            : ['#00E575ff', '#00E7C7ff', '#00B9EAff', '#0068ECff', '#0016EFff', '#3D00F2ff', '#9300F4ff', '#EB00F7ff', '#F900AEff', '#FC0058ff', '#FF0000ff'],
+            time            : ['#b78d5cff', '#a62ab5ff', '#ff82f2ff', '#0095ffff', '#88f26aff', '#ffe200ff', '#ff4700ff', '#ff000dff'],
             mirror          : ['#242424ff', '#6d6d6dff'],
             windows         : ['#000000ff', '#8c8c8cff', '#242424ff', '#6d6d6dff'],
             r0              : ['#ff8c00ff', '#ff4500ff'],
@@ -95,12 +95,12 @@
             perlin              : [16, 16],
             sun_pos             : [22,66,58],
             sun_rad             : 1.0,
-            ambient_occlusion   : 64,
-            soft_shadows        : 17,
+            ambient_occlusion   : 16,
+            // soft_shadows        : 17,
             fov                 : 60,
             aspect_ratio        : "IPhoneXS",
-            res                 : 375,
-            // ss                  : 2
+            res                 : 1125,
+            ss                  : 2
             // dof                 : [17, 0.1],
         }
     }
