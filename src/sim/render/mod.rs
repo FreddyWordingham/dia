@@ -8,9 +8,11 @@ pub mod scene;
 pub mod input;
 pub mod output;
 // pub mod painter;
-// pub mod run;
 pub mod lighting;
+pub mod run;
 pub mod settings;
 
 // pub use self::{attributes::*, camera::*, event::*, input::*, output::*, painter::*, settings::*};
-pub use self::{attributes::*, camera::*, input::*, lighting::*, output::*, scene::*, settings::*};
+pub use self::{
+    attributes::*, camera::*, input::*, lighting::*, output::*, run::*, scene::*, settings::*,
+};

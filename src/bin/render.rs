@@ -31,12 +31,16 @@ struct Parameters {
 /// Main function.
 pub fn main() {
     banner::title("Render");
-    let (params_path, in_dir, _out_dir) = init();
+    let (params_path, in_dir, out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let (tree_sett, grid_sett, _render_sett, surfs, _cols, _attrs, _scenes) =
-        build(&in_dir, params);
-    let (_tree, _grid) = grow(tree_sett, grid_sett, &surfs);
-    // render(&input);
+    let (tree_sett, grid_sett, render_sett, surfs, cols, attrs, scenes) = build(&in_dir, params);
+    let (tree, grid) = grow(tree_sett, grid_sett, &surfs);
+    let input = render::Input::new(&tree, &grid, &render_sett, &surfs, &cols, &attrs);
+    for (name, scene) in scenes.map() {
+        banner::section(&format!("Scene: {}", name));
+        let data = render::run::simulate(&input, &scene);
+        data.save(&out_dir).expect("Failed to save output data.");
+    }
     banner::section("Finished");
 }
 
