@@ -152,7 +152,7 @@ fn render_pix_lin(
                 let offset = rng.gen_range(0.0, 2.0 * PI);
                 for depth_sample in 0..dof_samples {
                     let ray = scene.cam().gen_ray(pixel, offset, sub_sample, depth_sample);
-                    col += painter::test(&mut rng, input, scene, ray, 0) * weight;
+                    col += painter::test(&mut rng, input, scene, ray, 1.0) * weight;
                 }
             }
 
@@ -200,7 +200,7 @@ fn render_pix(
                 let offset = rng.gen_range(0.0, 2.0 * PI);
                 for depth_sample in 0..dof_samples {
                     let ray = scene.cam().gen_ray(pixel, offset, sub_sample, depth_sample);
-                    col += painter::test(&mut rng, input, scene, ray, 0) * weight;
+                    col += painter::test(&mut rng, input, scene, ray, 1.0) * weight;
                 }
             }
 

@@ -18,16 +18,13 @@ pub fn test(
     input: &Input,
     scene: &Scene,
     mut ray: Ray,
-    depth: i32,
+    mut weight: f64,
 ) -> LinSrgba {
+    debug_assert!(weight > 0.0);
+    debug_assert!(weight <= 1.0);
+
     let bump_dist = input.sett.bump_dist();
     let mut col = LinSrgba::default();
-    let mut weight = 1.0_f64;
-    // let mut col = palette::Srgba::new(0.0, 0.2, 1.0, 1.0).into_linear();
-
-    if depth > input.sett.max_depth() {
-        return col;
-    }
 
     // Move rays into the grid.
     if !input.grid.boundary().contains(ray.pos()) {
@@ -94,25 +91,19 @@ pub fn test(
                                 };
                                 let crossing =
                                     Crossing::new(ray.dir(), hit.side().norm(), n_curr, n_next);
+
                                 let trans_prob = crossing.trans_prob();
-                                let trans_col = if let Some(trans_dir) = crossing.trans_dir() {
+                                if let Some(trans_dir) = crossing.trans_dir() {
                                     let mut trans_ray = ray.clone();
                                     *trans_ray.dir_mut() = *trans_dir;
                                     trans_ray.travel(bump_dist);
-                                    test(rng, input, scene, trans_ray, depth + 1)
-                                } else {
-                                    LinSrgba::default()
-                                };
+                                    col += test(rng, input, scene, trans_ray, weight * trans_prob)
+                                        * weight as f32;
+                                }
 
-                                let ref_prob = crossing.ref_prob();
-                                let mut ref_ray = ray;
-                                *ref_ray.dir_mut() = *crossing.ref_dir();
-                                let ref_col = test(rng, input, scene, ref_ray, depth + 1);
-
-                                col += ((ref_col * ref_prob as f32)
-                                    + (trans_col * trans_prob as f32))
-                                    * weight as f32;
-                                break;
+                                weight *= crossing.ref_prob();
+                                *ray.dir_mut() = *crossing.ref_dir();
+                                ray.travel(bump_dist);
                             }
                         }
                     } else {
