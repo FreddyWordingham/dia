@@ -2,7 +2,7 @@
 
 use crate::{
     render::{painter, Input, Output, Scene},
-    Bar, Error, SilentBar,
+    Bar, Error, SilentBar, BLUE, GREEN, RED,
 };
 use minifb::{CursorStyle, Scale, ScaleMode, Window, WindowOptions};
 use palette::Pixel;
@@ -227,22 +227,20 @@ fn render_pix(
 
             let time = std::time::Instant::now().duration_since(now).as_nanos();
             let t = (time as f64).log10() / 10.0;
-            let raw_time_col: [u8; 4] = input.cols.map()["time"]
-                .get(t as f32)
-                .into_format()
-                .into_raw();
+            let time_col = input.cols.map()["time"].get(t as f32);
+            data.lock().expect("Could not lock data.").time[pixel] = time_col;
+            let raw_time_col: [u8; 4] = time_col.into_format().into_raw();
             time_buffer
                 .lock()
                 .expect("Could not lock the time window buffer.")
                 [(total_pixels - (p + 1)) as usize] =
-                from_u8_rgb(raw_time_col[0], raw_time_col[1], raw_time_col[2]);
+                from_u8_rgb(raw_time_col[RED], raw_time_col[GREEN], raw_time_col[BLUE]);
 
-            let raw_col: [u8; 4] = palette::Srgba::from_linear(col).into_format().into_raw();
-
+            data.lock().expect("Could not lock data.").image[pixel] = col;
+            let raw_col: [u8; 4] = col.into_format().into_raw();
             img_buffer.lock().expect("Could not lock window buffer.")
                 [(total_pixels - (p + 1)) as usize] =
-                from_u8_rgb(raw_col[0], raw_col[1], raw_col[2]);
-            data.lock().expect("Could not lock data.").image[pixel] = col;
+                from_u8_rgb(raw_col[RED], raw_col[GREEN], raw_col[BLUE]);
         }
     }
 }
