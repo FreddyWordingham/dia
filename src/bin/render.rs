@@ -2,7 +2,7 @@
 
 use attr::input;
 use dia::*;
-// use palette::{Gradient, LinSrgba};
+use palette::{Gradient, LinSrgba};
 // use rand::thread_rng;
 use std::{
     env::current_dir,
@@ -33,7 +33,10 @@ pub fn main() {
     banner::title("Render");
     let (params_path, in_dir, _out_dir) = init();
     let params = input(&in_dir, &params_path);
-    let (_tree_sett, _grid_sett, _render_sett) = build(&in_dir, params);
+    let (tree_sett, grid_sett, _render_sett, surfs, _cols, _attrs, _scenes) =
+        build(&in_dir, params);
+    let (_tree, _grid) = grow(tree_sett, grid_sett, &surfs);
+    // render(&input);
     banner::section("Finished");
 }
 
@@ -71,7 +74,18 @@ fn input(in_dir: &Path, params_path: &Path) -> Parameters {
 }
 
 /// Build instances.
-fn build(in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings, render::Settings) {
+fn build(
+    in_dir: &Path,
+    params: Parameters,
+) -> (
+    tree::Settings,
+    grid::Settings,
+    render::Settings,
+    Set<Mesh>,
+    Set<Gradient<LinSrgba>>,
+    Set<render::Attributes>,
+    Set<render::Scene>,
+) {
     banner::section("Building");
     banner::sub_section("Adaptive Tree Settings");
     let tree_sett = params.tree;
@@ -106,8 +120,38 @@ fn build(in_dir: &Path, params: Parameters) -> (tree::Settings, grid::Settings, 
     report!("Attributes", &attrs);
 
     banner::sub_section("Scenes");
-    let scenes = params.scenes;
+    let scenes = params
+        .scenes
+        .build(in_dir)
+        .expect("Unable to build scenes.");
     report!("Scenes", &scenes);
 
-    (tree_sett, grid_sett, render_sett)
+    (
+        tree_sett,
+        grid_sett,
+        render_sett,
+        surfs,
+        cols,
+        attrs,
+        scenes,
+    )
+}
+
+/// Grow domains.
+fn grow<'a>(
+    tree_sett: tree::Settings,
+    grid_sett: grid::Settings,
+    surfs: &'a Set<Mesh>,
+) -> (tree::Cell<'a>, grid::Grid) {
+    banner::section("Growing");
+
+    banner::sub_section("Adaptive Tree");
+    let tree = tree::Cell::new_root(&tree_sett, &surfs);
+    report!("Adaptive tree", &tree);
+
+    banner::sub_section("Regular Grid");
+    let grid = grid::Grid::new(&grid_sett);
+    report!("Regular grid", &grid);
+
+    (tree, grid)
 }
