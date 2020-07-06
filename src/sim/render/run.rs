@@ -27,7 +27,7 @@ pub fn simulate_live(input: &Input, scene: &Scene) -> Result<Output, Error> {
     let img_buffer: Vec<u32> = vec![0; num_pixels as usize];
     let img_buffer = Arc::new(Mutex::new(img_buffer));
     let mut img_win = Window::new(
-        "Rendering",
+        "Rendering in Space",
         width,
         height,
         WindowOptions {
@@ -43,7 +43,7 @@ pub fn simulate_live(input: &Input, scene: &Scene) -> Result<Output, Error> {
     let time_buffer: Vec<u32> = vec![0; num_pixels as usize];
     let time_buffer = Arc::new(Mutex::new(time_buffer));
     let mut time_win = Window::new(
-        "Rendering",
+        "Rendering in Time",
         width,
         height,
         WindowOptions {
@@ -226,7 +226,7 @@ fn render_pix(
             }
 
             let time = std::time::Instant::now().duration_since(now).as_nanos();
-            let t = (time as f64).log10() / 10.0;
+            let t = (time as f64).log10() * 0.1;
             let time_col = input.cols.map()["time"].get(t as f32);
             data.lock().expect("Could not lock data.").time[pixel] = time_col;
             let raw_time_col: [u8; 4] = time_col.into_format().into_raw();
