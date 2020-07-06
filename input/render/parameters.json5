@@ -68,9 +68,9 @@
             stars           : ['#fffec1ff', '#f4f2e2ff'],
     },
     attrs: {
-        rocks: {
-            Transparent: {abs: 0.2}
-        },
+        // rocks: {
+        //     Transparent: {abs: 0.2}
+        // },
         mirror: {
             Mirror: {abs: 0.3}
         },
@@ -100,7 +100,7 @@
             fov                 : 90,
             aspect_ratio        : "Square",
             res                 : 400,
-            // ss                  : 2
+            ss                  : 2
             // dof                 : [17, 0.1],
         }
     }
