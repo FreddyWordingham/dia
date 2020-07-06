@@ -15,9 +15,13 @@ pub struct Lighting {
     /// Optional number of soft shadow samples.
     soft_shadows: Option<i32>,
     /// Ambient, diffuse and specular lighting fraction.
-    lighting_fracs: [f64; 3],
+    light_fracs: [f64; 3],
     /// Specular lighting power.
-    specular_pow: i32,
+    spec_pow: i32,
+    /// Ambient and direct shadowing fraction.
+    shadow_fracs: [f64; 2],
+    /// Ambient occlusion power.
+    ao_pow: i32,
 }
 
 impl Lighting {
@@ -25,8 +29,10 @@ impl Lighting {
     clone!(sun_rad, f64);
     clone!(ambient_occlusion, Option<i32>);
     clone!(soft_shadows, Option<i32>);
-    access!(lighting_fracs, [f64; 3]);
-    clone!(specular_pow, i32);
+    access!(light_fracs, [f64; 3]);
+    clone!(spec_pow, i32);
+    access!(shadow_fracs, [f64; 2]);
+    clone!(ao_pow, i32);
 
     /// Construct a new instance.
     #[inline]
@@ -36,16 +42,20 @@ impl Lighting {
         sun_rad: f64,
         ambient_occlusion: Option<i32>,
         soft_shadows: Option<i32>,
-        lighting_fracs: [f64; 3],
-        specular_pow: i32,
+        light_fracs: [f64; 3],
+        spec_pow: i32,
+        shadow_fracs: [f64; 2],
+        ao_pow: i32,
     ) -> Self {
         Self {
             sun_pos,
             sun_rad,
             ambient_occlusion,
             soft_shadows,
-            lighting_fracs,
-            specular_pow,
+            light_fracs,
+            spec_pow,
+            shadow_fracs,
+            ao_pow,
         }
     }
 
@@ -53,21 +63,35 @@ impl Lighting {
     #[inline]
     #[must_use]
     pub const fn ambient_light(&self) -> f64 {
-        self.lighting_fracs[0]
+        self.light_fracs[0]
     }
 
     /// Get the diffuse lighting fraction.
     #[inline]
     #[must_use]
     pub const fn diffuse_light(&self) -> f64 {
-        self.lighting_fracs[1]
+        self.light_fracs[1]
     }
 
     /// Get the specular lighting fraction.
     #[inline]
     #[must_use]
     pub const fn specular_light(&self) -> f64 {
-        self.lighting_fracs[2]
+        self.light_fracs[2]
+    }
+
+    /// Get the ambient shadowing fraction.
+    #[inline]
+    #[must_use]
+    pub const fn ambient_shadow(&self) -> f64 {
+        self.shadow_fracs[0]
+    }
+
+    /// Get the direct shadowing fraction.
+    #[inline]
+    #[must_use]
+    pub const fn direct_shadow(&self) -> f64 {
+        self.shadow_fracs[1]
     }
 }
 
@@ -97,6 +121,12 @@ impl Display for Lighting {
                 self.specular_light()
             )
         )?;
-        display_field!(fmt, "specular power", self.specular_pow)
+        display_field_ln!(fmt, "specular power", self.spec_pow)?;
+        display_field_ln!(
+            fmt,
+            "shadowing fractions",
+            &format!("[{} : {}]", self.ambient_shadow(), self.direct_shadow())
+        )?;
+        display_field!(fmt, "ambient occlusion power", self.ao_pow)
     }
 }

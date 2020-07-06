@@ -52,6 +52,11 @@ pub fn test(
                     let group = hit.group();
                     if let Some(attr) = input.attrs.map().get(group) {
                         match attr {
+                            Attributes::Luminous => {
+                                ray.travel(hit.dist());
+                                col += colour(&mut rng, input, scene, &ray, &hit) * weight as f32;
+                                break;
+                            }
                             Attributes::Transparent { abs } => {
                                 ray.travel(hit.dist());
                                 col += colour(&mut rng, input, scene, &ray, &hit)

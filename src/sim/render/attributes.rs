@@ -6,6 +6,8 @@ use std::fmt::{Display, Formatter, Result};
 /// Rendering attributes.
 #[load]
 pub enum Attributes {
+    /// Luminous.
+    Luminous,
     /// Transparent.
     Transparent {
         /// Absorption fraction.
@@ -32,6 +34,7 @@ impl Display for Attributes {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
         let kind = match self {
+            Self::Luminous => "Luminous".to_string(),
             Self::Transparent { abs } => format!("Transparent: [{}]", abs),
             Self::Mirror { abs } => format!("Mirror: [{}]", abs),
             Self::Refractive {

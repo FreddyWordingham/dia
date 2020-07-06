@@ -19,7 +19,7 @@ pub fn light(scene: &Scene, ray: &Ray, hit: &Hit) -> f64 {
     let mut specular = view_dir
         .dot(&ref_dir)
         .max(0.0)
-        .powi(scene.light().specular_pow());
+        .powi(scene.light().spec_pow());
 
     ambient *= scene.light().ambient_light();
     diffuse *= scene.light().diffuse_light();

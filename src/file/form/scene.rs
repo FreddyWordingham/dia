@@ -45,6 +45,10 @@ pub struct Scene {
     lighting_fracs: [f64; 3],
     /// Specular lighting power.
     spec_pow: i32,
+    /// Shadowing fractions.
+    shadowing_fracs: [f64; 2],
+    /// Ambient occlusion power.
+    ao_pow: i32,
 }
 
 impl Build for Scene {
@@ -75,6 +79,8 @@ impl Build for Scene {
                 self.soft_shadows,
                 self.lighting_fracs,
                 self.spec_pow,
+                self.shadowing_fracs,
+                self.ao_pow,
             ),
         ))
     }

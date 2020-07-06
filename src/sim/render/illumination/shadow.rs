@@ -11,9 +11,6 @@ use std::f64::consts::PI;
 /// Maximum distance tested for ray visibility [m].
 const MAX_VISIBILITY_DIST: f64 = 1.0e9;
 
-/// Ambient occlusion power constant.
-const AMBIENT_OCCLUSION_POWER: i32 = 8;
-
 /// Calculate the shadowing factor.
 #[inline]
 #[must_use]
@@ -26,22 +23,6 @@ pub fn shadow(
     rng: &mut ThreadRng,
 ) -> f64 {
     debug_assert!(bump_dist > 0.0);
-
-    let ambient = if let Some(samples) = scene.light().ambient_occlusion() {
-        let offset = rng.gen_range(0.0, 2.0 * PI);
-        let mut total = 0.0;
-        let mut norm_ray = Ray::new(*ray.pos(), *hit.side().norm());
-        norm_ray.travel(bump_dist);
-        for n in 0..samples {
-            let (phi, theta) = golden::hemisphere(n, samples);
-            let mut ambient_ray = norm_ray.clone();
-            ambient_ray.rotate(phi, theta + offset);
-            total += visibility(input, ambient_ray, bump_dist, 1.0);
-        }
-        (total / f64::from(samples)).powi(AMBIENT_OCCLUSION_POWER)
-    } else {
-        1.0
-    };
 
     let sun_dir = Dir3::new_normalize(scene.light().sun_pos() - ray.pos());
     let mut light_ray = Ray::new(*ray.pos(), *hit.side().norm());
@@ -62,7 +43,26 @@ pub fn shadow(
         visibility(input, light_ray, bump_dist, 1.0)
     };
 
-    (ambient * 0.6) + (solar * 0.4)
+    if let Some(samples) = scene.light().ambient_occlusion() {
+        let offset = rng.gen_range(0.0, 2.0 * PI);
+        let mut total = 0.0;
+        let mut norm_ray = Ray::new(*ray.pos(), *hit.side().norm());
+        norm_ray.travel(bump_dist);
+        for n in 0..samples {
+            let (phi, theta) = golden::hemisphere(n, samples);
+            let mut ambient_ray = norm_ray.clone();
+            ambient_ray.rotate(phi, theta + offset);
+            total += visibility(input, ambient_ray, bump_dist, 1.0);
+        }
+        let ambient = (total / f64::from(samples)).powi(scene.light().ao_pow());
+
+        return ambient.mul_add(
+            scene.light().ambient_shadow(),
+            solar * scene.light().direct_shadow(),
+        );
+    };
+
+    solar
 }
 
 /// Calculate the visibility of a given ray.
@@ -84,6 +84,9 @@ pub fn visibility(input: &Input, mut ray: Ray, bump_dist: f64, mut vis: f64) -> 
         let group = hit.group();
         if let Some(attr) = input.attrs.map().get(group) {
             match attr {
+                Attributes::Luminous => {
+                    break;
+                }
                 Attributes::Transparent { abs } => {
                     vis *= 1.0 - *abs;
                     ray.travel(hit.dist() + bump_dist);
