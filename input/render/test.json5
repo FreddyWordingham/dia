@@ -6,8 +6,8 @@
     },
     grid: {
         boundary: {
-            mins: [-100, -100, -100],
-            maxs: [ 100,  100,  100]
+            mins: [-2, -2, -2],
+            maxs: [ 2,  2,  2]
         },
         res: [1,1,1]
     },
@@ -57,7 +57,7 @@
             fov                 : 45,
             aspect_ratio        : "Square",
             res                 : 1000,
-            ss                  : 1
+            // ss                  : 2
             // dof                 : [17, 0.1],
         }
     }

@@ -1,0 +1,99 @@
+{
+    tree: {
+        tar_tris: 8,
+        max_depth: 8,
+        padding: 0.1
+    },
+    grid: {
+        boundary: {
+            mins: [-100, -100, -100],
+            maxs: [ 100,  100,  100]
+        },
+        res: [1,1,1]
+    },
+    sett: {
+        bump_dist       : 1e-6,
+        block_size      : 4000,
+        sub_block_size  : 100,
+        min_weight      : 0.01,
+        live            : true
+    },
+    surfs: {
+            mirror          : [['objs/fighter/royal.obj', 'objs/fighter/fighter_detail.obj'], null],
+            windows         : [['objs/fighter/royal_windows.obj'], null],
+            r0              : [['objs/fighter/r0.obj'], null],
+            r1              : [['objs/fighter/r1.obj'], null],
+            r2              : [['objs/fighter/r2.obj'], null],
+            fighter_body    : [['objs/fighter/fighter_body.obj'], null],
+            cliff           : [['objs/landscape/cliff.obj'], null],
+            tops            : [['objs/landscape/tops.obj'], null],
+            building        : [['objs/landscape/building.obj'], null],
+            roofs           : [['objs/landscape/roofs.obj'], null],
+            rocks           : [['objs/landscape/rocks.obj'], null],
+            water           : [['objs/water/sea.obj', 'objs/water/waterfall.obj'], null],
+            solar           : [['objs/sky/solar.obj'], null],
+            planet_0_land   : [['objs/sky/planet_0_land.obj'], {trans:[0,0,10]}],
+            planet_1_land   : [['objs/sky/planet_1_land.obj'], {trans:[0,0,30]}],
+            planet_2_land   : [['objs/sky/planet_2_land.obj'], {trans:[0,0,20]}],
+            planet_0_sea    : [['objs/sky/planet_0_sea.obj'], {trans:[0,0,10]}],
+            planet_1_sea    : [['objs/sky/planet_1_sea.obj'], {trans:[0,0,30]}],
+            clouds_0        : [['objs/sky/planet_0_clouds_inner.obj', 'objs/sky/planet_0_clouds_mid.obj', 'objs/sky/planet_0_clouds_outer.obj'], {trans:[0,0,10]}],
+            clouds_1        : [['objs/sky/planet_1_clouds_inner.obj', 'objs/sky/planet_1_clouds_mid.obj', 'objs/sky/planet_1_clouds_outer.obj'], {trans:[0,0,30]}],
+            clouds_2        : [['objs/sky/planet_2_clouds_inner.obj', 'objs/sky/planet_2_clouds_mid.obj', 'objs/sky/planet_2_clouds_outer.obj'], {trans:[0,0,20]}],
+    },
+    cols: {
+            mirror          : ['#242424ff', '#6d6d6dff'],
+            windows         : ['#000000ff', '#8c8c8cff', '#242424ff', '#6d6d6dff'],
+            r0              : ['#ff8c00ff', '#ff4500ff'],
+            r1              : ['#eeeb51ff', '#00ff45ff'],
+            r2              : ['#ff82f2ff', '#82b7ffff'],
+            sky             : ['#ffffffff', '#d2eeffff', '#0095ffff'],
+            fighter_body    : ['#ffd549ff', '#ffec88ff', '#ffa12fff', '#ffff00ff', '#ffff49ff', '#ffff80ff'],
+            cliff           : ['#b78d5cff', '#df9955ff', '#a66a3fff', '#dabb97ff', '#c46e1bff', '#a55555ff', '#ffd4a2ff'],
+            tops            : ['#228b22ff', '#88f26aff', '#34ff99ff', '#b1ed37ff', '#4dc94dff', '#90ee90ff'],
+            building        : ['#d4b388ff', '#a79884ff', '#9bc8c9ff', '#ecdecbff', '#d2b186ff', '#d7c9bbff', '#e3dccfff'],
+            roofs           : ['#008b8bff', '#3cb371ff', '#90ee90ff'],
+            rocks           : ['#72482aff', '#ff703cff', '#aed8d4ff', '#856e5dff', '#c9c1bbff'],
+            water           : ['#8282ffff', '#82a8ffff', '#82f1ffff'],
+            planet_0_land   : ['#008000ff', '#32cd32ff', '#0ebb0eff', '#008080ff', '#51dab6ff', '#556b2fff', '#1f841fff', '#56a556ff', '#67e2b9ff', '#3be3abff'],
+            planet_1_land   : ['#a62ab5ff', '#f0794aff', '#e03c7eff', '#f17bffff'],
+            planet_2_land   : ['#e53b3bff', '#ff8d2aff' , '#e8423fff'],
+            planet_0_sea    : ['#0542A8ff', '#1552C6ff', '#8e6fe4ff', '#724ceeff', '#7770ffff', '#3072EBff', '#71A8EEff'],
+            planet_1_sea    : ['#724ceeff', '#8e6fe4ff', '#ec61fdff', '#29afefff', '#5be2d8ff'],
+            clouds_0        : ['#97d9c5ff', '#f0f0b2ff', '#ffffffff'],
+            clouds_1        : ['#97aed9ff', '#cdcdffff', '#ffffffff'],
+            clouds_2        : ['#d493e4ff', '#f1c7ffff', '#ffffffff'],
+            solar           : ['#ffe200ff', '#ff4700ff', '#ff000dff'],
+            stars           : ['#fffec1ff', '#f4f2e2ff'],
+    },
+    attrs: {
+        // rocks: {
+        //     Transparent: {abs: 0.2}
+        // },
+        mirror: {
+            Mirror: {abs: 0.3}
+        },
+        water: {
+            Refractive: {abs:0.2, inside: 1.3, outside: 1.0}
+        },
+    },
+    scenes: {
+        first_view: {
+            cam_pos             : [40, -45, 31],
+            cam_tar             : [-0.75, -5.5, 28.5],
+            swivel              : [10.0, 0.0],
+            perlin              : [16, 16],
+            sun_pos             : [22,66,58],
+            sun_rad             : 1.0,
+            // ambient_occlusion   : 64,
+            ambient_occlusion   : 16,
+            // soft_shadows        : 17,
+            // soft_shadows        : 17,
+            fov                 : 90,
+            aspect_ratio        : "Square",
+            res                 : 1000,
+            // ss                  : 2
+            // dof                 : [17, 0.1],
+        }
+    }
+}

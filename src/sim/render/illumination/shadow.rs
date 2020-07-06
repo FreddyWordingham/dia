@@ -107,9 +107,9 @@ pub fn visibility(input: &Input, mut ray: Ray, bump_dist: f64, mut vis: f64) -> 
                     vis *= 1.0 - abs;
 
                     let (n_prev, n_curr) = if hit.side().is_inside() {
-                        (*outside, *inside)
-                    } else {
                         (*inside, *outside)
+                    } else {
+                        (*outside, *inside)
                     };
                     let crossing = Crossing::new(ray.dir(), hit.side().norm(), n_curr, n_prev);
 
