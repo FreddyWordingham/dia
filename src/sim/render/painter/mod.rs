@@ -52,7 +52,25 @@ pub fn test(
                 }
                 Event::Surface(hit) => {
                     match hit.group() {
-                        "glass" => {
+                        "glass" | "water" => {
+                            ray.travel(hit.dist());
+                            col += colour(&mut rng, input, scene, &ray, &hit) * 0.25;
+
+                            let (n0, n1) = if hit.side().is_inside() {
+                                (1.3, 1.0)
+                            } else {
+                                (1.0, 1.3)
+                            };
+                            let crossing = Crossing::new(ray.dir(), hit.side().norm(), n0, n1);
+
+                            if let Some(trans_dir) = crossing.trans_dir() {
+                                ray.travel(bump_dist);
+                                *ray.dir_mut() = *trans_dir;
+                            } else {
+                                break;
+                            }
+                        }
+                        "clouds_0" | "clouds_1" | "clouds_2" => {
                             ray.travel(hit.dist());
                             col += colour(&mut rng, input, scene, &ray, &hit) * 0.25;
 
