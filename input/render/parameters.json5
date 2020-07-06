@@ -12,18 +12,13 @@
         res: [1,1,1]
     },
     sett: {
-        bump_dist: 1e-6,
-        block_size: 1e2,
-        sub_block_size: 4e1,
-        max_depth: 3,
-        live: true
+        bump_dist       : 1e-6,
+        block_size      : 1e2,
+        sub_block_size  : 4e1,
+        max_depth       : 3,
+        live            : true
     },
     surfs: {
-            // stand           : [['objs/stand.obj'], null],
-            // glass    : [['objs/shatter_base_vein.obj'], null],
-            // shatter_bulk    : [['objs/shatter_base_bulk.obj'], null],
-            // shatter_core    : [['objs/shatter_base_core.obj'], null],
-            // mirror    : [['objs/shatter_base_gems.obj'], null],
             mirror          : [['objs/fighter/royal.obj', 'objs/fighter/fighter_detail.obj'], null],
             windows         : [['objs/fighter/royal_windows.obj'], null],
             r0              : [['objs/fighter/r0.obj'], null],
@@ -47,19 +42,11 @@
             clouds_2        : [['objs/sky/planet_2_clouds_inner.obj', 'objs/sky/planet_2_clouds_mid.obj', 'objs/sky/planet_2_clouds_outer.obj'], {trans:[0,0,20]}],
     },
     cols: {
-            // sky             : ['#ffffffff', '#d2eeffff', '#0095ffff'],
-            // stand           : ['#fffec1ff', '#f4f2e2ff'],
-            // glass    : ['#5a20ffff', '#376effff', '#00ffecff'],
-            // shatter_bulk    : ['#8c8996ff', '#8d7daeff', '#a14ba2ff'],
-            // shatter_core    : ['#ff4141ff', '#ff5b2bff', '#f09100ff'],
-            // mirror    : ['#20efefff', '#00ff7fff', '#efef5cff'],
-
-                        mirror          : ['#242424ff', '#6d6d6dff'],
+            mirror          : ['#242424ff', '#6d6d6dff'],
             windows         : ['#000000ff', '#8c8c8cff', '#242424ff', '#6d6d6dff'],
             r0              : ['#ff8c00ff', '#ff4500ff'],
             r1              : ['#eeeb51ff', '#00ff45ff'],
             r2              : ['#ff82f2ff', '#82b7ffff'],
-            // sky             : ['#008b8bff', '#00478bff', '#72008bff'],
             sky             : ['#ffffffff', '#d2eeffff', '#0095ffff'],
             fighter_body    : ['#ffd549ff', '#ffec88ff', '#ffa12fff', '#ffff00ff', '#ffff49ff', '#ffff80ff'],
             cliff           : ['#b78d5cff', '#df9955ff', '#a66a3fff', '#dabb97ff', '#c46e1bff', '#a55555ff', '#ffd4a2ff'],
@@ -77,7 +64,6 @@
             clouds_1        : ['#97aed9ff', '#cdcdffff', '#ffffffff'],
             clouds_2        : ['#d493e4ff', '#f1c7ffff', '#ffffffff'],
             solar           : ['#ffe200ff', '#ff4700ff', '#ff000dff'],
-            // stars           : ['#ffe200ff', '#ff4700ff', '#ff000dff'],
             stars           : ['#fffec1ff', '#f4f2e2ff'],
     },
     attrs: {
@@ -90,13 +76,9 @@
     },
     scenes: {
         first_view: {
-            // cam_pos             : [2.1,-2.2,1.2],
-            // cam_tar             : [0,0,0.5],
-            // swivel              : [0, 0],
             cam_pos             : [40, -45, 31],
             cam_tar             : [-0.75, -5.5, 28.5],
             swivel              : [10.0, 0.0],
-
             perlin              : [16, 16],
             sun_pos             : [22, 66, 58],
             sun_rad             : 1.0,
