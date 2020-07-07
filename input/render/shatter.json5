@@ -13,17 +13,17 @@
     },
     sett: {
         bump_dist       : 1e-6,
-        block_size      : 100,
-        sub_block_size  : 4,
+        block_size      : 200,
+        sub_block_size  : 10,
         min_weight      : 0.01,
         live            : true
     },
     surfs: {
-            stand   : [['objs/stand.obj'], null],
-            bulk    : [['objs/shatter_base_bulk.obj'], null],
-            core    : [['objs/shatter_base_core.obj'], null],
-            gems    : [['objs/shatter_base_gems.obj'], null],
-            vein    : [['objs/shatter_base_vein.obj'], null],
+            stand   : [['objs/shatter/stand.obj'], null],
+            bulk    : [['objs/shatter/base_bulk.obj'], null],
+            core    : [['objs/shatter/base_core.obj'], null],
+            gems    : [['objs/shatter/base_gems.obj'], null],
+            vein    : [['objs/shatter/base_vein.obj'], null],
     },
     cols: {
             time            : ['#b78d5cff', '#a62ab5ff', '#ff82f2ff', '#0095ffff', '#88f26aff', '#ffe200ff', '#ff4700ff', '#ff000dff'],
@@ -57,7 +57,7 @@
             soft_shadows        : 17,
             fov                 : 45,
             aspect_ratio        : "Square",
-            res                 : 1000,
+            res                 : 200,
             // ss                  : 2
             // dof                 : [17, 0.1],
             lighting_fracs      : [0.3, 0.5, 0.2],
