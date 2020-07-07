@@ -49,6 +49,11 @@ pub fn visibility(input: &Input, mut ray: Ray, bump_dist: f64, mut vis: f64) -> 
                     abs,
                     inside,
                     outside,
+                }
+                | Attributes::Solar {
+                    abs,
+                    inside,
+                    outside,
                 } => {
                     ray.travel(hit.dist());
                     vis *= 1.0 - abs;

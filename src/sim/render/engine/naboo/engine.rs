@@ -108,17 +108,47 @@ pub fn engine(
                                 );
                                 ray.travel(bump_dist);
                             }
+                            Attributes::Solar {
+                                abs,
+                                inside,
+                                outside,
+                            } => {
+                                ray.travel(hit.dist());
+                                let sun_dir = crate::Vec3::z_axis();
+                                col += colour(&mut rng, input, scene, &ray, &hit, &sun_dir)
+                                    * (*abs * weight) as f32;
+                                weight *= 1.0 - abs;
+
+                                let (n_curr, n_next) = if hit.side().is_inside() {
+                                    (*inside, *outside)
+                                } else {
+                                    (*outside, *inside)
+                                };
+                                let crossing =
+                                    Crossing::new(ray.dir(), hit.side().norm(), n_curr, n_next);
+
+                                let trans_prob = crossing.trans_prob();
+                                if let Some(trans_dir) = crossing.trans_dir() {
+                                    let mut trans_ray = ray.clone();
+                                    *trans_ray.dir_mut() = *trans_dir;
+                                    trans_ray.travel(bump_dist);
+                                    col +=
+                                        engine(rng, input, scene, trans_ray, weight * trans_prob)
+                                            * weight as f32;
+                                }
+
+                                weight *= crossing.ref_prob();
+                                *ray.dir_mut() = *crossing.ref_dir();
+                                ray.travel(bump_dist);
+                            }
                             Attributes::Refractive {
                                 abs,
                                 inside,
                                 outside,
                             } => {
                                 ray.travel(hit.dist());
-                                // let sun_dir =
-                                //     Dir3::new_normalize(ray.pos() - scene.light().sun_pos());
                                 let sun_dir =
-                                    // Dir3::new_normalize(Pos3::origin() - scene.light().sun_pos());
-                                    crate::Vec3::z_axis();
+                                    Dir3::new_normalize(ray.pos() - scene.light().sun_pos());
                                 col += colour(&mut rng, input, scene, &ray, &hit, &sun_dir)
                                     * (*abs * weight) as f32;
                                 weight *= 1.0 - abs;

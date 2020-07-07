@@ -30,6 +30,15 @@ pub enum Attributes {
         /// External refractive index.
         outside: f64,
     },
+    /// Solar special.
+    Solar {
+        /// Absorption fraction.
+        abs: f64,
+        /// Internal refractive index.
+        inside: f64,
+        /// External refractive index.
+        outside: f64,
+    },
 }
 
 impl Display for Attributes {
@@ -45,6 +54,11 @@ impl Display for Attributes {
                 inside,
                 outside,
             } => format!("Refractive: [{}]\t\t{}:|{}", abs, inside, outside),
+            Self::Solar {
+                abs,
+                inside,
+                outside,
+            } => format!("Solar: [{}]\t\t{}:|{}", abs, inside, outside),
         };
         write!(fmt, "{}", kind)
     }
