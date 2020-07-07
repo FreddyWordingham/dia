@@ -1,7 +1,7 @@
 //! Rendering simulation functions.
 
 use crate::{
-    render::{Engine, Input, Output, Scene},
+    render::{Engine, Input, Order, Output, Scene},
     Bar, Error, SilentBar, BLUE, GREEN, RED,
 };
 use minifb::{CursorStyle, Scale, ScaleMode, Window, WindowOptions};
@@ -24,8 +24,15 @@ pub fn simulate_live(engine: Engine, input: &Input, scene: &Scene) -> Result<Out
     let width = scene.cam().sensor().res().0 as usize;
     let height = scene.cam().sensor().res().1 as usize;
 
-    let mut order: Vec<u64> = (0..num_pixels).collect();
-    order.shuffle(&mut thread_rng());
+    let order: Vec<u64> = match input.sett.order() {
+        Order::Forward => (0..num_pixels).collect(),
+        Order::Backward => ((num_pixels - 1)..=0).collect(),
+        Order::Shuffle => {
+            let mut o: Vec<u64> = (0..num_pixels).collect();
+            o.shuffle(&mut thread_rng());
+            o
+        }
+    };
 
     let img_buffer: Vec<u32> = vec![0; num_pixels as usize];
     let img_buffer = Arc::new(Mutex::new(img_buffer));

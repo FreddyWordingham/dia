@@ -1,6 +1,6 @@
 //! Settings implementation.
 
-use crate::{clone, display_field, display_field_ln};
+use crate::{clone, display_field, display_field_ln, render::Order};
 use attr::load;
 use std::fmt::{Display, Formatter, Result};
 
@@ -17,6 +17,8 @@ pub struct Settings {
     min_weight: f64,
     /// Live rendering setting.
     live: bool,
+    /// Rendering order.
+    order: Order,
 }
 
 impl Settings {
@@ -25,6 +27,7 @@ impl Settings {
     clone!(sub_block_size, u64);
     clone!(min_weight, f64);
     clone!(live, bool);
+    clone!(order, Order);
 }
 
 impl Display for Settings {
@@ -34,7 +37,8 @@ impl Display for Settings {
         display_field_ln!(fmt, "bump distance", self.bump_dist, "m")?;
         display_field_ln!(fmt, "block size", self.block_size)?;
         display_field_ln!(fmt, "sub block size", self.block_size)?;
-        display_field!(fmt, "minimum photon weight", self.min_weight)?;
-        display_field!(fmt, "live", self.live)
+        display_field_ln!(fmt, "minimum photon weight", self.min_weight)?;
+        display_field_ln!(fmt, "live", self.live)?;
+        display_field!(fmt, "rendering order", &self.order)
     }
 }

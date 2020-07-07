@@ -86,10 +86,8 @@ pub fn engine(
                             }
                             Attributes::Transparent { abs } => {
                                 ray.travel(hit.dist());
-                                // let sun_dir =
-                                //     Dir3::new_normalize(ray.pos() - scene.light().sun_pos());
                                 let sun_dir =
-                                    Dir3::new_normalize(Pos3::origin() - scene.light().sun_pos());
+                                    Dir3::new_normalize(ray.pos() - scene.light().sun_pos());
                                 col += colour(&mut rng, input, scene, &ray, &hit, &sun_dir)
                                     * *abs as f32
                                     * weight as f32;
