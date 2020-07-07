@@ -1,3 +1,5 @@
+//! Render engine function.
+
 use crate::{
     render::{
         engine::naboo::{light, shadow, visibility},
@@ -8,7 +10,7 @@ use crate::{
 use palette::LinSrgba;
 use rand::rngs::ThreadRng;
 
-/// Pixel painting engine function.
+/// Naboo rendering engine function.
 #[allow(clippy::never_loop)]
 #[allow(clippy::option_expect_used)]
 #[allow(clippy::single_match_else)]

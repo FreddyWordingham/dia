@@ -49,7 +49,7 @@
     },
     attrs: {
         solar       : {  Transparent    : {abs: 0.75} },
-        core        : {  Luminous       : {} },
+        core        : {  Luminous       : {mult: 1.0} },
         windows     : {  Transparent    : {abs: 0.8} },
         royal       : {  Mirror         : {abs: 0.3} },
         sea         : {  Refractive     : {abs: 0.4, inside:1.3, outside:1.0} },
