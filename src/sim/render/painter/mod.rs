@@ -160,5 +160,5 @@ fn sky_col(
     let col = grad.get(x as f32);
 
     palette::Gradient::new(vec![palette::LinSrgba::default(), col])
-        .get(1.0 - ray.dir().z.powi(2) as f32)
+        .get(scene.light().sky_brightness())
 }
