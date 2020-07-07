@@ -26,7 +26,11 @@ pub fn simulate_live(engine: Engine, input: &Input, scene: &Scene) -> Result<Out
 
     let order: Vec<u64> = match input.sett.order() {
         Order::Forward => (0..num_pixels).collect(),
-        Order::Backward => ((num_pixels - 1)..=0).collect(),
+        Order::Backward => {
+            let mut o: Vec<u64> = (0..num_pixels).collect();
+            o.reverse();
+            o
+        }
         Order::Shuffle => {
             let mut o: Vec<u64> = (0..num_pixels).collect();
             o.shuffle(&mut thread_rng());
