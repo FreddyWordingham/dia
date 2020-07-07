@@ -24,6 +24,7 @@ pub fn test(
     debug_assert!(weight <= 1.0);
 
     let bump_dist = input.sett.bump_dist();
+    let fog_dist = scene.fog().dist();
     let mut col = LinSrgba::default();
     let mut fog = 0.0;
 
@@ -45,13 +46,27 @@ pub fn test(
             // Handle event.
             match Event::new(voxel_dist, surf_hit) {
                 Event::Voxel(dist) => {
+                    if dist > fog_dist {
+                        ray.travel(fog_dist / 2.0);
+                        let sun_dir = Dir3::new_normalize(scene.light().sun_pos() - ray.pos());
+                        let light_ray = Ray::new(*ray.pos(), sun_dir);
+                        fog += illumination::visibility(input, light_ray, bump_dist, 1.0);
+                        ray.travel(fog_dist / 2.0);
+                        continue;
+                    }
+
                     ray.travel(dist);
                     col += sky_col(scene, &ray, &input.cols.map()["sky"]) * weight as f32;
                     break;
                 }
                 Event::Surface(hit) => {
-                    if hit.dist() > scene.fog().dist() {
-                        
+                    if hit.dist() > fog_dist {
+                        ray.travel(fog_dist / 2.0);
+                        let sun_dir = Dir3::new_normalize(scene.light().sun_pos() - ray.pos());
+                        let light_ray = Ray::new(*ray.pos(), sun_dir);
+                        fog += illumination::visibility(input, light_ray, bump_dist, 1.0);
+                        ray.travel(fog_dist / 2.0);
+                        continue;
                     }
 
                     let group = hit.group();
@@ -131,6 +146,9 @@ pub fn test(
     } else {
         col += sky_col(scene, &ray, &input.cols.map()["sky"]);
     }
+
+    col += input.cols.map()["fog"].get(1.0)
+        * (scene.fog().scale() * (fog / fog_dist)).powi(scene.fog().power()) as f32;
 
     col
 }

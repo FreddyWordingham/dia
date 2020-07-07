@@ -19,6 +19,7 @@
         live            : true
     },
     surfs: {
+            core            : [['objs/space/core.obj'], null],
             solar           : [['objs/space/solar.obj'], null],
             royal           : [['objs/space/royal.obj'], null],
             windows         : [['objs/space/royal_windows.obj'], null],
@@ -45,9 +46,11 @@
             sea             : ['#0542A8ff', '#1552C6ff', '#8e6fe4ff', '#724ceeff', '#7770ffff', '#3072EBff', '#71A8EEff'],
             moon            : ['#9bc8c9ff', '#ecdecbff', '#d7c9bbff', '#e3dccfff'],
             fog             : ['#c0c0c0ff', '#d7c9bbff', '#e3dccfff'],
+            core            : ['#ff4444ff', '#ff4700ff', '##ffffffff'],
     },
     attrs: {
-        solar       : {  Luminous       : {} },
+        solar       : {  Transparent    : {abs: 0.8} },
+        core        : {  Luminous       : {} },
         windows     : {  Transparent    : {abs: 0.8} },
         royal       : {  Mirror         : {abs: 0.3} },
         sea         : {  Refractive     : {abs: 0.4, inside:1.3, outside:1.0} },
@@ -73,13 +76,16 @@
             // soft_shadows        : 17,
             fov                 : 30,
             aspect_ratio        : "IPhoneXS",
-            res                 : 1125,
+            res                 : 125,
             // ss                  : 2
             // dof                 : [17, 0.1],
             lighting_fracs      : [0.3, 0.5, 0.2],
             spec_pow            : 8,
             shadowing_fracs     : [0.7, 0.3],
-            ao_pow              : 12
+            ao_pow              : 12,
+            fog_dist: 1.0,
+            fog_scale: 0.01,
+            fog_power: 1
         }
     }
 }
