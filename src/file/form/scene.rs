@@ -51,6 +51,10 @@ pub struct Scene {
     shadowing_fracs: [f64; 2],
     /// Ambient occlusion power.
     ao_pow: i32,
+    /// Fogging sampling distance [m].
+    fog_dist: f64,
+    /// Fog scaling factor.
+    fog_scale: f64,
 }
 
 impl Build for Scene {
@@ -85,6 +89,7 @@ impl Build for Scene {
                 self.shadowing_fracs,
                 self.ao_pow,
             ),
+            render::Fog::new(self.fog_dist, self.fog_scale),
         ))
     }
 }

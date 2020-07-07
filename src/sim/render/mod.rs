@@ -3,6 +3,7 @@
 pub mod attributes;
 pub mod camera;
 pub mod event;
+pub mod fog;
 pub mod illumination;
 pub mod input;
 pub mod lighting;
@@ -13,6 +14,6 @@ pub mod scene;
 pub mod settings;
 
 pub use self::{
-    attributes::*, camera::*, event::*, illumination::*, input::*, lighting::*, output::*,
+    attributes::*, camera::*, event::*, fog::*, illumination::*, input::*, lighting::*, output::*,
     painter::*, run::*, scene::*, settings::*,
 };

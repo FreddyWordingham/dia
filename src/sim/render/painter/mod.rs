@@ -25,6 +25,7 @@ pub fn test(
 
     let bump_dist = input.sett.bump_dist();
     let mut col = LinSrgba::default();
+    let mut fog = 0.0;
 
     // Move rays into the grid.
     if !input.grid.boundary().contains(ray.pos()) {
@@ -49,6 +50,10 @@ pub fn test(
                     break;
                 }
                 Event::Surface(hit) => {
+                    if hit.dist() > scene.fog().dist() {
+                        
+                    }
+
                     let group = hit.group();
                     if let Some(attr) = input.attrs.map().get(group) {
                         match attr {
