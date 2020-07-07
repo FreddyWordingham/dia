@@ -1,7 +1,7 @@
 //! Rendering simulation functions.
 
 use crate::{
-    render::{painter, Input, Output, Scene},
+    render::{Engine, Input, Output, Scene},
     Bar, Error, SilentBar, BLUE, GREEN, RED,
 };
 use minifb::{CursorStyle, Scale, ScaleMode, Window, WindowOptions};
@@ -19,7 +19,7 @@ use std::{
 /// a mutex unwrapping failed or
 /// an arc unwrapping failed.
 #[inline]
-pub fn simulate_live(input: &Input, scene: &Scene) -> Result<Output, Error> {
+pub fn simulate_live(engine: Engine, input: &Input, scene: &Scene) -> Result<Output, Error> {
     let num_pixels = scene.cam().sensor().num_pixels();
     let width = scene.cam().sensor().res().0 as usize;
     let height = scene.cam().sensor().res().1 as usize;
@@ -74,6 +74,7 @@ pub fn simulate_live(input: &Input, scene: &Scene) -> Result<Output, Error> {
                 .par_iter()
                 .map(|_id| {
                     render_pix(
+                        engine,
                         &order,
                         start,
                         &Arc::clone(&pb),
@@ -103,7 +104,7 @@ pub fn simulate_live(input: &Input, scene: &Scene) -> Result<Output, Error> {
 /// if a mutex unwrapping failed or
 /// an arc unwrapping failed.
 #[inline]
-pub fn simulate_bts(input: &Input, scene: &Scene) -> Result<Output, Error> {
+pub fn simulate_bts(engine: Engine, input: &Input, scene: &Scene) -> Result<Output, Error> {
     let num_pixels = scene.cam().sensor().num_pixels();
     let width = scene.cam().sensor().res().0 as usize;
     let height = scene.cam().sensor().res().1 as usize;
@@ -118,7 +119,15 @@ pub fn simulate_bts(input: &Input, scene: &Scene) -> Result<Output, Error> {
     while !main_bar.lock()?.is_done() {
         let _out: Vec<()> = threads
             .par_iter()
-            .map(|_id| render_pix_lin(&Arc::clone(&main_bar), input, scene, &Arc::clone(&data)))
+            .map(|_id| {
+                render_pix_lin(
+                    engine,
+                    &Arc::clone(&main_bar),
+                    input,
+                    scene,
+                    &Arc::clone(&data),
+                )
+            })
             .collect();
     }
     main_bar.lock()?.finish_with_message("Render complete.");
@@ -133,7 +142,13 @@ pub fn simulate_bts(input: &Input, scene: &Scene) -> Result<Output, Error> {
 /// Render a range of pixels using a single thread.
 #[allow(clippy::result_expect_used)]
 #[inline]
-fn render_pix_lin(pb: &Arc<Mutex<Bar>>, input: &Input, scene: &Scene, data: &Arc<Mutex<Output>>) {
+fn render_pix_lin(
+    engine: Engine,
+    pb: &Arc<Mutex<Bar>>,
+    input: &Input,
+    scene: &Scene,
+    data: &Arc<Mutex<Output>>,
+) {
     let mut rng = thread_rng();
     let super_samples = scene.cam().sensor().super_samples();
     let dof_samples = scene.cam().focus().dof_samples();
@@ -157,7 +172,7 @@ fn render_pix_lin(pb: &Arc<Mutex<Bar>>, input: &Input, scene: &Scene, data: &Arc
                 let offset = rng.gen_range(0.0, 2.0 * PI);
                 for depth_sample in 0..dof_samples {
                     let ray = scene.cam().gen_ray(pixel, offset, sub_sample, depth_sample);
-                    col += painter::test(&mut rng, input, scene, ray, 1.0) * weight as f32;
+                    col += engine(&mut rng, input, scene, ray, 1.0) * weight as f32;
                 }
             }
 
@@ -174,6 +189,7 @@ fn render_pix_lin(pb: &Arc<Mutex<Bar>>, input: &Input, scene: &Scene, data: &Arc
 #[allow(clippy::result_expect_used)]
 #[inline]
 fn render_pix(
+    engine: Engine,
     order: &[u64],
     buffer_start: u64,
     pb: &Arc<Mutex<SilentBar>>,
@@ -209,7 +225,7 @@ fn render_pix(
                 let offset = rng.gen_range(0.0, 2.0 * PI);
                 for depth_sample in 0..dof_samples {
                     let ray = scene.cam().gen_ray(pixel, offset, sub_sample, depth_sample);
-                    col += painter::test(&mut rng, input, scene, ray, 1.0) * weight as f32;
+                    col += engine(&mut rng, input, scene, ray, 1.0) * weight as f32;
                 }
             }
 

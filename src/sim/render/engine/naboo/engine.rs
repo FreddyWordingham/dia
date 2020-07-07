@@ -1,19 +1,20 @@
-//! Pixel painter functions.
-
 use crate::{
-    render::{illumination, Attributes, Event, Input, Scene},
+    render::{
+        engine::naboo::{light, shadow, visibility},
+        Attributes, Event, Input, Scene,
+    },
     Crossing, Dir3, Hit, Ray, Trace,
 };
 use palette::LinSrgba;
 use rand::rngs::ThreadRng;
 
-/// Pixel painting test function.
+/// Pixel painting engine function.
 #[allow(clippy::never_loop)]
 #[allow(clippy::option_expect_used)]
 #[allow(clippy::single_match_else)]
 #[inline]
 #[must_use]
-pub fn test(
+pub fn engine(
     mut rng: &mut ThreadRng,
     input: &Input,
     scene: &Scene,
@@ -24,6 +25,7 @@ pub fn test(
     debug_assert!(weight <= 1.0);
 
     let bump_dist = input.sett.bump_dist();
+    let fog_dist = scene.fog().dist();
     let mut col = LinSrgba::default();
     let mut fog = 0.0;
 
@@ -45,13 +47,27 @@ pub fn test(
             // Handle event.
             match Event::new(voxel_dist, surf_hit) {
                 Event::Voxel(dist) => {
+                    if dist > fog_dist {
+                        ray.travel(fog_dist / 2.0);
+                        let sun_dir = Dir3::new_normalize(scene.light().sun_pos() - ray.pos());
+                        let light_ray = Ray::new(*ray.pos(), sun_dir);
+                        fog += visibility(input, light_ray, bump_dist, 1.0);
+                        ray.travel(fog_dist / 2.0);
+                        continue;
+                    }
+
                     ray.travel(dist);
                     col += sky_col(scene, &ray, &input.cols.map()["sky"]) * weight as f32;
                     break;
                 }
                 Event::Surface(hit) => {
-                    if hit.dist() > scene.fog().dist() {
-                        
+                    if hit.dist() > fog_dist {
+                        ray.travel(fog_dist / 2.0);
+                        let sun_dir = Dir3::new_normalize(scene.light().sun_pos() - ray.pos());
+                        let light_ray = Ray::new(*ray.pos(), sun_dir);
+                        fog += visibility(input, light_ray, bump_dist, 1.0);
+                        ray.travel(fog_dist / 2.0);
+                        continue;
                     }
 
                     let group = hit.group();
@@ -107,8 +123,9 @@ pub fn test(
                                     let mut trans_ray = ray.clone();
                                     *trans_ray.dir_mut() = *trans_dir;
                                     trans_ray.travel(bump_dist);
-                                    col += test(rng, input, scene, trans_ray, weight * trans_prob)
-                                        * weight as f32;
+                                    col +=
+                                        engine(rng, input, scene, trans_ray, weight * trans_prob)
+                                            * weight as f32;
                                 }
 
                                 weight *= crossing.ref_prob();
@@ -132,14 +149,17 @@ pub fn test(
         col += sky_col(scene, &ray, &input.cols.map()["sky"]);
     }
 
+    col += input.cols.map()["fog"].get(1.0)
+        * (scene.fog().scale() * (fog / fog_dist)).powi(scene.fog().power()) as f32;
+
     col
 }
 
 /// Perform a colouring.
 #[inline]
 fn colour(rng: &mut ThreadRng, input: &Input, scene: &Scene, ray: &Ray, hit: &Hit) -> LinSrgba {
-    let light = (illumination::light(scene, ray, hit) + 0.5).min(1.0);
-    let shadow = illumination::shadow(input, scene, ray, hit, input.sett.bump_dist(), rng);
+    let light = (light(scene, ray, hit) + 0.5).min(1.0);
+    let shadow = shadow(input, scene, ray, hit, input.sett.bump_dist(), rng);
 
     let sun_dir = Dir3::new_normalize(ray.pos() - scene.light().sun_pos());
 

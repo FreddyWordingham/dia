@@ -39,9 +39,11 @@ pub fn main() {
     for (name, scene) in scenes.map() {
         banner::section(&format!("Scene: {}", name));
         let data = if input.sett.live() {
-            render::run::simulate_live(&input, &scene).expect("Scene rendering failed.")
+            render::simulate_live(render::naboo::engine, &input, &scene)
+                .expect("Scene rendering failed.")
         } else {
-            render::run::simulate_bts(&input, &scene).expect("Scene rendering failed.")
+            render::simulate_bts(render::naboo::engine, &input, &scene)
+                .expect("Scene rendering failed.")
         };
         data.save(&out_dir).expect("Failed to save output data.");
     }

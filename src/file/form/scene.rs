@@ -55,6 +55,8 @@ pub struct Scene {
     fog_dist: f64,
     /// Fog scaling factor.
     fog_scale: f64,
+    /// Fog power factor.
+    fog_power: i32,
 }
 
 impl Build for Scene {
@@ -89,7 +91,7 @@ impl Build for Scene {
                 self.shadowing_fracs,
                 self.ao_pow,
             ),
-            render::Fog::new(self.fog_dist, self.fog_scale),
+            render::Fog::new(self.fog_dist, self.fog_scale, self.fog_power),
         ))
     }
 }
