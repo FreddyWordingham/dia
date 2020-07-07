@@ -1,0 +1,61 @@
+{
+    tree: {
+        tar_tris: 8,
+        max_depth: 8,
+        padding: 0.1
+    },
+    grid: {
+        boundary: {
+            mins: [-200, -200, -200],
+            maxs: [ 200,  200,  200]
+        },
+        res: [1,1,1]
+    },
+    sett: {
+        bump_dist       : 1e-6,
+        block_size      : 1000,
+        sub_block_size  : 40,
+        min_weight      : 0.01,
+        live            : true
+    },
+    surfs: {
+            royal           : [['objs/space/royal.obj'], null],
+            windows         : [['objs/space/royal_windows.obj'], null],
+    },
+    cols: {
+            sky             : ['#ed3636ff', '#a62ab5ff', '#008b8bff', '#0095ffff', '#00fa9aff'],
+            time            : ['#b78d5cff', '#a62ab5ff', '#ff82f2ff', '#0095ffff', '#88f26aff', '#ffe200ff', '#ff4700ff', '#ff000dff'],
+            royal           : ['#242424ff', '#6d6d6dff'],
+            windows         : ['#242424ff', '#6d6d6dff'],
+    },
+    attrs: {
+        windows: {
+            Transparent: {abs: 0.2}
+        },
+        royal: {
+            Mirror: {abs: 0.3}
+        },
+    },
+    scenes: {
+        first_view: {
+            sky_brightness      : 0.5,
+            cam_pos             : [2, -12, 12],
+            cam_tar             : [2.5,-4.5,7.5],
+            swivel              : [0.0, 0.0],
+            perlin              : [16, 16],
+            sun_pos             : [12,-2,12],
+            sun_rad             : 1.0,
+            // ambient_occlusion   : 65,
+            // soft_shadows        : 17,
+            fov                 : 60,
+            aspect_ratio        : "Square",
+            res                 : 400,
+            // ss                  : 2
+            // dof                 : [17, 0.1],
+            lighting_fracs      : [0.3, 0.5, 0.2],
+            spec_pow            : 8,
+            shadowing_fracs     : [0.7, 0.3],
+            ao_pow              : 12
+        }
+    }
+}

@@ -6,6 +6,8 @@ use std::fmt::{Display, Formatter, Result};
 /// Lighting structure.
 #[derive(Debug)]
 pub struct Lighting {
+    /// Sky brightness fraction.
+    sky_brightness: f32,
     /// Sun position when calculating direct shadows [m].
     sun_pos: Pos3,
     /// Sun angular radius when calculating soft shadows [deg].
@@ -25,6 +27,7 @@ pub struct Lighting {
 }
 
 impl Lighting {
+    clone!(sky_brightness, f32);
     access!(sun_pos, Pos3);
     clone!(sun_rad, f64);
     clone!(ambient_occlusion, Option<i32>);
@@ -38,6 +41,7 @@ impl Lighting {
     #[inline]
     #[must_use]
     pub const fn new(
+        sky_brightness: f32,
         sun_pos: Pos3,
         sun_rad: f64,
         ambient_occlusion: Option<i32>,
@@ -48,6 +52,7 @@ impl Lighting {
         ao_pow: i32,
     ) -> Self {
         Self {
+            sky_brightness,
             sun_pos,
             sun_rad,
             ambient_occlusion,
@@ -99,6 +104,7 @@ impl Display for Lighting {
     #[allow(clippy::result_expect_used)]
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> Result {
+        display_field_ln!(fmt, "sky brightness", self.sky_brightness)?;
         display_field_ln!(fmt, "sun position", &self.sun_pos, "m")?;
         display_field_ln!(fmt, "sun radius", &self.sun_rad.to_degrees(), "deg")?;
         if let Some(ambient_occlusion_samples) = self.ambient_occlusion {

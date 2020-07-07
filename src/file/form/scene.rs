@@ -15,6 +15,8 @@ use std::{
 /// Loadable camera structure.
 #[load]
 pub struct Scene {
+    /// Sky brightness fraction.
+    sky_brightness: f32,
     /// Camera position [m].
     cam_pos: Pos3,
     /// Target position [m].
@@ -73,6 +75,7 @@ impl Build for Scene {
             render::Camera::new(focus, lens, sensor),
             PerlinMap::new(self.perlin, &mut thread_rng()),
             render::Lighting::new(
+                self.sky_brightness,
                 self.sun_pos,
                 self.sun_rad,
                 self.ambient_occlusion,
