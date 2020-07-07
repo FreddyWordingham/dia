@@ -5,7 +5,7 @@ use crate::{
         engine::naboo::{light, shadow, visibility},
         Attributes, Event, Input, Scene,
     },
-    Crossing, Dir3, Hit, Ray, Trace,
+    Crossing, Dir3, Hit, Pos3, Ray, Trace,
 };
 use palette::LinSrgba;
 use rand::rngs::ThreadRng;
@@ -76,14 +76,21 @@ pub fn engine(
                     let group = hit.group();
                     if let Some(attr) = input.attrs.map().get(group) {
                         match attr {
-                            Attributes::Luminous { mult: _ } => {
+                            Attributes::Luminous { mult } => {
                                 ray.travel(hit.dist());
-                                col += colour(&mut rng, input, scene, &ray, &hit) * weight as f32;
+                                let sun_dir =
+                                    Dir3::new_normalize(Pos3::origin() - scene.light().sun_pos());
+                                col += colour(&mut rng, input, scene, &ray, &hit, &sun_dir)
+                                    * (mult * weight) as f32;
                                 break;
                             }
                             Attributes::Transparent { abs } => {
                                 ray.travel(hit.dist());
-                                col += colour(&mut rng, input, scene, &ray, &hit)
+                                // let sun_dir =
+                                //     Dir3::new_normalize(ray.pos() - scene.light().sun_pos());
+                                let sun_dir =
+                                    Dir3::new_normalize(Pos3::origin() - scene.light().sun_pos());
+                                col += colour(&mut rng, input, scene, &ray, &hit, &sun_dir)
                                     * *abs as f32
                                     * weight as f32;
                                 weight *= 1.0 - *abs;
@@ -91,9 +98,10 @@ pub fn engine(
                             }
                             Attributes::Mirror { abs } => {
                                 ray.travel(hit.dist());
-                                col += colour(&mut rng, input, scene, &ray, &hit)
-                                    * *abs as f32
-                                    * weight as f32;
+                                let sun_dir =
+                                    Dir3::new_normalize(ray.pos() - scene.light().sun_pos());
+                                col += colour(&mut rng, input, scene, &ray, &hit, &sun_dir)
+                                    * (*abs * weight) as f32;
                                 weight *= 1.0 - *abs;
                                 *ray.dir_mut() = Crossing::init_ref_dir(
                                     ray.dir(),
@@ -108,9 +116,10 @@ pub fn engine(
                                 outside,
                             } => {
                                 ray.travel(hit.dist());
-                                col += colour(&mut rng, input, scene, &ray, &hit)
-                                    * *abs as f32
-                                    * weight as f32;
+                                let sun_dir =
+                                    Dir3::new_normalize(ray.pos() - scene.light().sun_pos());
+                                col += colour(&mut rng, input, scene, &ray, &hit, &sun_dir)
+                                    * (*abs * weight) as f32;
                                 weight *= 1.0 - abs;
 
                                 let (n_curr, n_next) = if hit.side().is_inside() {
@@ -138,7 +147,8 @@ pub fn engine(
                         }
                     } else {
                         ray.travel(hit.dist());
-                        col += colour(&mut rng, input, scene, &ray, &hit) * weight as f32;
+                        let sun_dir = Dir3::new_normalize(ray.pos() - scene.light().sun_pos());
+                        col += colour(&mut rng, input, scene, &ray, &hit, &sun_dir) * weight as f32;
                         break;
                     }
                 }
@@ -160,11 +170,16 @@ pub fn engine(
 
 /// Perform a colouring.
 #[inline]
-fn colour(rng: &mut ThreadRng, input: &Input, scene: &Scene, ray: &Ray, hit: &Hit) -> LinSrgba {
+fn colour(
+    rng: &mut ThreadRng,
+    input: &Input,
+    scene: &Scene,
+    ray: &Ray,
+    hit: &Hit,
+    sun_dir: &Dir3,
+) -> LinSrgba {
     let light = (light(scene, ray, hit) + 0.5).min(1.0);
     let shadow = shadow(input, scene, ray, hit, input.sett.bump_dist(), rng);
-
-    let sun_dir = Dir3::new_normalize(ray.pos() - scene.light().sun_pos());
 
     let base_col = input.cols.map()[hit.group()].get(hit.side().norm().dot(&sun_dir).abs() as f32);
     let grad = palette::Gradient::new(vec![palette::LinSrgba::default(), base_col]);
