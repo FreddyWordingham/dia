@@ -12,6 +12,7 @@ use rand::rngs::ThreadRng;
 #[allow(clippy::never_loop)]
 #[allow(clippy::option_expect_used)]
 #[allow(clippy::single_match_else)]
+#[allow(clippy::too_many_lines)]
 #[inline]
 #[must_use]
 pub fn engine(
@@ -150,7 +151,7 @@ pub fn engine(
     }
 
     col += input.cols.map()["fog"].get(1.0)
-        * (scene.fog().scale() * (fog / fog_dist)).powi(scene.fog().power()) as f32;
+        * (scene.fog().scale() * (fog * fog_dist)).powi(scene.fog().power()) as f32;
 
     col
 }
