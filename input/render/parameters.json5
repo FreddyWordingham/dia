@@ -43,7 +43,8 @@
     },
     cols: {
             time            : ['#b78d5cff', '#a62ab5ff', '#ff82f2ff', '#0095ffff', '#88f26aff', '#ffe200ff', '#ff4700ff', '#ff000dff'],
-            mirror          : ['#242424ff', '#6d6d6dff'],
+            // mirror          : ['#242424ff', '#6d6d6dff'],
+            mirror          : ['#228b22ff', '#88f26aff', '#34ff99ff', '#b1ed37ff', '#4dc94dff', '#90ee90ff'],
             windows         : ['#000000ff', '#8c8c8cff', '#242424ff', '#6d6d6dff'],
             r0              : ['#ff8c00ff', '#ff4500ff'],
             r1              : ['#eeeb51ff', '#00ff45ff'],
@@ -75,13 +76,19 @@
             Mirror: {abs: 0.3}
         },
         clouds_0: {
-            Refractive: {abs:0.1, inside: 1.2, outside: 1.0}
+            Transparent: {abs:0.1}
         },
         clouds_1: {
-            Refractive: {abs:0.1, inside: 1.2, outside: 1.0}
+            Transparent: {abs:0.1}
         },
         clouds_2: {
-            Refractive: {abs:0.1, inside: 1.2, outside: 1.0}
+            Transparent: {abs:0.1}
+        },
+        planet_0_sea: {
+            Refractive: {abs:0.1, inside: 1.3, outside: 1.0}
+        },
+        planet_1_sea: {
+            Refractive: {abs:0.1, inside: 1.3, outside: 1.0}
         },
         water: {
             Refractive: {abs:0.3, inside: 1.4, outside: 1.0}
@@ -94,13 +101,13 @@
         first_view: {
             cam_pos             : [2, -25, 42],
             cam_tar             : [-0.75, -5.5, 28.5],
-            // cam_tar             : [7,8,24],
             swivel              : [0.0, 0.0],
             perlin              : [16, 16],
             sun_pos             : [20,-50,45],
             sun_rad             : 1.0,
-            ambient_occlusion   : 16,
-            soft_shadows        : 17,
+            ambient_occlusion   : 17,
+            // ambient_occlusion   : 65,
+            // soft_shadows        : 7,
             fov                 : 90,
             aspect_ratio        : "Square",
             res                 : 400,
@@ -109,7 +116,7 @@
             lighting_fracs      : [0.3, 0.5, 0.2],
             spec_pow            : 8,
             shadowing_fracs     : [0.7, 0.3],
-            ao_pow              : 8
+            ao_pow              : 12
         }
     }
 }
