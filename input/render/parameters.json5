@@ -82,9 +82,9 @@
             spec_pow            : 8,
             shadowing_fracs     : [0.7, 0.3],
             ao_pow              : 12,
-            fog_dist: 1,
-            fog_scale: 0.01,
-            fog_power: 2
+            fog_dist            : 1000000,
+            fog_scale           : 0.01,
+            fog_power           : 2
         }
     }
 }

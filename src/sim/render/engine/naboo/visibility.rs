@@ -27,8 +27,9 @@ pub fn visibility(input: &Input, mut ray: Ray, bump_dist: f64, mut vis: f64) -> 
         let group = hit.group();
         if let Some(attr) = input.attrs.map().get(group) {
             match attr {
-                Attributes::Luminous => {
-                    return vis;
+                Attributes::Luminous { mult } => {
+                    vis = *mult;
+                    break;
                 }
                 Attributes::Transparent { abs } => {
                     vis *= 1.0 - *abs;
@@ -83,5 +84,5 @@ pub fn visibility(input: &Input, mut ray: Ray, bump_dist: f64, mut vis: f64) -> 
         }
     }
 
-    0.0
+    vis
 }

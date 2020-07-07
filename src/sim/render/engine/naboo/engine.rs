@@ -74,9 +74,10 @@ pub fn engine(
                     let group = hit.group();
                     if let Some(attr) = input.attrs.map().get(group) {
                         match attr {
-                            Attributes::Luminous => {
+                            Attributes::Luminous { mult } => {
                                 ray.travel(hit.dist());
-                                col += colour(&mut rng, input, scene, &ray, &hit) * weight as f32;
+                                col += colour(&mut rng, input, scene, &ray, &hit)
+                                    * (mult * weight) as f32;
                                 break;
                             }
                             Attributes::Transparent { abs } => {
