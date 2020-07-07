@@ -99,9 +99,13 @@
             soft_shadows        : 17,
             fov                 : 90,
             aspect_ratio        : "Square",
-            res                 : 1000,
-            ss                  : 2
+            res                 : 400,
+            // ss                  : 2,
             // dof                 : [17, 0.1],
+            lighting_fracs      : [0.3, 0.5, 0.2],
+            spec_pow            : 8,
+            shadowing_fracs     : [0.7, 0.3],
+            ao_pow              : 12
         }
     }
 }
