@@ -13,9 +13,10 @@
     },
     sett: {
         bump_dist       : 1e-6,
-        block_size      : 4000,
-        sub_block_size  : 100,
-        min_weight      : 0.01,
+        block_size      : 400,
+        sub_block_size  : 10,
+        min_weight      : 0.1,
+        order           : 'Forward',
         live            : true
     },
     surfs: {
@@ -42,6 +43,7 @@
             clouds_2        : [['objs/naboo/sky/planet_2_clouds_inner.obj', 'objs/naboo/sky/planet_2_clouds_mid.obj', 'objs/naboo/sky/planet_2_clouds_outer.obj'], {trans:[0,0,20]}],
     },
     cols: {
+            fog             : ['#c0c0c0ff', '#d7c9bbff', '#e3dccfff'],
             time            : ['#b78d5cff', '#a62ab5ff', '#ff82f2ff', '#0095ffff', '#88f26aff', '#ffe200ff', '#ff4700ff', '#ff000dff'],
             mirror          : ['#242424ff', '#6d6d6dff'],
             windows         : ['#000000ff', '#8c8c8cff', '#242424ff', '#6d6d6dff'],
@@ -75,37 +77,41 @@
             Mirror: {abs: 0.3}
         },
         clouds_0: {
-            Refractive: {abs:0.2, inside: 1.3, outside: 1.0}
+            Refractive: {abs:0.05, inside: 1.2, outside: 1.0}
         },
         clouds_1: {
-            Refractive: {abs:0.2, inside: 1.3, outside: 1.0}
+            Refractive: {abs:0.05, inside: 1.2, outside: 1.0}
         },
         clouds_2: {
-            Refractive: {abs:0.2, inside: 1.3, outside: 1.0}
+            Refractive: {abs:0.05, inside: 1.2, outside: 1.0}
         },
         water: {
-            Refractive: {abs:0.2, inside: 1.3, outside: 1.0}
+            Refractive: {abs:0.2, inside: 1.4, outside: 1.0}
         },
     },
     scenes: {
         first_view: {
+            sky_brightness      : 0.9,
             cam_pos             : [40, -45, 31],
             cam_tar             : [-0.75, -5.5, 28.5],
             swivel              : [10.0, 0.0],
             perlin              : [16, 16],
-            sun_pos             : [22,66,58],
+            sun_pos             : [66, 22, 58],
             sun_rad             : 1.0,
             ambient_occlusion   : 64,
             soft_shadows        : 17,
             fov                 : 90,
             aspect_ratio        : "Square",
             res                 : 1000,
-            // ss                  : 2,
+            ss                  : 2,
             // dof                 : [17, 0.1],
             lighting_fracs      : [0.3, 0.5, 0.2],
             spec_pow            : 8,
-            shadowing_fracs     : [0.7, 0.3],
-            ao_pow              : 12
+            shadowing_fracs     : [0.3, 0.7],
+            ao_pow              : 12,
+            fog_dist            : 10000,
+            fog_scale           : 0.001,
+            fog_power           : 2
         }
     }
 }
