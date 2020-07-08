@@ -16,6 +16,7 @@
         block_size      : 200,
         sub_block_size  : 10,
         min_weight      : 0.01,
+        order           : 'Backward',
         live            : true
     },
     surfs: {
@@ -26,18 +27,19 @@
             vein    : [['objs/shatter/base_vein.obj'], null],
     },
     cols: {
-            time            : ['#b78d5cff', '#a62ab5ff', '#ff82f2ff', '#0095ffff', '#88f26aff', '#ffe200ff', '#ff4700ff', '#ff000dff'],
-            core    : ['#a62ab5ff', '#f0794aff', '#e03c7eff', '#f17bffff'],
+            fog     : ['#c0c0c0ff', '#d7c9bbff', '#e3dccfff'],
+            time    : ['#b78d5cff', '#a62ab5ff', '#ff82f2ff', '#0095ffff', '#88f26aff', '#ffe200ff', '#ff4700ff', '#ff000dff'],
             sky     : ['#ffffffff', '#d2eeffff', '#0095ffff'],
+            core    : ['#a62ab5ff', '#f0794aff', '#e03c7eff', '#f17bffff'],
             stand   : ['#b78d5cff', '#df9955ff', '#a66a3fff', '#dabb97ff', '#c46e1bff', '#a55555ff', '#ffd4a2ff'],
             gems    : ['#008000ff', '#32cd32ff', '#0ebb0eff', '#008080ff', '#51dab6ff', '#556b2fff', '#1f841fff', '#56a556ff', '#67e2b9ff', '#3be3abff'],
             vein    : ['#ffe200ff', '#ff4700ff', '#ff000dff'],
             bulk    : ['#0542A8ff', '#1552C6ff', '#8e6fe4ff', '#724ceeff', '#7770ffff', '#3072EBff', '#71A8EEff'],
     },
     attrs: {
-        bulk: {
-            Transparent: {abs: 0.2}
-        },
+        // bulk: {
+        //     Transparent: {abs: 0.2}
+        // },
         gems: {
             Mirror: {abs: 0.3}
         },
@@ -47,7 +49,8 @@
     },
     scenes: {
         first_view: {
-            cam_pos             : [2,-3,2],
+            sky_brightness      : 0.7,
+            cam_pos             : [2.1,-1.1,1.1],
             cam_tar             : [0,0,0.5],
             swivel              : [0,0],
             perlin              : [16, 16],
@@ -63,7 +66,10 @@
             lighting_fracs      : [0.3, 0.5, 0.2],
             spec_pow            : 8,
             shadowing_fracs     : [0.7, 0.3],
-            ao_pow              : 1
+            ao_pow              : 1,
+            fog_dist            : 10000,
+            fog_scale           : 0.001,
+            fog_power           : 2
         }
     }
 }
