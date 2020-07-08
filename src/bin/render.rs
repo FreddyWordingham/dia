@@ -57,6 +57,8 @@ fn init() -> (PathBuf, PathBuf, PathBuf) {
     args!(bin_path: PathBuf;
         params_path: PathBuf
     );
+    // args!(bin_path: PathBuf);
+    // let params_path = Path::new("space.json5").to_path_buf();
     report!("binary path", bin_path.display());
     report!("parameters path", params_path.display());
 
