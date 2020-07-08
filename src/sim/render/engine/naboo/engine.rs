@@ -114,7 +114,8 @@ pub fn engine(
                                 outside,
                             } => {
                                 ray.travel(hit.dist());
-                                let sun_dir = crate::Vec3::z_axis();
+                                let sun_dir =
+                                    crate::Dir3::new_normalize(crate::Vec3::new(1.0, -1.0, 1.0));
                                 col += colour(&mut rng, input, scene, &ray, &hit, &sun_dir)
                                     * (*abs * weight) as f32;
                                 weight *= 1.0 - abs;
