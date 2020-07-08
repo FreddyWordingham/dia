@@ -108,7 +108,7 @@
             sun_rad             : 1.0,
             // ambient_occlusion   : 31,
             // soft_shadows        : 7,
-            fov                 : 100,
+            fov                 : 400,
             aspect_ratio        : "Square",
             res                 : 400,
             // ss                  : 2,
