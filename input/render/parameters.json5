@@ -13,8 +13,8 @@
     },
     sett: {
         bump_dist       : 1e-6,
-        block_size      : 1000,
-        sub_block_size  : 40,
+        block_size      : 100,
+        sub_block_size  : 10,
         min_weight      : 0.01,
         order           : 'Shuffle',
         live            : true
@@ -107,8 +107,8 @@
             fov                 : 75,
             aspect_ratio        : "Square",
             // // res                 : 1125,
-            res                 : 1000,
-            ss                  : 2,
+            res                 : 200,
+            // ss                  : 2,
             // dof                 : [17, 0.1],
             lighting_fracs      : [0.3, 0.5, 0.2],
             spec_pow            : 8,
