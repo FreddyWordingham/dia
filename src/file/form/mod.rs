@@ -6,9 +6,8 @@ pub mod light;
 pub mod material;
 pub mod mesh;
 pub mod probability;
-pub mod scene;
 pub mod trans3;
 
 pub use self::{
-    formula::*, gradient::*, light::*, material::*, mesh::*, probability::*, scene::*, trans3::*,
+    formula::*, gradient::*, light::*, material::*, mesh::*, probability::*, trans3::*,
 };
