@@ -1,0 +1,1 @@
+//! Light setup structure.
