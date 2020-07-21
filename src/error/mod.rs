@@ -16,8 +16,8 @@ pub enum Error {
     ParseFloat(std::num::ParseFloatError),
     /// Json writing error.
     WriteJson(serde_json::Error),
-    /// MiniFB window error.
-    MiniFB(minifb::Error),
+    // /// MiniFB window error.
+    // MiniFB(minifb::Error),
     // /// NetCDF writing error.
     // WriteNetCDF(netcdf::error::Error),
     /// PNG writing error.
@@ -51,7 +51,7 @@ impl_from_for_err!(Self::ParseHex, hex::FromHexError);
 impl_from_for_err!(Self::ParseInt, std::num::ParseIntError);
 impl_from_for_err!(Self::ParseFloat, std::num::ParseFloatError);
 impl_from_for_err!(Self::WriteJson, serde_json::Error);
-impl_from_for_err!(Self::MiniFB, minifb::Error);
+// impl_from_for_err!(Self::MiniFB, minifb::Error);
 // impl_from_for_err!(Self::WriteNetCDF, netcdf::error::Error);
 impl_from_for_err!(Self::WritePng, png::EncodingError);
 impl_from_for_err!(Self::EnvVar, std::env::VarError);
@@ -85,7 +85,7 @@ impl Debug for Error {
                 Self::ParseInt { .. } => "Integer parsing",
                 Self::ParseFloat { .. } => "Float parsing",
                 Self::WriteJson { .. } => "JSON writing",
-                Self::MiniFB { .. } => "MiniFB window error",
+                // Self::MiniFB { .. } => "MiniFB window error",
                 // Self::WriteNetCDF { .. } => "NetCDF writing",
                 Self::WritePng { .. } => "PNG writing",
                 Self::EnvVar { .. } => "Environment variable missing",
@@ -101,7 +101,7 @@ impl Debug for Error {
                 Self::ParseInt { 0: err } => format!("{:?}", err),
                 Self::ParseFloat { 0: err } => format!("{:?}", err),
                 Self::WriteJson { 0: err } => format!("{:?}", err),
-                Self::MiniFB { 0: err } => format!("{:?}", err),
+                // Self::MiniFB { 0: err } => format!("{:?}", err),
                 // Self::WriteNetCDF { 0: err } => format!("{:?}", err),
                 Self::WritePng { 0: err } => format!("{:?}", err),
                 Self::EnvVar { 0: err } => format!("{:?}", err),
