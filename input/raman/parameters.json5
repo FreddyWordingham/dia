@@ -6,8 +6,8 @@
     },
     grid: {
         boundary: {
-            mins: [-5e-3, -5e-3, -8e-3],
-            maxs: [ 5e-3,  5e-3,  2e-3]
+            mins: [-5e-3, -5e-3, -5e-3],
+            maxs: [ 5e-3,  5e-3,  5e-3]
         },
         res: [65,65,65]
     },
@@ -18,19 +18,19 @@
         loop_limit:         1e6,
         roulette_weight:    0.01,
         roulette_barrels:   8,
-        init_mat:           'air',
-        range:              {min: 450e-9, max: 800e-9}
+        init_mat:           'breast',
+        range:              {min: 450e-9, max: 1000e-9}
     },
     light: {
-        surf: [['objs/led.obj'], {scale: 1.0e-3, trans: [0.0,0.0,0.5e-3]}],
+        surf: [['objs/led.obj'], {scale: 1.0e-3, trans: [0.0,0.0,-4.9e-3]}],
         spec: {
-            There: 'spec/aktilite.json5'
+            There: 'spec/laser_830nm.json5'
         },
         power: 1
     },
     surfs: {
-        skin:           [['objs/square.obj'],   {scale: 1.0e-3}],
-        tumour_body:    [['objs/sphere.obj'],   {scale: 1.0e-3, trans: [0,0,-2000e-6]}],
+        skin:           [['objs/cube.obj'],   {scale: 11.0e-3}],
+        //tumour_body:    [['objs/sphere.obj'],   {scale: 1.0e-3, trans: [0,0,-2000e-6]}],
         // skin:           [['objs/skin.obj'],         {scale: 1.0e-3}],
         // tumour_cap:     [['objs/tumour_cap.obj'],   {scale: 1.0e-3}],
         // tumour_body:    [['objs/tumour_2000.obj'],  {scale: 1.0e-3}],
@@ -48,6 +48,9 @@
         },
         tumour: {
             There: 'mats/tumour.json5'
+        },
+        breast: {
+            There: 'mats/breast.json5'
         }
     },
     points: [

@@ -43,7 +43,9 @@ pub fn main() {
         let index = input.grid.gen_index(&pos).unwrap();
         points.push((pos, absorptions[index]));
     }
-    let points = mcrt::Light::new_points(points, (*light.spec()).clone(), light.power());
+    //let points = mcrt::Light::new_points(points, (*light.spec()).clone(), light.power());
+    let new_spec = Probability::new_point(920.0e-9);
+    let points = mcrt::Light::new_points(points, new_spec, light.power());
     report!("Points", &points);
 
     let input = mcrt::Input::new(&mcrt_sett, &points, &mats, &tree, &grid, 4);

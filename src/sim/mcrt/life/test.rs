@@ -8,6 +8,7 @@ use crate::{
 use physical_constants::SPEED_OF_LIGHT_IN_VACUUM;
 use rand::{rngs::ThreadRng, Rng};
 use std::f64::consts::PI;
+use nalgebra::{Unit, Point3, distance};
 
 /// Test photon lifetime function.
 #[allow(clippy::option_expect_used)]
@@ -112,6 +113,14 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
                 travel(data, index, &env, &mut phot, bump_dist);
             }
         }
+
+        if phot.ray().pos()[0] >= 5e-3 {
+            if phot.wavelength() >= 900.0e-9 {
+                let weight_power_dist = phot.weight() * phot.power();
+                //println!("> {}", weight_power_dist);
+                data.shifts[index] += weight_power_dist;
+            }
+        }
     }
 
     // data.paths.last_mut().unwrap().push(*phot.ray().pos());
@@ -132,7 +141,7 @@ fn emit_phot<'a>(input: &'a Input, rng: &mut ThreadRng) -> (Photon, &'a Material
 
     // Select the required material.
     let mat = if input.kind == 4 {
-        &input.mats.map()["flesh"]
+        &input.mats.map()["breast"]
     } else {
         &input.mats.map()[input.sett.init_mat()]
     };
@@ -219,4 +228,77 @@ pub fn select_property<'a>(hit: &Hit, mats: &'a Set<Material>) -> &'a Material {
             hit.group()
         )),
     }
+}
+
+/// Perform a peel off event.
+#[inline]
+#[must_use]
+pub fn peel_off(
+    mut phot: Photon,
+    mut env: Environment,
+    pos: &Point3<f64>,
+) -> Option<f64> {
+    let g = env.asym();
+    let g2 = g.powi(2);
+
+    let dir = Unit::new_normalize(pos - phot.ray().pos());
+
+    let cos_ang = phot.ray().dir().dot(&dir);
+    let mut prob = phot.weight() * 0.5 * ((1.0 - g2) / (1.0 + g2 - (2.0 * g * cos_ang)).powf(1.5));
+    if prob < 0.00001 {
+        return None;
+    }
+    let dist = distance(pos, phot.ray().pos());
+    prob *= (-dist * env.inter_coeff()).exp();
+    //*phot.ray_mut().dir_mut() = dir;
+    //let mut cell = get_cell(phot.ray().pos(), &grid);
+
+    //loop {
+        //if prob < 0.00001 {
+        //    return None;
+        //}
+
+    //    let cell_dist = cell
+    //        .bound()
+    //        .dist(phot.ray())
+    //        .expect("Unable to determine cell distance.");
+    //    let inter_dist = cell.inter_dist_inside_norm_inter(phot.ray());
+
+    //    if let Some((dist, inside, _norm, inter)) = inter_dist {
+    //        if dist < cell_dist {
+    //            prob *= (-(dist + bump_dist) * env.inter_coeff()).exp();
+    //            phot.ray_mut().travel(dist + bump_dist);
+
+    //            if inside {
+    //                env = mats
+    //                    .map()
+    //                    .get(inter.in_mat())
+    //                    .unwrap()
+    //                    .optics()
+    //                    .env(phot.wavelength());
+    //            } else {
+    //                env = mats
+    //                    .map()
+    //                    .get(inter.out_mat())
+    //                    .unwrap()
+    //                    .optics()
+    //                    .env(phot.wavelength());
+    //            }
+    //        } else {
+    //            prob *= (-(cell_dist + bump_dist) * env.inter_coeff()).exp();
+    //            phot.ray_mut().travel(cell_dist + bump_dist);
+    //        }
+    //    } else {
+    //        prob *= (-(cell_dist + bump_dist) * env.inter_coeff()).exp();
+    //        phot.ray_mut().travel(cell_dist + bump_dist);
+    //    }
+
+    //    if !grid.bound().contains(phot.ray().pos()) {
+    //        break;
+    //    }
+
+    //    cell = get_cell(phot.ray().pos(), &grid);
+    //}
+    //report!(prob);
+    Some(prob)
 }
