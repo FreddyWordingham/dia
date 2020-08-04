@@ -1,7 +1,7 @@
 //! Optical environment implementation.
 
 use crate::clone;
-
+#[derive(Clone)]
 /// Local optical environment structure.
 pub struct Environment {
     /// Refractive index.

@@ -31,7 +31,7 @@ pub fn main() {
     let ps = params.points.clone();
     let (tree_sett, grid_sett, mcrt_sett, light, surfs, mats) = build(&in_dir, params);
     let (tree, grid) = grow(tree_sett, grid_sett, &surfs);
-    let input = mcrt::Input::new(&mcrt_sett, &light, &mats, &tree, &grid, 0);
+    let input = mcrt::Input::new(&mcrt_sett, &light, &mats, &tree, &grid, 4);
     let data = render(&input);
     report!("illumination data", &data);
 

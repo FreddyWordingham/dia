@@ -14,6 +14,7 @@ use nalgebra::{Unit, Point3, distance};
 #[allow(clippy::option_expect_used)]
 #[allow(clippy::single_match)]
 #[inline]
+
 pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
     // Useful constants.
     let bump_dist = input.sett.bump_dist();
@@ -73,7 +74,11 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
             // Interaction event.
             Event::Scattering(dist) => {
                 scatter(data, rng, index, &env, &mut phot, dist);
+                if phot.wavelength() >= 900.0e-9 {
+                    data.shifts[index] += peel_off(phot.clone(), env.clone(), &Point3::new(0.005, 0.0, 0.0)).unwrap_or(0.0);
+                }
             }
+
             // Interface collision.
             Event::Surface(hit) => {
                 // Move to the collision point.
@@ -114,13 +119,13 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
             }
         }
 
-        if phot.ray().pos()[0] >= 5e-3 {
-            if phot.wavelength() >= 900.0e-9 {
-                let weight_power_dist = phot.weight() * phot.power();
+        //if phot.ray().pos()[0] >= 5e-3 {
+            //if phot.wavelength() >= 900.0e-9 {
+                //let weight_power_dist = phot.weight() * phot.power();
                 //println!("> {}", weight_power_dist);
-                data.shifts[index] += weight_power_dist;
-            }
-        }
+                //data.shifts[index] += weight_power_dist;
+            //}
+        //}
     }
 
     // data.paths.last_mut().unwrap().push(*phot.ray().pos());
@@ -234,8 +239,8 @@ pub fn select_property<'a>(hit: &Hit, mats: &'a Set<Material>) -> &'a Material {
 #[inline]
 #[must_use]
 pub fn peel_off(
-    mut phot: Photon,
-    mut env: Environment,
+    phot: Photon,
+    env: Environment,
     pos: &Point3<f64>,
 ) -> Option<f64> {
     let g = env.asym();

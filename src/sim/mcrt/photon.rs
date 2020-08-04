@@ -1,7 +1,7 @@
 //! Photon implementation.
 
 use crate::{access, clone, Ray};
-
+#[derive(Clone)]
 /// Photon structure.
 pub struct Photon {
     /// Ray of travel.
