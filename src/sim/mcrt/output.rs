@@ -30,6 +30,8 @@ pub struct Output {
     pub paths: Vec<Vec<Pos3>>,
     /// Spectrometer.
     pub spec: Histogram,
+    /// Detected shifted photon weights.
+    pub detected_raman: Array3<f64>,
 }
 
 impl Output {
@@ -56,6 +58,7 @@ impl Output {
             shifts: Array3::zeros(res),
             paths: Vec::new(),
             spec: Histogram::new(0e-9, 1000e-9, 100),
+            detected_raman: Array3::zeros(res),
         }
     }
 }
@@ -69,6 +72,7 @@ impl AddAssign<Self> for Output {
         self.absorptions += &rhs.absorptions;
         self.shifts += &rhs.shifts;
         self.paths.append(&mut rhs.paths);
+        self.detected_raman += &rhs.detected_raman;
     }
 }
 
@@ -77,6 +81,7 @@ impl Display for Output {
     #[inline]
     fn fmt(&self, fmt: &mut Formatter) -> std::fmt::Result {
         display_field_ln!(fmt, "total emitted photons", self.emitted_photons.sum())?;
+        display_field_ln!(fmt, "total detected Raman photons", self.detected_raman.sum())?;
         display_field_ln!(
             fmt,
             "total distance travelled",
@@ -87,6 +92,7 @@ impl Display for Output {
         display_field_ln!(fmt, "total absorption energy", self.absorptions.sum(), "J")?;
         display_field_ln!(fmt, "total shifted energy", self.shifts.sum(), "J")?;
         display_field!(fmt, "number of recorded paths", self.paths.len())
+
     }
 }
 
@@ -97,6 +103,11 @@ impl Save for Output {
         println!("saving: {}", path.display());
         let emission_dens = &self.emitted_photons / self.cell_vol;
         emission_dens.save(&path)?;
+
+        let path = out_dir.join("detected_raman_dens.nc");
+        println!("saving: {}", path.display());
+        let detected_raman_dens = &self.detected_raman/ self.cell_vol;
+        detected_raman_dens.save(&path)?;
 
         let path = out_dir.join("energy_dens.nc");
         println!("saving: {}", path.display());
@@ -120,5 +131,6 @@ impl Save for Output {
         let path = out_dir.join("spectrometer.csv");
         println!("saving: {}", path.display());
         self.spec.save(&path)
+
     }
 }

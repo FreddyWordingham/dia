@@ -75,7 +75,8 @@ pub fn test(input: &Input, data: &mut Output, rng: &mut ThreadRng) {
             Event::Scattering(dist) => {
                 scatter(data, rng, index, &env, &mut phot, dist);
                 if phot.wavelength() >= 900.0e-9 {
-                    data.shifts[index] += peel_off(phot.clone(), env.clone(), &Point3::new(0.005, 0.0, 0.0)).unwrap_or(0.0);
+                    data.detected_raman[index] += peel_off(phot.clone(), env.clone(), &Point3::new(0.0, 0.0, 0.025)).unwrap_or(0.0);
+                    //println!("{}", peel_off(phot.clone(), env.clone(), &Point3::new(0.005, 0.0, 0.0)).unwrap_or(0.0));
                 }
             }
 
@@ -250,11 +251,13 @@ pub fn peel_off(
 
     let cos_ang = phot.ray().dir().dot(&dir);
     let mut prob = phot.weight() * 0.5 * ((1.0 - g2) / (1.0 + g2 - (2.0 * g * cos_ang)).powf(1.5));
-    if prob < 0.00001 {
+    if prob < 0.0000001 {
         return None;
     }
+
     let dist = distance(pos, phot.ray().pos());
     prob *= (-dist * env.inter_coeff()).exp();
+
     //*phot.ray_mut().dir_mut() = dir;
     //let mut cell = get_cell(phot.ray().pos(), &grid);
 
