@@ -147,7 +147,7 @@ fn emit_phot<'a>(input: &'a Input, rng: &mut ThreadRng) -> (Photon, &'a Material
 
     // Select the required material.
     let mat = if input.kind == 4 {
-        &input.mats.map()["breast"]
+        &input.mats.map()["pork"]
     } else {
         &input.mats.map()[input.sett.init_mat()]
     };
@@ -251,7 +251,7 @@ pub fn peel_off(
 
     let cos_ang = phot.ray().dir().dot(&dir);
     let mut prob = phot.weight() * 0.5 * ((1.0 - g2) / (1.0 + g2 - (2.0 * g * cos_ang)).powf(1.5));
-    if prob < 0.0000001 {
+    if prob < 0.00001 {
         return None;
     }
 
