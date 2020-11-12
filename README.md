@@ -1,2 +1,2 @@
 # dia
-Do it alone
+testing numerical models
